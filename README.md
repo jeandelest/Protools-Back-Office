@@ -8,17 +8,17 @@ Current WIP & experimentations can be found on the protools-wip branch.
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Installation
-[Link to swagger](https://protools-flowable.dev.insee.io/)
+[Link to swagger](https://protools-flowable-demo.dev.insee.io/)
 
 ### Installation via Docker (Recommended)
 
 ```bash
 docker pull mailinenguyen/protools-flowable-demo
-docker run -d --name protoolsflowable -p 8080:8080  mailinenguyen/protools-flowabl0-demo:latest
+docker run -d --name protoolsflowable -p 8080:8080  mailinenguyen/protools-flowable-demo:latest
 ```
 ### Manual Install
 ``` bash
-git clone git@github.com:MailineN/Protools-Back-Office.git
+git clone git@github.com:InseeFr/Protools-Back-Office.git
 cd Protools-Back-Office
 git checkout demo
 ./mvnw spring-boot:run -Dmaven.test.skip
