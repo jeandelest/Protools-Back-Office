@@ -14,14 +14,14 @@ Current WIP & experimentations can be found on the protools-wip branch.
 
 ```bash
 docker pull mailinenguyen/protools-flowable-demo
-docker run -d --name protoolsflowable -p 8080:8080  mailinenguyen/protools-flowable:latest
+docker run -d --name protoolsflowable -p 8080:8080  mailinenguyen/protools-flowabl0-demo:latest
 ```
 ### Manual Install
 ``` bash
-git clone git@github.com:POCProtools/Protools-Flowable.git
-cd Protools-Flowable
-git checkout demo-protools
-./mvnw spring-boot:run
+git clone git@github.com:MailineN/Protools-Back-Office.git
+cd Protools-Back-Office
+git checkout demo
+./mvnw spring-boot:run -Dmaven.test.skip
 ```
 
 
