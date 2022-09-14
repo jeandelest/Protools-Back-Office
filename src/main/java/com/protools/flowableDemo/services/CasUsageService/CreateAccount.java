@@ -29,7 +29,7 @@ public class CreateAccount implements JavaDelegate {
         String unit = (String) delegateExecution.getVariable("unit");
         String surveyID = (String) delegateExecution.getVariable("idSurvey") ;
         int count = (int) delegateExecution.getVariable("count");
-        logger.info("\t >>> Create Account for unit: " + unit + " for survey: "+ surveyID);
+
 
         Gson gson = new Gson();
         Person[] map = gson.fromJson(unit,Person[].class);

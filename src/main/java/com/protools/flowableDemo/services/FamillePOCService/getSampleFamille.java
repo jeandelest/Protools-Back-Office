@@ -86,13 +86,13 @@ public class getSampleFamille implements JavaDelegate {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        logger.info("\t Drawn sample Famille : "+ responseSample.body());
+
         String sample = responseSample.body();
         Gson gson = new Gson();
         Person[] map = gson.fromJson(sample,Person[].class);
         ArrayList<String> elements = new ArrayList<String>();
         for (Person person : map) {
-            logger.info("\t \t >>> Unit : " +person);
+            logger.info("\t >>> Unit Drawn : " +person);
             var unit = new HashMap<String, Object>() {{
                 put("email", person.getEmail());
                 put("nom", person.getNom());

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Flowable Open Source Modeler" exporterVersion="6.7.2">
-  <message id="proceedPOC" name="messageToProceedPOCFamille"/>
   <process id="EnqueteWeb2" name="Enquête web continue 2" isExecutable="true">
     <documentation>Enquête web source échantillon externe avec message (base Qualité Volaille)</documentation>
     <startEvent id="Event_07ga0xu" flowable:formFieldValidation="true"></startEvent>
@@ -78,11 +77,21 @@
       <sequenceFlow id="sid-BD78F59E-B311-41B6-A016-5E67A6752796" sourceRef="SendGlobalErrorProcess" targetRef="sid-8922F637-F7E2-45DF-9586-04917CB8293D"></sequenceFlow>
     </subProcess>
     <sequenceFlow id="sid-78852250-63B8-4149-AD77-204EEC9843F0" sourceRef="RecupEch" targetRef="ReceiveMessageStartProcess"></sequenceFlow>
+    <sequenceFlow id="sid-33B92BA0-B1EC-4D7C-9D88-7A06A3298480" sourceRef="ReceiveMessageStartProcess" targetRef="SubProcessAddToSurvey"></sequenceFlow>
     <intermediateCatchEvent id="ReceiveMessageStartProcess" name="Réception message">
       <documentation>Réception d'un message pour avancer dans le processus</documentation>
-      <messageEventDefinition id="messageToProceedPOCFamille" messageRef="proceedPOC"/>
+      <extensionElements>
+        <flowable:eventType xmlns:flowable="http://flowable.org/bpmn">testEvent</flowable:eventType>
+        <flowable:eventOutParameter xmlns:flowable="http://flowable.org/bpmn"
+                                    source="customerName"
+                                    sourceType="string"
+                                    target="customerName"/>
+        <flowable:eventOutParameter xmlns:flowable="http://flowable.org/bpmn"
+                                    source="amount"
+                                    sourceType="integer"
+                                    target="amount"/>
+      </extensionElements>
     </intermediateCatchEvent>
-    <sequenceFlow id="sid-33B92BA0-B1EC-4D7C-9D88-7A06A3298480" sourceRef="ReceiveMessageStartProcess" targetRef="SubProcessAddToSurvey"></sequenceFlow>
     <textAnnotation id="TextAnnotation_1da9efo">
       <text>Pour chaque UE</text>
     </textAnnotation>
@@ -97,8 +106,8 @@
     <association id="Association_0d21dcl" sourceRef="Gateway_06p0ycx" targetRef="TextAnnotation_0xrtymh" associationDirection="None"></association>
     <association id="Association_1aqs91l" sourceRef="SendControlMessageError" targetRef="TextAnnotation_16dgncd" associationDirection="None"></association>
   </process>
-  <bpmndi:BPMNDiagram id="BPMNDiagram_TestFamilleMessage">
-    <bpmndi:BPMNPlane bpmnElement="TestFamilleMessage" id="BPMNPlane_TestFamilleMessage">
+  <bpmndi:BPMNDiagram id="BPMNDiagram_EnqueteWeb2">
+    <bpmndi:BPMNPlane bpmnElement="EnqueteWeb2" id="BPMNPlane_EnqueteWeb2">
       <bpmndi:BPMNShape bpmnElement="Event_07ga0xu" id="BPMNShape_Event_07ga0xu">
         <omgdc:Bounds height="30.0" width="30.0" x="195.0" y="429.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
@@ -169,13 +178,13 @@
         <omgdc:Bounds height="55.33063427800266" width="99.99156545209178" x="573.0" y="594.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="ReceiveMessageStartProcess" id="BPMNShape_ReceiveMessageStartProcess">
-        <omgdc:Bounds height="30.0" width="30.0" x="735.0" y="429.0"></omgdc:Bounds>
+        <omgdc:Bounds height="30.0" width="30.0" x="735.5" y="429.5"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="sid-33B92BA0-B1EC-4D7C-9D88-7A06A3298480" id="BPMNEdge_sid-33B92BA0-B1EC-4D7C-9D88-7A06A3298480" flowable:sourceDockerX="15.0" flowable:sourceDockerY="15.0" flowable:targetDockerX="326.0" flowable:targetDockerY="175.0">
-        <omgdi:waypoint x="764.9499933774536" y="444.0"></omgdi:waypoint>
-        <omgdi:waypoint x="802.5" y="444.0"></omgdi:waypoint>
-        <omgdi:waypoint x="802.5" y="445.0"></omgdi:waypoint>
-        <omgdi:waypoint x="839.9999999998729" y="445.0"></omgdi:waypoint>
+        <omgdi:waypoint x="765.4493099993967" y="444.3543756534762"></omgdi:waypoint>
+        <omgdi:waypoint x="802.0" y="444.0"></omgdi:waypoint>
+        <omgdi:waypoint x="802.0" y="445.0"></omgdi:waypoint>
+        <omgdi:waypoint x="839.9999999997898" y="445.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="Flow_05mel6j" id="BPMNEdge_Flow_05mel6j" flowable:sourceDockerX="15.5" flowable:sourceDockerY="15.5" flowable:targetDockerX="14.0" flowable:targetDockerY="14.0">
         <omgdi:waypoint x="1265.9499992667074" y="464.0"></omgdi:waypoint>
@@ -221,9 +230,9 @@
         <omgdi:waypoint x="891.9499978878" y="465.0"></omgdi:waypoint>
         <omgdi:waypoint x="919.9999999999478" y="465.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="sid-78852250-63B8-4149-AD77-204EEC9843F0" id="BPMNEdge_sid-78852250-63B8-4149-AD77-204EEC9843F0" flowable:sourceDockerX="50.0" flowable:sourceDockerY="40.0" flowable:targetDockerX="15.483870967741934" flowable:targetDockerY="15.746309458720612">
-        <omgdi:waypoint x="672.9499999999869" y="444.2924146966993"></omgdi:waypoint>
-        <omgdi:waypoint x="735.0000674860523" y="444.65566605590465"></omgdi:waypoint>
+      <bpmndi:BPMNEdge bpmnElement="sid-78852250-63B8-4149-AD77-204EEC9843F0" id="BPMNEdge_sid-78852250-63B8-4149-AD77-204EEC9843F0" flowable:sourceDockerX="50.0" flowable:sourceDockerY="40.0" flowable:targetDockerX="15.000000000000002" flowable:targetDockerY="15.000000000000002">
+        <omgdi:waypoint x="672.9499999999871" y="444.1958823529412"></omgdi:waypoint>
+        <omgdi:waypoint x="735.5000072383544" y="444.44117691361424"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="Association_1aqs91l" id="BPMNEdge_Association_1aqs91l" flowable:sourceDockerX="50.0" flowable:sourceDockerY="40.0" flowable:targetDockerX="49.99578272604589" flowable:targetDockerY="0.0">
         <omgdi:waypoint x="517.9499999999995" y="573.6680049846813"></omgdi:waypoint>
