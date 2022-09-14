@@ -10,14 +10,7 @@ Currently testing event-egistry features with RabbitQM for PQV (Proto Qualité V
 
 ## Installation
 
-[Link to swagger](https://protools-flowable.dev.insee.io/)
-
-### Installation via Docker (Recommended)
-
-```bash
-docker pull mailinenguyen/protools-flowable
-docker run -d --name protoolsflowable -p 8080:8080  mailinenguyen/protools-flowable:latest
-```
+[Link to swagger](https://protools-flowable-wip.dev.insee.io/)
 
 ### Manual Install
 
