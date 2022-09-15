@@ -83,14 +83,7 @@
       <documentation>Réception d'un message pour avancer dans le processus</documentation>
       <extensionElements>
         <flowable:eventType xmlns:flowable="http://flowable.org/bpmn">testEvent</flowable:eventType>
-        <flowable:eventOutParameter xmlns:flowable="http://flowable.org/bpmn"
-                                    source="customerName"
-                                    sourceType="string"
-                                    target="customerName"/>
-        <flowable:eventOutParameter xmlns:flowable="http://flowable.org/bpmn"
-                                    source="amount"
-                                    sourceType="integer"
-                                    target="amount"/>
+        <flowable:eventOutParameter xmlns:flowable="http://flowable.org/bpmn" source="id" sourceType="string" target="id"></flowable:eventOutParameter>
       </extensionElements>
     </intermediateCatchEvent>
     <textAnnotation id="TextAnnotation_1da9efo">

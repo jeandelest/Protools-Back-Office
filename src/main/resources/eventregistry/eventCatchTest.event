@@ -4,24 +4,11 @@
   "inboundChannelKeys": [
     "test-channel"
   ],
-  "correlationParameters": [
-    {
-      "name": "customerId",
-      "type": "string"
-    }
-  ],
+  "correlationParameters": [],
   "payload": [
-    {
-      "name": "customerName",
-      "type": "string"
-    },
-    {
-      "name": "foo",
-      "type": "string"
-    },
-    {
-      "name": "amount",
-      "type": "integer"
-    }
+      {
+          "name": "id",
+          "type": "string"
+      }
   ]
 }
