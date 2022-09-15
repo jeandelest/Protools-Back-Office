@@ -1,0 +1,11 @@
+{
+  "key": "sendMessageOutboundChannel",
+  "category": "channel",
+  "name": "Send message",
+  "description": "Send Message Outbound Channel",
+  "channelType": "outbound",
+  "type": "rabbit",
+  "serializerType": "json",
+  "routingKey": "send-message",
+  "exchange": "amq.topic"
+}

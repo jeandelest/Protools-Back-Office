@@ -1,0 +1,13 @@
+{
+  "name": "Send receive message",
+  "key": "receiveMessageInboundChannel",
+  "category": "channel",
+  "description": "Send Receive inbound channel",
+  "channelType": "inbound",
+  "type": "rabbit",
+  "deserializerType": "json",
+  "channelEventKeyDetection": {
+    "fixedValue": "receiveMessageEventKey"
+  },
+  "queues": ["receive-message"]
+}

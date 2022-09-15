@@ -1,0 +1,329 @@
+2022-09-15 13:58:51,162 INFO m.p.s.DotenvPropertySource [main] Initializing Dotenv with DotenvConfig{directory=null, filename=null, ignoreIfMalformed=false, ignoreIfMissing=true, systemProperties=false, prefix=null}
+2022-09-15 13:58:51,168 INFO o.s.b.StartupInfoLogger [main] Starting FlowablePocApplication using Java 17.0.1 on Flying-Red-Panda.local with PID 21058 (/Users/mailinenguyen/ProtoolsDev/Protools-Back-Office/target/classes started by mailinenguyen in /Users/mailinenguyen/ProtoolsDev/Protools-Back-Office)
+2022-09-15 13:58:51,169 DEBUG o.s.b.StartupInfoLogger [main] Running with Spring Boot v2.6.7, Spring v5.3.19
+2022-09-15 13:58:51,169 INFO o.s.b.SpringApplication [main] No active profile set, falling back to 1 default profile: "default"
+2022-09-15 13:58:51,689 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2022-09-15 13:58:51,696 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 3 ms. Found 0 JPA repository interfaces.
+2022-09-15 13:58:51,936 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat initialized with port(s): 8080 (http)
+2022-09-15 13:58:51,940 INFO o.a.j.l.DirectJDKLog [main] Initializing ProtocolHandler ["http-nio-8080"]
+2022-09-15 13:58:51,941 INFO o.a.j.l.DirectJDKLog [main] Starting service [Tomcat]
+2022-09-15 13:58:51,941 INFO o.a.j.l.DirectJDKLog [main] Starting Servlet engine: [Apache Tomcat/9.0.62]
+2022-09-15 13:58:51,991 INFO o.a.j.l.DirectJDKLog [main] Initializing Spring embedded WebApplicationContext
+2022-09-15 13:58:51,992 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [main] Root WebApplicationContext: initialization completed in 801 ms
+2022-09-15 13:58:52,068 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Starting...
+2022-09-15 13:58:52,141 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Start completed.
+2022-09-15 13:58:52,146 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [main] H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:flowable'
+2022-09-15 13:58:52,222 INFO o.h.j.i.u.LogHelper [main] HHH000204: Processing PersistenceUnitInfo [name: default]
+2022-09-15 13:58:52,252 INFO o.h.Version [main] HHH000412: Hibernate ORM core version 5.6.8.Final
+2022-09-15 13:58:52,325 INFO o.h.a.c.r.j.JavaReflectionManager [main] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2022-09-15 13:58:52,379 INFO o.h.d.Dialect [main] HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
+2022-09-15 13:58:52,469 INFO o.h.e.t.j.p.i.JtaPlatformInitiator [main] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2022-09-15 13:58:52,473 INFO o.s.o.j.AbstractEntityManagerFactoryBean [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2022-09-15 13:58:52,620 INFO o.f.s.b.AbstractEngineAutoConfiguration [main] No deployment resources were found for autodeployment
+2022-09-15 13:58:52,657 INFO o.f.s.b.AbstractEngineAutoConfiguration [main] No deployment resources were found for autodeployment
+2022-09-15 13:58:52,671 INFO o.f.s.b.AbstractEngineAutoConfiguration [main] No deployment resources were found for autodeployment
+2022-09-15 13:58:52,792 INFO o.f.s.b.AbstractEngineAutoConfiguration [main] No deployment resources were found for autodeployment
+2022-09-15 13:58:52,798 INFO o.f.c.e.i.AbstractEngineConfiguration [main] Found 7 Engine Configurators in total:
+2022-09-15 13:58:52,798 INFO o.f.c.e.i.AbstractEngineConfiguration [main] class org.flowable.engine.spring.configurator.SpringProcessEngineConfigurator (priority:50000)
+2022-09-15 13:58:52,798 INFO o.f.c.e.i.AbstractEngineConfiguration [main] class org.flowable.eventregistry.spring.configurator.SpringEventRegistryConfigurator (priority:100000)
+2022-09-15 13:58:52,798 INFO o.f.c.e.i.AbstractEngineConfiguration [main] class org.flowable.idm.spring.configurator.SpringIdmEngineConfigurator (priority:150000)
+2022-09-15 13:58:52,798 INFO o.f.c.e.i.AbstractEngineConfiguration [main] class org.flowable.dmn.spring.configurator.SpringDmnEngineConfigurator (priority:200000)
+2022-09-15 13:58:52,798 INFO o.f.c.e.i.AbstractEngineConfiguration [main] class org.flowable.form.spring.configurator.SpringFormEngineConfigurator (priority:300000)
+2022-09-15 13:58:52,798 INFO o.f.c.e.i.AbstractEngineConfiguration [main] class org.flowable.content.spring.configurator.SpringContentEngineConfigurator (priority:400000)
+2022-09-15 13:58:52,798 INFO o.f.c.e.i.AbstractEngineConfiguration [main] class org.flowable.cmmn.spring.configurator.SpringCmmnEngineConfigurator (priority:500000)
+2022-09-15 13:58:52,798 INFO o.f.c.e.i.AbstractEngineConfiguration [main] Executing beforeInit() of class org.flowable.engine.spring.configurator.SpringProcessEngineConfigurator (priority:50000)
+2022-09-15 13:58:52,802 INFO o.f.c.e.i.AbstractEngineConfiguration [main] Executing beforeInit() of class org.flowable.eventregistry.spring.configurator.SpringEventRegistryConfigurator (priority:100000)
+2022-09-15 13:58:52,803 INFO o.f.c.e.i.AbstractEngineConfiguration [main] Executing beforeInit() of class org.flowable.idm.spring.configurator.SpringIdmEngineConfigurator (priority:150000)
+2022-09-15 13:58:52,804 INFO o.f.c.e.i.AbstractEngineConfiguration [main] Executing beforeInit() of class org.flowable.dmn.spring.configurator.SpringDmnEngineConfigurator (priority:200000)
+2022-09-15 13:58:52,805 INFO o.f.c.e.i.AbstractEngineConfiguration [main] Executing beforeInit() of class org.flowable.form.spring.configurator.SpringFormEngineConfigurator (priority:300000)
+2022-09-15 13:58:52,806 INFO o.f.c.e.i.AbstractEngineConfiguration [main] Executing beforeInit() of class org.flowable.content.spring.configurator.SpringContentEngineConfigurator (priority:400000)
+2022-09-15 13:58:52,807 INFO o.f.c.e.i.AbstractEngineConfiguration [main] Executing beforeInit() of class org.flowable.cmmn.spring.configurator.SpringCmmnEngineConfigurator (priority:500000)
+2022-09-15 13:58:53,269 INFO o.f.c.e.i.AbstractEngineConfiguration [main] Executing configure() of class org.flowable.engine.spring.configurator.SpringProcessEngineConfigurator (priority:50000)
+2022-09-15 13:58:53,365 INFO o.f.c.e.i.d.AbstractSqlScriptBasedDbSchemaManager [main] performing create on common with resource org/flowable/common/db/create/flowable.h2.create.common.sql
+2022-09-15 13:58:53,371 INFO o.f.c.e.i.d.AbstractSqlScriptBasedDbSchemaManager [main] performing create on identitylink with resource org/flowable/identitylink/service/db/create/flowable.h2.create.identitylink.sql
+2022-09-15 13:58:53,372 INFO o.f.c.e.i.d.AbstractSqlScriptBasedDbSchemaManager [main] performing create on identitylink.history with resource org/flowable/identitylink/service/db/create/flowable.h2.create.identitylink.history.sql
+2022-09-15 13:58:53,375 INFO o.f.c.e.i.d.AbstractSqlScriptBasedDbSchemaManager [main] performing create on entitylink with resource org/flowable/entitylink/service/db/create/flowable.h2.create.entitylink.sql
+2022-09-15 13:58:53,376 INFO o.f.c.e.i.d.AbstractSqlScriptBasedDbSchemaManager [main] performing create on entitylink.history with resource org/flowable/entitylink/service/db/create/flowable.h2.create.entitylink.history.sql
+2022-09-15 13:58:53,378 INFO o.f.c.e.i.d.AbstractSqlScriptBasedDbSchemaManager [main] performing create on eventsubscription with resource org/flowable/eventsubscription/service/db/create/flowable.h2.create.eventsubscription.sql
+2022-09-15 13:58:53,380 INFO o.f.c.e.i.d.AbstractSqlScriptBasedDbSchemaManager [main] performing create on task with resource org/flowable/task/service/db/create/flowable.h2.create.task.sql
+2022-09-15 13:58:53,382 INFO o.f.c.e.i.d.AbstractSqlScriptBasedDbSchemaManager [main] performing create on task.history with resource org/flowable/task/service/db/create/flowable.h2.create.task.history.sql
+2022-09-15 13:58:53,386 INFO o.f.c.e.i.d.AbstractSqlScriptBasedDbSchemaManager [main] performing create on variable with resource org/flowable/variable/service/db/create/flowable.h2.create.variable.sql
+2022-09-15 13:58:53,391 INFO o.f.c.e.i.d.AbstractSqlScriptBasedDbSchemaManager [main] performing create on variable.history with resource org/flowable/variable/service/db/create/flowable.h2.create.variable.history.sql
+2022-09-15 13:58:53,393 INFO o.f.c.e.i.d.AbstractSqlScriptBasedDbSchemaManager [main] performing create on job with resource org/flowable/job/service/db/create/flowable.h2.create.job.sql
+2022-09-15 13:58:53,407 INFO o.f.c.e.i.d.AbstractSqlScriptBasedDbSchemaManager [main] performing create on batch with resource org/flowable/batch/service/db/create/flowable.h2.create.batch.sql
+2022-09-15 13:58:53,408 INFO o.f.c.e.i.d.AbstractSqlScriptBasedDbSchemaManager [main] performing create on engine with resource org/flowable/db/create/flowable.h2.create.engine.sql
+2022-09-15 13:58:53,426 INFO o.f.c.e.i.d.AbstractSqlScriptBasedDbSchemaManager [main] performing create on history with resource org/flowable/db/create/flowable.h2.create.history.sql
+2022-09-15 13:58:53,430 INFO o.f.e.i.ProcessEngineImpl [main] ProcessEngine default created
+2022-09-15 13:58:53,464 INFO o.f.e.i.c.ValidateV5EntitiesCmd [main] Total of v5 deployments found: 0
+2022-09-15 13:58:53,466 INFO o.f.c.e.i.AbstractEngineConfiguration [main] Executing configure() of class org.flowable.eventregistry.spring.configurator.SpringEventRegistryConfigurator (priority:100000)
+2022-09-15 13:58:53,571 INFO l.l.c.JavaLogger [main] Set default schema name to PUBLIC
+2022-09-15 13:58:53,630 INFO l.l.c.JavaLogger [main] Successfully acquired change log lock
+2022-09-15 13:58:53,743 INFO l.l.c.JavaLogger [main] Creating database history table with name: PUBLIC.FLW_EV_DATABASECHANGELOG
+2022-09-15 13:58:53,744 INFO l.l.c.JavaLogger [main] Reading from PUBLIC.FLW_EV_DATABASECHANGELOG
+2022-09-15 13:58:53,798 INFO l.l.c.JavaLogger [main] Table FLW_EVENT_DEPLOYMENT created
+2022-09-15 13:58:53,798 INFO l.l.c.JavaLogger [main] Table FLW_EVENT_RESOURCE created
+2022-09-15 13:58:53,799 INFO l.l.c.JavaLogger [main] Table FLW_EVENT_DEFINITION created
+2022-09-15 13:58:53,800 INFO l.l.c.JavaLogger [main] Index ACT_IDX_EVENT_DEF_UNIQ created
+2022-09-15 13:58:53,801 INFO l.l.c.JavaLogger [main] Table FLW_CHANNEL_DEFINITION created
+2022-09-15 13:58:53,801 INFO l.l.c.JavaLogger [main] Index ACT_IDX_CHANNEL_DEF_UNIQ created
+2022-09-15 13:58:53,802 INFO l.l.c.JavaLogger [main] ChangeSet org/flowable/eventregistry/db/liquibase/flowable-eventregistry-db-changelog.xml::1::flowable ran successfully in 5ms
+2022-09-15 13:58:53,809 INFO l.l.c.JavaLogger [main] Columns TYPE_(varchar(255)) added to FLW_CHANNEL_DEFINITION
+2022-09-15 13:58:53,811 INFO l.l.c.JavaLogger [main] Columns IMPLEMENTATION_(varchar(255)) added to FLW_CHANNEL_DEFINITION
+2022-09-15 13:58:53,811 INFO l.l.c.JavaLogger [main] ChangeSet org/flowable/eventregistry/db/liquibase/flowable-eventregistry-db-changelog.xml::2::flowable ran successfully in 6ms
+2022-09-15 13:58:53,815 INFO l.l.c.JavaLogger [main] Set Channel Definition type and implementation columns
+2022-09-15 13:58:53,816 INFO l.l.c.JavaLogger [main] ChangeSet org/flowable/eventregistry/db/liquibase/flowable-eventregistry-db-changelog.xml::3::flowable ran successfully in 4ms
+2022-09-15 13:58:53,817 INFO l.l.c.JavaLogger [main] Successfully released change log lock
+2022-09-15 13:58:53,817 INFO o.f.e.i.EventRegistryEngineImpl [main] EventRegistryEngine default created
+2022-09-15 13:58:53,818 INFO o.f.c.e.i.AbstractEngineConfiguration [main] Executing configure() of class org.flowable.idm.spring.configurator.SpringIdmEngineConfigurator (priority:150000)
+2022-09-15 13:58:53,824 INFO o.f.c.e.i.d.AbstractSqlScriptBasedDbSchemaManager [main] performing create on identity with resource org/flowable/idm/db/create/flowable.h2.create.identity.sql
+2022-09-15 13:58:53,827 INFO o.f.i.e.i.IdmEngineImpl [main] IdmEngine default created
+2022-09-15 13:58:53,828 INFO o.f.c.e.i.AbstractEngineConfiguration [main] Executing configure() of class org.flowable.dmn.spring.configurator.SpringDmnEngineConfigurator (priority:200000)
+2022-09-15 13:58:53,838 INFO l.l.c.JavaLogger [main] Set default schema name to PUBLIC
+2022-09-15 13:58:53,840 INFO l.l.c.JavaLogger [main] Successfully acquired change log lock
+2022-09-15 13:58:53,850 INFO l.l.c.JavaLogger [main] Creating database history table with name: PUBLIC.ACT_DMN_DATABASECHANGELOG
+2022-09-15 13:58:53,850 INFO l.l.c.JavaLogger [main] Reading from PUBLIC.ACT_DMN_DATABASECHANGELOG
+2022-09-15 13:58:53,872 INFO l.l.c.JavaLogger [main] Table ACT_DMN_DEPLOYMENT created
+2022-09-15 13:58:53,873 INFO l.l.c.JavaLogger [main] Table ACT_DMN_DEPLOYMENT_RESOURCE created
+2022-09-15 13:58:53,874 INFO l.l.c.JavaLogger [main] Table ACT_DMN_DECISION_TABLE created
+2022-09-15 13:58:53,874 INFO l.l.c.JavaLogger [main] ChangeSet org/flowable/dmn/db/liquibase/flowable-dmn-db-changelog.xml::1::activiti ran successfully in 3ms
+2022-09-15 13:58:53,875 INFO l.l.c.JavaLogger [main] Table ACT_DMN_HI_DECISION_EXECUTION created
+2022-09-15 13:58:53,876 INFO l.l.c.JavaLogger [main] ChangeSet org/flowable/dmn/db/liquibase/flowable-dmn-db-changelog.xml::2::flowable ran successfully in 1ms
+2022-09-15 13:58:53,878 INFO l.l.c.JavaLogger [main] Columns SCOPE_TYPE_(varchar(255)) added to ACT_DMN_HI_DECISION_EXECUTION
+2022-09-15 13:58:53,878 INFO l.l.c.JavaLogger [main] ChangeSet org/flowable/dmn/db/liquibase/flowable-dmn-db-changelog.xml::3::flowable ran successfully in 2ms
+2022-09-15 13:58:53,879 INFO l.l.c.JavaLogger [main] Column ACT_DMN_DECISION_TABLE.PARENT_DEPLOYMENT_ID_ dropped
+2022-09-15 13:58:53,879 INFO l.l.c.JavaLogger [main] ChangeSet org/flowable/dmn/db/liquibase/flowable-dmn-db-changelog.xml::4::flowable ran successfully in 1ms
+2022-09-15 13:58:53,880 INFO l.l.c.JavaLogger [main] Index ACT_IDX_DEC_TBL_UNIQ created
+2022-09-15 13:58:53,881 INFO l.l.c.JavaLogger [main] ChangeSet org/flowable/dmn/db/liquibase/flowable-dmn-db-changelog.xml::6::flowable ran successfully in 0ms
+2022-09-15 13:58:53,882 INFO l.l.c.JavaLogger [main] Index ACT_IDX_DEC_TBL_UNIQ dropped from table ACT_DMN_DECISION_TABLE
+2022-09-15 13:58:53,882 INFO l.l.c.JavaLogger [main] Table ACT_DMN_DECISION_TABLE renamed to ACT_DMN_DECISION
+2022-09-15 13:58:53,882 INFO l.l.c.JavaLogger [main] Index ACT_IDX_DMN_DEC_UNIQ created
+2022-09-15 13:58:53,883 INFO l.l.c.JavaLogger [main] ChangeSet org/flowable/dmn/db/liquibase/flowable-dmn-db-changelog.xml::7::flowable ran successfully in 1ms
+2022-09-15 13:58:53,884 INFO l.l.c.JavaLogger [main] Columns DECISION_TYPE_(varchar(255)) added to ACT_DMN_DECISION
+2022-09-15 13:58:53,884 INFO l.l.c.JavaLogger [main] ChangeSet org/flowable/dmn/db/liquibase/flowable-dmn-db-changelog.xml::8::flowable ran successfully in 1ms
+2022-09-15 13:58:53,885 INFO l.l.c.JavaLogger [main] Successfully released change log lock
+2022-09-15 13:58:53,885 INFO o.f.d.e.i.DmnEngineImpl [main] DmnEngine default created
+2022-09-15 13:58:53,887 INFO o.f.c.e.i.AbstractEngineConfiguration [main] Executing configure() of class org.flowable.form.spring.configurator.SpringFormEngineConfigurator (priority:300000)
+2022-09-15 13:58:53,891 INFO l.l.c.JavaLogger [main] Set default schema name to PUBLIC
+2022-09-15 13:58:53,892 INFO l.l.c.JavaLogger [main] Successfully acquired change log lock
+2022-09-15 13:58:53,900 INFO l.l.c.JavaLogger [main] Creating database history table with name: PUBLIC.ACT_FO_DATABASECHANGELOG
+2022-09-15 13:58:53,901 INFO l.l.c.JavaLogger [main] Reading from PUBLIC.ACT_FO_DATABASECHANGELOG
+2022-09-15 13:58:53,906 INFO l.l.c.JavaLogger [main] Table ACT_FO_FORM_DEPLOYMENT created
+2022-09-15 13:58:53,907 INFO l.l.c.JavaLogger [main] Table ACT_FO_FORM_RESOURCE created
+2022-09-15 13:58:53,907 INFO l.l.c.JavaLogger [main] Table ACT_FO_FORM_DEFINITION created
+2022-09-15 13:58:53,908 INFO l.l.c.JavaLogger [main] Table ACT_FO_FORM_INSTANCE created
+2022-09-15 13:58:53,908 INFO l.l.c.JavaLogger [main] ChangeSet org/flowable/form/db/liquibase/flowable-form-db-changelog.xml::1::activiti ran successfully in 3ms
+2022-09-15 13:58:53,911 INFO l.l.c.JavaLogger [main] Columns SCOPE_ID_(varchar(255)),SCOPE_TYPE_(varchar(255)),SCOPE_DEFINITION_ID_(varchar(255)) added to ACT_FO_FORM_INSTANCE
+2022-09-15 13:58:53,911 INFO l.l.c.JavaLogger [main] ChangeSet org/flowable/form/db/liquibase/flowable-form-db-changelog.xml::2::flowable ran successfully in 2ms
+2022-09-15 13:58:53,912 INFO l.l.c.JavaLogger [main] Column ACT_FO_FORM_DEFINITION.PARENT_DEPLOYMENT_ID_ dropped
+2022-09-15 13:58:53,912 INFO l.l.c.JavaLogger [main] ChangeSet org/flowable/form/db/liquibase/flowable-form-db-changelog.xml::3::flowable ran successfully in 1ms
+2022-09-15 13:58:53,913 INFO l.l.c.JavaLogger [main] Index ACT_IDX_FORM_DEF_UNIQ created
+2022-09-15 13:58:53,913 INFO l.l.c.JavaLogger [main] ChangeSet org/flowable/form/db/liquibase/flowable-form-db-changelog.xml::5::flowable ran successfully in 0ms
+2022-09-15 13:58:53,914 INFO l.l.c.JavaLogger [main] Index ACT_IDX_FORM_TASK created
+2022-09-15 13:58:53,914 INFO l.l.c.JavaLogger [main] Index ACT_IDX_FORM_PROC created
+2022-09-15 13:58:53,915 INFO l.l.c.JavaLogger [main] Index ACT_IDX_FORM_SCOPE created
+2022-09-15 13:58:53,915 INFO l.l.c.JavaLogger [main] ChangeSet org/flowable/form/db/liquibase/flowable-form-db-changelog.xml::6::flowable ran successfully in 1ms
+2022-09-15 13:58:53,916 INFO l.l.c.JavaLogger [main] Successfully released change log lock
+2022-09-15 13:58:53,916 INFO o.f.f.e.i.FormEngineImpl [main] FormEngine default created
+2022-09-15 13:58:53,916 INFO o.f.c.e.i.AbstractEngineConfiguration [main] Executing configure() of class org.flowable.content.spring.configurator.SpringContentEngineConfigurator (priority:400000)
+2022-09-15 13:58:53,917 INFO o.f.c.e.ContentEngineConfiguration [main] Content file system root : /Users/mailinenguyen/content
+2022-09-15 13:58:53,920 INFO l.l.c.JavaLogger [main] Set default schema name to PUBLIC
+2022-09-15 13:58:53,922 INFO l.l.c.JavaLogger [main] Successfully acquired change log lock
+2022-09-15 13:58:53,927 INFO l.l.c.JavaLogger [main] Creating database history table with name: PUBLIC.ACT_CO_DATABASECHANGELOG
+2022-09-15 13:58:53,928 INFO l.l.c.JavaLogger [main] Reading from PUBLIC.ACT_CO_DATABASECHANGELOG
+2022-09-15 13:58:53,931 INFO l.l.c.JavaLogger [main] Table ACT_CO_CONTENT_ITEM created
+2022-09-15 13:58:53,931 INFO l.l.c.JavaLogger [main] Index idx_contitem_taskid created
+2022-09-15 13:58:53,932 INFO l.l.c.JavaLogger [main] Index idx_contitem_procid created
+2022-09-15 13:58:53,932 INFO l.l.c.JavaLogger [main] ChangeSet org/flowable/content/db/liquibase/flowable-content-db-changelog.xml::1::activiti ran successfully in 2ms
+2022-09-15 13:58:53,935 INFO l.l.c.JavaLogger [main] Columns SCOPE_ID_(varchar(255)),SCOPE_TYPE_(varchar(255)) added to ACT_CO_CONTENT_ITEM
+2022-09-15 13:58:53,935 INFO l.l.c.JavaLogger [main] Index idx_contitem_scope created
+2022-09-15 13:58:53,935 INFO l.l.c.JavaLogger [main] ChangeSet org/flowable/content/db/liquibase/flowable-content-db-changelog.xml::2::flowable ran successfully in 3ms
+2022-09-15 13:58:53,936 INFO l.l.c.JavaLogger [main] Successfully released change log lock
+2022-09-15 13:58:53,936 INFO o.f.c.e.i.ContentEngineImpl [main] ContentEngine default created
+2022-09-15 13:58:53,936 INFO o.f.c.e.i.AbstractEngineConfiguration [main] Executing configure() of class org.flowable.cmmn.spring.configurator.SpringCmmnEngineConfigurator (priority:500000)
+2022-09-15 13:58:53,972 INFO l.l.c.JavaLogger [main] Set default schema name to PUBLIC
+2022-09-15 13:58:53,974 INFO l.l.c.JavaLogger [main] Successfully acquired change log lock
+2022-09-15 13:58:53,985 INFO l.l.c.JavaLogger [main] Creating database history table with name: PUBLIC.ACT_CMMN_DATABASECHANGELOG
+2022-09-15 13:58:53,985 INFO l.l.c.JavaLogger [main] Reading from PUBLIC.ACT_CMMN_DATABASECHANGELOG
+2022-09-15 13:58:54,019 INFO l.l.c.JavaLogger [main] Table ACT_CMMN_DEPLOYMENT created
+2022-09-15 13:58:54,019 INFO l.l.c.JavaLogger [main] Table ACT_CMMN_DEPLOYMENT_RESOURCE created
+2022-09-15 13:58:54,021 INFO l.l.c.JavaLogger [main] Foreign key constraint added to ACT_CMMN_DEPLOYMENT_RESOURCE (DEPLOYMENT_ID_)
+2022-09-15 13:58:54,021 INFO l.l.c.JavaLogger [main] Index ACT_IDX_CMMN_RSRC_DPL created
+2022-09-15 13:58:54,022 INFO l.l.c.JavaLogger [main] Table ACT_CMMN_CASEDEF created
+2022-09-15 13:58:54,022 INFO l.l.c.JavaLogger [main] Foreign key constraint added to ACT_CMMN_CASEDEF (DEPLOYMENT_ID_)
+2022-09-15 13:58:54,023 INFO l.l.c.JavaLogger [main] Index ACT_IDX_CASE_DEF_DPLY created
+2022-09-15 13:58:54,023 INFO l.l.c.JavaLogger [main] Table ACT_CMMN_RU_CASE_INST created
+2022-09-15 13:58:54,024 INFO l.l.c.JavaLogger [main] Foreign key constraint added to ACT_CMMN_RU_CASE_INST (CASE_DEF_ID_)
+2022-09-15 13:58:54,024 INFO l.l.c.JavaLogger [main] Index ACT_IDX_CASE_INST_CASE_DEF created
+2022-09-15 13:58:54,024 INFO l.l.c.JavaLogger [main] Index ACT_IDX_CASE_INST_PARENT created
+2022-09-15 13:58:54,025 INFO l.l.c.JavaLogger [main] Table ACT_CMMN_RU_PLAN_ITEM_INST created
+2022-09-15 13:58:54,025 INFO l.l.c.JavaLogger [main] Foreign key constraint added to ACT_CMMN_RU_PLAN_ITEM_INST (CASE_DEF_ID_)
+2022-09-15 13:58:54,026 INFO l.l.c.JavaLogger [main] Index ACT_IDX_PLAN_ITEM_CASE_DEF created
+2022-09-15 13:58:54,026 INFO l.l.c.JavaLogger [main] Foreign key constraint added to ACT_CMMN_RU_PLAN_ITEM_INST (CASE_INST_ID_)
+2022-09-15 13:58:54,027 INFO l.l.c.JavaLogger [main] Index ACT_IDX_PLAN_ITEM_CASE_INST created
+2022-09-15 13:58:54,027 INFO l.l.c.JavaLogger [main] Table ACT_CMMN_RU_SENTRY_PART_INST created
+2022-09-15 13:58:54,027 INFO l.l.c.JavaLogger [main] Foreign key constraint added to ACT_CMMN_RU_SENTRY_PART_INST (CASE_DEF_ID_)
+2022-09-15 13:58:54,028 INFO l.l.c.JavaLogger [main] Index ACT_IDX_SENTRY_CASE_DEF created
+2022-09-15 13:58:54,028 INFO l.l.c.JavaLogger [main] Foreign key constraint added to ACT_CMMN_RU_SENTRY_PART_INST (CASE_INST_ID_)
+2022-09-15 13:58:54,029 INFO l.l.c.JavaLogger [main] Index ACT_IDX_SENTRY_CASE_INST created
+2022-09-15 13:58:54,029 INFO l.l.c.JavaLogger [main] Foreign key constraint added to ACT_CMMN_RU_SENTRY_PART_INST (PLAN_ITEM_INST_ID_)
+2022-09-15 13:58:54,030 INFO l.l.c.JavaLogger [main] Index ACT_IDX_SENTRY_PLAN_ITEM created
+2022-09-15 13:58:54,030 INFO l.l.c.JavaLogger [main] Table ACT_CMMN_RU_MIL_INST created
+2022-09-15 13:58:54,031 INFO l.l.c.JavaLogger [main] Foreign key constraint added to ACT_CMMN_RU_MIL_INST (CASE_DEF_ID_)
+2022-09-15 13:58:54,031 INFO l.l.c.JavaLogger [main] Index ACT_IDX_MIL_CASE_DEF created
+2022-09-15 13:58:54,031 INFO l.l.c.JavaLogger [main] Foreign key constraint added to ACT_CMMN_RU_MIL_INST (CASE_INST_ID_)
+2022-09-15 13:58:54,032 INFO l.l.c.JavaLogger [main] Index ACT_IDX_MIL_CASE_INST created
+2022-09-15 13:58:54,032 INFO l.l.c.JavaLogger [main] Table ACT_CMMN_HI_CASE_INST created
+2022-09-15 13:58:54,033 INFO l.l.c.JavaLogger [main] Table ACT_CMMN_HI_MIL_INST created
+2022-09-15 13:58:54,033 INFO l.l.c.JavaLogger [main] ChangeSet org/flowable/cmmn/db/liquibase/flowable-cmmn-db-changelog.xml::1::flowable ran successfully in 15ms
+2022-09-15 13:58:54,038 INFO l.l.c.JavaLogger [main] Columns DGRM_RESOURCE_NAME_(varchar(4000)),HAS_START_FORM_KEY_(boolean) added to ACT_CMMN_CASEDEF
+2022-09-15 13:58:54,039 INFO l.l.c.JavaLogger [main] Columns GENERATED_(boolean) added to ACT_CMMN_DEPLOYMENT_RESOURCE
+2022-09-15 13:58:54,040 INFO l.l.c.JavaLogger [main] Columns LOCK_TIME_(datetime) added to ACT_CMMN_RU_CASE_INST
+2022-09-15 13:58:54,042 INFO l.l.c.JavaLogger [main] Columns ITEM_DEFINITION_ID_(varchar(255)),ITEM_DEFINITION_TYPE_(varchar(255)) added to ACT_CMMN_RU_PLAN_ITEM_INST
+2022-09-15 13:58:54,043 INFO l.l.c.JavaLogger [main] ChangeSet org/flowable/cmmn/db/liquibase/flowable-cmmn-db-changelog.xml::2::flowable ran successfully in 9ms
+2022-09-15 13:58:54,044 INFO l.l.c.JavaLogger [main] Columns IS_COMPLETEABLE_(boolean) added to ACT_CMMN_RU_PLAN_ITEM_INST
+2022-09-15 13:58:54,046 INFO l.l.c.JavaLogger [main] Columns IS_COMPLETEABLE_(boolean) added to ACT_CMMN_RU_CASE_INST
+2022-09-15 13:58:54,047 INFO l.l.c.JavaLogger [main] Index ACT_IDX_PLAN_ITEM_STAGE_INST created
+2022-09-15 13:58:54,048 INFO l.l.c.JavaLogger [main] Columns IS_COUNT_ENABLED_(boolean) added to ACT_CMMN_RU_PLAN_ITEM_INST
+2022-09-15 13:58:54,049 INFO l.l.c.JavaLogger [main] Columns VAR_COUNT_(integer) added to ACT_CMMN_RU_PLAN_ITEM_INST
+2022-09-15 13:58:54,050 INFO l.l.c.JavaLogger [main] Columns SENTRY_PART_INST_COUNT_(integer) added to ACT_CMMN_RU_PLAN_ITEM_INST
+2022-09-15 13:58:54,051 INFO l.l.c.JavaLogger [main] ChangeSet org/flowable/cmmn/db/liquibase/flowable-cmmn-db-changelog.xml::3::flowable ran successfully in 7ms
+2022-09-15 13:58:54,052 INFO l.l.c.JavaLogger [main] Table ACT_CMMN_HI_PLAN_ITEM_INST created
+2022-09-15 13:58:54,053 INFO l.l.c.JavaLogger [main] Columns TENANT_ID_(varchar(255)) added to ACT_CMMN_RU_MIL_INST
+2022-09-15 13:58:54,054 INFO l.l.c.JavaLogger [main] Columns TENANT_ID_(varchar(255)) added to ACT_CMMN_HI_MIL_INST
+2022-09-15 13:58:54,054 INFO l.l.c.JavaLogger [main] ChangeSet org/flowable/cmmn/db/liquibase/flowable-cmmn-db-changelog.xml::4::flowable ran successfully in 3ms
+2022-09-15 13:58:54,055 INFO l.l.c.JavaLogger [main] Index ACT_IDX_CASE_DEF_UNIQ created
+2022-09-15 13:58:54,055 INFO l.l.c.JavaLogger [main] ChangeSet org/flowable/cmmn/db/liquibase/flowable-cmmn-db-changelog.xml::6::flowable ran successfully in 1ms
+2022-09-15 13:58:54,056 INFO l.l.c.JavaLogger [main] Column ACT_CMMN_RU_PLAN_ITEM_INST.START_TIME_ renamed to CREATE_TIME_
+2022-09-15 13:58:54,056 INFO l.l.c.JavaLogger [main] Column ACT_CMMN_HI_PLAN_ITEM_INST.CREATED_TIME_ renamed to CREATE_TIME_
+2022-09-15 13:58:54,070 INFO l.l.c.JavaLogger [main] Columns LAST_AVAILABLE_TIME_(datetime(3)),LAST_ENABLED_TIME_(datetime(3)),LAST_DISABLED_TIME_(datetime(3)),LAST_STARTED_TIME_(datetime(3)),LAST_SUSPENDED_TIME_(datetime(3)),COMPLETED_TIME_(datetime(3)),OCCURRED_TIME_(datetime(3)),TERMINATED_TIME_(datetime(3)),EXIT_TIME_(datetime(3)),ENDED_TIME_(datetime(3)),ENTRY_CRITERION_ID_(varchar(255)),EXIT_CRITERION_ID_(varchar(255)) added to ACT_CMMN_RU_PLAN_ITEM_INST
+2022-09-15 13:58:54,071 INFO l.l.c.JavaLogger [main] Columns ENTRY_CRITERION_ID_(varchar(255)),EXIT_CRITERION_ID_(varchar(255)) added to ACT_CMMN_HI_PLAN_ITEM_INST
+2022-09-15 13:58:54,072 INFO l.l.c.JavaLogger [main] ChangeSet org/flowable/cmmn/db/liquibase/flowable-cmmn-db-changelog.xml::7::flowable ran successfully in 17ms
+2022-09-15 13:58:54,073 INFO l.l.c.JavaLogger [main] Columns SHOW_IN_OVERVIEW_(boolean) added to ACT_CMMN_HI_PLAN_ITEM_INST
+2022-09-15 13:58:54,073 INFO l.l.c.JavaLogger [main] ChangeSet org/flowable/cmmn/db/liquibase/flowable-cmmn-db-changelog.xml::8::flowable ran successfully in 1ms
+2022-09-15 13:58:54,075 INFO l.l.c.JavaLogger [main] Columns EXTRA_VALUE_(varchar(255)) added to ACT_CMMN_RU_PLAN_ITEM_INST
+2022-09-15 13:58:54,075 INFO l.l.c.JavaLogger [main] Columns EXTRA_VALUE_(varchar(255)) added to ACT_CMMN_HI_PLAN_ITEM_INST
+2022-09-15 13:58:54,076 INFO l.l.c.JavaLogger [main] ChangeSet org/flowable/cmmn/db/liquibase/flowable-cmmn-db-changelog.xml::9::flowable ran successfully in 2ms
+2022-09-15 13:58:54,077 INFO l.l.c.JavaLogger [main] Columns REFERENCE_ID_(varchar(255)) added to ACT_CMMN_RU_CASE_INST
+2022-09-15 13:58:54,078 INFO l.l.c.JavaLogger [main] Columns REFERENCE_TYPE_(varchar(255)) added to ACT_CMMN_RU_CASE_INST
+2022-09-15 13:58:54,079 INFO l.l.c.JavaLogger [main] Index ACT_IDX_CASE_INST_REF_ID_ created
+2022-09-15 13:58:54,079 INFO l.l.c.JavaLogger [main] Columns REFERENCE_ID_(varchar(255)) added to ACT_CMMN_HI_CASE_INST
+2022-09-15 13:58:54,080 INFO l.l.c.JavaLogger [main] Columns REFERENCE_TYPE_(varchar(255)) added to ACT_CMMN_HI_CASE_INST
+2022-09-15 13:58:54,080 INFO l.l.c.JavaLogger [main] ChangeSet org/flowable/cmmn/db/liquibase/flowable-cmmn-db-changelog.xml::10::flowable ran successfully in 4ms
+2022-09-15 13:58:54,082 INFO l.l.c.JavaLogger [main] Columns DERIVED_CASE_DEF_ID_(varchar(255)) added to ACT_CMMN_RU_PLAN_ITEM_INST
+2022-09-15 13:58:54,083 INFO l.l.c.JavaLogger [main] Columns DERIVED_CASE_DEF_ID_(varchar(255)) added to ACT_CMMN_HI_PLAN_ITEM_INST
+2022-09-15 13:58:54,083 INFO l.l.c.JavaLogger [main] ChangeSet org/flowable/cmmn/db/liquibase/flowable-cmmn-db-changelog.xml::11::flowable ran successfully in 2ms
+2022-09-15 13:58:54,085 INFO l.l.c.JavaLogger [main] Columns LOCK_OWNER_(varchar(255)) added to ACT_CMMN_RU_CASE_INST
+2022-09-15 13:58:54,085 INFO l.l.c.JavaLogger [main] ChangeSet org/flowable/cmmn/db/liquibase/flowable-cmmn-db-changelog.xml::12::flowable ran successfully in 1ms
+2022-09-15 13:58:54,087 INFO l.l.c.JavaLogger [main] Columns LAST_UNAVAILABLE_TIME_(datetime(3)) added to ACT_CMMN_RU_PLAN_ITEM_INST
+2022-09-15 13:58:54,087 INFO l.l.c.JavaLogger [main] Columns LAST_UNAVAILABLE_TIME_(datetime(3)) added to ACT_CMMN_HI_PLAN_ITEM_INST
+2022-09-15 13:58:54,088 INFO l.l.c.JavaLogger [main] ChangeSet org/flowable/cmmn/db/liquibase/flowable-cmmn-db-changelog.xml::13::flowable ran successfully in 3ms
+2022-09-15 13:58:54,091 INFO l.l.c.JavaLogger [main] Columns LAST_REACTIVATION_TIME_(datetime(3)),LAST_REACTIVATION_USER_ID_(varchar(255)) added to ACT_CMMN_RU_CASE_INST
+2022-09-15 13:58:54,092 INFO l.l.c.JavaLogger [main] Columns LAST_REACTIVATION_TIME_(datetime(3)),LAST_REACTIVATION_USER_ID_(varchar(255)) added to ACT_CMMN_HI_CASE_INST
+2022-09-15 13:58:54,092 INFO l.l.c.JavaLogger [main] ChangeSet org/flowable/cmmn/db/liquibase/flowable-cmmn-db-changelog.xml::14::flowable ran successfully in 4ms
+2022-09-15 13:58:54,094 INFO l.l.c.JavaLogger [main] Columns BUSINESS_STATUS_(varchar(255)) added to ACT_CMMN_RU_CASE_INST
+2022-09-15 13:58:54,095 INFO l.l.c.JavaLogger [main] Columns BUSINESS_STATUS_(varchar(255)) added to ACT_CMMN_HI_CASE_INST
+2022-09-15 13:58:54,095 INFO l.l.c.JavaLogger [main] ChangeSet org/flowable/cmmn/db/liquibase/flowable-cmmn-db-changelog.xml::16::flowable ran successfully in 2ms
+2022-09-15 13:58:54,101 INFO l.l.c.JavaLogger [main] Successfully released change log lock
+2022-09-15 13:58:54,102 INFO o.f.c.e.i.CmmnEngineImpl [main] CmmnEngine default created
+2022-09-15 13:58:54,106 INFO l.l.c.JavaLogger [main] Set default schema name to PUBLIC
+2022-09-15 13:58:54,107 INFO l.l.c.JavaLogger [main] Successfully acquired change log lock
+2022-09-15 13:58:54,113 INFO l.l.c.JavaLogger [main] Creating database history table with name: PUBLIC.ACT_APP_DATABASECHANGELOG
+2022-09-15 13:58:54,113 INFO l.l.c.JavaLogger [main] Reading from PUBLIC.ACT_APP_DATABASECHANGELOG
+2022-09-15 13:58:54,116 INFO l.l.c.JavaLogger [main] Table ACT_APP_DEPLOYMENT created
+2022-09-15 13:58:54,117 INFO l.l.c.JavaLogger [main] Table ACT_APP_DEPLOYMENT_RESOURCE created
+2022-09-15 13:58:54,117 INFO l.l.c.JavaLogger [main] Foreign key constraint added to ACT_APP_DEPLOYMENT_RESOURCE (DEPLOYMENT_ID_)
+2022-09-15 13:58:54,117 INFO l.l.c.JavaLogger [main] Index ACT_IDX_APP_RSRC_DPL created
+2022-09-15 13:58:54,118 INFO l.l.c.JavaLogger [main] Table ACT_APP_APPDEF created
+2022-09-15 13:58:54,118 INFO l.l.c.JavaLogger [main] Foreign key constraint added to ACT_APP_APPDEF (DEPLOYMENT_ID_)
+2022-09-15 13:58:54,119 INFO l.l.c.JavaLogger [main] Index ACT_IDX_APP_DEF_DPLY created
+2022-09-15 13:58:54,119 INFO l.l.c.JavaLogger [main] ChangeSet org/flowable/app/db/liquibase/flowable-app-db-changelog.xml::1::flowable ran successfully in 4ms
+2022-09-15 13:58:54,120 INFO l.l.c.JavaLogger [main] Index ACT_IDX_APP_DEF_UNIQ created
+2022-09-15 13:58:54,120 INFO l.l.c.JavaLogger [main] ChangeSet org/flowable/app/db/liquibase/flowable-app-db-changelog.xml::3::flowable ran successfully in 1ms
+2022-09-15 13:58:54,120 INFO l.l.c.JavaLogger [main] Successfully released change log lock
+2022-09-15 13:58:54,120 INFO o.f.a.e.i.AppEngineImpl [main] AppEngine default created
+2022-09-15 13:58:54,180 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2022-09-15 13:58:54,691 INFO o.s.b.a.e.w.EndpointLinksResolver [main] Exposing 14 endpoint(s) beneath base path '/actuator'
+2022-09-15 13:58:54,749 INFO o.f.c.s.CommonAutoDeploymentStrategy [main] Deploying resources [file [/Users/mailinenguyen/ProtoolsDev/Protools-Back-Office/target/classes/eventregistry/eventCatchTest.event], file [/Users/mailinenguyen/ProtoolsDev/Protools-Back-Office/target/classes/eventregistry/receive-message.event], file [/Users/mailinenguyen/ProtoolsDev/Protools-Back-Office/target/classes/eventregistry/send-message.event], file [/Users/mailinenguyen/ProtoolsDev/Protools-Back-Office/target/classes/eventregistry/inbound.channel], file [/Users/mailinenguyen/ProtoolsDev/Protools-Back-Office/target/classes/eventregistry/outbound.channel], file [/Users/mailinenguyen/ProtoolsDev/Protools-Back-Office/target/classes/eventregistry/send-receive-inbound.channel], file [/Users/mailinenguyen/ProtoolsDev/Protools-Back-Office/target/classes/eventregistry/send-receive-outbound.channel]] for engine org.flowable.eventregistry.impl.EventRegistryEngineImpl@39a809db deployment name hint SpringBootAutoDeployment
+2022-09-15 13:58:54,782 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Starting to unregister channel receiveMessageInboundChannel in tenant 
+2022-09-15 13:58:54,782 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Finished unregistering channel receiveMessageInboundChannel in tenant 
+2022-09-15 13:58:54,782 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Starting to register inbound channel receiveMessageInboundChannel in tenant 
+2022-09-15 13:58:54,783 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Registering endpoint SimpleRabbitListenerEndpoint[org.flowable.eventregistry.rabbit.ChannelRabbitListenerEndpointContainer#receiveMessageInboundChannel] queues=[]' | queueNames='[receive-message]' | exclusive='false' | priority='null' | admin='null' | messageListener='org.flowable.eventregistry.spring.rabbit.RabbitChannelMessageListenerAdapter@79414283' with start immediately false
+2022-09-15 13:58:54,790 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Finished registering endpoint SimpleRabbitListenerEndpoint[org.flowable.eventregistry.rabbit.ChannelRabbitListenerEndpointContainer#receiveMessageInboundChannel] queues=[]' | queueNames='[receive-message]' | exclusive='false' | priority='null' | admin='null' | messageListener='org.flowable.eventregistry.spring.rabbit.RabbitChannelMessageListenerAdapter@79414283'
+2022-09-15 13:58:54,790 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Finished registering inbound channel receiveMessageInboundChannel in tenant 
+2022-09-15 13:58:54,791 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Starting to unregister channel testChannel in tenant 
+2022-09-15 13:58:54,791 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Finished unregistering channel testChannel in tenant 
+2022-09-15 13:58:54,791 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Starting to register inbound channel testChannel in tenant 
+2022-09-15 13:58:54,791 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Registering endpoint SimpleRabbitListenerEndpoint[org.flowable.eventregistry.rabbit.ChannelRabbitListenerEndpointContainer#testChannel] queues=[]' | queueNames='[flowable-inbound]' | exclusive='false' | priority='null' | admin='null' | messageListener='org.flowable.eventregistry.spring.rabbit.RabbitChannelMessageListenerAdapter@7ec9780b' with start immediately false
+2022-09-15 13:58:54,791 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Finished registering endpoint SimpleRabbitListenerEndpoint[org.flowable.eventregistry.rabbit.ChannelRabbitListenerEndpointContainer#testChannel] queues=[]' | queueNames='[flowable-inbound]' | exclusive='false' | priority='null' | admin='null' | messageListener='org.flowable.eventregistry.spring.rabbit.RabbitChannelMessageListenerAdapter@7ec9780b'
+2022-09-15 13:58:54,791 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Finished registering inbound channel testChannel in tenant 
+2022-09-15 13:58:54,791 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Starting to unregister channel outboundCustomer in tenant 
+2022-09-15 13:58:54,791 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Finished unregistering channel outboundCustomer in tenant 
+2022-09-15 13:58:54,791 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Starting to register outbound channel outboundCustomer in tenant 
+2022-09-15 13:58:54,792 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Finished registering outbound channel outboundCustomer in tenant 
+2022-09-15 13:58:54,792 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Starting to unregister channel sendMessageOutboundChannel in tenant 
+2022-09-15 13:58:54,792 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Finished unregistering channel sendMessageOutboundChannel in tenant 
+2022-09-15 13:58:54,792 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Starting to register outbound channel sendMessageOutboundChannel in tenant 
+2022-09-15 13:58:54,792 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Finished registering outbound channel sendMessageOutboundChannel in tenant 
+2022-09-15 13:58:54,799 INFO o.f.j.s.i.a.AbstractAsyncExecutor [main] Starting up the async job executor [org.flowable.spring.job.service.SpringAsyncExecutor] for engine cmmn
+2022-09-15 13:58:54,802 INFO o.f.j.s.i.a.ResetExpiredJobsRunnable [Thread-4] starting to reset expired jobs for engine cmmn
+2022-09-15 13:58:54,802 INFO o.f.j.s.i.a.AbstractAsyncExecutor [main] Starting up the async job executor [org.flowable.spring.job.service.SpringAsyncExecutor] for engine bpmn
+2022-09-15 13:58:54,802 INFO o.f.j.s.i.a.AcquireAsyncJobsDueRunnable [Thread-2] starting to acquire async jobs due for engine cmmn
+2022-09-15 13:58:54,802 INFO o.f.j.s.i.a.AcquireTimerJobsRunnable [Thread-3] starting to acquire async jobs due for engine cmmn
+2022-09-15 13:58:54,803 INFO o.f.c.s.CommonAutoDeploymentStrategy [main] Deploying resources [file [/Users/mailinenguyen/ProtoolsDev/Protools-Back-Office/target/classes/processes/EnqueteFamille.bpmn20.xml], file [/Users/mailinenguyen/ProtoolsDev/Protools-Back-Office/target/classes/processes/TestPQVWithMessages.bpmn20.xml], file [/Users/mailinenguyen/ProtoolsDev/Protools-Back-Office/target/classes/processes/TestPQVWoMessages.bpmn20.xml], file [/Users/mailinenguyen/ProtoolsDev/Protools-Back-Office/target/classes/processes/casUsageTest.bpmn20.xml]] for engine org.flowable.engine.impl.ProcessEngineImpl@2a97b4b8 deployment name hint SpringBootAutoDeployment
+2022-09-15 13:58:54,803 INFO o.f.j.s.i.a.AcquireAsyncJobsDueRunnable [Thread-5] starting to acquire async jobs due for engine bpmn
+2022-09-15 13:58:54,803 INFO o.f.j.s.i.a.AcquireTimerJobsRunnable [Thread-6] starting to acquire async jobs due for engine bpmn
+2022-09-15 13:58:54,803 INFO o.f.j.s.i.a.ResetExpiredJobsRunnable [Thread-7] starting to reset expired jobs for engine bpmn
+2022-09-15 13:58:54,871 WARN o.f.e.i.b.p.BpmnParse [main] Following warnings encountered during process validation: [Validation set: 'flowable-executable-process' | Problem: 'flowable-di-does-not-reference-flownode'] : Invalid reference in diagram interchange definition: BDDCampagne does not reference a flow node - [Extra info : id = BDDCampagne |  | activityName = campagne | ] ( line: 48, column: 58)
+[Validation set: 'flowable-executable-process' | Problem: 'flowable-di-does-not-reference-flownode'] : Invalid reference in diagram interchange definition: OperationCampagneData does not reference a flow node - [Extra info : id = OperationCampagneData |  | activityName = operation/campagne | ] ( line: 54, column: 78)
+[Validation set: 'flowable-executable-process' | Problem: 'flowable-exclusive-gateway-seq-flow-without-conditions'] : Exclusive gateway has at least one outgoing sequence flow without a condition (which isn't the default one) - [Extra info : processDefinitionId = EnqueteWebContinue | processDefinitionName = Enquete Web en Continue |  | id = Gateway_1rveezl | ] ( line: 42, column: 44)
+[Validation set: 'flowable-executable-process' | Problem: 'flowable-exclusive-gateway-seq-flow-without-conditions'] : Exclusive gateway has at least one outgoing sequence flow without a condition (which isn't the default one) - [Extra info : processDefinitionId = EnqueteWebContinue | processDefinitionName = Enquete Web en Continue |  | id = Gateway_16p04je | ] ( line: 47, column: 44)
+[Validation set: 'flowable-executable-process' | Problem: 'flowable-exclusive-gateway-seq-flow-without-conditions'] : Exclusive gateway has at least one outgoing sequence flow without a condition (which isn't the default one) - [Extra info : processDefinitionId = EnqueteWebContinue | processDefinitionName = Enquete Web en Continue |  | id = GatewayControlinit | ] ( line: 51, column: 47)
+
+2022-09-15 13:58:54,872 WARN o.f.e.i.b.p.BpmnParseHandlers [main] Could not find matching parse handler for + BDDCampagne this is likely a bug.
+2022-09-15 13:58:54,872 WARN o.f.e.i.b.p.BpmnParseHandlers [main] Could not find matching parse handler for + OperationCampagneData this is likely a bug.
+2022-09-15 13:58:54,873 WARN o.f.e.i.b.p.BpmnParse [main] Invalid reference in diagram interchange definition: BDDCampagne does not reference a flow node
+2022-09-15 13:58:54,873 WARN o.f.e.i.b.p.BpmnParse [main] Invalid reference in diagram interchange definition: OperationCampagneData does not reference a flow node
+2022-09-15 13:58:54,881 WARN o.f.e.i.b.p.BpmnParse [main] Following warnings encountered during process validation: [Validation set: 'flowable-executable-process' | Problem: 'flowable-exclusive-gateway-seq-flow-without-conditions'] : Exclusive gateway has at least one outgoing sequence flow without a condition (which isn't the default one) - [Extra info : processDefinitionId = EnqueteTest | processDefinitionName = Enquête Test |  | id = Gateway_0ptspxv | ] ( line: 38, column: 44)
+[Validation set: 'flowable-executable-process' | Problem: 'flowable-exclusive-gateway-seq-flow-without-conditions'] : Exclusive gateway has at least one outgoing sequence flow without a condition (which isn't the default one) - [Extra info : processDefinitionId = EnqueteTest | processDefinitionName = Enquête Test |  | id = Gateway_0y69ydq | ] ( line: 48, column: 44)
+
+2022-09-15 13:58:55,577 INFO o.a.j.l.DirectJDKLog [main] Starting ProtocolHandler ["http-nio-8080"]
+2022-09-15 13:58:55,588 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat started on port(s): 8080 (http) with context path ''
+2022-09-15 13:58:55,589 INFO o.s.a.r.c.AbstractConnectionFactory [main] Attempting to connect to: [localhost:5672]
+2022-09-15 13:58:55,930 INFO o.s.a.r.c.AbstractConnectionFactory [main] Created new connection: rabbitConnectionFactory#1e489957:0/SimpleConnection@4c082a7d [delegate=amqp://toto@127.0.0.1:5672/, localPort= 62900]
+2022-09-15 13:58:56,412 INFO o.s.b.StartupInfoLogger [main] Started FlowablePocApplication in 5.381 seconds (JVM running for 5.828)
+2022-09-15 13:58:56,416 INFO c.p.f.FlowablePocApplication [main] Application started.
+2022-09-15 13:58:56,417 INFO c.p.f.FlowablePocApplication [main] Processes deployed: 1
+2022-09-15 13:58:56,860 INFO o.a.j.l.DirectJDKLog [RMI TCP Connection(3)-127.0.0.1] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-09-15 13:58:56,860 INFO o.s.w.s.FrameworkServlet [RMI TCP Connection(3)-127.0.0.1] Initializing Servlet 'dispatcherServlet'
+2022-09-15 13:58:56,862 INFO o.s.w.s.FrameworkServlet [RMI TCP Connection(3)-127.0.0.1] Completed initialization in 1 ms
+2022-09-15 13:58:56,866 INFO o.a.j.l.DirectJDKLog [RMI TCP Connection(3)-127.0.0.1] Initializing Spring DispatcherServlet 'Flowable IDM Rest API'
+2022-09-15 13:58:56,867 INFO o.s.w.s.FrameworkServlet [RMI TCP Connection(3)-127.0.0.1] Initializing Servlet 'Flowable IDM Rest API'
+2022-09-15 13:58:56,928 INFO o.s.w.s.FrameworkServlet [RMI TCP Connection(3)-127.0.0.1] Completed initialization in 61 ms
+2022-09-15 13:58:56,929 INFO o.a.j.l.DirectJDKLog [RMI TCP Connection(3)-127.0.0.1] Initializing Spring DispatcherServlet 'Flowable Form Rest API'
+2022-09-15 13:58:56,929 INFO o.s.w.s.FrameworkServlet [RMI TCP Connection(3)-127.0.0.1] Initializing Servlet 'Flowable Form Rest API'
+2022-09-15 13:58:56,967 INFO o.s.w.s.FrameworkServlet [RMI TCP Connection(3)-127.0.0.1] Completed initialization in 38 ms
+2022-09-15 13:58:56,967 INFO o.a.j.l.DirectJDKLog [RMI TCP Connection(3)-127.0.0.1] Initializing Spring DispatcherServlet 'Flowable Event Registry Rest API'
+2022-09-15 13:58:56,967 INFO o.s.w.s.FrameworkServlet [RMI TCP Connection(3)-127.0.0.1] Initializing Servlet 'Flowable Event Registry Rest API'
+2022-09-15 13:58:57,005 INFO o.s.w.s.FrameworkServlet [RMI TCP Connection(3)-127.0.0.1] Completed initialization in 38 ms
+2022-09-15 13:58:57,005 INFO o.a.j.l.DirectJDKLog [RMI TCP Connection(3)-127.0.0.1] Initializing Spring DispatcherServlet 'Flowable DMN Rest API'
+2022-09-15 13:58:57,005 INFO o.s.w.s.FrameworkServlet [RMI TCP Connection(3)-127.0.0.1] Initializing Servlet 'Flowable DMN Rest API'
+2022-09-15 13:58:57,046 INFO o.s.w.s.FrameworkServlet [RMI TCP Connection(3)-127.0.0.1] Completed initialization in 41 ms
+2022-09-15 13:58:57,047 INFO o.a.j.l.DirectJDKLog [RMI TCP Connection(3)-127.0.0.1] Initializing Spring DispatcherServlet 'Flowable Content Rest API'
+2022-09-15 13:58:57,047 INFO o.s.w.s.FrameworkServlet [RMI TCP Connection(3)-127.0.0.1] Initializing Servlet 'Flowable Content Rest API'
+2022-09-15 13:58:57,078 INFO o.s.w.s.FrameworkServlet [RMI TCP Connection(3)-127.0.0.1] Completed initialization in 31 ms
+2022-09-15 13:58:57,079 INFO o.a.j.l.DirectJDKLog [RMI TCP Connection(3)-127.0.0.1] Initializing Spring DispatcherServlet 'Flowable CMMN Rest API'
+2022-09-15 13:58:57,079 INFO o.s.w.s.FrameworkServlet [RMI TCP Connection(3)-127.0.0.1] Initializing Servlet 'Flowable CMMN Rest API'
+2022-09-15 13:58:57,184 INFO o.s.w.s.FrameworkServlet [RMI TCP Connection(3)-127.0.0.1] Completed initialization in 105 ms
+2022-09-15 13:58:57,185 INFO o.a.j.l.DirectJDKLog [RMI TCP Connection(3)-127.0.0.1] Initializing Spring DispatcherServlet 'Flowable App Rest API'
+2022-09-15 13:58:57,185 INFO o.s.w.s.FrameworkServlet [RMI TCP Connection(3)-127.0.0.1] Initializing Servlet 'Flowable App Rest API'
+2022-09-15 13:58:57,217 INFO o.s.w.s.FrameworkServlet [RMI TCP Connection(3)-127.0.0.1] Completed initialization in 32 ms
+2022-09-15 13:58:57,218 INFO o.a.j.l.DirectJDKLog [RMI TCP Connection(3)-127.0.0.1] Initializing Spring DispatcherServlet 'Flowable External Job Rest API'
+2022-09-15 13:58:57,218 INFO o.s.w.s.FrameworkServlet [RMI TCP Connection(3)-127.0.0.1] Initializing Servlet 'Flowable External Job Rest API'
+2022-09-15 13:58:57,249 INFO o.s.w.s.FrameworkServlet [RMI TCP Connection(3)-127.0.0.1] Completed initialization in 31 ms
+2022-09-15 13:58:57,250 INFO o.a.j.l.DirectJDKLog [RMI TCP Connection(3)-127.0.0.1] Initializing Spring DispatcherServlet 'Flowable BPMN Rest API'
+2022-09-15 13:58:57,250 INFO o.s.w.s.FrameworkServlet [RMI TCP Connection(3)-127.0.0.1] Initializing Servlet 'Flowable BPMN Rest API'
+2022-09-15 13:58:57,386 INFO o.s.w.s.FrameworkServlet [RMI TCP Connection(3)-127.0.0.1] Completed initialization in 136 ms
+2022-09-15 14:00:54,550 INFO c.p.f.c.ProcessController [http-nio-8080-exec-10] > Start the process: EnqueteWeb2
+2022-09-15 14:00:54,575 INFO c.p.f.s.WorkflowService [http-nio-8080-exec-10] Process Instance ID : 0d2284a7-34ee-11ed-92fb-5a29bf9cf95d
+2022-09-15 14:00:54,575 INFO c.p.f.s.WorkflowService [http-nio-8080-exec-10] Added businessKey to the process :PQV
+2022-09-15 14:00:54,575 INFO c.p.f.c.ProcessController [http-nio-8080-exec-10] {"businessKey":"PQV","processKey":"EnqueteWeb2","startTime":"Thu Sep 15 14:00:54 CEST 2022","id":"0d2284a7-34ee-11ed-92fb-5a29bf9cf95d"}
