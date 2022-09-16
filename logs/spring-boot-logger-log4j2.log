@@ -244,26 +244,26 @@
 2022-09-16 10:18:54,877 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
 2022-09-16 10:18:55,399 INFO o.s.b.a.e.w.EndpointLinksResolver [main] Exposing 14 endpoint(s) beneath base path '/actuator'
 2022-09-16 10:18:55,458 INFO o.f.c.s.CommonAutoDeploymentStrategy [main] Deploying resources [file [/Users/mailinenguyen/ProtoolsDev/Protools-Back-Office/target/classes/eventregistry/eventCatchTest.event], file [/Users/mailinenguyen/ProtoolsDev/Protools-Back-Office/target/classes/eventregistry/receive-message.event], file [/Users/mailinenguyen/ProtoolsDev/Protools-Back-Office/target/classes/eventregistry/send-message.event], file [/Users/mailinenguyen/ProtoolsDev/Protools-Back-Office/target/classes/eventregistry/inbound.channel], file [/Users/mailinenguyen/ProtoolsDev/Protools-Back-Office/target/classes/eventregistry/outbound.channel], file [/Users/mailinenguyen/ProtoolsDev/Protools-Back-Office/target/classes/eventregistry/send-receive-inbound.channel], file [/Users/mailinenguyen/ProtoolsDev/Protools-Back-Office/target/classes/eventregistry/send-receive-outbound.channel]] for engine org.flowable.eventregistry.impl.EventRegistryEngineImpl@7ceb432c deployment name hint SpringBootAutoDeployment
-2022-09-16 10:18:55,492 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Starting to unregister channel receiveMessageInboundChannel in tenant 
-2022-09-16 10:18:55,492 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Finished unregistering channel receiveMessageInboundChannel in tenant 
-2022-09-16 10:18:55,492 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Starting to register inbound channel receiveMessageInboundChannel in tenant 
+2022-09-16 10:18:55,492 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Starting to unregister channel receiveMessageInboundChannel in tenant
+2022-09-16 10:18:55,492 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Finished unregistering channel receiveMessageInboundChannel in tenant
+2022-09-16 10:18:55,492 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Starting to register inbound channel receiveMessageInboundChannel in tenant
 2022-09-16 10:18:55,494 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Registering endpoint SimpleRabbitListenerEndpoint[org.flowable.eventregistry.rabbit.ChannelRabbitListenerEndpointContainer#receiveMessageInboundChannel] queues=[]' | queueNames='[receive-message]' | exclusive='false' | priority='null' | admin='null' | messageListener='org.flowable.eventregistry.spring.rabbit.RabbitChannelMessageListenerAdapter@689d522e' with start immediately false
 2022-09-16 10:18:55,500 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Finished registering endpoint SimpleRabbitListenerEndpoint[org.flowable.eventregistry.rabbit.ChannelRabbitListenerEndpointContainer#receiveMessageInboundChannel] queues=[]' | queueNames='[receive-message]' | exclusive='false' | priority='null' | admin='null' | messageListener='org.flowable.eventregistry.spring.rabbit.RabbitChannelMessageListenerAdapter@689d522e'
-2022-09-16 10:18:55,500 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Finished registering inbound channel receiveMessageInboundChannel in tenant 
-2022-09-16 10:18:55,501 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Starting to unregister channel testChannel in tenant 
-2022-09-16 10:18:55,501 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Finished unregistering channel testChannel in tenant 
-2022-09-16 10:18:55,501 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Starting to register inbound channel testChannel in tenant 
+2022-09-16 10:18:55,500 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Finished registering inbound channel receiveMessageInboundChannel in tenant
+2022-09-16 10:18:55,501 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Starting to unregister channel testChannel in tenant
+2022-09-16 10:18:55,501 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Finished unregistering channel testChannel in tenant
+2022-09-16 10:18:55,501 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Starting to register inbound channel testChannel in tenant
 2022-09-16 10:18:55,501 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Registering endpoint SimpleRabbitListenerEndpoint[org.flowable.eventregistry.rabbit.ChannelRabbitListenerEndpointContainer#testChannel] queues=[]' | queueNames='[flowable-inbound]' | exclusive='false' | priority='null' | admin='null' | messageListener='org.flowable.eventregistry.spring.rabbit.RabbitChannelMessageListenerAdapter@399faad3' with start immediately false
 2022-09-16 10:18:55,501 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Finished registering endpoint SimpleRabbitListenerEndpoint[org.flowable.eventregistry.rabbit.ChannelRabbitListenerEndpointContainer#testChannel] queues=[]' | queueNames='[flowable-inbound]' | exclusive='false' | priority='null' | admin='null' | messageListener='org.flowable.eventregistry.spring.rabbit.RabbitChannelMessageListenerAdapter@399faad3'
-2022-09-16 10:18:55,501 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Finished registering inbound channel testChannel in tenant 
-2022-09-16 10:18:55,501 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Starting to unregister channel outboundCustomer in tenant 
-2022-09-16 10:18:55,501 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Finished unregistering channel outboundCustomer in tenant 
-2022-09-16 10:18:55,501 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Starting to register outbound channel outboundCustomer in tenant 
-2022-09-16 10:18:55,502 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Finished registering outbound channel outboundCustomer in tenant 
-2022-09-16 10:18:55,502 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Starting to unregister channel sendMessageOutboundChannel in tenant 
-2022-09-16 10:18:55,502 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Finished unregistering channel sendMessageOutboundChannel in tenant 
-2022-09-16 10:18:55,502 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Starting to register outbound channel sendMessageOutboundChannel in tenant 
-2022-09-16 10:18:55,502 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Finished registering outbound channel sendMessageOutboundChannel in tenant 
+2022-09-16 10:18:55,501 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Finished registering inbound channel testChannel in tenant
+2022-09-16 10:18:55,501 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Starting to unregister channel outboundCustomer in tenant
+2022-09-16 10:18:55,501 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Finished unregistering channel outboundCustomer in tenant
+2022-09-16 10:18:55,501 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Starting to register outbound channel outboundCustomer in tenant
+2022-09-16 10:18:55,502 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Finished registering outbound channel outboundCustomer in tenant
+2022-09-16 10:18:55,502 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Starting to unregister channel sendMessageOutboundChannel in tenant
+2022-09-16 10:18:55,502 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Finished unregistering channel sendMessageOutboundChannel in tenant
+2022-09-16 10:18:55,502 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Starting to register outbound channel sendMessageOutboundChannel in tenant
+2022-09-16 10:18:55,502 INFO o.f.e.s.r.RabbitChannelDefinitionProcessor [main] Finished registering outbound channel sendMessageOutboundChannel in tenant
 2022-09-16 10:18:55,508 INFO o.f.j.s.i.a.AbstractAsyncExecutor [main] Starting up the async job executor [org.flowable.spring.job.service.SpringAsyncExecutor] for engine cmmn
 2022-09-16 10:18:55,514 INFO o.f.j.s.i.a.ResetExpiredJobsRunnable [Thread-4] starting to reset expired jobs for engine cmmn
 2022-09-16 10:18:55,514 INFO o.f.j.s.i.a.AcquireAsyncJobsDueRunnable [Thread-2] starting to acquire async jobs due for engine cmmn
@@ -342,8 +342,8 @@ org.flowable.common.engine.api.FlowableObjectNotFoundException: No process defin
 	at org.flowable.common.engine.impl.cfg.CommandExecutorImpl.execute(CommandExecutorImpl.java:51) ~[flowable-engine-common-6.7.2.jar:6.7.2]
 	at org.flowable.engine.impl.RuntimeServiceImpl.startProcessInstance(RuntimeServiceImpl.java:748) ~[flowable-engine-6.7.2.jar:6.7.2]
 	at org.flowable.engine.impl.runtime.ProcessInstanceBuilderImpl.start(ProcessInstanceBuilderImpl.java:244) ~[flowable-engine-6.7.2.jar:6.7.2]
-	at com.protools.flowableDemo.services.WorkflowService.startProcess(WorkflowService.java:36) ~[classes/:?]
-	at com.protools.flowableDemo.services.WorkflowService$$FastClassBySpringCGLIB$$91a8ecb6.invoke(<generated>) ~[classes/:?]
+	at com.protools.flowableDemo.services.EngineService.WorkflowService.startProcess(WorkflowService.java:36) ~[classes/:?]
+	at com.protools.flowableDemo.services.EngineService.WorkflowService$$FastClassBySpringCGLIB$$91a8ecb6.invoke(<generated>) ~[classes/:?]
 	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218) ~[spring-core-5.3.19.jar:5.3.19]
 	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:793) ~[spring-aop-5.3.19.jar:5.3.19]
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163) ~[spring-aop-5.3.19.jar:5.3.19]
@@ -354,7 +354,7 @@ org.flowable.common.engine.api.FlowableObjectNotFoundException: No process defin
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186) ~[spring-aop-5.3.19.jar:5.3.19]
 	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:763) ~[spring-aop-5.3.19.jar:5.3.19]
 	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:708) ~[spring-aop-5.3.19.jar:5.3.19]
-	at com.protools.flowableDemo.services.WorkflowService$$EnhancerBySpringCGLIB$$a79200ae.startProcess(<generated>) ~[classes/:?]
+	at com.protools.flowableDemo.services.EngineService.WorkflowService$$EnhancerBySpringCGLIB$$a79200ae.startProcess(<generated>) ~[classes/:?]
 	at com.protools.flowableDemo.controllers.ProcessController.startProcessInstance(ProcessController.java:24) ~[classes/:?]
 	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
 	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[?:?]
