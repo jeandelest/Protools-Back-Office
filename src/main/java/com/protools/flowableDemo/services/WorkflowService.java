@@ -2,6 +2,8 @@ package com.protools.flowableDemo.services;
 
 
 import org.flowable.engine.*;
+import org.flowable.engine.repository.Deployment;
+import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.engine.runtime.ProcessInstanceBuilder;
 import org.flowable.task.api.Task;
@@ -20,6 +22,9 @@ public class WorkflowService {
     private Logger logger =LogManager.getLogger(WorkflowService.class);
     @Autowired
     private RuntimeService runtimeService;
+
+    @Autowired
+    private RepositoryService repositoryService;
 
     @Autowired
     private TaskService taskService;
@@ -96,5 +101,19 @@ public class WorkflowService {
     @Transactional
     public void cancelProcessWithReason( String ProcessID, String reason) {
         runtimeService.deleteProcessInstance(ProcessID, reason);
+    }
+
+    @Transactional
+    public void deployBpmnProcess(){
+        //TODO : Remplacer avec un fichier BPMN externe
+        Deployment deployment = repositoryService.createDeployment()
+                .addClasspathResource("testProcessRandomDir/testBPMN.bpmn20.xml")
+                .deploy();
+
+        ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
+                .deploymentId(deployment.getId())
+                .singleResult();
+
+        logger.info("Deployed new process definition : " + processDefinition.getName());
     }
 }

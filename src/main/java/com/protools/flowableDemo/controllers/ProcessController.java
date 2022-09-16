@@ -73,5 +73,12 @@ public class ProcessController {
         workflowService.cancelProcessWithReason(ProcessID,reason);
     }
 
+    @CrossOrigin
+    @Operation(summary = "Add BPMN file to deployment")
+    @PostMapping("/addBPMN")
+    public void deployBPMN() {
+        logger.info(">>> Adding BPMN to deployment <<<");
+        workflowService.deployBpmnProcess();
+    }
 
 }
