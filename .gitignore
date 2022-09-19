@@ -35,3 +35,5 @@ build/
 .properties
 .DS_Store
 .env
+
+logs/

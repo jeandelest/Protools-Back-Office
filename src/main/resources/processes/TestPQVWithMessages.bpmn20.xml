@@ -14,9 +14,11 @@
       <serviceTask id="AttenteMessageTrigger" name="Send message" flowable:type="send-event">
         <extensionElements>
           <flowable:eventType><![CDATA[sendMessageEventKey]]></flowable:eventType>
+          <flowable:triggerEventType><![CDATA[receiveMessageEventKey]]></flowable:triggerEventType>
+          <flowable:eventInParameter sourceExpression="${idSurvey}" target="id" targetType="string"></flowable:eventInParameter>
           <flowable:eventOutParameter source="id" sourceType="string" target="id"></flowable:eventOutParameter>
+          <flowable:triggerEventCorrelationParameter xmlns:flowable="http://flowable.org/bpmn" name="id" type="string" value="${idSurvey}"></flowable:triggerEventCorrelationParameter>
           <flowable:channelKey xmlns:flowable="http://flowable.org/bpmn"><![CDATA[sendMessageOutboundChannel]]></flowable:channelKey>
-          <flowable:triggerEventCorrelationParameter xmlns:flowable="http://flowable.org/bpmn" name="id" type="null" value="${sampleSize}"></flowable:triggerEventCorrelationParameter>
         </extensionElements>
       </serviceTask>
       <sequenceFlow id="Flow_0c4616o" sourceRef="Event_0t18ur8" targetRef="Activity_00rnxz8"></sequenceFlow>
@@ -92,7 +94,7 @@
       <bpmndi:BPMNShape bpmnElement="Event_07ga0xu" id="BPMNShape_Event_07ga0xu">
         <omgdc:Bounds height="30.0" width="30.0" x="195.0" y="429.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="SubProcessAddToSurvey" id="BPMNShape_SubProcessAddToSurvey">
+      <bpmndi:BPMNShape bpmnElement="SubProcessAddToSurvey" id="BPMNShape_SubProcessAddToSurvey" isExpanded="true">
         <omgdc:Bounds height="350.0" width="652.0" x="840.0" y="270.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="Event_0t18ur8" id="BPMNShape_Event_0t18ur8">
@@ -131,7 +133,7 @@
       <bpmndi:BPMNShape bpmnElement="RecupEch" id="BPMNShape_RecupEch">
         <omgdc:Bounds height="80.0" width="100.0" x="573.0" y="404.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="ErrorEventSubProcessError" id="BPMNShape_ErrorEventSubProcessError">
+      <bpmndi:BPMNShape bpmnElement="ErrorEventSubProcessError" id="BPMNShape_ErrorEventSubProcessError" isExpanded="true">
         <omgdc:Bounds height="168.0" width="387.0" x="945.0" y="657.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="StartEventError" id="BPMNShape_StartEventError">

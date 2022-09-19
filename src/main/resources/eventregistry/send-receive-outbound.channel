@@ -6,6 +6,5 @@
   "channelType": "outbound",
   "type": "rabbit",
   "serializerType": "json",
-  "routingKey": "send-message",
-  "exchange": "amq.topic"
+  "routingKey": "send-message"
 }
