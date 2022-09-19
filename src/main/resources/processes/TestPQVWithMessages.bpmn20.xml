@@ -11,7 +11,7 @@
       <startEvent id="Event_0t18ur8" name="StartSubprocess" flowable:formFieldValidation="true"></startEvent>
       <serviceTask id="Activity_00rnxz8" name="Logger info" flowable:delegateExpression="${createAccount}"></serviceTask>
       <endEvent id="EndSubProcessAddSurvey" name="End subProcess"></endEvent>
-      <serviceTask id="AttenteMessageTrigger" name="Send message" flowable:type="send-event">
+      <serviceTask id="AttenteMessageTrigger" name="Send message" flowable:type="send-event" flowable:triggerable="true">
         <extensionElements>
           <flowable:eventType><![CDATA[sendMessageEventKey]]></flowable:eventType>
           <flowable:triggerEventType><![CDATA[receiveMessageEventKey]]></flowable:triggerEventType>
