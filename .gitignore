@@ -39,3 +39,4 @@ build/
 logs/
 lib/
 glowroot.jar
+kubernetes/
