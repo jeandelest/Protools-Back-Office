@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: protools-back-office
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: protools-back-office
+  template:
+    metadata:
+      labels:
+        app: protools-back-office
+    spec:
+      containers:
+        - name: protools-back-office
+          image: inseefr/protools-back-office:experimental
+          imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: "6.2"
+              memory: "12.2Gi"
+            requests:
+              cpu: "4"
+              memory: "8Gi"
+          env:
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: protools-database-postgresql
+                  key: postgres-password
+            - name: SPRING_DATASOURCE_USERNAME
+              value: postgres
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://protools-database-postgresql/
+            - name: SPRING_RABBITMQ_HOST
+              value: "protools-rabbitmq"
+            - name: SPRING_RABBITMQ_PORT
+              value: "5672"
+            - name: SPRING_RABBITMQ_VIRTUEL_HOST
+              value: "/"
+            - name: SPRING_RABBITMQ_USERNAME
+              value: "user"
+            - name: SPRING_LOGGING_LEVEL_ROOT
+              value: "DEBUG"
+            - name: SPRING_RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: protools-rabbitmq
+                  key: rabbitmq-password
+            - name: RABBITMQ_LISTENER_SIMPLE_ACKNOWLEDGE
+              value: "true"
