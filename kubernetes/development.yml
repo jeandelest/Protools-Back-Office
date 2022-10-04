@@ -16,13 +16,6 @@ spec:
         - name: protools-back-office
           image: inseefr/protools-back-office:experimental
           imagePullPolicy: Always
-          resources:
-            limits:
-              cpu: "6.2"
-              memory: "12.2Gi"
-            requests:
-              cpu: "4"
-              memory: "8Gi"
           env:
             - name: SPRING_DATASOURCE_PASSWORD
               valueFrom:
