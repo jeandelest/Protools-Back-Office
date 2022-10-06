@@ -7,8 +7,8 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 
 @Component
-public class sendGlobalErrorMessage implements JavaDelegate {
-    private Logger logger =LogManager.getLogger(com.protools.flowableDemo.services.FamillePOCService.sendGlobalErrorMessage.class);
+public class SendGlobalErrorMessage implements JavaDelegate {
+    private Logger logger =LogManager.getLogger(SendGlobalErrorMessage.class);
     @Override
     public void execute(DelegateExecution delegateExecution) {
         // Contenu à analyser

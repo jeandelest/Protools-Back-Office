@@ -21,8 +21,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 @Component
-public class getSampleFamille implements JavaDelegate {
-    private Logger logger =LogManager.getLogger(com.protools.flowableDemo.services.FamillePOCService.getSampleFamille.class);
+public class GetSampleFamille implements JavaDelegate {
+    private Logger logger =LogManager.getLogger(GetSampleFamille.class);
 
     @Override
     public void execute(DelegateExecution delegateExecution) {
