@@ -3,7 +3,7 @@
   <process id="EnqueteWeb2" name="Enquête web continue 2" isExecutable="true">
     <documentation>Enquête web source échantillon externe avec message (base Qualité Volaille)</documentation>
     <startEvent id="Event_07ga0xu" flowable:formFieldValidation="true"></startEvent>
-    <subProcess id="SubProcessAddToSurvey" name="SubProcess Add to Survey" flowable:async="true" flowable:exclusive="true">
+    <subProcess id="SubProcessAddToSurvey" name="SubProcess Add to Survey" flowable:async="true" flowable:exclusive="false">
       <documentation>SubProcess Add to Survey</documentation>
       <multiInstanceLoopCharacteristics isSequential="false" flowable:collection="sample" flowable:elementVariable="unit">
         <extensionElements></extensionElements>
