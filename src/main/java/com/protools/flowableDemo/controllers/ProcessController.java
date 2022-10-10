@@ -80,4 +80,12 @@ public class ProcessController {
         workflowService.deployBpmnProcess();
     }
 
+    @CrossOrigin
+    @Operation(summary = "Restart dead job by JobID")
+    @PostMapping("/restartJob/{JobID}")
+    public void restartJob(@PathVariable String JobID) {
+        logger.info(">>> Restarting Dead Job :" +JobID+" <<<");
+        workflowService.relaunchDeadLetterJob(JobID);
+    }
+
 }
