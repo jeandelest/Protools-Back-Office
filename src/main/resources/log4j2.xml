@@ -24,14 +24,14 @@
     </Appenders>
 
     <Loggers>
-        <!-- LOG everything at INFO level -->
-        <Root level="info">
+        <!-- LOG everything at debug level -->
+        <Root level="debug">
             <AppenderRef ref="Console" />
             <AppenderRef ref="RollingFile" />
         </Root>
 
-        <!-- LOG "com.protools*" at TRACE level -->
-        <Logger name="com.protools" level="trace"></Logger>
+        <!-- LOG "com.protools*" at debug level -->
+        <Logger name="com.protools" level="debug"></Logger>
     </Loggers>
 
 </Configuration>

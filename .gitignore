@@ -39,3 +39,7 @@ build/
 .properties
 .DS_Store
 .env
+
+logs/
+lib/
+glowroot.jar

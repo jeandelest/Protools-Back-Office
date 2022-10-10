@@ -1,7 +1,9 @@
-package com.protools.flowableDemo.services;
+package com.protools.flowableDemo.services.EngineService;
 
 
 import org.flowable.engine.*;
+import org.flowable.engine.repository.Deployment;
+import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.engine.runtime.ProcessInstanceBuilder;
 import org.flowable.task.api.Task;
@@ -11,9 +13,8 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class WorkflowService {
@@ -22,14 +23,20 @@ public class WorkflowService {
     private RuntimeService runtimeService;
 
     @Autowired
+    private RepositoryService repositoryService;
+
+    @Autowired
     private TaskService taskService;
+
+    @Autowired
+    private ManagementService managementService;
 
     // Process execution and setBusinessKey
     @Transactional
-    public JSONObject startProcess(String ProcessKey, String BusinessKey, HashMap<String,Object> variables){
+    public JSONObject startProcess(String ProcessKey, String BusinessKey, Map<String,Object> variables){
         ProcessInstanceBuilder processInstanceBuilder = runtimeService.createProcessInstanceBuilder();
         processInstanceBuilder.businessKey(BusinessKey).processDefinitionKey(ProcessKey).variables(variables).start();
-        //runtimeService.startProcessInstanceByKey(ProcessKey);
+
         List<ProcessInstance> liste = runtimeService.createProcessInstanceQuery()
                 .processDefinitionKey(ProcessKey)
                 .list();
@@ -51,7 +58,7 @@ public class WorkflowService {
     @Transactional
     public void claimTasks(String taskID, String assignee){
         List<Task> taskInstances = taskService.createTaskQuery().taskId(taskID).taskAssignee(assignee).active().list();
-        if (taskInstances.size() > 0) {
+        if (taskInstances.isEmpty()) {
             for (Task t : taskInstances) {
                 taskService.addCandidateGroup(t.getId(), "userTeam");
                 logger.info("> Claiming task: " + t.getId());
@@ -63,11 +70,11 @@ public class WorkflowService {
     }
 
     @Transactional
-    public void completeTask(String taskID, HashMap<String,Object> variables, String assignee){
+    public void completeTask(String taskID, Map<String,Object> variables, String assignee){
         List<Task> taskInstances = taskService.createTaskQuery().taskId(taskID).taskAssignee(assignee).active().list();
         logger.info("> Completing task from process : " + taskID);
         logger.info("\t > Variables : " + variables.toString());
-        if (taskInstances.size() > 0) {
+        if (taskInstances.isEmpty()) {
             for (Task t : taskInstances) {
                 taskService.addCandidateGroup(t.getId(), "userTeam");
                 logger.info("> Completing task: " + t.getId());
@@ -96,5 +103,26 @@ public class WorkflowService {
     @Transactional
     public void cancelProcessWithReason( String ProcessID, String reason) {
         runtimeService.deleteProcessInstance(ProcessID, reason);
+    }
+
+    @Transactional
+    public void deployBpmnProcess(){
+        //TODO : Remplacer avec un fichier BPMN externe
+        Deployment deployment = repositoryService.createDeployment()
+                .addClasspathResource("testProcessRandomDir/testBPMN.bpmn20.xml")
+                .deploy();
+
+        ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
+                .deploymentId(deployment.getId())
+                .singleResult();
+
+        logger.info("Deployed new process definition : " + processDefinition.getName());
+    }
+
+    @Transactional
+    public void relaunchDeadLetterJob(String jobID){
+        // Set to 3 retries to avoid infinite loop
+        managementService.moveDeadLetterJobToExecutableJob(jobID,3);
+        managementService.executeJob(jobID);
     }
 }

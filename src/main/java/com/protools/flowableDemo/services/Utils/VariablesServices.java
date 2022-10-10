@@ -13,7 +13,8 @@ import java.util.HashSet;
 @Service
 public class VariablesServices {
     private static Logger logger =LogManager.getLogger(VariablesServices.class);
-
+    private VariablesServices() {
+    }
     public static Collection<String> stringToCollectionString(String string){
         logger.info("\t >> Converting String to Collection ... <<  ");
         Collection<String > response = new HashSet<String>() {

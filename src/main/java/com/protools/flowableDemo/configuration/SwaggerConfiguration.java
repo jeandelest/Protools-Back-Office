@@ -20,7 +20,7 @@ public class SwaggerConfiguration {
                 .components(new Components())
                 .info(new Info()
                         .title(buildProperties.getName())
-                        .description("POC Protools avec Activiti Core BPMN manager")
+                        .description("POC Protools avec Flowable BPMN Engine")
                         .version(buildProperties.getVersion()));
     }
 

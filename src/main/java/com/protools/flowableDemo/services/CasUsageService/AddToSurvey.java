@@ -11,7 +11,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -35,16 +34,13 @@ public class AddToSurvey implements JavaDelegate {
         Person person = map[0];
         logger.info(" \t \t >>> Add unit to survey : " + person.toString());
 
-        int statusCode = 0;
         var id = person.getId();
-        var values = new HashMap<String, Object>() {{
-            put("id", id);
-            put("email", person.getEmail());
-            put("nom", person.getNom());
-            put("prenom", person.getPrenom());
-
-            put("id_survey",Long.parseLong(surveyID));
-        }};
+        var values = new HashMap<String, Object>();
+        values.put("id", id);
+        values.put("email", person.getEmail());
+        values.put("nom", person.getNom());
+        values.put("prenom", person.getPrenom());
+        values.put("id_survey",Long.parseLong(surveyID));
         var objectMapper = new ObjectMapper();
         String requestBody = null;
         try {
@@ -59,13 +55,9 @@ public class AddToSurvey implements JavaDelegate {
                 .setHeader(HttpHeaders.CONTENT_TYPE, "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
-        HttpResponse<String> response = null;
         try {
-            response = client.send(request,
-                    HttpResponse.BodyHandlers.ofString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+            client.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (Exception e) {
             e.printStackTrace();
         }
         logger.info("\t \t https://coleman.dev.insee.io/persons/"+ id);

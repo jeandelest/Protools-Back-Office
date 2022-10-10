@@ -1,4 +1,4 @@
-package com.protools.flowableDemo.services;
+package com.protools.flowableDemo.services.EngineService;
 
 import org.flowable.eventregistry.api.EventDeployment;
 import org.flowable.eventregistry.api.EventRepositoryService;
@@ -16,7 +16,6 @@ public class EventInfoService {
     @Transactional
     public List<EventDeployment> getEventDeployments(){
         List<EventDeployment> response = eventRepositoryService.createDeploymentQuery().list();
-
         return (response);
     };
 }

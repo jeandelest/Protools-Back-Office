@@ -1,0 +1,28 @@
+prometheus:
+  rbac:
+    create: false
+  alertmanager:
+    enabled: false
+  configmapReload:
+    prometheus:
+      enabled: false
+    alertmanager:
+      enabled: false
+  kubeStateMetrics:
+    enabled: false
+  nodeExporter:
+    enabled: false
+  pushgateway:
+    enabled: false
+  server:
+    global:
+      scrape_interval: 15s
+      evaluation_interval: 15s
+  serverFiles:
+      prometheus.yml:
+        scrape_configs:
+          - job_name: spring-boot-api-metrics
+            metrics_path: '/actuator/prometheus'
+            static_configs:
+            - targets: 
+              - protools-back-office:8080

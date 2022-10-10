@@ -1,14 +1,13 @@
 package com.protools.flowableDemo.controllers;
 
-import com.protools.flowableDemo.services.WorkflowService;
+import com.protools.flowableDemo.services.EngineService.WorkflowService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.json.JSONObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 public class ProcessController {
@@ -19,7 +18,7 @@ public class ProcessController {
     @CrossOrigin
     @Operation(summary = "Start process by ProcessKey")
     @PostMapping(value= "/start-process/{processKey}/{businessKey}")
-    public String startProcessInstance(@PathVariable String processKey, @PathVariable String businessKey, @RequestBody HashMap<String,Object> variables){
+    public String startProcessInstance(@PathVariable String processKey, @PathVariable String businessKey, @RequestBody Map<String,Object> variables){
         logger.info("> Start the process: "+ processKey);
         JSONObject object = workflowService.startProcess(processKey,businessKey,variables);
         logger.info(String.valueOf(object));
@@ -36,7 +35,7 @@ public class ProcessController {
     @CrossOrigin
     @Operation(summary = "Complete claimed task by taskID, add variables to process")
     @PostMapping("/complete-task/{assignee}/{taskID}")
-    public void completeTaskA(@PathVariable String taskID, @RequestBody HashMap<String,Object> variables, @PathVariable String assignee) {
+    public void completeTaskA(@PathVariable String taskID, @RequestBody Map<String,Object> variables, @PathVariable String assignee) {
         logger.info(">>> Complete assigned task for assignee "+ assignee +" <<<");
         logger.info("TaskID : "+taskID);
         workflowService.completeTask(taskID,variables,assignee);
@@ -73,5 +72,12 @@ public class ProcessController {
         workflowService.cancelProcessWithReason(ProcessID,reason);
     }
 
+    @CrossOrigin
+    @Operation(summary = "Add BPMN file to deployment")
+    @PostMapping("/addBPMN")
+    public void deployBPMN() {
+        logger.info(">>> Adding BPMN to deployment <<<");
+        workflowService.deployBpmnProcess();
+    }
 
 }

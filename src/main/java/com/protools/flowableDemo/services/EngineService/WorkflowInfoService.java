@@ -1,4 +1,4 @@
-package com.protools.flowableDemo.services;
+package com.protools.flowableDemo.services.EngineService;
 
 import org.flowable.bpmn.model.BpmnModel;
 import org.flowable.bpmn.model.ExtensionElement;
@@ -172,15 +172,16 @@ public class WorkflowInfoService {
     @Transactional
     public Map<String, Object> getProcessVariables(String ProcessInstanceID){
         ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().includeProcessVariables().processInstanceId(ProcessInstanceID).singleResult();
-        Map<String,Object> variables = processInstance.getProcessVariables();
-        return variables;
+        return processInstance.getProcessVariables();
+
     }
 
     @Transactional
     public List<String> getActivityExecution(String ProcessInstanceID){
         List<Execution> executions = runtimeService.createExecutionQuery().onlyChildExecutions().processInstanceId(ProcessInstanceID).list();
-        List<String> activityIds = executions.stream().map(Execution::getActivityId).collect(Collectors.toList());
-        return activityIds;
+        return executions.stream().map(Execution::getActivityId).collect(Collectors.toList());
+
 
     }
+
 }

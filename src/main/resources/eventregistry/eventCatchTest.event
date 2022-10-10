@@ -1,0 +1,14 @@
+{
+  "key": "testEvent",
+  "name": "My event",
+  "inboundChannelKeys": [
+    "test-channel"
+  ],
+  "correlationParameters": [],
+  "payload": [
+      {
+          "name": "id",
+          "type": "string"
+      }
+  ]
+}

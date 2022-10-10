@@ -24,14 +24,6 @@ public class Survey {
         this.state_survey = state_survey;
     }
 
-    public String getState_survey() {
-        return state_survey;
-    }
-
-    public void setState_survey(String state_survey) {
-        this.state_survey = state_survey;
-    }
-
     public String getSampleSize() {
         return sampleSize;
     }

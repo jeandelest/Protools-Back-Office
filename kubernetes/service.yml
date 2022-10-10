@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: protools-back-office
+spec:
+  ports:
+    - name: http
+      targetPort: 8080
+      port: 8080
+  selector:
+    app: protools-back-office

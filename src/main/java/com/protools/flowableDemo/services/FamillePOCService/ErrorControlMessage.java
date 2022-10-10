@@ -7,8 +7,8 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 
 @Component
-public class errorControlMessage implements JavaDelegate {
-    private Logger logger =LogManager.getLogger(com.protools.flowableDemo.services.FamillePOCService.errorControlMessage.class);
+public class ErrorControlMessage implements JavaDelegate {
+    private Logger logger =LogManager.getLogger(ErrorControlMessage.class);
     @Override
     public void execute(DelegateExecution delegateExecution) {
         logger.info("\t >> Aborting Process ... <<  ");

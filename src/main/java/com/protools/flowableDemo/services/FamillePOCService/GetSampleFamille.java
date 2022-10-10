@@ -11,8 +11,6 @@ import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -21,8 +19,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 @Component
-public class getSampleFamille implements JavaDelegate {
-    private Logger logger =LogManager.getLogger(com.protools.flowableDemo.services.FamillePOCService.getSampleFamille.class);
+public class GetSampleFamille implements JavaDelegate {
+    private Logger logger =LogManager.getLogger(GetSampleFamille.class);
 
     @Override
     public void execute(DelegateExecution delegateExecution) {
@@ -34,11 +32,11 @@ public class getSampleFamille implements JavaDelegate {
         String sampleSize = (String) delegateExecution.getVariable("sampleSize");
 
         // Save Survey into Coleman
-        var values = new HashMap<String, String>() {{
-            put("name", surveyName);
-            put ("dateDeb", dateDeb);
-            put("dateEnd", dateEnd);
-        }};
+        var values = new HashMap<String, String>();
+        values.put("name", surveyName);
+        values.put ("dateDeb", dateDeb);
+        values.put("dateEnd", dateEnd);
+
 
         var objectMapper = new ObjectMapper();
         String requestBody = null;
@@ -58,12 +56,9 @@ public class getSampleFamille implements JavaDelegate {
         try {
             response = client.send(request,
                     HttpResponse.BodyHandlers.ofString());
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
-
 
         JSONObject jsonResponse = new JSONObject(response.body());
         logger.info("\t \t >>> Save Survey Sample  : " +jsonResponse);
@@ -72,7 +67,7 @@ public class getSampleFamille implements JavaDelegate {
         delegateExecution.setVariable("idSurvey",idSurvey);
 
         // Get Sample
-        HttpClient clientSample = HttpClient.newHttpClient();
+
         String url = "https://crabe.dev.insee.io/persons/sample/"+ sampleSize ;
         HttpRequest requestSample = HttpRequest.newBuilder()
                 .uri(URI.create(url))
@@ -81,26 +76,23 @@ public class getSampleFamille implements JavaDelegate {
         try {
             responseSample = client.send(requestSample,
                     HttpResponse.BodyHandlers.ofString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        logger.info("\t Drawn sample Famille : "+ responseSample.body());
+
         String sample = responseSample.body();
         Gson gson = new Gson();
         Person[] map = gson.fromJson(sample,Person[].class);
-        ArrayList<String> elements = new ArrayList<String>();
+        ArrayList<String> elements = new ArrayList<>();
         for (Person person : map) {
-            logger.info("\t \t >>> Unit : " +person);
-            var unit = new HashMap<String, Object>() {{
-                put("email", person.getEmail());
-                put("nom", person.getNom());
-                put("prenom", person.getPrenom());
+            logger.info("\t >>> Unit Drawn : " +person);
+            var unit = new HashMap<String, Object>() ;
+            unit.put("email", person.getEmail());
+            unit.put("nom", person.getNom());
+            unit.put("prenom", person.getPrenom());
+            unit.put("id_survey",Long.parseLong(idSurvey));
 
-                put("id_survey",Long.parseLong(idSurvey));
-            }};
-            ArrayList<Object> tmp= new ArrayList<Object>();
+            ArrayList<Object> tmp= new ArrayList<>();
             tmp.add(unit);
             // C'est super moche mais c'est pour pas toucher au code de la démo, on va refaire propre après
             elements.add(tmp.toString());
