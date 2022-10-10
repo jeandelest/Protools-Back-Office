@@ -13,8 +13,8 @@ Current WIP & experimentations can be found on the protools-wip branch.
 ### Installation via Docker (Recommended)
 
 ```bash
-docker pull mailinenguyen/protools-flowable-demo
-docker run -d --name protoolsflowable -p 8080:8080  mailinenguyen/protools-flowable-demo:latest
+docker pull docker pull inseefr/protools-back-office
+docker run -d --name protoolsflowable -p 8080:8080  docker pull inseefr/protools-back-office:experimental
 ```
 ### Manual Install
 ``` bash
