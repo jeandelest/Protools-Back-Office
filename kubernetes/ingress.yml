@@ -7,9 +7,9 @@ metadata:
 spec:
   tls:
     - hosts:
-        - protools-back-office.dev.insee.io
+        - protools-back-office.demo.insee.io
   rules:
-    - host: protools-back-office.dev.insee.io
+    - host: protools-back-office.demo.insee.io
       http:
         paths:
           - path: /
