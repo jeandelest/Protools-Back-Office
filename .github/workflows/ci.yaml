@@ -2,7 +2,7 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [event-registry]
+    branches: [develop]
   workflow_dispatch:
 
 jobs:
@@ -26,4 +26,4 @@ jobs:
           name: inseefr/protools-back-office
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-          tags: "experimental"
+          tags: "develop"

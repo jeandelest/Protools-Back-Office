@@ -10,13 +10,13 @@ Currently testing event-egistry features with RabbitQM for PQV (Proto Qualité V
 
 ## Installation
 
-[Link to swagger](https://protools-flowable-demo.dev.insee.io/)
+[Link to swagger](https://protools-back-office.dev.insee.io/)
 
 ### Manual Install
 
 ```bash
 docker pull docker pull inseefr/protools-back-office
-docker run -d --name protoolsflowable -p 8080:8080  docker pull inseefr/protools-back-office:experimental
+docker run -d --name protoolsflowable -p 8080:8080  docker pull inseefr/protools-back-office:develop
 ```
 
 ### Manual Install
@@ -24,6 +24,6 @@ docker run -d --name protoolsflowable -p 8080:8080  docker pull inseefr/protools
 ```bash
 git clone git@github.com:InseeFr/Protools-Back-Office.git
 cd Protools-Back-Office
-git checkout event-registry
+git checkout develop
 ./mvnw spring-boot:run -Dmaven.test.skip
 ```
