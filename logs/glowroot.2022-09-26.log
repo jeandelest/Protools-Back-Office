@@ -1,8 +1,0 @@
-2022-09-26 15:30:23.034 INFO  org.glowroot - Glowroot version: 0.13.6, built 2020-03-01 01:25:31 +0000
-2022-09-26 15:30:23.035 INFO  org.glowroot - Java version: 11.0.14.1 (Azul Systems, Inc. / Mac OS X)
-2022-09-26 15:30:23.036 INFO  org.glowroot - Java args: -javaagent:/Users/mailinenguyen/ProtoolsDev/Protools-Back-Office/glowroot.jar -Xmx8G -XX:TieredStopAtLevel=1 -Xverify:none -javaagent:/Applications/IntelliJ IDEA.app/Contents/lib/idea_rt.jar=55784:/Applications/IntelliJ IDEA.app/Contents/bin
-2022-09-26 15:30:24.270 INFO  org.glowroot - UI listening on 127.0.0.1:4000 (to access the UI from remote machines, change the bind address to 0.0.0.0, either in the Glowroot UI under Configuration > Web or directly in the admin.json file, and then restart JVM to take effect)
-2022-09-26 16:05:39.184 INFO  org.glowroot - Glowroot version: 0.13.6, built 2020-03-01 01:25:31 +0000
-2022-09-26 16:05:39.185 INFO  org.glowroot - Java version: 11.0.14.1 (Azul Systems, Inc. / Mac OS X)
-2022-09-26 16:05:39.186 INFO  org.glowroot - Java args: -javaagent:/Users/mailinenguyen/ProtoolsDev/Protools-Back-Office/glowroot.jar -Xmx8G -XX:TieredStopAtLevel=1 -Xverify:none -javaagent:/Applications/IntelliJ IDEA.app/Contents/lib/idea_rt.jar=56107:/Applications/IntelliJ IDEA.app/Contents/bin
-2022-09-26 16:05:40.445 INFO  org.glowroot - UI listening on 127.0.0.1:4000 (to access the UI from remote machines, change the bind address to 0.0.0.0, either in the Glowroot UI under Configuration > Web or directly in the admin.json file, and then restart JVM to take effect)
