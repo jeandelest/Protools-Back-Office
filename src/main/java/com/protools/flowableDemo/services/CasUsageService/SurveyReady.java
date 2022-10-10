@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.http.HttpClient;
 
 @Component
 public class SurveyReady implements JavaDelegate {
@@ -18,13 +17,12 @@ public class SurveyReady implements JavaDelegate {
     private Logger logger =LogManager.getLogger(SurveyReady.class);
     @Override
     public void execute(DelegateExecution delegateExecution) {
-        HttpClient client = HttpClient.newHttpClient();
         logger.info("surveyID: " + delegateExecution.getVariable("idSurvey"));
         String surveyID = (String) delegateExecution.getVariable("idSurvey") ;
 
         URL url = null;
         try {
-            url = new URL("https://coleman.dev.insee.io/survey/"+ String.valueOf(surveyID)+ "/ready");
+            url = new URL("https://coleman.dev.insee.io/survey/"+ surveyID+ "/ready");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

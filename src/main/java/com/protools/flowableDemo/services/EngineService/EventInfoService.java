@@ -16,7 +16,6 @@ public class EventInfoService {
     @Transactional
     public List<EventDeployment> getEventDeployments(){
         List<EventDeployment> response = eventRepositoryService.createDeploymentQuery().list();
-
         return (response);
     };
 }

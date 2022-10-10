@@ -10,8 +10,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -34,15 +32,14 @@ public class CreateAccount implements JavaDelegate {
         Gson gson = new Gson();
         Person[] map = gson.fromJson(unit,Person[].class);
         Person person = map[0];
-        int statusCode = 0;
 
-        var values = new HashMap<String, Object>() {{
-            put("email", person.getEmail());
-            put("nom", person.getNom());
-            put("prenom", person.getPrenom());
+        var values = new HashMap<String, Object>();
+        values.put("email", person.getEmail());
+        values.put("nom", person.getNom());
+        values.put("prenom", person.getPrenom());
 
-            put("id_survey",Long.parseLong(surveyID));
-        }};
+        values.put("id_survey",Long.parseLong(surveyID));
+
         var objectMapper = new ObjectMapper();
         String requestBody = null;
         try {
@@ -62,13 +59,11 @@ public class CreateAccount implements JavaDelegate {
         try {
             response = client.send(request,
                     HttpResponse.BodyHandlers.ofString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        logger.info("\t \t Response Code: " + String.valueOf(response.statusCode()));
+        logger.info("\t \t Response Code: " + response.statusCode());
         delegateExecution.setVariable("count", count+1);
 
     }

@@ -13,7 +13,7 @@ public class LoggerInfo implements JavaDelegate {
     @Override
     public void execute(DelegateExecution delegateExecution) {
         String surveyName = (String) delegateExecution.getVariable("name");
-        logger.info("send Message to send-message queue log ");
+        logger.info("send Message to send-message queue log for survey ", surveyName);
     }
 
 }

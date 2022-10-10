@@ -23,44 +23,42 @@ public class HistoryInfoService {
 
     @Transactional
     public List<HistoricProcessInstance> getHistoryProcess(){
-        List<HistoricProcessInstance> response = historyService.createHistoricProcessInstanceQuery()
+        return historyService.createHistoricProcessInstanceQuery()
                 .finished().orderByProcessInstanceStartTime().desc().listPage(0,100);
 
-        return (response);
+
     };
 
     @Transactional
     public List<HistoricTaskInstance> getHistoryTask(String processDefinitionID){
-        List<HistoricTaskInstance> response = historyService.createHistoricTaskInstanceQuery()
+        return historyService.createHistoricTaskInstanceQuery()
                 .processDefinitionId(processDefinitionID).listPage(0,100);
-
-        return (response);
     };
 
     @Transactional
     public List<HistoricActivityInstance> getHistoryActivity(){
-        List<HistoricActivityInstance> response = historyService.createHistoricActivityInstanceQuery().orderByHistoricActivityInstanceStartTime().desc().listPage(0,100);
-        return response;
+        return historyService.createHistoricActivityInstanceQuery().orderByHistoricActivityInstanceStartTime().desc().listPage(0,100);
+
     }
 
     @Transactional
     public List<Job> getFailedJobs(){
-        List<Job> response = managementService.createDeadLetterJobQuery().orderByJobCreateTime().desc().listPage(0,100);
-        return response;
+        return managementService.createDeadLetterJobQuery().orderByJobCreateTime().desc().listPage(0,100);
+
 
     }
 
     @Transactional
     public List<Job> getSuspendedJobs(){
-        List<Job> response = managementService.createSuspendedJobQuery().orderByJobCreateTime().desc().listPage(0,100);
-        return response;
+        return managementService.createSuspendedJobQuery().orderByJobCreateTime().desc().listPage(0,100);
+
 
     }
 
     @Transactional
     public List<HistoricProcessInstance> getDeletedProcess(){
-        List<HistoricProcessInstance> response = historyService.createHistoricProcessInstanceQuery().deleted().orderByProcessInstanceStartTime().desc().listPage(0,100);
-        return response;
+        return historyService.createHistoricProcessInstanceQuery().deleted().orderByProcessInstanceStartTime().desc().listPage(0,100);
+
     }
 
 

@@ -9,8 +9,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -28,13 +26,13 @@ public class SaveSurvey implements JavaDelegate {
         String surveyName = (String) delegateExecution.getVariable("name");
         String dateDeb = (String) delegateExecution.getVariable("dateDeb");
         String dateEnd = (String) delegateExecution.getVariable("dateEnd");
-        String sampleSize = (String) delegateExecution.getVariable("sampleSize");
 
-        var values = new HashMap<String, String>() {{
-            put("name", surveyName);
-            put ("dateDeb", dateDeb);
-            put("dateEnd", dateEnd);
-        }};
+
+        var values = new HashMap<String, String>();
+        values.put("name", surveyName);
+        values.put ("dateDeb", dateDeb);
+        values.put("dateEnd", dateEnd);
+
 
         var objectMapper = new ObjectMapper();
         String requestBody = null;
@@ -54,10 +52,8 @@ public class SaveSurvey implements JavaDelegate {
         try {
             response = client.send(request,
                     HttpResponse.BodyHandlers.ofString());
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
 
         JSONObject jsonResponse = new JSONObject(response.body());
