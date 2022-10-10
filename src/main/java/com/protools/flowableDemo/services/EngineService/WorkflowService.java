@@ -28,6 +28,9 @@ public class WorkflowService {
     @Autowired
     private TaskService taskService;
 
+    @Autowired
+    private ManagementService managementService;
+
     // Process execution and setBusinessKey
     @Transactional
     public JSONObject startProcess(String ProcessKey, String BusinessKey, Map<String,Object> variables){
@@ -114,5 +117,12 @@ public class WorkflowService {
                 .singleResult();
 
         logger.info("Deployed new process definition : " + processDefinition.getName());
+    }
+
+    @Transactional
+    public void relaunchDeadLetterJob(String jobID){
+        // Set to 3 retries to avoid infinite loop
+        managementService.moveDeadLetterJobToExecutableJob(jobID,3);
+        managementService.executeJob(jobID);
     }
 }
