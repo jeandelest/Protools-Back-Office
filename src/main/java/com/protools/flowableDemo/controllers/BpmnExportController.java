@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import org.w3c.dom.Document;
 
 import java.io.IOException;
 import java.util.Map;
@@ -28,6 +29,6 @@ public class BpmnExportController {
     @GetMapping(value = "/getBPMNFile/{processKey}", produces = MediaType.APPLICATION_XML_VALUE)
     public String getBPMNInfo(@PathVariable String processKey) throws IOException {
         logger.info("\t >> Getting BPMN file (String format) with processKey : "+processKey);
-        return(ressourceUtils.getResourceFileAsString(processKey));
+        return(RessourceUtils.getResourceFileAsString(processKey));
     }
 }
