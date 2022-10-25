@@ -11,7 +11,7 @@
 	<artifactId>protools-back-office</artifactId>
 	<version>0.0.2</version>
 	<name>Protools</name>
-	<description>Protools using Flowable: orchestrate protocols of survey </description>
+	<description>Protools using Flowable: orchestrate surveys protocols </description>
 	<properties>
 		<java.version>11</java.version>
 	</properties>
