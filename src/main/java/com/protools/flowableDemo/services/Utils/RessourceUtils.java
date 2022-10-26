@@ -1,7 +1,6 @@
 package com.protools.flowableDemo.services.Utils;
 
-import com.protools.flowableDemo.controllers.BpmnExportController;
-import com.protools.flowableDemo.services.FamillePOCService.GetSampleFamille;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,8 +13,8 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -27,9 +26,12 @@ import java.util.List;
 @Service
 public class RessourceUtils {
     private static Logger logger = LogManager.getLogger(RessourceUtils.class);
-    public static String getResourceFileAsString(String fileName) throws IOException {
+    public static String getResourceFileAsString(String fileName) throws IOException, TransformerException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+
+        int indent = 3;
+        boolean ignoreDeclaration = true;
 
         String fileNameFinal = "processes/"+fileName+".bpmn20.xml";
         logger.info("\t >> Getting file : "+fileNameFinal);
@@ -59,18 +61,17 @@ public class RessourceUtils {
         }
 
         // Convert to String (even tho we apparently want a xml file)
-        DOMSource domSource = new DOMSource(doc);
-        StringWriter writer = new StringWriter();
-        StreamResult result = new StreamResult(writer);
-        TransformerFactory tf = TransformerFactory.newInstance();
-        Transformer transformer = null;
-        try {
-            transformer = tf.newTransformer();
-            transformer.transform(domSource, result);
-        } catch (TransformerException e) {
-            throw new RuntimeException(e);
-        }
-        return writer.toString();
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        transformerFactory.setAttribute("indent-number", indent);
+        Transformer transformer = transformerFactory.newTransformer();
+        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, ignoreDeclaration ? "yes" : "no");
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+
+        Writer out = new StringWriter();
+        transformer.transform(new DOMSource(doc), new StreamResult(out));
+        logger.info("\t >> File converted to String : "+ out.toString());
+        return out.toString();
 
     }
 }
