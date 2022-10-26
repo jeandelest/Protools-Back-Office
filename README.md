@@ -1,4 +1,4 @@
-# Protools POC - Flowable Engine 🦊
+# Protools - Flowable Engine 🦊
 [Demo Link](https://protools.dev.insee.io/)
 
 This prototype was build with Flowable Engine. At the moment, it only serves as a demonstration support.
@@ -6,7 +6,7 @@ This prototype was build with Flowable Engine. At the moment, it only serves as 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Installation
-[Link to swagger](https://protools-back-office.dev.insee.io/)
+[Link to swagger](https://protools-back-office.demo.insee.io/)
 
 ### Installation via Docker (Recommended)
 
