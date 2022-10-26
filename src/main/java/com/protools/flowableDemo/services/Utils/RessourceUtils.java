@@ -30,9 +30,6 @@ public class RessourceUtils {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
 
-        int indent = 3;
-        boolean ignoreDeclaration = true;
-
         String fileNameFinal = "processes/"+fileName+".bpmn20.xml";
         logger.info("\t >> Getting file : "+fileNameFinal);
 
@@ -48,11 +45,9 @@ public class RessourceUtils {
 
             String line;
             while ((line = reader.readLine()) != null) {
-
                 lines += line;
             }
             DocumentBuilder builder = dbf.newDocumentBuilder();
-
             doc = builder.parse(new InputSource(new StringReader(lines)));
 
 
@@ -62,16 +57,19 @@ public class RessourceUtils {
 
         // Convert to String (even tho we apparently want a xml file)
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        transformerFactory.setAttribute("indent-number", indent);
         Transformer transformer = transformerFactory.newTransformer();
         transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, ignoreDeclaration ? "yes" : "no");
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 
         Writer out = new StringWriter();
         transformer.transform(new DOMSource(doc), new StreamResult(out));
-        logger.info("\t >> File converted to String : "+ out.toString());
-        return out.toString();
+        String outString = out.toString().replaceAll("[\\\r]+", "");
+
+        logger.info("\t >> File converted to String : "+ outString);
+        return outString;
 
     }
 }
