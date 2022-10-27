@@ -57,7 +57,8 @@ public class WorkflowService {
 
     @Transactional
     public void claimTasks(String taskID, String assignee){
-        List<Task> taskInstances = taskService.createTaskQuery().taskId(taskID).taskAssignee(assignee).active().list();
+        List<Task> taskInstances = taskService.createTaskQuery().taskId(taskID).list();
+        logger.info("Task List before claim: ", taskInstances.get(0));
         if (taskInstances.isEmpty()) {
             for (Task t : taskInstances) {
                 taskService.addCandidateGroup(t.getId(), "userTeam");
@@ -65,13 +66,13 @@ public class WorkflowService {
                 taskService.claim(t.getId(),assignee);
             }
         } else {
-            logger.info("\t \t >> No task found.");
+            logger.info("\t >> No task found.");
         }
     }
 
     @Transactional
     public void completeTask(String taskID, Map<String,Object> variables, String assignee){
-        List<Task> taskInstances = taskService.createTaskQuery().taskId(taskID).taskAssignee(assignee).active().list();
+        List<Task> taskInstances = taskService.createTaskQuery().taskId(taskID).taskAssignee(assignee).list();
         logger.info("> Completing task from process : " + taskID);
         logger.info("\t > Variables : " + variables.toString());
         if (taskInstances.isEmpty()) {

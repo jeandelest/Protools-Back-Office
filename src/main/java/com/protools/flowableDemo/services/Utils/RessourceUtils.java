@@ -33,7 +33,6 @@ public class RessourceUtils {
         String fileNameFinal = "processes/"+fileName+".bpmn20.xml";
         logger.info("\t >> Getting file : "+fileNameFinal);
 
-
         InputStream file = classloader.getResourceAsStream(fileNameFinal);
         logger.info("\t >> File found : "+ file.toString());
         String lines = new String();
@@ -47,6 +46,8 @@ public class RessourceUtils {
             while ((line = reader.readLine()) != null) {
                 lines += line;
             }
+            lines = lines.replace("\n", "").replace("\r", "");
+            logger.info("lines: " + lines);
             DocumentBuilder builder = dbf.newDocumentBuilder();
             doc = builder.parse(new InputSource(new StringReader(lines)));
 
@@ -59,7 +60,6 @@ public class RessourceUtils {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
         transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
         transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
         transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
@@ -68,7 +68,7 @@ public class RessourceUtils {
         transformer.transform(new DOMSource(doc), new StreamResult(out));
         String outString = out.toString().replaceAll("[\\\r]+", "");
 
-        logger.info("\t >> File converted to String : "+ outString);
+        //logger.info("\t >> File converted to String : "+ outString);
         return outString;
 
     }
