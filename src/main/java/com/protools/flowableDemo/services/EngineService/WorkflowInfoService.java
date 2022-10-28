@@ -96,6 +96,8 @@ public class WorkflowInfoService {
             jsonResponse.put("createTime",response.get(i).getCreateTime());
             jsonResponse.put("processDefinitionID",response.get(i).getProcessDefinitionId());
             jsonResponse.put("description", response.get(i).getDescription());
+            jsonResponse.put("category",response.get(i).getCategory());
+            jsonResponse.put("assignee",response.get(i).getAssignee());
             jsonArray.put(jsonResponse);
         }
         return jsonArray;
@@ -116,6 +118,7 @@ public class WorkflowInfoService {
             jsonResponse.put("BPMN_ID", response.get(i).getExecutionId());
             jsonResponse.put("processDefinitionID",response.get(i).getProcessDefinitionId());
             jsonResponse.put("description", response.get(i).getDescription());
+            jsonResponse.put("category",response.get(i).getCategory());
             jsonArray.put(jsonResponse);
 
         }
@@ -142,6 +145,7 @@ public class WorkflowInfoService {
             jsonResponse.put("createTime",response.get(i).getCreateTime());
             jsonResponse.put("extensionID", response.get(i).getExecutionId());
             jsonResponse.put("description", response.get(i).getDescription());
+            jsonResponse.put("category",response.get(i).getCategory());
             jsonArray.put(jsonResponse);
 
         }

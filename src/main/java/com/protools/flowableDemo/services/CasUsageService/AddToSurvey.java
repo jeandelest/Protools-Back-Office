@@ -41,6 +41,7 @@ public class AddToSurvey implements JavaDelegate {
         values.put("nom", person.getNom());
         values.put("prenom", person.getPrenom());
         values.put("id_survey",Long.parseLong(surveyID));
+
         var objectMapper = new ObjectMapper();
         String requestBody = null;
         try {
