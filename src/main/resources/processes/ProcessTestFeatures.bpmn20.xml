@@ -2,11 +2,11 @@
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef" exporter="Flowable Open Source Modeler" exporterVersion="6.7.2">
   <process id="ProcessTestFeature" name="Process Test Fonctionnalités Diverses" isExecutable="true">
     <startEvent id="Start_Process" name="Start Process" flowable:formFieldValidation="true"></startEvent>
-    <userTask id="upload_file" name="Upload Fichier" flowable:formFieldValidation="true" flowable:assignee="user">
+    <userTask id="upload_file" name="Upload Fichier" flowable:formFieldValidation="true" flowable:assignee="user" flowable:category="upload" >
       <documentation>Upload - Test Upload Fichier</documentation>
     </userTask>
     <sequenceFlow id="sid-2E55816C-0371-41B2-9258-CCE324879A6A" sourceRef="Start_Process" targetRef="upload_file"></sequenceFlow>
-    <userTask id="Check_value" name="Vérification données" flowable:formFieldValidation="true" flowable:assignee="user">
+    <userTask id="Check_value" name="Vérification données" flowable:formFieldValidation="true" flowable:assignee="user" flowable:category="review">
       <documentation>Review - Permet de vérifier si les données du fichier ont bien été téléchargées</documentation>
     </userTask>
     <sequenceFlow id="sid-5530E905-82FA-486B-80F5-14879CFA9C1D" sourceRef="upload_file" targetRef="Check_value"></sequenceFlow>
