@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
-import java.util.Map;
+import java.util.HashMap;
 
 @Service
 public class WorkflowService {
@@ -33,7 +33,7 @@ public class WorkflowService {
 
     // Process execution and setBusinessKey
     @Transactional
-    public JSONObject startProcess(String ProcessKey, String BusinessKey, Map<String,Object> variables){
+    public JSONObject startProcess(String ProcessKey, String BusinessKey, HashMap<String,Object> variables){
         ProcessInstanceBuilder processInstanceBuilder = runtimeService.createProcessInstanceBuilder();
         processInstanceBuilder.businessKey(BusinessKey).processDefinitionKey(ProcessKey).variables(variables).start();
 
@@ -59,7 +59,7 @@ public class WorkflowService {
     public void claimTasks(String taskID, String assignee){
         List<Task> taskInstances = taskService.createTaskQuery().taskId(taskID).list();
         logger.info("Task List before claim: ", taskInstances.get(0));
-        if (taskInstances.isEmpty()) {
+        if (taskInstances.size() > 0) {
             for (Task t : taskInstances) {
                 taskService.addCandidateGroup(t.getId(), "userTeam");
                 logger.info("> Claiming task: " + t.getId());
@@ -71,11 +71,11 @@ public class WorkflowService {
     }
 
     @Transactional
-    public void completeTask(String taskID, Map<String,Object> variables, String assignee){
+    public void completeTask(String taskID, HashMap<String,Object> variables, String assignee){
         List<Task> taskInstances = taskService.createTaskQuery().taskId(taskID).taskAssignee(assignee).list();
         logger.info("> Completing task from process : " + taskID);
         logger.info("\t > Variables : " + variables.toString());
-        if (taskInstances.isEmpty()) {
+        if (taskInstances.size() > 0) {
             for (Task t : taskInstances) {
                 taskService.addCandidateGroup(t.getId(), "userTeam");
                 logger.info("> Completing task: " + t.getId());
