@@ -10,7 +10,7 @@
     </userTask>
     <sequenceFlow id="sid-2E55816C-0371-41B2-9258-CCE324879A6A" sourceRef="Start_Process" targetRef="upload_file"></sequenceFlow>
     <sequenceFlow id="sid-5530E905-82FA-486B-80F5-14879CFA9C1D" sourceRef="upload_file" targetRef="Check_value"></sequenceFlow>
-    <serviceTask id="Check_value" name="Appel API Cassée" flowable:delegateExpression="${sampleServiceTask}">
+    <serviceTask id="Check_value" name="Appel API Cassée" flowable:delegateExpression="${APICallService}">
       <documentation>Review - Permet de vérifier si les données du fichier ont bien été téléchargées</documentation>
     </serviceTask>
     <endEvent id="end_process" name="End Process"></endEvent>

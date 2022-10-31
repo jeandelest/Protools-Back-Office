@@ -24,7 +24,7 @@ public class APICallService implements JavaDelegate {
         HttpClient client = HttpClient.newHttpClient();
         HttpResponse<String> response = null;
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("https://localhost:8081/test"))
+                .uri(URI.create("http://localhost:8081/test"))
                 .build();
         try {
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
