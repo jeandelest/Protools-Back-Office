@@ -33,11 +33,12 @@ public class ProcessController {
 
     }
     @CrossOrigin
-    @Operation(summary = "Complete claimed task by taskID, add variables to process")
+    @Operation(summary = "Claim & Complete task by taskID, add variables to process")
     @PostMapping("/complete-task/{assignee}/{taskID}")
     public void completeTaskA(@PathVariable String taskID, @RequestBody HashMap<String,Object> variables, @PathVariable String assignee) {
-        logger.info(">>> Complete assigned task for assignee "+ assignee +" <<<");
+        logger.info(">>> Claim & Complete assigned task for assignee "+ assignee +" <<<");
         logger.info("TaskID : "+taskID);
+        workflowService.claimTasks(taskID,assignee);
         workflowService.completeTask(taskID,variables,assignee);
     }
 

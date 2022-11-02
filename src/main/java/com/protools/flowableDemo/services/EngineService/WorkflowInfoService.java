@@ -177,15 +177,18 @@ public class WorkflowInfoService {
     public Map<String, Object> getProcessVariables(String ProcessInstanceID){
         ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().includeProcessVariables().processInstanceId(ProcessInstanceID).singleResult();
         return processInstance.getProcessVariables();
-
     }
 
     @Transactional
     public List<String> getActivityExecution(String ProcessInstanceID){
         List<Execution> executions = runtimeService.createExecutionQuery().onlyChildExecutions().processInstanceId(ProcessInstanceID).list();
         return executions.stream().map(Execution::getActivityId).collect(Collectors.toList());
+    }
 
-
+    @Transactional
+    public List<Execution> getAllExecutions(){
+        List<Execution> allExecutions = runtimeService.createExecutionQuery().list();
+        return allExecutions;
     }
 
 }
