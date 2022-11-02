@@ -6,6 +6,8 @@ target/
 lib/
 logs/
 metrics/
+tmp/
+uploads/
 ```
 
 ### STS ###
