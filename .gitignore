@@ -37,7 +37,6 @@ build/
 
 ### VS Code ###
 .vscode/
-
 .properties
 .DS_Store
 .env
@@ -45,3 +44,6 @@ build/
 logs/
 lib/
 glowroot.jar
+
+### Properties ###
+!**/src/main/**/local.properties
