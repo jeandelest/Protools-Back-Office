@@ -29,10 +29,10 @@ Se découpe en 2 étapes :
 - suppression dans questionnaire
 - suppression dans pilotage</documentation>
     </serviceTask>
-    <userTask id="Activity_0fb8sah" name="Clore la campagne" flowable:formFieldValidation="true">
+    <userTask id="Activity_0fb8sah" name="Clore la campagne" flowable:formFieldValidation="true" flowable:category="SurveyAction">
       <documentation>Formulaire proposant la possibilité de supprimer la campagne dans la plateforme de collecte web Coleman</documentation>
     </userTask>
-    <userTask id="sid-32EA6CD0-0BF7-4EC4-8966-7E485A85FD36" name="Upload fichier" flowable:formFieldValidation="true">
+    <userTask id="sid-32EA6CD0-0BF7-4EC4-8966-7E485A85FD36" name="Upload fichier" flowable:formFieldValidation="true" flowable:category="Upload">
       <documentation>upload du fichier de contexte du processus</documentation>
     </userTask>
     <subProcess id="sid-FDA6F610-D6E1-4806-8929-57AA4A1BBC9B" name="subProcess">

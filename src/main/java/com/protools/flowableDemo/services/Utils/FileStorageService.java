@@ -61,7 +61,7 @@ public class FileStorageService {
             }
             // Récupérer le contenu du fichier
             Path targetLocation = this.fileStorageLocation.resolve(fileName);
-            String content = new String(file.getBytes(), StandardCharsets.UTF_8);
+            String content = new String(file.getBytes(), StandardCharsets.UTF_8).replaceAll("[\\n\\r\\t]+", "");
 
             logger.info("\t >> Context File content : "+content);
             var values = new HashMap<String, Object>();

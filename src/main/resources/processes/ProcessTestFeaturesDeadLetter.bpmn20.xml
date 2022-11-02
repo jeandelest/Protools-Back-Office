@@ -2,8 +2,8 @@
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef" exporter="Flowable Open Source Modeler" exporterVersion="6.7.2">
   <process id="ProcessTestFeatureDead" name="Process Test Fonctionnalités Diverses" isExecutable="true">
     <startEvent id="Start_Process" name="Start Process" flowable:formFieldValidation="true"></startEvent>
-    <userTask id="upload_file" name="Lancer Appel" flowable:assignee="user" flowable:category="review" flowable:formFieldValidation="true">
-      <documentation>Upload - Test Upload Fichier</documentation>
+    <userTask id="upload_file" name="Lancer Appel" flowable:assignee="user" flowable:category="Review" flowable:formFieldValidation="true">
+      <documentation>Autre - Lancer un appel vers une API morte</documentation>
       <extensionElements>
         <modeler:initiator-can-complete xmlns:modeler="http://flowable.org/modeler"><![CDATA[false]]></modeler:initiator-can-complete>
       </extensionElements>
@@ -14,7 +14,7 @@
       <documentation>Review - Permet de vérifier si les données du fichier ont bien été téléchargées</documentation>
     </serviceTask>
     <endEvent id="end_process" name="End Process"></endEvent>
-    <userTask id="check_response" name="Vérif Reprise" flowable:category="review" flowable:formFieldValidation="true">
+    <userTask id="check_response" name="Vérif Reprise" flowable:category="Review" flowable:formFieldValidation="true">
       <documentation>Vérifie la bonne reprise du process</documentation>
     </userTask>
     <sequenceFlow id="sid-5F7E7A2C-B115-493D-A739-DF621269974F" sourceRef="Check_value" targetRef="check_response"></sequenceFlow>
