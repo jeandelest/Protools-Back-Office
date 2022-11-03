@@ -1,4 +1,4 @@
-package com.protools.flowableDemo.services.Utils;
+package com.protools.flowableDemo.services.utils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -8,7 +8,7 @@ import java.nio.file.Paths;
 import java.util.Date;
 import java.util.HashMap;
 
-import com.protools.flowableDemo.services.EngineService.WorkflowService;
+import com.protools.flowableDemo.services.engineService.WorkflowService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
