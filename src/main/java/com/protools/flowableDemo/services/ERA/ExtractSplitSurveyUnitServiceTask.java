@@ -15,7 +15,7 @@ import java.net.http.HttpResponse;
 public class ExtractSplitSurveyUnitServiceTask implements JavaDelegate {
     Logger logger = LoggerFactory.getLogger(ExtractSplitSurveyUnitServiceTask.class);
 
-    @Value("${fr.insee.era.uri}")
+    @Value("${fr.insee.era.api}")
     private String eraUrl;
     @Override
     public void execute(org.flowable.engine.delegate.DelegateExecution delegateExecution) {

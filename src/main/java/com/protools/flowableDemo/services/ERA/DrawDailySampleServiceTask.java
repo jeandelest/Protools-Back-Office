@@ -25,7 +25,7 @@ import java.util.*;
 public class DrawDailySampleServiceTask implements JavaDelegate {
     Logger logger = LoggerFactory.getLogger(DrawDailySampleServiceTask.class);
 
-    @Value("${fr.insee.era.uri}")
+    @Value("${fr.insee.era.api}")
     private String eraUrl;
     @Override
     public void execute(org.flowable.engine.delegate.DelegateExecution delegateExecution) {
