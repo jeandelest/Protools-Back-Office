@@ -8,6 +8,8 @@ import org.flowable.engine.delegate.JavaDelegate;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +24,9 @@ import java.util.*;
 @Component
 public class DrawDailySampleServiceTask implements JavaDelegate {
     Logger logger = LoggerFactory.getLogger(DrawDailySampleServiceTask.class);
+
+    @Value("${fr.insee.era.uri}")
+    private String eraUrl;
     @Override
     public void execute(org.flowable.engine.delegate.DelegateExecution delegateExecution) {
         logger.info("\t >> Draw Daily Sample Service Task <<  ");
@@ -40,6 +45,7 @@ public class DrawDailySampleServiceTask implements JavaDelegate {
     // Get daily sample IDs from ERA
     public List<Integer> getSampleIDs() throws ParseException, JsonProcessingException {
         Calendar cal = Calendar.getInstance();
+        // Set hours, minutes, seconds and millis to zero to avoid errors
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
@@ -58,7 +64,7 @@ public class DrawDailySampleServiceTask implements JavaDelegate {
 
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("https://[ERA_URL]/extraction-survey-unit/survey-units-for-period?startDate="+startDate+"&endDate="+endDate))
+                .uri(URI.create(eraUrl+"/extraction-survey-unit/survey-units-for-period?startDate="+startDate+"&endDate="+endDate))
                 .setHeader(HttpHeaders.CONTENT_TYPE, "application/json")
                 .GET()
                 .build();
@@ -69,7 +75,6 @@ public class DrawDailySampleServiceTask implements JavaDelegate {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
 
         Gson gson = new Gson();
         List<String> responseList = (List<String>) gson.fromJson(gson.toJson(response.body()),List.class);

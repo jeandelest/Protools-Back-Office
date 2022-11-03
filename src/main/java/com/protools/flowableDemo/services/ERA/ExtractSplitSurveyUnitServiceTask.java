@@ -4,6 +4,7 @@ import org.flowable.engine.delegate.JavaDelegate;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 
 import java.net.URI;
@@ -13,6 +14,9 @@ import java.net.http.HttpResponse;
 
 public class ExtractSplitSurveyUnitServiceTask implements JavaDelegate {
     Logger logger = LoggerFactory.getLogger(ExtractSplitSurveyUnitServiceTask.class);
+
+    @Value("${fr.insee.era.uri}")
+    private String eraUrl;
     @Override
     public void execute(org.flowable.engine.delegate.DelegateExecution delegateExecution) {
         logger.info("\t >> Extract Survey Unit and Split response into two JSON Service Task <<  ");
@@ -30,7 +34,7 @@ public class ExtractSplitSurveyUnitServiceTask implements JavaDelegate {
     public JSONObject extractSurveyUnit(Integer unitID){
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("https://[ERA_URL]/extraction-survey-unit/"+unitID))
+                .uri(URI.create(eraUrl+"/extraction-survey-unit/"+unitID))
                 .setHeader(HttpHeaders.CONTENT_TYPE, "application/json")
                 .GET()
                 .build();
