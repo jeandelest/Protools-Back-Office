@@ -2,6 +2,7 @@ package com.protools.flowableDemo.services.coleman;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import liquibase.pro.packaged.J;
 import liquibase.pro.packaged.S;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
@@ -38,6 +39,10 @@ public class CreateSurveyUnitServiceTask implements JavaDelegate {
         String idCampaign = (String) delegateExecution.getVariableLocal("idCampaign");
         String idUnit = (String) delegateExecution.getVariableLocal("idUnit");
 
+        questionnaireColemanData = transformColemanQuestionnaireData(questionnaireColemanData);
+        sendColemanPilotageData(pilotageColemanData,idCampaign);
+        sendColemanQuestionnaireData(questionnaireColemanData,idUnit);
+
     }
 
     // Send TRANSFORMED data into Coleman Pilotage
@@ -45,6 +50,7 @@ public class CreateSurveyUnitServiceTask implements JavaDelegate {
         HttpClient client = HttpClient.newHttpClient();
 
         // Transfo Data Coleman Pilotage
+        pilotageColemanData= (JSONObject) pilotageColemanData.get("pilotage");
         List<JSONObject> pilotageColemanDataArray = new ArrayList<>();
         pilotageColemanDataArray.add(pilotageColemanData);
 
@@ -100,5 +106,52 @@ public class CreateSurveyUnitServiceTask implements JavaDelegate {
             throw new RuntimeException(e);
         }
         logger.info("\t \t Coleman Pilotage Response : "+ responseQuestionnaire.statusCode());
+    }
+
+    public JSONObject transformColemanQuestionnaireData(JSONObject questionnaireColemanData){
+        // TODO : Vérifier le format des données
+        questionnaireColemanData = (JSONObject) questionnaireColemanData.get("questionnaire");
+        // Ajout de la personalisation
+        String sexe = (String) questionnaireColemanData.getJSONObject("data").getJSONObject("EXTERNAL").get("TYPE_QUEST");
+        List<JSONObject> personalisationContent = new ArrayList<>();
+        // TODO : Remplacer le string partition par la variable de contexte partition
+        switch (sexe) {
+            case "1":
+                JSONObject personalisationContent1 = new JSONObject();
+                personalisationContent1.put("name", "whoAnswer1");
+                personalisationContent1.put("value", "partition1.quiRepond1");
+
+                JSONObject personalisationContent2 = new JSONObject();
+                personalisationContent2.put("name", "whoAnswer2");
+                personalisationContent2.put("value", "partition1.quiRepond2");
+
+                JSONObject personalisationContent3 = new JSONObject();
+                personalisationContent3.put("name", "whoAnswer1");
+                personalisationContent3.put("value", "partition1.quiRepond2");
+
+                personalisationContent.add(personalisationContent1);
+                personalisationContent.add(personalisationContent2);
+                personalisationContent.add(personalisationContent3);
+
+                break;
+            case "2":
+                JSONObject personalisationContent21 = new JSONObject();
+                personalisationContent21.put("name", "whoAnswer1");
+                personalisationContent21.put("value", "partition2.quiRepond1");
+
+                JSONObject personalisationContent22 = new JSONObject();
+                personalisationContent22.put("name", "whoAnswer2");
+                personalisationContent22.put("value", "partition2.quiRepond2");
+
+                JSONObject personalisationContent23 = new JSONObject();
+                personalisationContent23.put("name", "whoAnswer1");
+                personalisationContent23.put("value", "partition2.quiRepond2");
+
+                personalisationContent.add(personalisationContent21);
+                personalisationContent.add(personalisationContent22);
+                personalisationContent.add(personalisationContent23);
+        }
+        questionnaireColemanData.put("personalization", personalisationContent);
+        return questionnaireColemanData;
     }
 }

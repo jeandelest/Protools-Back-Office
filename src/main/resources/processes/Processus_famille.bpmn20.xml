@@ -41,7 +41,7 @@ Se découpe en 2 étapes :
       </serviceTask>
       <intermediateCatchEvent id="sid-BCCEABBF-1468-4968-A490-04915E0F205B">
           <timerEventDefinition>
-              <timeDuration>PT60S</timeDuration>
+              <timeCycle>R${numDays}/${startDate}T12:00/PT24H</timeCycle>
           </timerEventDefinition>
       </intermediateCatchEvent>
       <subProcess id="sid-F0A2DCEE-C591-4A77-BFD1-24A8B5D14F67" name="subProcess">
@@ -66,7 +66,7 @@ Boucle sur l'ensemble des UE en base de donnée du processus</documentation>
         <intermediateCatchEvent id="Event_184v5zt">
           <documentation>Date de fin de collecte du lot</documentation>
             <timerEventDefinition>
-                <timeDuration>PT60S</timeDuration>
+                <timeDate>${partition.collectionEndDate}</timeDate>
             </timerEventDefinition>
         </intermediateCatchEvent>
         <intermediateCatchEvent id="sid-828C42AD-FFC2-4D1A-9372-E8E9C05F5C50">
