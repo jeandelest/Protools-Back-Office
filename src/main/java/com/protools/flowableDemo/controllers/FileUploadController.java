@@ -1,9 +1,6 @@
 package com.protools.flowableDemo.controllers;
 
-import com.protools.flowableDemo.services.Utils.FileStorageService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.http.ResponseEntity;
+import com.protools.flowableDemo.services.utils.UploadFileToEngineService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,10 +9,10 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 public class FileUploadController {
 
-    private final FileStorageService fileStorageService;
+    private final UploadFileToEngineService uploadFileToEngineService;
 
-    public FileUploadController(FileStorageService fileStorageService) {
-        this.fileStorageService = fileStorageService;
+    public FileUploadController(UploadFileToEngineService uploadFileToEngineService) {
+        this.uploadFileToEngineService = uploadFileToEngineService;
     }
 
     @PostMapping("/upload-context")
@@ -23,7 +20,7 @@ public class FileUploadController {
             @RequestParam(name = "file", required = false) MultipartFile file,
             @RequestParam("taskID") String taskID
     ) {
-        fileStorageService.storeFile(file, taskID);
+        uploadFileToEngineService.storeFile(file, taskID);
 
     }
 }

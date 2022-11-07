@@ -1,4 +1,4 @@
-package com.protools.flowableDemo.services.Utils;
+package com.protools.flowableDemo.services.utils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.util.Date;
 import java.util.HashMap;
 
+import com.protools.flowableDemo.services.engineService.WorkflowService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,20 +16,19 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.protools.flowableDemo.services.EngineService.WorkflowService;
-
 @Service
-public class FileStorageService {
-	private Logger logger = LogManager.getLogger(FileStorageService.class);
+public class UploadFileToEngineService {
+    private Logger logger = LogManager.getLogger(UploadFileToEngineService.class);
 
 	private final Path fileStorageLocation;
 
 	@Autowired
 	private WorkflowService workflowService;
 
-	@Autowired
-	public FileStorageService(@Value("${app.file.upload-dir:./uploads/files}") String path) {
-		this.fileStorageLocation = Paths.get(path).toAbsolutePath().normalize();
+    @Autowired
+    public UploadFileToEngineService(Environment env) {
+        this.fileStorageLocation = Paths.get(env.getProperty("app.file.upload-dir", "./uploads/files"))
+                .toAbsolutePath().normalize();
 
 		try {
 			Files.createDirectories(this.fileStorageLocation);
