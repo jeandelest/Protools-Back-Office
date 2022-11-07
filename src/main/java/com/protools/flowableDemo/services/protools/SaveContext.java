@@ -59,7 +59,12 @@ public class SaveContext implements JavaDelegate {
                 Map<String,Object> subMap = (Map<String, Object>) entry.getValue();
                 for (Map.Entry<String,Object> subEntry : subMap.entrySet()){
                     logger.info(subEntry.getKey() + ": " + subEntry.getValue()+ " of type "+ subEntry.getValue().getClass());
-                    newVariables.put(subEntry.getKey(),subEntry.getValue());
+                    if (newVariables.containsKey(subEntry.getKey())){
+                        // C'est super sale, mais ça suffit pour le moment
+                        newVariables.put(subEntry.getKey()+".1", newVariables.remove(subEntry.getKey()));
+                        newVariables.put(subEntry.getKey()+".2",subEntry.getValue());
+                    } else {
+                        newVariables.put(subEntry.getKey(),subEntry.getValue());}
                 }
             } else {
                 newVariables.put(entry.getKey(),entry.getValue());
