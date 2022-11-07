@@ -16,19 +16,19 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+
 @Service
 public class UploadFileToEngineService {
-    private Logger logger = LogManager.getLogger(UploadFileToEngineService.class);
+	private Logger logger = LogManager.getLogger(UploadFileToEngineService.class);
 
 	private final Path fileStorageLocation;
 
 	@Autowired
 	private WorkflowService workflowService;
 
-    @Autowired
-    public UploadFileToEngineService(Environment env) {
-        this.fileStorageLocation = Paths.get(env.getProperty("app.file.upload-dir", "./uploads/files"))
-                .toAbsolutePath().normalize();
+	@Autowired
+	public UploadFileToEngineService(@Value("${app.file.upload-dir:./uploads/files}") String path) {
+		this.fileStorageLocation = Paths.get(path).toAbsolutePath().normalize();
 
 		try {
 			Files.createDirectories(this.fileStorageLocation);
