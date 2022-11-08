@@ -27,8 +27,8 @@ public class DrawDailySampleServiceTask implements JavaDelegate {
     public void execute(org.flowable.engine.delegate.DelegateExecution delegateExecution) {
         logger.info("\t >> Draw Daily Sample Service Task <<  ");
         try {
-            List<Map> listOfSampleIds = getSampleIDs();
-            delegateExecution.setVariable("sampleIds",listOfSampleIds);
+            List<Map> listOfSampleUnit = getSampleIDs();
+            delegateExecution.setVariable("sample",listOfSampleUnit);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         } catch (JsonProcessingException e) {

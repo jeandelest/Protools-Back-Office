@@ -21,7 +21,8 @@ public class ExtractSplitSurveyUnitServiceTask implements JavaDelegate {
     public void execute(org.flowable.engine.delegate.DelegateExecution delegateExecution) {
         logger.info("\t >> Extract Survey Unit and Split response into two JSON Service Task <<  ");
         Integer unitID = (Integer) delegateExecution.getVariableLocal("unitID");
-        JSONObject surveyUnitInfo = extractSurveyUnit(unitID);
+        String idCampaign = (String) delegateExecution.getVariableLocal("Id");
+        JSONObject surveyUnitInfo = extractSurveyUnit(unitID, idCampaign);
         String questionnaireKey = "questionnaire";
         JSONObject questionnaireObject = new JSONObject();
 
@@ -31,10 +32,10 @@ public class ExtractSplitSurveyUnitServiceTask implements JavaDelegate {
         delegateExecution.setVariableLocal("pilotageColemmanData",surveyUnitInfo);
     }
 
-    public JSONObject extractSurveyUnit(Integer unitID){
+    public JSONObject extractSurveyUnit(Integer unitID, String idCampaign){
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(eraUrl+"/extraction-survey-unit/"+unitID))
+                .uri(URI.create(eraUrl+"/extraction-survey-unit/"+unitID+ "?idCampaign" +idCampaign))
                 .setHeader(HttpHeaders.CONTENT_TYPE, "application/json")
                 .GET()
                 .build();

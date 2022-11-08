@@ -2,7 +2,7 @@
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef" exporter="Flowable Open Source Modeler" exporterVersion="6.7.2">
   <process id="ProcessTestFeature" name="Process Test Fonctionnalités Diverses" isExecutable="true">
     <startEvent id="Start_Process" name="Start Process" flowable:formFieldValidation="true"></startEvent>
-    <userTask id="upload_file" name="Upload Fichier" flowable:assignee="user" flowable:category="upload" flowable:formFieldValidation="true">
+    <userTask id="upload_file" name="Upload Fichier" flowable:assignee="user" flowable:category="Upload" flowable:formFieldValidation="true">
       <documentation>Upload - Test Upload Fichier</documentation>
       <extensionElements>
         <modeler:initiator-can-complete xmlns:modeler="http://flowable.org/modeler"><![CDATA[false]]></modeler:initiator-can-complete>
@@ -14,9 +14,7 @@
     <serviceTask id="Save_context" name="Enregistrement du context" flowable:delegateExpression="${saveContext}">
       <documentation>Review - Permet de vérifier si les données du fichier ont bien été téléchargées</documentation>
     </serviceTask>
-    <userTask id="save_context" name="Check context
-
-" flowable:formFieldValidation="true"></userTask>
+    <userTask id="save_context" name="Check context" flowable:formFieldValidation="true"></userTask>
     <sequenceFlow id="sid-4173782E-C5C7-4C72-B5A0-65B3EECC70ED" sourceRef="Save_context" targetRef="save_context"></sequenceFlow>
     <sequenceFlow id="sid-FBD23415-975C-4268-BD79-357181167D9D" sourceRef="save_context" targetRef="end_process"></sequenceFlow>
   </process>

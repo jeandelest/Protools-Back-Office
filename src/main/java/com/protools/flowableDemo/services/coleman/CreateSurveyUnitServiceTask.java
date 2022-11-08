@@ -36,10 +36,11 @@ public class CreateSurveyUnitServiceTask implements JavaDelegate {
         logger.info("\t >> Create Survey Unit into Coleman Pilotage & Questionnaire Service Task <<  ");
         JSONObject questionnaireColemanData = (JSONObject) delegateExecution.getVariableLocal("questionnaireColemanData");
         JSONObject pilotageColemanData = (JSONObject) delegateExecution.getVariableLocal("pilotageColemanData");
-        String idCampaign = (String) delegateExecution.getVariableLocal("idCampaign");
+        JSONObject partition = (JSONObject) delegateExecution.getVariableLocal("Partition");
+        String idCampaign = (String) delegateExecution.getVariableLocal("Id");
         String idUnit = (String) delegateExecution.getVariableLocal("idUnit");
 
-        questionnaireColemanData = transformColemanQuestionnaireData(questionnaireColemanData);
+        questionnaireColemanData = transformColemanQuestionnaireData(questionnaireColemanData, partition);
         sendColemanPilotageData(pilotageColemanData,idCampaign);
         sendColemanQuestionnaireData(questionnaireColemanData,idUnit);
 
@@ -108,48 +109,19 @@ public class CreateSurveyUnitServiceTask implements JavaDelegate {
         logger.info("\t \t Coleman Pilotage Response : "+ responseQuestionnaire.statusCode());
     }
 
-    public JSONObject transformColemanQuestionnaireData(JSONObject questionnaireColemanData){
+    public JSONObject transformColemanQuestionnaireData(JSONObject questionnaireColemanData, JSONObject partition){
         // TODO : Vérifier le format des données
         questionnaireColemanData = (JSONObject) questionnaireColemanData.get("questionnaire");
         // Ajout de la personalisation
         String sexe = (String) questionnaireColemanData.getJSONObject("data").getJSONObject("EXTERNAL").get("TYPE_QUEST");
         List<JSONObject> personalisationContent = new ArrayList<>();
-        // TODO : Remplacer le string partition par la variable de contexte partition
+        // TODO : Remplacer la partition une fois un fichier de contexte correct obtenu
         switch (sexe) {
             case "1":
-                JSONObject personalisationContent1 = new JSONObject();
-                personalisationContent1.put("name", "whoAnswer1");
-                personalisationContent1.put("value", "partition1.quiRepond1");
-
-                JSONObject personalisationContent2 = new JSONObject();
-                personalisationContent2.put("name", "whoAnswer2");
-                personalisationContent2.put("value", "partition1.quiRepond2");
-
-                JSONObject personalisationContent3 = new JSONObject();
-                personalisationContent3.put("name", "whoAnswer1");
-                personalisationContent3.put("value", "partition1.quiRepond2");
-
-                personalisationContent.add(personalisationContent1);
-                personalisationContent.add(personalisationContent2);
-                personalisationContent.add(personalisationContent3);
-
+                personalisationContent.add((JSONObject) partition);
                 break;
             case "2":
-                JSONObject personalisationContent21 = new JSONObject();
-                personalisationContent21.put("name", "whoAnswer1");
-                personalisationContent21.put("value", "partition2.quiRepond1");
-
-                JSONObject personalisationContent22 = new JSONObject();
-                personalisationContent22.put("name", "whoAnswer2");
-                personalisationContent22.put("value", "partition2.quiRepond2");
-
-                JSONObject personalisationContent23 = new JSONObject();
-                personalisationContent23.put("name", "whoAnswer1");
-                personalisationContent23.put("value", "partition2.quiRepond2");
-
-                personalisationContent.add(personalisationContent21);
-                personalisationContent.add(personalisationContent22);
-                personalisationContent.add(personalisationContent23);
+                personalisationContent.add((JSONObject) partition);
         }
         questionnaireColemanData.put("personalization", personalisationContent);
         return questionnaireColemanData;
