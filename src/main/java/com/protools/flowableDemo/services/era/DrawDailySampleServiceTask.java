@@ -40,7 +40,7 @@ public class DrawDailySampleServiceTask implements JavaDelegate {
 
     // Get daily sample IDs from ERA
     public List<Map> getSampleIDs() throws ParseException, JsonProcessingException {
-        Calendar cal = Calendar.getInstance();
+        /*Calendar cal = Calendar.getInstance();
         // Set hours, minutes, seconds and millis to zero to avoid errors
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
@@ -60,7 +60,10 @@ public class DrawDailySampleServiceTask implements JavaDelegate {
 
         SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-JJ");
         String startDate = sdf.format(start);
-        String endDate = sdf.format(end);
+        String endDate = sdf.format(end);*/
+        String startDate = "2022-01-24";
+        String endDate = "2022-01-25";
+
 
         logger.info("\t \t >> Get survey sample for today : {} << ", endDate.toString());
 
@@ -80,6 +83,7 @@ public class DrawDailySampleServiceTask implements JavaDelegate {
 
         Gson gson = new Gson();
         List<String> responseList = (List<String>) gson.fromJson(gson.toJson(response.body()),List.class);
+        logger.info("\t \t >> Response : {} << ", responseList.toString());
         List<Map> listOfIds = new ArrayList<>();
         for (String s : responseList) {
             logger.info("\t \t >> Sample ID : {} << ", s);
