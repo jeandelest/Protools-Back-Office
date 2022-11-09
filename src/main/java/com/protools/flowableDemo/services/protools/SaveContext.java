@@ -61,6 +61,7 @@ public class SaveContext implements JavaDelegate {
                     logger.info(subEntry.getKey() + ": " + subEntry.getValue()+ " of type "+ subEntry.getValue().getClass());
                     if (newVariables.containsKey(subEntry.getKey())){
                         // C'est super sale, mais ça suffit pour le moment
+                        // En plus empiriquement c'est pas utile
                         newVariables.put(subEntry.getKey()+".1", newVariables.remove(subEntry.getKey()));
                         newVariables.put(subEntry.getKey()+".2",subEntry.getValue());
                     } else {

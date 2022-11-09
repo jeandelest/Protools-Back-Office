@@ -3,7 +3,7 @@
   <process id="ProcessTestFeature" name="Process Test Fonctionnalités Diverses" isExecutable="true">
     <documentation>Processus de tests de fonctionnalités et de tâches pour [FAM]</documentation>
     <startEvent id="Start_Process" name="Start Process" flowable:formFieldValidation="true"></startEvent>
-    <userTask id="upload_file" name="Upload Fichier" flowable:assignee="user" flowable:category="upload" flowable:formFieldValidation="true">
+    <userTask id="upload_file" name="Upload Fichier" flowable:assignee="user" flowable:category="Upload" flowable:formFieldValidation="true">
       <documentation>Upload - Test Upload Fichier</documentation>
       <extensionElements>
         <modeler:initiator-can-complete xmlns:modeler="http://flowable.org/modeler"><![CDATA[false]]></modeler:initiator-can-complete>
@@ -11,7 +11,7 @@
     </userTask>
     <sequenceFlow id="sid-2E55816C-0371-41B2-9258-CCE324879A6A" sourceRef="Start_Process" targetRef="upload_file"></sequenceFlow>
     <sequenceFlow id="sid-5530E905-82FA-486B-80F5-14879CFA9C1D" sourceRef="upload_file" targetRef="Save_context"></sequenceFlow>
-    <serviceTask id="Save_context" name="Enregistrement du context" flowable:delegateExpression="SaveContext">
+    <serviceTask id="Save_context" name="Enregistrement du context" flowable:delegateExpression="${saveContext}">
       <documentation>Review - Permet de vérifier si les données du fichier ont bien été téléchargées</documentation>
     </serviceTask>
     <userTask id="save_context" name="Check context
@@ -19,7 +19,7 @@
 " flowable:category="Review" flowable:formFieldValidation="true"></userTask>
     <sequenceFlow id="sid-4173782E-C5C7-4C72-B5A0-65B3EECC70ED" sourceRef="Save_context" targetRef="save_context"></sequenceFlow>
     <sequenceFlow id="sid-8C89F58D-CF65-4EDA-AB7C-0F2AC45485BC" sourceRef="save_context" targetRef="appel_era"></sequenceFlow>
-    <serviceTask id="appel_era" name="Récupération échantillon ERA" flowable:delegateExpression="DrawDailySampleServiceTask">
+    <serviceTask id="appel_era" name="Récupération échantillon ERA" flowable:delegateExpression="${drawDailySampleServiceTask}">
       <documentation>Appel simple à ERA pour récupérer un échantillon à une date donnée</documentation>
     </serviceTask>
     <endEvent id="end_process" name="End Process"></endEvent>
