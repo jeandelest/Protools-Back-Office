@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.google.gson.Gson;
 import com.protools.flowableDemo.services.engineService.WorkflowService;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
@@ -12,6 +13,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.websocket.OnClose;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -29,6 +34,14 @@ public class SaveContext implements JavaDelegate {
         Map<String,Object> result = saveContext(node);
         logger.info("Final result: " + result);
         delegateExecution.setVariables(result);
+
+        // Extraction données du timer de cloture de campagne
+        // TODO : à déplacer dans une fonction dédiée
+        LinkedHashMap<Object,Object> partitionsStr = (LinkedHashMap) delegateExecution.getVariable("Partition");
+        String dateFinCampagne = getDateFinCampagne(partitionsStr);
+        delegateExecution.setVariable("dateFinCampagne",dateFinCampagne);
+
+        // Purge de la variable initiale
         delegateExecution.removeVariable("contextRawFile");
 
     }
@@ -45,8 +58,6 @@ public class SaveContext implements JavaDelegate {
         return node;
     }
     public Map<String, Object> saveContext(JsonNode node){
-        //TODO : Sauvegarder les objets dans la base de données
-
         //Récupération premier niveau et init de la clé
         String key = "Campaign";
         ObjectMapper mapper = new ObjectMapper();
@@ -75,5 +86,23 @@ public class SaveContext implements JavaDelegate {
         return newVariables;
 
 
+    }
+
+    public String getDateFinCampagne(LinkedHashMap<Object,Object> partitionsStr){
+        Gson gson = new Gson();
+        Map<String, Object> partitions = gson.fromJson(gson.toJson(partitionsStr),Map.class);
+        String dateFinCampagne = "2000-01-01";
+
+        Map<String, Object> dateObject = (Map<String, Object>) partitions.get("Dates");
+        dateFinCampagne = ((String)dateObject.get("DateFinCollecte")).substring(0, 10);
+
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate date = LocalDate.parse(dateFinCampagne, dateFormat);
+
+        DateTimeFormatter finalFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        dateFinCampagne = date.format(finalFormatter);
+
+        logger.info("Date de fin de campagne: " + dateFinCampagne);
+        return dateFinCampagne;
     }
 }

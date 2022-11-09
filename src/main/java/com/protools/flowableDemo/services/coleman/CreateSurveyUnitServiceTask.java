@@ -39,12 +39,16 @@ public class CreateSurveyUnitServiceTask implements JavaDelegate {
         JSONObject partition = (JSONObject) delegateExecution.getVariableLocal("Partition");
         String idCampaign = (String) delegateExecution.getVariableLocal("Id");
         String idUnit = (String) delegateExecution.getVariableLocal("idUnit");
+        //Extraction donnée du timer
+        delegateExecution.setVariableLocal("partition.collectionEndDate",partition.getJSONObject("Dates").getJSONObject("DateFinCollecte"));
 
         questionnaireColemanData = transformColemanQuestionnaireData(questionnaireColemanData, partition);
         sendColemanPilotageData(pilotageColemanData,idCampaign);
         sendColemanQuestionnaireData(questionnaireColemanData,idUnit);
 
+
     }
+
 
     // Send TRANSFORMED data into Coleman Pilotage
     public void sendColemanPilotageData(JSONObject pilotageColemanData, String idCampaign){
