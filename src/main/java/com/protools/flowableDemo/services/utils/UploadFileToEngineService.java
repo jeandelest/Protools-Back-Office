@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 import com.protools.flowableDemo.services.engineService.WorkflowService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 @Service
+@Slf4j
 public class UploadFileToEngineService {
-	private Logger logger = LogManager.getLogger(UploadFileToEngineService.class);
 
 	private final Path fileStorageLocation;
 
@@ -58,13 +59,13 @@ public class UploadFileToEngineService {
 			// Récupérer le contenu du fichier
 			String content = new String(file.getBytes(), StandardCharsets.UTF_8).replaceAll("[\\n\\r\\t]+", "");
 
-			logger.info("\t >> Context File content : " + content);
+			log.info("\t >> Context File content : " + content);
 			var values = new HashMap<String, Object>();
 			values.put("contextRawFile", content);
 			// Complete task & upload file content into the engine
 
 			workflowService.completeTask(taskID, values, "user");
-			logger.info("\t >> Context File uploaded to process engine");
+			log.info("\t >> Context File uploaded to process engine");
 			return fileName;
 		} catch (IOException ex) {
 			throw new RuntimeException("Could not store file " + fileName, ex);

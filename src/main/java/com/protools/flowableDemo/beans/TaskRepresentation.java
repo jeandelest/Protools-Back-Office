@@ -1,5 +1,10 @@
 package com.protools.flowableDemo.beans;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class TaskRepresentation {
     private String id;
     private String name;
@@ -16,40 +21,5 @@ public class TaskRepresentation {
         this.delegationState = delegationState;
     }
 
-    public String getId() {
-        return id;
-    }
-    public void setId(String id) {
-        this.id = id;
-    }
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
 
-    public String getGetParentTaskId() {
-        return getParentTaskId;
-    }
-
-    public void setGetParentTaskId(String getParentTaskId) {
-        this.getParentTaskId = getParentTaskId;
-    }
-
-    public String getGetProcessInstanceId() {
-        return getProcessInstanceId;
-    }
-
-    public void setGetProcessInstanceId(String getProcessInstanceId) {
-        this.getProcessInstanceId = getProcessInstanceId;
-    }
-
-    public String getDelegationState() {
-        return delegationState;
-    }
-
-    public void setDelegationState(String delegationState) {
-        this.delegationState = delegationState;
-    }
 }

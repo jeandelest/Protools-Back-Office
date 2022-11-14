@@ -7,32 +7,31 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.google.gson.Gson;
 import com.protools.flowableDemo.services.engineService.WorkflowService;
+import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.websocket.OnClose;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Component
+@Slf4j
 public class SaveContext implements JavaDelegate {
     @Autowired
     private WorkflowService workflowService;
-    Logger logger = LoggerFactory.getLogger(SaveContext.class);
     @Override
     public void execute(org.flowable.engine.delegate.DelegateExecution delegateExecution) {
-        logger.info("\t >> Save Context Service Task <<  ");
+        log.info("\t >> Save Context Service Task <<  ");
         String xmlFile = (String) delegateExecution.getVariable("contextRawFile");
         JsonNode node = parseXml(xmlFile);
         Map<String,Object> result = saveContext(node);
-        logger.info("Final result: " + result);
+        log.info("Final result: " + result);
         delegateExecution.setVariables(result);
 
         // Extraction données du timer de cloture de campagne
@@ -50,7 +49,7 @@ public class SaveContext implements JavaDelegate {
         JsonNode node = null;
         try {
             node = xmlMapper.readTree(xmlFile);
-            logger.info("Xml file parsed into JsonNode: " + node);
+            log.info("Xml file parsed into JsonNode: " + node);
 
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
@@ -62,14 +61,14 @@ public class SaveContext implements JavaDelegate {
         String key = "Campaign";
         ObjectMapper mapper = new ObjectMapper();
         Map<String, Object> result = mapper.convertValue(node, new TypeReference<Map<String, Object>>(){});
-        logger.info("result: " + result);
+        log.info("result: " + result);
         Map<String, Object> newVariables = new HashMap<>();
         //Iterate over result map
         for (Map.Entry<String, Object> entry : result.entrySet()) {
             if (entry.getValue() instanceof LinkedHashMap) {
                 Map<String,Object> subMap = (Map<String, Object>) entry.getValue();
                 for (Map.Entry<String,Object> subEntry : subMap.entrySet()){
-                    logger.info(subEntry.getKey() + ": " + subEntry.getValue()+ " of type "+ subEntry.getValue().getClass());
+                    log.info(subEntry.getKey() + ": " + subEntry.getValue()+ " of type "+ subEntry.getValue().getClass());
                     if (newVariables.containsKey(subEntry.getKey())){
                         // C'est super sale, mais ça suffit pour le moment
                         // En plus empiriquement c'est pas utile
@@ -102,7 +101,7 @@ public class SaveContext implements JavaDelegate {
         DateTimeFormatter finalFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         dateFinCampagne = date.format(finalFormatter);
 
-        logger.info("Date de fin de campagne: " + dateFinCampagne);
+        log.info("Date de fin de campagne: " + dateFinCampagne);
         return dateFinCampagne;
     }
 }

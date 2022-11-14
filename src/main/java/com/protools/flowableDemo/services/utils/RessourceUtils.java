@@ -1,6 +1,7 @@
 package com.protools.flowableDemo.services.utils;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -21,17 +22,17 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 @Service
+@Slf4j
 public class RessourceUtils {
-    private static Logger logger = LogManager.getLogger(RessourceUtils.class);
     public static String getResourceFileAsString(String fileName) throws IOException, TransformerException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
 
         String fileNameFinal = "processes/"+fileName+".bpmn20.xml";
-        logger.info("\t >> Getting file : "+fileNameFinal);
+        log.info("\t >> Getting file : "+fileNameFinal);
 
         InputStream file = classloader.getResourceAsStream(fileNameFinal);
-        logger.info("\t >> File found : "+ file.toString());
+        log.info("\t >> File found : "+ file.toString());
         String lines = new String();
         Document doc = null;
 
@@ -44,7 +45,7 @@ public class RessourceUtils {
                 lines += line;
             }
             lines = lines.replace("\n", "").replace("\r", "");
-            logger.info("lines: " + lines);
+            log.info("lines: " + lines);
             DocumentBuilder builder = dbf.newDocumentBuilder();
             doc = builder.parse(new InputSource(new StringReader(lines)));
 
@@ -65,7 +66,7 @@ public class RessourceUtils {
         transformer.transform(new DOMSource(doc), new StreamResult(out));
         String outString = out.toString().replaceAll("[\\\r]+", "");
 
-        //logger.info("\t >> File converted to String : "+ outString);
+        //log.info("\t >> File converted to String : "+ outString);
         return outString;
 
     }

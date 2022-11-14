@@ -1,9 +1,13 @@
 package com.protools.flowableDemo.beans;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
-@Component
+@Getter
+@Setter
 public class Person {
     private Long id;
     private String nom;
@@ -20,44 +24,6 @@ public class Person {
         this.prenom = prenom;
 
     }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getNom() {
-        return nom;
-    }
-
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
-
-    public String getPrenom() {
-        return prenom;
-    }
-
-    public void setPrenom(String prenom) {
-        this.prenom = prenom;
-    }
-
-    public Long getIdSurvey() {
-        return idSurvey;
-    }
-
-    public void setIdSurvey(Long id_survey) {
-        this.idSurvey = id_survey;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-
 
     @Override
     public boolean equals(Object o) {

@@ -1,5 +1,6 @@
 package com.protools.flowableDemo.services.engineService;
 
+import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.*;
 import org.flowable.engine.history.HistoricActivityInstance;
 import org.flowable.engine.history.HistoricProcessInstance;
@@ -13,8 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 @Service
+@Slf4j
 public class HistoryInfoService {
-    private Logger logger =LogManager.getLogger(HistoryInfoService.class);
     @Autowired
     private HistoryService historyService;
 

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import liquibase.pro.packaged.J;
 import liquibase.pro.packaged.S;
+import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.json.JSONObject;
@@ -22,8 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@Slf4j
 public class CreateSurveyUnitServiceTask implements JavaDelegate {
-    Logger logger = LoggerFactory.getLogger(CreateSurveyUnitServiceTask.class);
 
     @Value("${fr.insee.coleman.questionnaire.uri}")
     private String colemanQuestionnaireUri;
@@ -33,7 +34,7 @@ public class CreateSurveyUnitServiceTask implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution delegateExecution){
-        logger.info("\t >> Create Survey Unit into Coleman Pilotage & Questionnaire Service Task <<  ");
+        log.info("\t >> Create Survey Unit into Coleman Pilotage & Questionnaire Service Task <<  ");
         JSONObject questionnaireColemanData = (JSONObject) delegateExecution.getVariableLocal("questionnaireColemanData");
         JSONObject pilotageColemanData = (JSONObject) delegateExecution.getVariableLocal("pilotageColemanData");
         JSONObject partition = (JSONObject) delegateExecution.getVariableLocal("Partition");
@@ -81,7 +82,7 @@ public class CreateSurveyUnitServiceTask implements JavaDelegate {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        logger.info("\t \t Coleman Pilotage Response : "+ responsePilotage.statusCode());
+        log.info("\t \t Coleman Pilotage Response : "+ responsePilotage.statusCode());
     }
 
     // Send TRANSFORMED data into Coleman Questionnaire
@@ -110,7 +111,7 @@ public class CreateSurveyUnitServiceTask implements JavaDelegate {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        logger.info("\t \t Coleman Pilotage Response : "+ responseQuestionnaire.statusCode());
+        log.info("\t \t Coleman Pilotage Response : "+ responseQuestionnaire.statusCode());
     }
 
     public JSONObject transformColemanQuestionnaireData(JSONObject questionnaireColemanData, JSONObject partition){

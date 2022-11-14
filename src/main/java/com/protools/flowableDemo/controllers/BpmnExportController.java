@@ -2,6 +2,7 @@ package com.protools.flowableDemo.controllers;
 
 import com.protools.flowableDemo.services.utils.RessourceUtils;
 import io.swagger.v3.oas.annotations.Operation;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,8 @@ import javax.xml.transform.TransformerException;
 import java.io.IOException;
 
 @RestController
+@Slf4j
 public class BpmnExportController {
-    private Logger logger = LogManager.getLogger(BpmnExportController.class);
 
     @Autowired
     private RessourceUtils ressourceUtils;
@@ -27,7 +28,7 @@ public class BpmnExportController {
     @Operation(summary = "Return BPMN file (String format) by processKey")
     @GetMapping(value = "/getBPMNFile/{processKey}", produces = MediaType.APPLICATION_XML_VALUE)
     public ResponseEntity<String> getBPMNInfo(@PathVariable String processKey) throws IOException, TransformerException {
-        logger.info("\t >> Getting BPMN file (String format) with processKey : "+processKey);
+        log.info("\t >> Getting BPMN file (String format) with processKey : "+processKey);
         return ResponseEntity.status(HttpStatus.OK).body((RessourceUtils.getResourceFileAsString(processKey)));
     }
 }

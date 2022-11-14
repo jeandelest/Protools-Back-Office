@@ -25,7 +25,6 @@ import java.util.Map;
 
 @RestController
 public class ProcessInfoController {
-    private Logger logger =LogManager.getLogger(ProcessInfoController.class);
     @Autowired
     private WorkflowInfoService workflowInfoService;
 

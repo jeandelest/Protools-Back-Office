@@ -10,7 +10,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 public class FileUploadController {
-
     private final UploadFileToEngineService uploadFileToEngineService;
 
     public FileUploadController(UploadFileToEngineService uploadFileToEngineService) {

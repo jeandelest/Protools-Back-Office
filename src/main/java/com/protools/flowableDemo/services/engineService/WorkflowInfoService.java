@@ -1,5 +1,6 @@
 package com.protools.flowableDemo.services.engineService;
 
+import lombok.extern.slf4j.Slf4j;
 import org.flowable.bpmn.model.BpmnModel;
 import org.flowable.bpmn.model.ExtensionElement;
 import org.flowable.bpmn.model.FlowElement;
@@ -22,8 +23,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class WorkflowInfoService {
-    private Logger logger =LogManager.getLogger(WorkflowInfoService.class);
     @Autowired
     private RuntimeService runtimeService;
 
@@ -87,7 +88,7 @@ public class WorkflowInfoService {
     public JSONArray getTasks(String assignee) {
         List<Task> response = taskService.createTaskQuery().taskAssignee(assignee).list();
         JSONArray jsonArray = new JSONArray();
-        logger.info("Ceci est un test pour voir s'il prend en compte la dernière version du code");
+        log.info("Ceci est un test pour voir s'il prend en compte la dernière version du code");
         for (int i =0; i<response.size(); i++) {
             JSONObject jsonResponse = new JSONObject();
             jsonResponse.put("TaskId", response.get(i).getId());

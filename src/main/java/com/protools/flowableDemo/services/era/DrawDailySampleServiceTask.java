@@ -2,6 +2,7 @@ package com.protools.flowableDemo.services.era;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
+import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,14 +19,13 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Component
+@Slf4j
 public class DrawDailySampleServiceTask implements JavaDelegate {
-    Logger logger = LoggerFactory.getLogger(DrawDailySampleServiceTask.class);
-
     @Value("${fr.insee.era.api}")
     private String eraUrl;
     @Override
     public void execute(org.flowable.engine.delegate.DelegateExecution delegateExecution) {
-        logger.info("\t >> Draw Daily Sample Service Task <<  ");
+        log.info("\t >> Draw Daily Sample Service Task <<  ");
         try {
             List<Map> listOfSampleUnit = getSampleIDs();
             delegateExecution.setVariable("sample",listOfSampleUnit);
@@ -65,7 +65,7 @@ public class DrawDailySampleServiceTask implements JavaDelegate {
         String endDate = "2022-01-25";
 
 
-        logger.info("\t \t >> Get survey sample for today : {} << ", endDate.toString());
+        log.info("\t \t >> Get survey sample for today : {} << ", endDate.toString());
 
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
@@ -83,14 +83,14 @@ public class DrawDailySampleServiceTask implements JavaDelegate {
 
         Gson gson = new Gson();
         List<String> responseList = (List<String>) gson.fromJson(gson.toJson(response.body()),List.class);
-        logger.info("\t \t >> Response : {} << ", responseList.toString());
+        log.info("\t \t >> Response : {} << ", responseList.toString());
         List<Map> listOfIds = new ArrayList<>();
         for (String s : responseList) {
-            logger.info("\t \t >> Sample ID : {} << ", s);
+            log.info("\t \t >> Sample ID : {} << ", s);
             Map unitMap = gson.fromJson(gson.toJson(s), Map.class);
             listOfIds.add(unitMap);
         }
-        logger.info("\t \t >>> Got today's sample from ERA  : " + listOfIds.toString());
+        log.info("\t \t >>> Got today's sample from ERA  : " + listOfIds.toString());
         return listOfIds;
     }
 
