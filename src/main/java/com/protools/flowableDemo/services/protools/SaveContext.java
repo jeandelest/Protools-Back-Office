@@ -95,17 +95,11 @@ public class SaveContext implements JavaDelegate {
     public String getDateFinCampagne(LinkedHashMap<Object,Object> partitionsStr){
         Gson gson = new Gson();
         Map<String, Object> partitions = gson.fromJson(gson.toJson(partitionsStr),Map.class);
-        log.info("Partitions: " + partitions);
+
         String dateFinCampagne = "2000-01-01";
 
         Map<String, Object> dateObject = (Map<String, Object>) partitions.get("Dates");
-        dateFinCampagne = ((String)dateObject.get("DateFinCollecte")).substring(0, 10);
-
-        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate date = LocalDate.parse(dateFinCampagne, dateFormat);
-
-        DateTimeFormatter finalFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        dateFinCampagne = date.format(finalFormatter);
+        dateFinCampagne = ((String)dateObject.get("CollectionEndDate")).substring(0, 10);
 
         log.info("Date de fin de campagne: " + dateFinCampagne);
         return dateFinCampagne;
