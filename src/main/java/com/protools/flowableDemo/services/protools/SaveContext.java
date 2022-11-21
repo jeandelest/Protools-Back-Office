@@ -37,8 +37,13 @@ public class SaveContext implements JavaDelegate {
         // Extraction données du timer de cloture de campagne
         // TODO : à déplacer dans une fonction dédiée
         LinkedHashMap<Object,Object> partitionsStr = (LinkedHashMap) delegateExecution.getVariable("Partition");
-        String dateFinCampagne = getDateFinCampagne(partitionsStr);
-        delegateExecution.setVariable("dateFinCampagne",dateFinCampagne);
+        try {
+            String dateFinCampagne = getDateFinCampagne(partitionsStr);
+            delegateExecution.setVariable("dateFinCampagne",dateFinCampagne);
+        } catch (Exception e) {
+            log.info("Could not extract dateFinCampagne from context file, error: " + e.getMessage());
+        }
+
 
         // Purge de la variable initiale
         delegateExecution.removeVariable("contextRawFile");
@@ -71,7 +76,7 @@ public class SaveContext implements JavaDelegate {
                     log.info(subEntry.getKey() + ": " + subEntry.getValue()+ " of type "+ subEntry.getValue().getClass());
                     if (newVariables.containsKey(subEntry.getKey())){
                         // C'est super sale, mais ça suffit pour le moment
-                        // En plus empiriquement c'est pas utile
+                        // Empiriquement c'est pas utile -> Par défaut il crée un array avec les valeurs
                         newVariables.put(subEntry.getKey()+".1", newVariables.remove(subEntry.getKey()));
                         newVariables.put(subEntry.getKey()+".2",subEntry.getValue());
                     } else {
@@ -90,6 +95,7 @@ public class SaveContext implements JavaDelegate {
     public String getDateFinCampagne(LinkedHashMap<Object,Object> partitionsStr){
         Gson gson = new Gson();
         Map<String, Object> partitions = gson.fromJson(gson.toJson(partitionsStr),Map.class);
+        log.info("Partitions: " + partitions);
         String dateFinCampagne = "2000-01-01";
 
         Map<String, Object> dateObject = (Map<String, Object>) partitions.get("Dates");

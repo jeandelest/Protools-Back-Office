@@ -22,7 +22,7 @@ public class ExtractSplitSurveyUnitServiceTask implements JavaDelegate {
     public void execute(org.flowable.engine.delegate.DelegateExecution delegateExecution) {
         log.info("\t >> Extract Survey Unit and Split response into two JSON Service Task <<  ");
         Integer unitID = (Integer) delegateExecution.getVariableLocal("unitID");
-        String idCampaign = (String) delegateExecution.getVariableLocal("Id");
+        String idCampaign = (String) delegateExecution.getVariable("Id");
         JSONObject surveyUnitInfo = extractSurveyUnit(unitID, idCampaign);
         String questionnaireKey = "questionnaire";
         JSONObject questionnaireObject = new JSONObject();
