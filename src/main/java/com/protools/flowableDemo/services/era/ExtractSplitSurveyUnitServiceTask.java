@@ -1,27 +1,27 @@
 package com.protools.flowableDemo.services.era;
 
+import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.stereotype.Component;
 
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-
+@Component
+@Slf4j
 public class ExtractSplitSurveyUnitServiceTask implements JavaDelegate {
-    Logger logger = LoggerFactory.getLogger(ExtractSplitSurveyUnitServiceTask.class);
-
     @Value("${fr.insee.era.api}")
     private String eraUrl;
     @Override
     public void execute(org.flowable.engine.delegate.DelegateExecution delegateExecution) {
-        logger.info("\t >> Extract Survey Unit and Split response into two JSON Service Task <<  ");
+        log.info("\t >> Extract Survey Unit and Split response into two JSON Service Task <<  ");
         Integer unitID = (Integer) delegateExecution.getVariableLocal("unitID");
-        JSONObject surveyUnitInfo = extractSurveyUnit(unitID);
+        String idCampaign = (String) delegateExecution.getVariable("Id");
+        JSONObject surveyUnitInfo = extractSurveyUnit(unitID, idCampaign);
         String questionnaireKey = "questionnaire";
         JSONObject questionnaireObject = new JSONObject();
 
@@ -31,10 +31,10 @@ public class ExtractSplitSurveyUnitServiceTask implements JavaDelegate {
         delegateExecution.setVariableLocal("pilotageColemmanData",surveyUnitInfo);
     }
 
-    public JSONObject extractSurveyUnit(Integer unitID){
+    public JSONObject extractSurveyUnit(Integer unitID, String idCampaign){
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(eraUrl+"/extraction-survey-unit/"+unitID))
+                .uri(URI.create(eraUrl+"/extraction-survey-unit/"+unitID+ "?idCampaign" +idCampaign))
                 .setHeader(HttpHeaders.CONTENT_TYPE, "application/json")
                 .GET()
                 .build();
@@ -47,7 +47,7 @@ public class ExtractSplitSurveyUnitServiceTask implements JavaDelegate {
         }
 
         JSONObject jsonResponse = new JSONObject(response.body());
-        logger.info("\t \t >>> Get Survey Unit info for unit  : " + unitID + " << ");
+        log.info("\t \t >>> Get Survey Unit info for unit  : " + unitID + " << ");
         return jsonResponse;
     }
 
