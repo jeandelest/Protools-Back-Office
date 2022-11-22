@@ -1,8 +1,5 @@
 package com.protools.flowableDemo;
 
-import java.util.Arrays;
-import java.util.stream.StreamSupport;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.flowable.engine.RepositoryService;
@@ -15,6 +12,9 @@ import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.core.env.EnumerablePropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.MutablePropertySources;
+
+import java.util.Arrays;
+import java.util.stream.StreamSupport;
 
 @SpringBootApplication
 public class FlowablePocApplication {
