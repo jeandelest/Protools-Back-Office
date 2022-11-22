@@ -1,6 +1,7 @@
 package com.protools.flowableDemo.services.engineService;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.*;
 import org.flowable.engine.repository.Deployment;
 import org.flowable.engine.repository.ProcessDefinition;
@@ -8,8 +9,6 @@ import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.engine.runtime.ProcessInstanceBuilder;
 import org.flowable.task.api.Task;
 import org.json.JSONObject;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,8 +16,8 @@ import java.util.List;
 import java.util.HashMap;
 
 @Service
+@Slf4j
 public class WorkflowService {
-    private Logger logger =LogManager.getLogger(WorkflowService.class);
     @Autowired
     private RuntimeService runtimeService;
 
@@ -40,8 +39,8 @@ public class WorkflowService {
         List<ProcessInstance> liste = runtimeService.createProcessInstanceQuery()
                 .processDefinitionKey(ProcessKey)
                 .list();
-        logger.info("Process Instance ID : " + liste.get(0).getId());
-        logger.info("Added businessKey to the process :"+ liste.get(0).getBusinessKey() );
+        log.info("Process Instance ID : " + liste.get(0).getId());
+        log.info("Added businessKey to the process :"+ liste.get(0).getBusinessKey() );
 
 
         JSONObject jsonResponse = new JSONObject();
@@ -58,31 +57,31 @@ public class WorkflowService {
     @Transactional
     public void claimTasks(String taskID, String assignee){
         List<Task> taskInstances = taskService.createTaskQuery().taskId(taskID).list();
-        logger.info("Task List before claim: ", taskInstances.get(0));
+        log.info("Task List before claim: ", taskInstances.get(0));
         if (taskInstances.size() > 0) {
             for (Task t : taskInstances) {
                 taskService.addCandidateGroup(t.getId(), "userTeam");
-                logger.info("> Claiming task: " + t.getId());
+                log.info("> Claiming task: " + t.getId());
                 taskService.claim(t.getId(),assignee);
             }
         } else {
-            logger.info("\t >> No task found.");
+            log.info("\t >> No task found.");
         }
     }
 
     @Transactional
     public void completeTask(String taskID, HashMap<String,Object> variables, String assignee){
         List<Task> taskInstances = taskService.createTaskQuery().taskId(taskID).taskAssignee(assignee).list();
-        logger.info("> Completing task from process : " + taskID);
-        logger.info("\t > Variables : " + variables.toString());
+        log.info("> Completing task from process : " + taskID);
+        log.info("\t > Variables : " + variables.toString());
         if (taskInstances.size() > 0) {
             for (Task t : taskInstances) {
                 taskService.addCandidateGroup(t.getId(), "userTeam");
-                logger.info("> Completing task: " + t.getId());
+                log.info("> Completing task: " + t.getId());
                 taskService.complete(t.getId(),variables);
             }
         } else {
-            logger.info("\t \t >> There are no task for me to complete");
+            log.info("\t \t >> There are no task for me to complete");
         }
     }
 
@@ -117,7 +116,7 @@ public class WorkflowService {
                 .deploymentId(deployment.getId())
                 .singleResult();
 
-        logger.info("Deployed new process definition : " + processDefinition.getName());
+        log.info("Deployed new process definition : " + processDefinition.getName());
     }
 
     @Transactional

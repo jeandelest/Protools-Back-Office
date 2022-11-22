@@ -4,7 +4,9 @@ import com.protools.flowableDemo.services.engineService.EventInfoService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.flowable.eventregistry.api.EventDeployment;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,8 +21,8 @@ public class EventInfoController {
     @CrossOrigin
     @Operation(summary = "Get Events ")
     @GetMapping(value = "/eventDeployments", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<EventDeployment> getEventActivity(){
-        return(eventInfoService.getEventDeployments());
+    public ResponseEntity<List<EventDeployment>>getEventActivity(){
+        return ResponseEntity.status(HttpStatus.OK).body((eventInfoService.getEventDeployments()));
     }
 
 }

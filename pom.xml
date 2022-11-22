@@ -114,16 +114,11 @@
 			<artifactId>junit-jupiter-params</artifactId>
 			<scope>test</scope>
 		</dependency>
-
 		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-api</artifactId>
-			<version>${log4j2.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-core</artifactId>
-			<version>${log4j2.version}</version>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.24</version>
+			<scope>provided</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-xml -->
 		<dependency>
