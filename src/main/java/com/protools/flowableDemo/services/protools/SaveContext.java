@@ -61,14 +61,14 @@ public class SaveContext implements JavaDelegate {
         String key = "Campaign";
         ObjectMapper mapper = new ObjectMapper();
         Map<String, Object> result = mapper.convertValue(node, new TypeReference<Map<String, Object>>(){});
-        log.info("result: " + result);
+        //log.info("result: " + result);
         Map<String, Object> newVariables = new HashMap<>();
         //Iterate over result map
         for (Map.Entry<String, Object> entry : result.entrySet()) {
             if (entry.getValue() instanceof LinkedHashMap) {
                 Map<String,Object> subMap = (Map<String, Object>) entry.getValue();
                 for (Map.Entry<String,Object> subEntry : subMap.entrySet()){
-                    log.info(subEntry.getKey() + ": " + subEntry.getValue()+ " of type "+ subEntry.getValue().getClass());
+                    //log.info(subEntry.getKey() + ": " + subEntry.getValue()+ " of type "+ subEntry.getValue().getClass());
                     if (newVariables.containsKey(subEntry.getKey())){
                         // C'est super sale, mais ça suffit pour le moment
                         // Empiriquement c'est pas utile -> Par défaut il crée un array avec les valeurs

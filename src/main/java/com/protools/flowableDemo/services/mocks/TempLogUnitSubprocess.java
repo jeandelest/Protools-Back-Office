@@ -14,9 +14,9 @@ public class TempLogUnitSubprocess implements JavaDelegate {
     public void execute(org.flowable.engine.delegate.DelegateExecution delegateExecution) {
         log.info("\t >> Temporary Service Task Log Unit Subprocess <<  ");
         // Retrieve variables (à tester si c'est une var locale ou globale)
-        Map unit = (Map) delegateExecution.getVariableLocal("unit");
-
-        log.info("\t \t Got unit id" + unit.get("id"));
+        Map unit = (Map) delegateExecution.getVariable("unit");
+        log.info("\t \t Got unit : " + unit);
+        log.info("\t \t Unit ID: " + unit.get("id"));
     }
 }
 
