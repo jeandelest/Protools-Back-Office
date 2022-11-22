@@ -81,14 +81,14 @@ public class DrawDailySampleServiceTask implements JavaDelegate {
         Gson gson = new Gson();
         List<String> responseList = (List<String>) gson.fromJson(gson.toJson(response.body()),List.class);
         log.info("\t \t >> Response : {} << ", responseList.toString());
-        List<Map> listOfIds = new ArrayList<>();
+        List<Map> unitList = new ArrayList<>();
         for (String s : responseList) {
             log.info("\t \t >> Sample ID : {} << ", s);
             Map unitMap = gson.fromJson(gson.toJson(s), Map.class);
-            listOfIds.add(unitMap);
+            unitList.add(unitMap);
         }
-        log.info("\t \t >>> Got today's sample from ERA  : " + listOfIds.toString());
-        return listOfIds;
+        log.info("\t \t >>> Got today's sample from ERA  : " + unitList.toString());
+        return unitList;
     }
 
 }
