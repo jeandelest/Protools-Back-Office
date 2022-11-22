@@ -17,10 +17,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Component
-public class SaveContext implements JavaDelegate {
+public class SaveContextTask implements JavaDelegate {
     @Autowired
     private WorkflowService workflowService;
-    Logger logger = LoggerFactory.getLogger(SaveContext.class);
+    Logger logger = LoggerFactory.getLogger(SaveContextTask.class);
     @Override
     public void execute(org.flowable.engine.delegate.DelegateExecution delegateExecution) {
         logger.info("\t >> Save Context Service Task <<  ");
@@ -29,7 +29,9 @@ public class SaveContext implements JavaDelegate {
         Map<String,Object> result = saveContext(node);
         logger.info("Final result: " + result);
         delegateExecution.setVariables(result);
-        delegateExecution.removeVariable("contextRawFile");
+
+        //TODO: je pense qu'il ne faut pas l'enlever
+        //delegateExecution.removeVariable("contextRawFile");
 
     }
     public JsonNode parseXml(String xmlFile){
