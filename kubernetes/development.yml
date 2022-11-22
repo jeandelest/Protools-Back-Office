@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: protools-back-office
-          image: inseefr/protools-back-office:develop
+          image: inseefr/protools-back-office:demo-support
           imagePullPolicy: Always
           env:
             - name: SPRING_DATASOURCE_PASSWORD
@@ -26,20 +26,3 @@ spec:
               value: postgres
             - name: SPRING_DATASOURCE_URL
               value: jdbc:postgresql://protools-database-postgresql/
-            - name: SPRING_RABBITMQ_HOST
-              value: "protools-rabbitmq"
-            - name: SPRING_RABBITMQ_PORT
-              value: "5672"
-            - name: SPRING_RABBITMQ_VIRTUEL_HOST
-              value: "/"
-            - name: SPRING_RABBITMQ_USERNAME
-              value: "user"
-            - name: SPRING_LOGGING_LEVEL_ROOT
-              value: "DEBUG"
-            - name: SPRING_RABBITMQ_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: protools-rabbitmq
-                  key: rabbitmq-password
-            - name: RABBITMQ_LISTENER_SIMPLE_ACKNOWLEDGE
-              value: "true"
