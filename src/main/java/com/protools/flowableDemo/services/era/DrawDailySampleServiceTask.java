@@ -1,6 +1,5 @@
 package com.protools.flowableDemo.services.era;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -79,12 +78,15 @@ public class DrawDailySampleServiceTask implements JavaDelegate {
         log.info("\t \t >> Get survey sample for today : {} << ", endDate.toString());
 
         HttpClient client = HttpClient.newHttpClient();
+        String token = keycloakService.getContextReferentialToken();
+        log.info("\t \t >> Get token : {} << ", token);
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(eraUrl+"/extraction-survey-unit/survey-units-for-period?startDate="+startDate+"&endDate="+endDate))
                 .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .setHeader(HttpHeaders.AUTHORIZATION,"Bearer " + keycloakService.getContextReferentialToken())
+                .setHeader(HttpHeaders.AUTHORIZATION,"Bearer " + token)
                 .GET()
                 .build();
+        
         HttpResponse<String> response = null;
         try {
             response = client.send(request,
