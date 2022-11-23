@@ -11,6 +11,8 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Map;
+
 @Component
 @Slf4j
 public class ExtractSplitSurveyUnitServiceTask implements JavaDelegate {
@@ -19,7 +21,8 @@ public class ExtractSplitSurveyUnitServiceTask implements JavaDelegate {
     @Override
     public void execute(org.flowable.engine.delegate.DelegateExecution delegateExecution) {
         log.info("\t >> Extract Survey Unit and Split response into two JSON Service Task <<  ");
-        Integer unitID = (Integer) delegateExecution.getVariableLocal("unitID");
+        Map unit = (Map) delegateExecution.getVariable("unit");
+        Integer unitID = (Integer) unit.get("id");
         String idCampaign = (String) delegateExecution.getVariable("Id");
         JSONObject surveyUnitInfo = extractSurveyUnit(unitID, idCampaign);
         String questionnaireKey = "questionnaire";
