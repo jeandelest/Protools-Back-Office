@@ -29,10 +29,10 @@ import lombok.extern.slf4j.Slf4j;
 public class DrawDailySampleServiceTask implements JavaDelegate {
     @Value("${fr.insee.era.api}")
     private String eraUrl;
-    
+
     @Autowired
     KeycloakService keycloakService;
-    
+
     @Override
     public void execute(org.flowable.engine.delegate.DelegateExecution delegateExecution) {
         log.info("\t >> Draw Daily Sample Service Task <<  ");
@@ -86,7 +86,7 @@ public class DrawDailySampleServiceTask implements JavaDelegate {
                 .setHeader(HttpHeaders.AUTHORIZATION,"Bearer " + token)
                 .GET()
                 .build();
-        
+
         HttpResponse<String> response = null;
         try {
             response = client.send(request,
@@ -104,16 +104,23 @@ public class DrawDailySampleServiceTask implements JavaDelegate {
         }
 
         Gson gson = new Gson();
-        List<String> responseList = (List<String>) gson.fromJson(response.body(),List.class);
-        log.info("\t \t >> Response : {} << ", responseList.toString());
-        List<Map> unitList = new ArrayList<>();
-        for (String s : responseList) {
-            log.info("\t \t >> Sample ID : {} << ", s);
-            Map unitMap = gson.fromJson(gson.toJson(s), Map.class);
-            unitList.add(unitMap);
+        if (response.statusCode()==200) {
+            List<String> responseList = (List<String>) gson.fromJson(gson.toJson(response.body()),List.class);
+            log.info("\t \t >> Response : {} << ", responseList.toString());
+            List<Map> unitList = new ArrayList<>();
+            for (String s : responseList) {
+                log.info("\t \t >> Sample ID : {} << ", s);
+                Map unitMap = gson.fromJson(gson.toJson(s), Map.class);
+                unitList.add(unitMap);
+            }
+            log.info("\t \t >>> Got today's sample from ERA  : " + unitList.toString());
+            return unitList;
+        } else {
+            log.error("Error while getting sample from ERA : " + response.statusCode());
+            return null;
         }
-        log.info("\t \t >>> Got today's sample from ERA  : " + unitList.toString());
-        return unitList;
+
+
     }
 
 }
