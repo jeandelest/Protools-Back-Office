@@ -55,6 +55,7 @@ public class UploadFileToEngineService {
 				throw new RuntimeException("File name contains invalid path sequence " + fileName);
 			}
 			// Récupérer le contenu du fichier
+			//TODO : Supprimer certains blancs doit pouvoir casser le fichier. à minima mettre des espaces à la place.
 			String content = new String(file.getBytes(), StandardCharsets.UTF_8).replaceAll("[\\n\\r\\t]+", "");
 
 			log.info("\t >> Context File content : " + content);

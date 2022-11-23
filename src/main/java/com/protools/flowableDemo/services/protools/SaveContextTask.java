@@ -17,7 +17,7 @@ import java.util.Map;
 
 @Component
 @Slf4j
-public class SaveContext implements JavaDelegate {
+public class SaveContextTask implements JavaDelegate {
     @Autowired
     private WorkflowService workflowService;
     @Override
