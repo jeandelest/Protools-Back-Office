@@ -45,8 +45,9 @@ Se découpe en 2 étapes :
           </timerEventDefinition>
       </intermediateCatchEvent>
       <subProcess id="sid-F0A2DCEE-C591-4A77-BFD1-24A8B5D14F67" name="subProcess">
-        <documentation>Sous-processus correspondant à la phase de collecte web d'une UE.
-Boucle sur l'ensemble des UE en base de donnée du processus</documentation>
+        <multiInstanceLoopCharacteristics isSequential="false" flowable:collection="sample" flowable:elementVariable="unit">
+          <extensionElements></extensionElements>
+        </multiInstanceLoopCharacteristics>
         <endEvent id="sid-EF044862-20A7-41D8-AFB1-F3E353D04A73"></endEvent>
         <startEvent id="sid-CD51B07B-E0DE-430D-85A9-5AA6FA1FC5CA" flowable:formFieldValidation="true"></startEvent>
         <serviceTask id="Activity_1mjxk8s" name="ajouter le mail de l'ue dans l'annuaire" flowable:delegateExpression="${sampleServiceTask}">

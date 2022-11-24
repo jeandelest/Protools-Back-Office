@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -54,6 +55,7 @@ public class WorkflowInfoService {
     };
     @Transactional
     public JSONObject getAllProcessInstance(){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd - HH:mm");
         List<ProcessInstance> liste = runtimeService.createProcessInstanceQuery()
                 .list();
         JSONObject responseDetailsJson = new JSONObject();
@@ -64,7 +66,7 @@ public class WorkflowInfoService {
             jsonResponse.put("name", liste.get(i).getName());
             jsonResponse.put("processKey", liste.get(i).getProcessDefinitionKey());
             jsonResponse.put("activity", liste.get(i).getActivityId());
-            jsonResponse.put("startTime",liste.get(i).getStartTime());
+            jsonResponse.put("startTime",sdf.format(liste.get(i).getStartTime()));
             jsonResponse.put("ProcessDefinitionId",liste.get(i).getProcessDefinitionId());
             jsonResponse.put("description", liste.get(i).getDescription());
             jsonResponse.put("businessStatus", liste.get(i).getBusinessStatus());
@@ -84,6 +86,7 @@ public class WorkflowInfoService {
     }
     @Transactional
     public JSONArray getTasks(String assignee) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd - HH:mm");
         List<Task> response = taskService.createTaskQuery().taskAssignee(assignee).list();
         JSONArray jsonArray = new JSONArray();
         log.info("Ceci est un test pour voir s'il prend en compte la dernière version du code");
@@ -92,7 +95,7 @@ public class WorkflowInfoService {
             jsonResponse.put("TaskId", response.get(i).getId());
             jsonResponse.put("name", response.get(i).getName());
             jsonResponse.put("processInstance", response.get(i).getProcessInstanceId());
-            jsonResponse.put("createTime",response.get(i).getCreateTime());
+            jsonResponse.put("createTime", sdf.format(response.get(i).getCreateTime()));
             jsonResponse.put("processDefinitionID",response.get(i).getProcessDefinitionId());
             jsonResponse.put("description", response.get(i).getDescription());
             jsonResponse.put("category",response.get(i).getCategory());
@@ -104,6 +107,7 @@ public class WorkflowInfoService {
 
     @Transactional
     public JSONArray getTasksProcess(String ProcessID) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd - HH:mm");
         List<Task> response = taskService.createTaskQuery().processInstanceId(ProcessID).list();
         JSONArray jsonArray = new JSONArray();
         for (int i =0; i<response.size(); i++) {
@@ -113,7 +117,7 @@ public class WorkflowInfoService {
             jsonResponse.put("processInstance", response.get(i).getProcessInstanceId());
             jsonResponse.put("delegationState", response.get(i).getDelegationState());
             jsonResponse.put("parentTask",response.get(i).getParentTaskId());
-            jsonResponse.put("createTime",response.get(i).getCreateTime());
+            jsonResponse.put("createTime", sdf.format(response.get(i).getCreateTime()));
             jsonResponse.put("BPMN_ID", response.get(i).getExecutionId());
             jsonResponse.put("processDefinitionID",response.get(i).getProcessDefinitionId());
             jsonResponse.put("description", response.get(i).getDescription());
@@ -131,6 +135,7 @@ public class WorkflowInfoService {
     }
     @Transactional
     public JSONArray getAllTasks() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd - HH:mm");
         List<Task> response = taskService.createTaskQuery().list();
 
         JSONArray jsonArray = new JSONArray();
@@ -141,7 +146,7 @@ public class WorkflowInfoService {
             jsonResponse.put("processInstance", response.get(i).getProcessInstanceId());
             jsonResponse.put("delegationState", response.get(i).getDelegationState());
             jsonResponse.put("parentTask",response.get(i).getParentTaskId());
-            jsonResponse.put("createTime",response.get(i).getCreateTime());
+            jsonResponse.put("createTime", sdf.format(response.get(i).getCreateTime()));
             jsonResponse.put("extensionID", response.get(i).getExecutionId());
             jsonResponse.put("description", response.get(i).getDescription());
             jsonResponse.put("category",response.get(i).getCategory());

@@ -2,6 +2,7 @@ package com.protools.flowableDemo.services.coleman;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import liquibase.pro.packaged.S;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
@@ -17,6 +18,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Component
 @Slf4j
@@ -33,15 +35,14 @@ public class CreateSurveyUnitServiceTask implements JavaDelegate {
         log.info("\t >> Create Survey Unit into Coleman Pilotage & Questionnaire Service Task <<  ");
         JSONObject questionnaireColemanData = (JSONObject) delegateExecution.getVariableLocal("questionnaireColemanData");
         JSONObject pilotageColemanData = (JSONObject) delegateExecution.getVariableLocal("pilotageColemanData");
-        JSONObject partition = (JSONObject) delegateExecution.getVariableLocal("Partition");
-        String idCampaign = (String) delegateExecution.getVariableLocal("Id");
-        String idUnit = (String) delegateExecution.getVariableLocal("idUnit");
-        //Extraction donnée du timer
-        delegateExecution.setVariableLocal("partition.collectionEndDate",partition.getJSONObject("Dates").getJSONObject("DateFinCollecte"));
+        JSONObject partition = (JSONObject) delegateExecution.getVariable("Partition");
+        String idCampaign = (String) delegateExecution.getVariable("Id");
+        Map unit = (Map) delegateExecution.getVariable("unit");
+        String unitID = (String) unit.get("id");
 
         questionnaireColemanData = transformColemanQuestionnaireData(questionnaireColemanData, partition);
         sendColemanPilotageData(pilotageColemanData,idCampaign);
-        sendColemanQuestionnaireData(questionnaireColemanData,idUnit);
+        sendColemanQuestionnaireData(questionnaireColemanData,unitID);
 
 
     }

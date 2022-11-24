@@ -79,16 +79,23 @@ public class DrawDailySampleServiceTask implements JavaDelegate {
         }
 
         Gson gson = new Gson();
-        List<String> responseList = (List<String>) gson.fromJson(gson.toJson(response.body()),List.class);
-        log.info("\t \t >> Response : {} << ", responseList.toString());
-        List<Map> listOfIds = new ArrayList<>();
-        for (String s : responseList) {
-            log.info("\t \t >> Sample ID : {} << ", s);
-            Map unitMap = gson.fromJson(gson.toJson(s), Map.class);
-            listOfIds.add(unitMap);
+        if (response.statusCode()==200) {
+            List<String> responseList = (List<String>) gson.fromJson(gson.toJson(response.body()),List.class);
+            log.info("\t \t >> Response : {} << ", responseList.toString());
+            List<Map> unitList = new ArrayList<>();
+            for (String s : responseList) {
+                log.info("\t \t >> Sample ID : {} << ", s);
+                Map unitMap = gson.fromJson(gson.toJson(s), Map.class);
+                unitList.add(unitMap);
+            }
+            log.info("\t \t >>> Got today's sample from ERA  : " + unitList.toString());
+            return unitList;
+        } else {
+            log.error("Error while getting sample from ERA : " + response.statusCode());
+            return null;
         }
-        log.info("\t \t >>> Got today's sample from ERA  : " + listOfIds.toString());
-        return listOfIds;
+
+
     }
 
 }
