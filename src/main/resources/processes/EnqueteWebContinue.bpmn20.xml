@@ -35,25 +35,23 @@ Se découpe en 2 étapes :
     <userTask id="sid-32EA6CD0-0BF7-4EC4-8966-7E485A85FD36" name="Upload fichier" flowable:formFieldValidation="true" flowable:category="Upload">
       <documentation>upload du fichier de contexte du processus</documentation>
     </userTask>
-    <subProcess id="sid-FDA6F610-D6E1-4806-8929-57AA4A1BBC9B" name="subProcess">
-      <serviceTask id="Activity_1phmvxa" name="Récupérer échantillon (source externe)" flowable:delegateExpression="${sampleServiceTask}">
-        <documentation>Récupération dans Era et stockage dans la base de données du processus d'une liste d'UE (idUE, idContact) pour une campagne entre 2 dates.</documentation>
-      </serviceTask>
-      <intermediateCatchEvent id="sid-BCCEABBF-1468-4968-A490-04915E0F205B">
-          <timerEventDefinition>
-              <timeCycle>R${numDays}/${startDate}T12:00/PT24H</timeCycle>
-          </timerEventDefinition>
-      </intermediateCatchEvent>
-      <subProcess id="sid-F0A2DCEE-C591-4A77-BFD1-24A8B5D14F67" name="subProcess">
-          <multiInstanceLoopCharacteristics isSequential="false" flowable:collection="sample" flowable:elementVariable="unit">
-              <extensionElements></extensionElements>
-          </multiInstanceLoopCharacteristics>
-        <documentation>Sous-processus correspondant à la phase de collecte web d'une UE.
-Boucle sur l'ensemble des UE en base de donnée du processus</documentation>
-        <endEvent id="sid-EF044862-20A7-41D8-AFB1-F3E353D04A73"></endEvent>
-        <startEvent id="sid-CD51B07B-E0DE-430D-85A9-5AA6FA1FC5CA" flowable:formFieldValidation="true"></startEvent>
-        <serviceTask id="Activity_1mjxk8s" name="ajouter le mail de l'ue dans l'annuaire" flowable:delegateExpression="${sampleServiceTask}">
-          <documentation>Récupération du mail de l'UE dans Era puis ajout dans l'annuaire externe du domaine RP, pour une collecte web avec Coleman</documentation>
+      <subProcess id="sid-FDA6F610-D6E1-4806-8929-57AA4A1BBC9B" name="subProcess">
+          <serviceTask id="Activity_1phmvxa" name="Récupérer échantillon (source externe)" flowable:delegateExpression="${sampleServiceTask}">
+              <documentation>Récupération dans Era et stockage dans la base de données du processus d'une liste d'UE (idUE, idContact) pour une campagne entre 2 dates.</documentation>
+          </serviceTask>
+          <intermediateCatchEvent id="sid-BCCEABBF-1468-4968-A490-04915E0F205B">
+              <timerEventDefinition>
+                  <timeCycle>R${numDays}/${startDate}T12:00/PT24H</timeCycle>
+              </timerEventDefinition>
+          </intermediateCatchEvent>
+          <subProcess id="sid-F0A2DCEE-C591-4A77-BFD1-24A8B5D14F67" name="subProcess">
+              <multiInstanceLoopCharacteristics isSequential="false" flowable:collection="sample" flowable:elementVariable="unit">
+                  <extensionElements></extensionElements>
+              </multiInstanceLoopCharacteristics>
+              <endEvent id="sid-EF044862-20A7-41D8-AFB1-F3E353D04A73"></endEvent>
+              <startEvent id="sid-CD51B07B-E0DE-430D-85A9-5AA6FA1FC5CA" flowable:formFieldValidation="true"></startEvent>
+              <serviceTask id="Activity_1mjxk8s" name="ajouter le mail de l'ue dans l'annuaire" flowable:delegateExpression="${sampleServiceTask}">
+                  <documentation>Récupération du mail de l'UE dans Era puis ajout dans l'annuaire externe du domaine RP, pour une collecte web avec Coleman</documentation>
         </serviceTask>
         <serviceTask id="Activity_0ciedft" name="créer l'ue dans la plateforme de collecte web" flowable:delegateExpression="${sampleServiceTask}">
           <documentation>Récupération de données d'une UE pour une campagne dans Era puis création de l'UE dans la plateforme de collecte web Coleman, en 2 étapes :
