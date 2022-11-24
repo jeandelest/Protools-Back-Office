@@ -92,6 +92,7 @@ public class DrawDailySampleServiceTask implements JavaDelegate {
             response = client.send(request,
                     HttpResponse.BodyHandlers.ofString());
             log.info("call draw daily sample : status={} ",response.statusCode());
+            log.info("Response body : {} << ", response.body());
             if(response.statusCode() != HttpStatus.SC_OK)
             {
                 String errorMessage = "Error call draw daily sample response={}";
@@ -103,7 +104,7 @@ public class DrawDailySampleServiceTask implements JavaDelegate {
         }
 
         Gson gson = new Gson();
-        List<String> responseList = (List<String>) gson.fromJson(gson.toJson(response.body()),List.class);
+        List<String> responseList = (List<String>) gson.fromJson(response.body(),List.class);
         log.info("\t \t >> Response : {} << ", responseList.toString());
         List<Map> unitList = new ArrayList<>();
         for (String s : responseList) {
