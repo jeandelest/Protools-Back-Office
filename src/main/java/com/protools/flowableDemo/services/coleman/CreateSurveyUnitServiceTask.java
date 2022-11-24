@@ -42,12 +42,10 @@ public class CreateSurveyUnitServiceTask implements JavaDelegate {
         log.info("\t >> Create Survey Unit into Coleman Pilotage & Questionnaire Service Task <<  ");
         JSONObject questionnaireColemanData = (JSONObject) delegateExecution.getVariableLocal("questionnaireColemanData");
         JSONObject pilotageColemanData = (JSONObject) delegateExecution.getVariableLocal("pilotageColemanData");
-        JSONObject partition = (JSONObject) delegateExecution.getVariableLocal("Partition");
-        String idCampaign = (String) delegateExecution.getVariableLocal("Id");
+        JSONObject partition = (JSONObject) delegateExecution.getVariable("Partition");
+        String idCampaign = (String) delegateExecution.getVariable("Id");
         Map unit = (Map) delegateExecution.getVariable("unit");
         String unitID = (String) unit.get("id");
-        //Extraction donnée du timer
-        delegateExecution.setVariableLocal("partition.collectionEndDate",partition.getJSONObject("Dates").getJSONObject("DateFinCollecte"));
 
         questionnaireColemanData = transformColemanQuestionnaireData(questionnaireColemanData, partition);
         sendColemanPilotageData(pilotageColemanData,idCampaign);

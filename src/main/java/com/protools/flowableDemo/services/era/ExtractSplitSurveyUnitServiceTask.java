@@ -39,7 +39,7 @@ public class ExtractSplitSurveyUnitServiceTask implements JavaDelegate {
         questionnaireObject.append(questionnaireKey, surveyUnitInfo.remove(questionnaireKey));
 
         delegateExecution.setVariableLocal("questionnaireColemanData",questionnaireObject);
-        delegateExecution.setVariableLocal("pilotageColemmanData",surveyUnitInfo);
+        delegateExecution.setVariableLocal("pilotageColemanData",surveyUnitInfo);
     }
 
     public JSONObject extractSurveyUnit(Integer unitID, String idCampaign){
