@@ -21,11 +21,17 @@ import java.net.http.HttpResponse;
 class SendMailService {
     @Value("${fr.insee.coleman.pilotage.uri}")
     private String colemanPilotageUri;
-    //TODO : Check si url reste la même
 
+    @Value("${fr.insee.keycloak.realm.survey:#{null}}")
+    private String realm;
+
+    @Value("${fr.insee.keycloak.client.secret.survey:#{null}}")
+    private String clientSecret;
     @Autowired
     KeycloakService keycloakService;
     public void SendMail(String mailContent){
+        keycloakService.setRealm(realm);
+        keycloakService.setClientSecret(clientSecret);
         log.info("\t \t >> Send Mail Task ");
 
         HttpClient client = HttpClient.newHttpClient();

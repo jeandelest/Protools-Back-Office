@@ -1,7 +1,9 @@
 package com.protools.flowableDemo.services.messhugah;
 
+import com.protools.flowableDemo.keycloak.KeycloakService;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
@@ -18,8 +20,20 @@ public class SurveyUnitFollowUpService {
     @Value("${fr.insee.coleman.pilotage.uri}")
     private String colemanPilotageUri;
 
+    @Value("${fr.insee.keycloak.realm.survey:#{null}}")
+    private String realm;
+
+    @Value("${fr.insee.keycloak.client.secret.survey:#{null}}")
+    private String clientSecret;
+
+    @Autowired
+    KeycloakService keycloakService;
+
     public JSONObject checkIfUnitNeedsToBeFollowedUp(String idCampaign, String unitID) {
         log.info("\t \t >> Check If Unit Needs To Be Followed Up");
+
+        keycloakService.setRealm(realm);
+        keycloakService.setClientSecret(clientSecret);
 
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()

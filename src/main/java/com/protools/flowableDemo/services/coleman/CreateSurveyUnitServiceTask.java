@@ -34,12 +34,20 @@ public class CreateSurveyUnitServiceTask implements JavaDelegate {
     @Value("${fr.insee.coleman.pilotage.uri}")
     private String colemanPilotageUri;
 
+    @Value("${fr.insee.keycloak.realm.survey:#{null}}")
+    private String realm;
+
+    @Value("${fr.insee.keycloak.client.secret.survey:#{null}}")
+    private String clientSecret;
+
     @Autowired
     KeycloakService keycloakService;
 
     @Override
     public void execute(DelegateExecution delegateExecution){
         log.info("\t >> Create Survey Unit into Coleman Pilotage & Questionnaire Service Task <<  ");
+        keycloakService.setRealm(realm);
+        keycloakService.setClientSecret(clientSecret);
         JSONObject questionnaireColemanData = (JSONObject) delegateExecution.getVariableLocal("questionnaireColemanData");
         JSONObject pilotageColemanData = (JSONObject) delegateExecution.getVariableLocal("pilotageColemanData");
         JSONObject partition = (JSONObject) delegateExecution.getVariable("Partition");
