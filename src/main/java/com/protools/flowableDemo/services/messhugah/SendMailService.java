@@ -1,8 +1,10 @@
 package com.protools.flowableDemo.services.messhugah;
 
 
+import com.protools.flowableDemo.keycloak.KeycloakService;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
@@ -20,14 +22,20 @@ class SendMailService {
     @Value("${fr.insee.coleman.pilotage.uri}")
     private String colemanPilotageUri;
     //TODO : Check si url reste la même
+
+    @Autowired
+    KeycloakService keycloakService;
     public void SendMail(String mailContent){
         log.info("\t \t >> Send Mail Task ");
 
         HttpClient client = HttpClient.newHttpClient();
-
+        //
+        String token = keycloakService.getContextReferentialToken();
+        log.info("\t \t >> Get token : {} << ", token);
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(colemanPilotageUri+"/contact/send-mail"))
                 .setHeader(HttpHeaders.CONTENT_TYPE, "application/json")
+                .setHeader(HttpHeaders.AUTHORIZATION,"Bearer " + token)
                 .POST(HttpRequest.BodyPublishers.ofString(mailContent))
                 .build();
         HttpResponse<String> response = null;
