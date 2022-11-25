@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -178,10 +179,15 @@ public class WorkflowInfoService {
     }
 
     @Transactional
-    public Map<String, Object> getProcessVariables(String ProcessInstanceID){
+    public Map<String, String> getProcessVariables(String ProcessInstanceID){
         ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().includeProcessVariables().processInstanceId(ProcessInstanceID).singleResult();
-        return processInstance.getProcessVariables();
+        Map<String,Object> rawVariables = processInstance.getProcessVariables();
+        Map<String, String> variables = new HashMap<>();
         //TODO: Changer l'affichage pour mieux visualiser les variables de type objet
+        for (Map.Entry<String, Object> entry : rawVariables.entrySet()) {
+            variables.put(entry.getKey(), String.valueOf(entry.getValue()));
+        }
+        return variables;
     }
 
     @Transactional

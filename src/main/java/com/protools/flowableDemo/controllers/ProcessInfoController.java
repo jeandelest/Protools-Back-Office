@@ -103,7 +103,7 @@ public class ProcessInfoController {
     @Operation(summary = "Get Process Variables by Process Instance ID")
     @GetMapping(value = "/variables/{processInstanceId}")
     public ResponseEntity<String> getVariables(@PathVariable String processInstanceId){
-        Map<String,Object> result = workflowInfoService.getProcessVariables(processInstanceId);
+        Map<String,String> result = workflowInfoService.getProcessVariables(processInstanceId);
         JSONObject json = new JSONObject(result);
         return ResponseEntity.status(HttpStatus.OK).body(String.valueOf(json));
     }
