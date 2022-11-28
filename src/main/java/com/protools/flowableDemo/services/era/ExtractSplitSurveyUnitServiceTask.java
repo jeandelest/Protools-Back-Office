@@ -1,10 +1,14 @@
 package com.protools.flowableDemo.services.era;
 
+import com.protools.flowableDemo.keycloak.KeycloakService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpStatus;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
 import java.net.URI;
@@ -18,6 +22,10 @@ import java.util.Map;
 public class ExtractSplitSurveyUnitServiceTask implements JavaDelegate {
     @Value("${fr.insee.era.api}")
     private String eraUrl;
+
+    @Autowired
+    KeycloakService keycloakService;
+
     @Override
     public void execute(org.flowable.engine.delegate.DelegateExecution delegateExecution) {
         log.info("\t >> Extract Survey Unit and Split response into two JSON Service Task <<  ");
@@ -31,20 +39,29 @@ public class ExtractSplitSurveyUnitServiceTask implements JavaDelegate {
         questionnaireObject.append(questionnaireKey, surveyUnitInfo.remove(questionnaireKey));
 
         delegateExecution.setVariableLocal("questionnaireColemanData",questionnaireObject);
-        delegateExecution.setVariableLocal("pilotageColemmanData",surveyUnitInfo);
+        delegateExecution.setVariableLocal("pilotageColemanData",surveyUnitInfo);
     }
 
     public JSONObject extractSurveyUnit(Integer unitID, String idCampaign){
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(eraUrl+"/extraction-survey-unit/"+unitID+ "?idCampaign" +idCampaign))
-                .setHeader(HttpHeaders.CONTENT_TYPE, "application/json")
+                .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .setHeader(HttpHeaders.AUTHORIZATION,"Bearer " + keycloakService.getContextReferentialToken())
                 .GET()
                 .build();
+
         HttpResponse<String> response = null;
         try {
             response = client.send(request,
                     HttpResponse.BodyHandlers.ofString());
+            log.info("Appel a era extraction-survey-unit : status={} ",response.statusCode());
+            if(response.statusCode() != HttpStatus.SC_OK)
+            {
+                String errorMessage = "Erreur appel extraction-survey-unit response={}";
+                log.error(errorMessage);
+                throw new RuntimeException(errorMessage);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

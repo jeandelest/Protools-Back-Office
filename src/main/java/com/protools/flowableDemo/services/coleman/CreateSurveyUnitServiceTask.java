@@ -2,13 +2,17 @@ package com.protools.flowableDemo.services.coleman;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.protools.flowableDemo.keycloak.KeycloakHeadersConsumerJSON;
+import com.protools.flowableDemo.keycloak.KeycloakService;
 import liquibase.pro.packaged.S;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -30,17 +34,18 @@ public class CreateSurveyUnitServiceTask implements JavaDelegate {
     @Value("${fr.insee.coleman.pilotage.uri}")
     private String colemanPilotageUri;
 
+    @Autowired
+    KeycloakService keycloakService;
+
     @Override
     public void execute(DelegateExecution delegateExecution){
         log.info("\t >> Create Survey Unit into Coleman Pilotage & Questionnaire Service Task <<  ");
         JSONObject questionnaireColemanData = (JSONObject) delegateExecution.getVariableLocal("questionnaireColemanData");
         JSONObject pilotageColemanData = (JSONObject) delegateExecution.getVariableLocal("pilotageColemanData");
-        JSONObject partition = (JSONObject) delegateExecution.getVariableLocal("Partition");
-        String idCampaign = (String) delegateExecution.getVariableLocal("Id");
+        JSONObject partition = (JSONObject) delegateExecution.getVariable("Partition");
+        String idCampaign = (String) delegateExecution.getVariable("Id");
         Map unit = (Map) delegateExecution.getVariable("unit");
         String unitID = (String) unit.get("id");
-        //Extraction donnée du timer
-        delegateExecution.setVariableLocal("partition.collectionEndDate",partition.getJSONObject("Dates").getJSONObject("DateFinCollecte"));
 
         questionnaireColemanData = transformColemanQuestionnaireData(questionnaireColemanData, partition);
         sendColemanPilotageData(pilotageColemanData,idCampaign);
@@ -69,8 +74,9 @@ public class CreateSurveyUnitServiceTask implements JavaDelegate {
         }
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(colemanPilotageUri+"/rest-survey-unit/campaigns/"+ idCampaign + "/survey-units"))
-                .setHeader(HttpHeaders.CONTENT_TYPE, "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(requestBodyPilotage))
+                .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .setHeader(HttpHeaders.AUTHORIZATION,"Bearer " + keycloakService.getContextReferentialToken())
+            .POST(HttpRequest.BodyPublishers.ofString(requestBodyPilotage))
                 .build();
         HttpResponse<String> responsePilotage = null;
         try {
