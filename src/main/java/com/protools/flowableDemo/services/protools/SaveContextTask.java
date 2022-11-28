@@ -45,7 +45,7 @@ public class SaveContextTask implements JavaDelegate {
         //delegateExecution.removeVariable("contextRawFile");
 
     }
-    public JsonNode parseXml(String xmlFile){
+    private static JsonNode parseXml(String xmlFile){
         XmlMapper xmlMapper = new XmlMapper();
         JsonNode node = null;
         try {

@@ -11,7 +11,7 @@
     </userTask>
     <sequenceFlow id="sid-2E55816C-0371-41B2-9258-CCE324879A6A" sourceRef="Start_Process" targetRef="upload_file"></sequenceFlow>
     <sequenceFlow id="sid-5530E905-82FA-486B-80F5-14879CFA9C1D" sourceRef="upload_file" targetRef="Save_context"></sequenceFlow>
-    <serviceTask id="Save_context" name="Enregistrement du context" flowable:delegateExpression="${saveContext}">
+    <serviceTask id="Save_context" name="Enregistrement du context" flowable:delegateExpression="${saveContextTask}">
       <documentation>Review - Permet de vérifier si les données du fichier ont bien été téléchargées</documentation>
     </serviceTask>
     <userTask id="save_context" name="Check context  " flowable:category="Review" flowable:formFieldValidation="true"></userTask>
