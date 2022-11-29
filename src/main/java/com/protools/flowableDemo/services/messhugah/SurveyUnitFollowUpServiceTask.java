@@ -40,12 +40,16 @@ public class SurveyUnitFollowUpServiceTask implements JavaDelegate {
         Map unit = (Map) delegateExecution.getVariable("unit");
         String unitID = (String) unit.get("id").toString();
         String idCampaign = (String) delegateExecution.getVariable("Id");
-        log.info("\t \t Unit ID: " + unitID);
-        delegateExecution.setVariableLocal("followUp",checkIfUnitNeedsToBeFollowedUp(idCampaign,unitID));
+        try {
+            delegateExecution.setVariableLocal("followUp",checkIfUnitNeedsToBeFollowedUp(idCampaign,unitID).get("eligible"));
+        } catch (Exception e){
+            log.info("\t \t >> Could not retrieve unit follow up status <<");
+        }
+
     }
 
     public JSONObject checkIfUnitNeedsToBeFollowedUp(String idCampaign, String unitID) {
-        log.info("\t \t >> Check If Unit Needs To Be Followed Up");
+        log.info("\t \t >> Check If Unit Needs To Be Followed Up Service task");
 
         keycloakService.setRealm(realm);
         keycloakService.setClientSecret(clientSecret);
