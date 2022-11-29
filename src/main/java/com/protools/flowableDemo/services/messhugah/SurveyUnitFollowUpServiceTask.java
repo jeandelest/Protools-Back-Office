@@ -38,7 +38,7 @@ public class SurveyUnitFollowUpServiceTask implements JavaDelegate {
     public void execute(org.flowable.engine.delegate.DelegateExecution delegateExecution) {
 
         Map unit = (Map) delegateExecution.getVariable("unit");
-        String unitID = (String) unit.get("id").toString();
+        String unitID = (String) unit.get("internaute").toString();
         String idCampaign = (String) delegateExecution.getVariable("Id");
         try {
             delegateExecution.setVariableLocal("followUp",checkIfUnitNeedsToBeFollowedUp(idCampaign,unitID).get("eligible"));
@@ -69,7 +69,7 @@ public class SurveyUnitFollowUpServiceTask implements JavaDelegate {
         try {
             response = client.send(request,
                     HttpResponse.BodyHandlers.ofString());
-            log.info("\t \t >> Response from Coleman: " +response.body()+ "with status code: "+response.statusCode());
+            log.info("\t \t >> Response from Coleman: " +response.body()+ " with status code: "+response.statusCode());
             if(response.statusCode() == OK.value()){
                 jsonResponse = new JSONObject(response.body());
             }

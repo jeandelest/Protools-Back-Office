@@ -30,6 +30,7 @@ public class SendFollowUpMailServiceTask implements JavaDelegate {
 
         // TODO : Check niveau de partition dans Partitions ?
         JSONObject partition = (JSONObject) delegateExecution.getVariable("Partition");
+        log.info("Partition : "+ partition.toString());
         JSONObject communications = partition.getJSONObject("Communication");
         log.info("Communication Content :" +communications.toString());
         // TODO : Filter communication to retrieve the right comm

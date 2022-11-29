@@ -27,7 +27,7 @@
       <serviceTask id="check_follow_up" name="Check if unit needs follow up" flowable:delegateExpression="${surveyUnitFollowUpServiceTask}">
         <documentation>Log each unit as part of each subprocess</documentation>
       </serviceTask>
-      <serviceTask id="send_mail" name="Send Follow Up Mail to Unit">
+      <serviceTask id="send_mail" name="Send Follow Up Mail to Unit" flowable:delegateExpression="${sendFollowUpMailServiceTask}">
         <documentation>Send Follow Up Mail to Unit</documentation>
       </serviceTask>
       <endEvent id="sid-A77FDBEE-F765-48CC-AA30-980B7CFCAC1C"></endEvent>
