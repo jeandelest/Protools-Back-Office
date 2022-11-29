@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,26 +24,25 @@ public class SendFollowUpMailServiceTask implements JavaDelegate {
     private SendMailService sendMailService;
     @Override
     public void execute(org.flowable.engine.delegate.DelegateExecution delegateExecution) {
-        log.info(">> Send Follow Up Email ServiceTask");
+        log.info("\t >> Send Follow Up Email ServiceTask");
 
         // Retrieve email content data
         Map unit = (Map) delegateExecution.getVariable("unit");
-
-        // TODO : Check niveau de partition dans Partitions ?
-        JSONObject partition = (JSONObject) delegateExecution.getVariable("Partition");
-        log.info("Partition : "+ partition.toString());
-        JSONObject communications = partition.getJSONObject("Communication");
-        log.info("Communication Content :" +communications.toString());
-        // TODO : Filter communication to retrieve the right comm
-        List<JSONObject> communication = (List<JSONObject>) communications.get("Communication");
+        int sexe = Integer.valueOf((String) unit.get("sexe"));
+        List<LinkedHashMap<String,Object>> partition = (List<LinkedHashMap<String,Object>>) delegateExecution.getVariable("Partition");
+        LinkedHashMap<String,Object> communications = (LinkedHashMap<String,Object>) partition.get(sexe - 1).get("Communications");
+        List<LinkedHashMap<String,Object>> communication = (List<LinkedHashMap<String, Object>>) communications.get("Communication");
 
         //TODO : Faire moins degueu
-        JSONObject communicationRelance = null;
-        JSONObject contenuCommunication = null;
-        for (JSONObject comm: communication ){
-            if (comm.get("MoyenCommunication")== "mail" && comm.get("TypeCommunication")=="relance"){
+        LinkedHashMap<String,Object> communicationRelance = null;
+        LinkedHashMap<String,Object> contenuCommunication = null;
+        for (LinkedHashMap<String,Object> comm: communication ){
+            //log.info("Comm: " + comm.toString());
+            //log.info("Comm type: " + comm.get("MoyenCommunication")+" - "+ comm.get("TypeCommunication"));
+            if (comm.get("MoyenCommunication").equals("mail") && comm.get("TypeCommunication").equals("relance")){
+
                 communicationRelance = comm;
-                contenuCommunication = (JSONObject) comm.get("ContenuCommunication");
+                contenuCommunication = (LinkedHashMap<String,Object>) comm.get("ContenuCommunication");
 
                 // Retrieve Campaign data
                 // This part is not mandatory, it only serves as a mark to not get lost in all those variables
@@ -56,8 +56,8 @@ public class SendFollowUpMailServiceTask implements JavaDelegate {
                 String Enq_Prestataire = (String) delegateExecution.getVariable("Enq_Prestataire");
 
                 // Create Email request body
-                JSONObject finalContenuCommunication = contenuCommunication;
-                JSONObject finalCommunicationRelance = communicationRelance;
+                LinkedHashMap<String,Object> finalContenuCommunication = contenuCommunication;
+                LinkedHashMap<String,Object> finalCommunicationRelance = communicationRelance;
                 var data = new HashMap<String, Object>() {{
                     put("Ue_CalcIdentifiant", unit.get("internaute"));
                     put("Enq_ThemeMieuxConnaitreMail", finalContenuCommunication.get("ThemeMieuxConnaitreMail"));
@@ -82,6 +82,7 @@ public class SendFollowUpMailServiceTask implements JavaDelegate {
                     put("data", data);
 
                 }};
+                log.info("\t \t FollowUp Mail data: " + values);
                 var objectMapper = new ObjectMapper();
                 String requestBody = null;
                 try {
@@ -94,9 +95,6 @@ public class SendFollowUpMailServiceTask implements JavaDelegate {
                 break;
             }
         }
-
-
-
 
     }
 }

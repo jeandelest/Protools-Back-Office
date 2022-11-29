@@ -48,7 +48,7 @@ class SendMailService {
         try {
             response = client.send(request,
                     HttpResponse.BodyHandlers.ofString());
-            log.info("\t \t Mail data sent to Messhugah with response status code : "+ response.statusCode());
+            log.info("\t \t \t Mail data sent to Messhugah with response status code : "+ response.statusCode());
 
         } catch (Exception e) {
             e.printStackTrace();
