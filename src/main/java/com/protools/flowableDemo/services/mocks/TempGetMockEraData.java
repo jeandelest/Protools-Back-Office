@@ -18,7 +18,7 @@ public class TempGetMockEraData implements JavaDelegate {
         public void execute(org.flowable.engine.delegate.DelegateExecution delegateExecution) {
             log.info("\t >> Temporary Service Task Upload Mock Era Data <<  ");
 
-            String jsonStringList = "{\"id\":39127127,\"internaute\":\"EF000994\",\"mail\":\"nguyen.mailine@gmail.com\",\"sexe\":\"2\"},{\"id\":39127127,\"internaute\":\"EF000994\",\"mail\":\"nguyen.mailine@gmail.com\",\"sexe\":\"2\"},";
+            String jsonStringList = "{\"id\":39127127,\"internaute\":\"EF000994\",\"mail\":\"mailine.nguyen@insee.fr \",\"sexe\":\"2\"},{\"id\":39127127,\"internaute\":\"EF000994\",\"mail\":\"nguyen.mailine@gmail.com\",\"sexe\":\"2\"},";
             // Get data from ERA
             Gson gson = new Gson();
             List<String> responseList = new ArrayList<>(Arrays.asList(jsonStringList.split("},")));
