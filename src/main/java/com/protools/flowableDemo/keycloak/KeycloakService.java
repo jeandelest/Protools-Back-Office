@@ -1,6 +1,8 @@
 package com.protools.flowableDemo.keycloak;
 
 import com.protools.flowableDemo.helpers.WebClientHelper;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -15,24 +17,27 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Service
+@Getter
+@Setter
 public class KeycloakService {
-
-
-    @Value("${fr.insee.keycloak.realm:#{null}}")
-    private String realm;
 
     @Value("${fr.insee.keycloak.client.id:#{null}}")
     private String clientId;
-
-    @Value("${fr.insee.keycloak.client.secret:#{null}}")
-    private String clientSecret;
 
     @Autowired
     WebClientHelper webClientHelper;
     private final WebClient webClient;
 
-    public KeycloakService(    @Value("${fr.insee.keycloak.auth.server.uri:#{null}}") String authServerUri) {
+    //@Value("${fr.insee.keycloak.realm:#{null}}")
+    private String realm;
+
+    //@Value("${fr.insee.keycloak.client.secret:#{null}}")
+    private String clientSecret;
+
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+    public KeycloakService(@Value("${fr.insee.keycloak.auth.server.uri:#{null}}") String authServerUri) {
         webClient= webClientHelper.getWebClient(authServerUri);
+
     }
 
     private final AtomicReference<Token> token = new AtomicReference<>(new Token("", -1));
