@@ -28,7 +28,7 @@ public class SaveContextTask implements JavaDelegate {
         log.info("\t >> Save Context Service Task <<  ");
         String xmlFile = (String) delegateExecution.getVariable("contextRawFile");
         try {
-            new XmlValidator().isValid("person.xsd", xmlFile);
+            new XmlValidator().isValid("context_scheme.xsd", xmlFile);
         }
         catch (Exception e) {
             log.error("Error while saving context", e);
