@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.google.gson.Gson;
 import com.protools.flowableDemo.services.engineService.WorkflowService;
+import com.protools.flowableDemo.services.utils.XmlValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,19 @@ public class SaveContextTask implements JavaDelegate {
     public void execute(org.flowable.engine.delegate.DelegateExecution delegateExecution) {
         log.info("\t >> Save Context Service Task <<  ");
         String xmlFile = (String) delegateExecution.getVariable("contextRawFile");
+        try {
+            new XmlValidator().isValid("person.xsd", xmlFile);
+        }
+        catch (Exception e) {
+            log.error("Error while saving context", e);
+            try {
+                throw e;
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            } catch (SAXException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
         JsonNode node = parseXml(xmlFile);
         Map<String,Object> result = saveContext(node);
         delegateExecution.setVariables(result);
