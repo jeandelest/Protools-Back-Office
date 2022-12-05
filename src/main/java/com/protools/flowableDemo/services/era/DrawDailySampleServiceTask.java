@@ -30,12 +30,16 @@ public class DrawDailySampleServiceTask implements JavaDelegate {
     @Value("${fr.insee.era.api}")
     private String eraUrl;
 
+    @Value("${fr.insee.keycloak.realm.internal:#{null}}")
+    private String realm;
+
     @Autowired
     KeycloakService keycloakService;
 
     @Override
     public void execute(org.flowable.engine.delegate.DelegateExecution delegateExecution) {
         log.info("\t >> Draw Daily Sample Service Task <<  ");
+        keycloakService.setRealm(realm);
         try {
             List<Map> listOfSampleUnit = getSampleIDs();
             delegateExecution.setVariable("sample",listOfSampleUnit);
@@ -78,6 +82,7 @@ public class DrawDailySampleServiceTask implements JavaDelegate {
         log.info("\t \t >> Get survey sample for today : {} << ", endDate.toString());
 
         HttpClient client = HttpClient.newHttpClient();
+
         String token = keycloakService.getContextReferentialToken();
         log.info("\t \t >> Get token : {} << ", token);
         HttpRequest request = HttpRequest.newBuilder()
