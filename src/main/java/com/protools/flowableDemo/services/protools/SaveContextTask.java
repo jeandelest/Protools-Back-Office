@@ -27,19 +27,7 @@ public class SaveContextTask implements JavaDelegate {
     public void execute(org.flowable.engine.delegate.DelegateExecution delegateExecution) {
         log.info("\t >> Save Context Service Task <<  ");
         String xmlFile = (String) delegateExecution.getVariable("contextRawFile");
-        try {
-            new XmlValidator().isValid("context_scheme.xsd", xmlFile);
-        }
-        catch (Exception e) {
-            log.error("Error while saving context", e);
-            try {
-                throw e;
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            } catch (SAXException ex) {
-                throw new RuntimeException(ex);
-            }
-        }
+
         JsonNode node = parseXml(xmlFile);
         Map<String,Object> result = saveContext(node);
         delegateExecution.setVariables(result);
