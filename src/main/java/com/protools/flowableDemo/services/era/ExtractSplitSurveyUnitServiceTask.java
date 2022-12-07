@@ -1,20 +1,13 @@
 package com.protools.flowableDemo.services.era;
 
-import com.protools.flowableDemo.keycloak.KeycloakService;
+import com.protools.flowableDemo.helpers.client.WebClientHelper;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.HttpStatus;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.Map;
 
 @Component
@@ -23,8 +16,11 @@ public class ExtractSplitSurveyUnitServiceTask implements JavaDelegate {
     @Value("${fr.insee.era.api}")
     private String eraUrl;
 
+    @Value("${fr.insee.era.realm}")
+    private String realm;
+
     @Autowired
-    KeycloakService keycloakService;
+    WebClientHelper webClientHelper;
 
     @Override
     public void execute(org.flowable.engine.delegate.DelegateExecution delegateExecution) {
@@ -43,30 +39,16 @@ public class ExtractSplitSurveyUnitServiceTask implements JavaDelegate {
     }
 
     public JSONObject extractSurveyUnit(Integer unitID, String idCampaign){
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(eraUrl+"/extraction-survey-unit/"+unitID+ "?idCampaign" +idCampaign))
-                .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .setHeader(HttpHeaders.AUTHORIZATION,"Bearer " + keycloakService.getContextReferentialToken())
-                .GET()
-                .build();
+             JSONObject jsonResponse =
+                 webClientHelper.getWebClientForRealm(realm,eraUrl).get()
+                .uri(uriBuilder -> uriBuilder
+                    .path("/extraction-survey-unit/{unitID}")
+                    .queryParam("idCampaign", idCampaign)
+                    .build(unitID))
+                .retrieve()
+                .bodyToMono(JSONObject.class)
+                .block();
 
-        HttpResponse<String> response = null;
-        try {
-            response = client.send(request,
-                    HttpResponse.BodyHandlers.ofString());
-            log.info("Appel a era extraction-survey-unit : status={} ",response.statusCode());
-            if(response.statusCode() != HttpStatus.SC_OK)
-            {
-                String errorMessage = "Erreur appel extraction-survey-unit response={}";
-                log.error(errorMessage);
-                throw new RuntimeException(errorMessage);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        JSONObject jsonResponse = new JSONObject(response.body());
         log.info("\t \t >>> Get Survey Unit info for unit  : " + unitID + " << ");
         return jsonResponse;
     }

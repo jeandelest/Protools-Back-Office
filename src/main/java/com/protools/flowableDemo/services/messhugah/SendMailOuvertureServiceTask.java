@@ -78,13 +78,12 @@ public class SendMailOuvertureServiceTask implements JavaDelegate {
                 }};
                 log.info("\t \t FollowUp Mail data: " + values);
                 var objectMapper = new ObjectMapper();
-                String requestBody = null;
                 try {
-                    requestBody = objectMapper
+                    String requestBody = objectMapper
                             .writeValueAsString(values);
-                    sendMailService.SendMail(requestBody);
+                    sendMailService.sendMail(requestBody);
                 } catch (JsonProcessingException e) {
-                    e.printStackTrace();
+                    throw new RuntimeException(e);
                 }
                 break;
             }

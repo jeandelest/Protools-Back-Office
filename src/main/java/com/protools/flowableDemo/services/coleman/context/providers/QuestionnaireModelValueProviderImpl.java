@@ -1,13 +1,12 @@
 package com.protools.flowableDemo.services.coleman.context.providers;
 
+import com.protools.flowableDemo.helpers.client.WebClientHelper;
 import com.protools.flowableDemo.services.coleman.context.enums.CollectionPlatform;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -19,8 +18,9 @@ public class QuestionnaireModelValueProviderImpl implements QuestionnaireModelVa
     @Value("${fr.insee.questionnaire.model.value.provider.uri:#{null}}")
     private String questionnaireModelValueProviderUri;
 
-    @Autowired
-    private ProviderRestTemplate restTemplate;
+    @Autowired WebClientHelper webClientHelper;
+    //TODO : realm a definir
+    String realm = " to be defined";
 
     @Override
     public Map<?, ?> getQuestionnaireModelValue(CollectionPlatform platform, String questionnaireModelId) {
@@ -29,10 +29,15 @@ public class QuestionnaireModelValueProviderImpl implements QuestionnaireModelVa
 
         log.info("getQuestionnaireModelValue: uri={}",uri);
 
-        //TODO : on vire restTemplate??
-        ResponseEntity<Map> response = restTemplate.exchange(uri, HttpMethod.GET, request, Map.class);
+        Map response =
+            webClientHelper.getWebClientForRealm(realm,questionnaireModelValueProviderUri)
+                .get()
+                .uri("/"+getPath(platform, questionnaireModelId))
+                .retrieve()
+                .bodyToMono(Map.class)
+                .block();
 
-        return response.getBody();
+        return response;
     }
 
     private String getPath(CollectionPlatform platform, String questionnaireModelId) {

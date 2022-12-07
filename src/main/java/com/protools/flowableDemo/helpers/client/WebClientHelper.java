@@ -1,7 +1,8 @@
-package com.protools.flowableDemo.helpers;
+package com.protools.flowableDemo.helpers.client;
 
 import io.netty.handler.logging.LogLevel;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -15,8 +16,8 @@ import reactor.netty.transport.logging.AdvancedByteBufFormat;
 @Slf4j
 public class WebClientHelper {
 
-        private static WebClient.Builder webClientBuilder;
-
+        private WebClient.Builder webClientBuilder;
+        @Autowired private KeycloakService keycloakService;
         public WebClientHelper() {
 
                 webClientBuilder = WebClient.builder()
@@ -31,18 +32,23 @@ public class WebClientHelper {
         }
         /**
          * init a new WebClient proxy aware (default one ignore system proxy)
-         * @param baseUrl
          * @return
          */
-        public static WebClient getWebClient(String baseUrl) {
-                return webClientBuilder
-                   .baseUrl(baseUrl)
-                   .build();
-        }
-
-        public static WebClient getWebClient() {
+        public WebClient getWebClient() {
                 return webClientBuilder
                     .build();
         }
 
+        public WebClient getWebClientForRealm(String realm) {
+                return webClientBuilder
+                    .defaultHeaders(new KeycloakHeadersConsumerJSON(realm, keycloakService))
+                    .build();
+        }
+
+        public WebClient getWebClientForRealm(String realm, String baseUrl) {
+                return webClientBuilder
+                    .defaultHeaders(new KeycloakHeadersConsumerJSON(realm, keycloakService))
+                    .baseUrl(baseUrl)
+                    .build();
+        }
 }

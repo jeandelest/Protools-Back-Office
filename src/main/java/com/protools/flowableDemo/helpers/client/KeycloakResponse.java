@@ -1,9 +1,9 @@
-package com.protools.flowableDemo.keycloak;
+package com.protools.flowableDemo.helpers.client;
 
 import lombok.Data;
 
 @Data
-public class KeycloakResponse {
+class KeycloakResponse {
     private String access_token;
 
     private Integer expires_in;

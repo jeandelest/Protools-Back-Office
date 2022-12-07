@@ -1,6 +1,6 @@
-package com.protools.flowableDemo.keycloak;
+package com.protools.flowableDemo.helpers.client;
 
-public class Token {
+class Token {
     public final String value;
     public final long endValidityTimeMillis;
 

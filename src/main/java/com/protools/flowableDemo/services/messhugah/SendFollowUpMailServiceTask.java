@@ -2,12 +2,9 @@ package com.protools.flowableDemo.services.messhugah;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.protools.flowableDemo.keycloak.KeycloakService;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.JavaDelegate;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -88,7 +85,7 @@ public class SendFollowUpMailServiceTask implements JavaDelegate {
                 try {
                     requestBody = objectMapper
                             .writeValueAsString(values);
-                    sendMailService.SendMail(requestBody);
+                    sendMailService.sendMail(requestBody);
                 } catch (JsonProcessingException e) {
                     e.printStackTrace();
                 }

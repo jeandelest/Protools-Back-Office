@@ -1,28 +1,18 @@
 package com.protools.flowableDemo.services.era;
 
-
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.http.HttpStatus;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.protools.flowableDemo.helpers.client.WebClientHelper;
+import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.google.gson.Gson;
-import com.protools.flowableDemo.keycloak.KeycloakService;
-
-import lombok.extern.slf4j.Slf4j;
+import java.text.ParseException;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 @Slf4j
@@ -33,13 +23,11 @@ public class DrawDailySampleServiceTask implements JavaDelegate {
     @Value("${fr.insee.keycloak.realm.internal:#{null}}")
     private String realm;
 
-    @Autowired
-    KeycloakService keycloakService;
+    @Autowired WebClientHelper webClientHelper;
 
     @Override
     public void execute(org.flowable.engine.delegate.DelegateExecution delegateExecution) {
         log.info("\t >> Draw Daily Sample Service Task <<  ");
-        keycloakService.setRealm(realm);
         try {
             List<Map> listOfSampleUnit = getSampleIDs();
             delegateExecution.setVariable("sample",listOfSampleUnit);
@@ -81,51 +69,18 @@ public class DrawDailySampleServiceTask implements JavaDelegate {
 
         log.info("\t \t >> Get survey sample for today : {} << ", endDate.toString());
 
-        HttpClient client = HttpClient.newHttpClient();
+        var responseList =
+            webClientHelper.getWebClientForRealm(realm,eraUrl).get()
+                .uri(uriBuilder -> uriBuilder
+                    .path("/extraction-survey-unit/survey-units-for-period")
+                    .queryParam("startDate", startDate)
+                    .queryParam("endDate", endDate)
+                    .build())
+                .retrieve()
+                .bodyToMono(LinkedHashMap[].class)
+                .block();
 
-        String token = keycloakService.getContextReferentialToken();
-        log.info("\t \t >> Get token : {} << ", token);
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(eraUrl+"/extraction-survey-unit/survey-units-for-period?startDate="+startDate+"&endDate="+endDate))
-                .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .setHeader(HttpHeaders.AUTHORIZATION,"Bearer " + token)
-                .GET()
-                .build();
-
-        HttpResponse<String> response = null;
-        try {
-            response = client.send(request,
-                    HttpResponse.BodyHandlers.ofString());
-            log.info("call draw daily sample : status={} ",response.statusCode());
-            log.info("Response body : {} << ", response.body());
-            if(response.statusCode() != HttpStatus.SC_OK)
-            {
-                String errorMessage = "Error call draw daily sample response={}";
-                log.error(errorMessage);
-                throw new RuntimeException(errorMessage);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        Gson gson = new Gson();
-        if (response.statusCode()==200) {
-            List<String> responseList = (List<String>) gson.fromJson(gson.toJson(response.body()),List.class);
-            log.info("\t \t >> Response : {} << ", responseList.toString());
-            List<Map> unitList = new ArrayList<>();
-            for (String s : responseList) {
-                log.info("\t \t >> Sample ID : {} << ", s);
-                Map unitMap = gson.fromJson(gson.toJson(s), Map.class);
-                unitList.add(unitMap);
-            }
-            log.info("\t \t >>> Got today's sample from ERA  : " + unitList.toString());
-            return unitList;
-        } else {
-            log.error("Error while getting sample from ERA : " + response.statusCode());
-            return null;
-        }
-
-
+        log.info("\t \t >>> Got today's sample from ERA  : " + responseList.toString());
+        return Arrays.asList(responseList);
     }
-
 }

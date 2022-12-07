@@ -1,11 +1,8 @@
 package com.protools.flowableDemo.services.coleman.context.providers;
 
+import com.protools.flowableDemo.helpers.client.WebClientHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -18,18 +15,21 @@ public class NomenclatureValueProviderImpl implements NomenclatureValueProvider 
     @Value("${fr.insee.nomenclature.value.provider.uri:#{null}}")
     private String nomenclatureValueProviderUri;
 
+    //TODO : définir realm
+    String realm = " to be defined";
     @Autowired
-    private ProviderRestTemplate restTemplate;
+    private WebClientHelper webClientHelper;
 
     @Override
     public Collection<?> getNomenclatureValue(String nomenclatureId) {
-        String uri = nomenclatureValueProviderUri + "/" + getPath(nomenclatureId);
-
-        HttpEntity<String> request = new HttpEntity<>(new HttpHeaders());
-
-        ResponseEntity<Collection> response = restTemplate.exchange(uri, HttpMethod.GET, request, Collection.class);
-
-        return response.getBody();
+        Collection response =
+            webClientHelper.getWebClientForRealm(realm, nomenclatureValueProviderUri)
+            .get()
+            .uri("/"+getPath(nomenclatureId))
+            .retrieve()
+            .bodyToMono(Collection.class)
+            .block();
+        return response;
     }
 
     private String getPath(String nomenclatureId)  {

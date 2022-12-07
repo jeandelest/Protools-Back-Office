@@ -2,22 +2,16 @@ package com.protools.flowableDemo.services.coleman;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.protools.flowableDemo.keycloak.KeycloakService;
+import com.protools.flowableDemo.helpers.client.WebClientHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.BodyInserters;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -36,18 +30,12 @@ public class CreateSurveyUnitServiceTask implements JavaDelegate {
     @Value("${fr.insee.keycloak.realm.survey:#{null}}")
     private String realm;
 
-    @Value("${fr.insee.keycloak.client.secret.survey:#{null}}")
-    private String clientSecret;
-
     @Autowired
-    KeycloakService keycloakService;
+    WebClientHelper webClientHelper;
 
     @Override
     public void execute(DelegateExecution delegateExecution){
         log.info("\t >> Create Survey Unit into Coleman Pilotage & Questionnaire Service Task <<  ");
-        keycloakService.setRealm(realm);
-        keycloakService.setClientSecret(clientSecret);
-
 
         JSONObject questionnaireColemanData = (JSONObject) delegateExecution.getVariableLocal("questionnaireColemanData");
         JSONObject pilotageColemanData = (JSONObject) delegateExecution.getVariableLocal("pilotageColemanData");
@@ -67,9 +55,6 @@ public class CreateSurveyUnitServiceTask implements JavaDelegate {
 
     // Send TRANSFORMED data into Coleman Pilotage
     public void sendColemanPilotageData(JSONObject pilotageColemanData, String idCampaign){
-        String token = keycloakService.getContextReferentialToken();
-        HttpClient client = HttpClient.newHttpClient();
-
         // Transfo Data Coleman Pilotage
         pilotageColemanData= (JSONObject) pilotageColemanData.get("pilotage");
         List<JSONObject> pilotageColemanDataArray = new ArrayList<>();
@@ -83,30 +68,23 @@ public class CreateSurveyUnitServiceTask implements JavaDelegate {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(colemanPilotageUri+"/rest-survey-unit/campaigns/"+ idCampaign + "/survey-units"))
-                .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .setHeader(HttpHeaders.AUTHORIZATION,"Bearer " + token)
-                .POST(HttpRequest.BodyPublishers.ofString(requestBodyPilotage))
-                .build();
-        HttpResponse<String> responsePilotage = null;
-        try {
-            responsePilotage = client.send(request,
-                    HttpResponse.BodyHandlers.ofString());
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        log.info("\t \t Coleman Pilotage Response : "+ responsePilotage.statusCode());
+
+        String responsePilotage = webClientHelper.getWebClientForRealm(realm,colemanPilotageUri)
+            .post()
+            .uri(uriBuilder -> uriBuilder
+                .path("/rest-survey-unit/campaigns/{idCampaign}/survey-units")
+                .build(idCampaign))
+            .body(BodyInserters.fromValue(requestBodyPilotage))
+            .retrieve()
+            .bodyToMono(String.class)
+            .block();
+        log.info("\t \t Coleman Pilotage Response : "+ responsePilotage);
     }
 
     // Send TRANSFORMED data into Coleman Questionnaire
     public void sendColemanQuestionnaireData(JSONObject questionnaireColemanData, String idUnit){
-        String token = keycloakService.getContextReferentialToken();
-        HttpClient client = HttpClient.newHttpClient();
 
-        var objectMapper = new ObjectMapper();
+        ObjectMapper objectMapper = new ObjectMapper();
         String requestBodyQuestionnaire = null;
         try {
             requestBodyQuestionnaire = objectMapper
@@ -114,22 +92,18 @@ public class CreateSurveyUnitServiceTask implements JavaDelegate {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(colemanQuestionnaireUri+"/api/campaign/"+ idUnit + "/survey-unit"))
-                .setHeader(HttpHeaders.CONTENT_TYPE, "application/json")
-                .setHeader(HttpHeaders.AUTHORIZATION,"Bearer " + token)
-                .POST(HttpRequest.BodyPublishers.ofString(requestBodyQuestionnaire))
-                .build();
-        HttpResponse<String> responseQuestionnaire = null;
-        try {
-            responseQuestionnaire = client.send(request,
-                    HttpResponse.BodyHandlers.ofString());
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        log.info("\t \t Coleman Pilotage Response : "+ responseQuestionnaire.statusCode());
+
+        String responseQuestionnaire = webClientHelper.getWebClientForRealm(realm,colemanQuestionnaireUri)
+            .post()
+            .uri(uriBuilder -> uriBuilder
+                .path("/api/campaign/{idUnit}/survey-unit")
+                .build(idUnit))
+            .body(BodyInserters.fromValue(requestBodyQuestionnaire))
+            .retrieve()
+            .bodyToMono(String.class)
+            .block();
+
+        log.info("\t \t Coleman Questionnaire Response : "+ responseQuestionnaire);
     }
 
     public JSONObject transformColemanQuestionnaireData(JSONObject questionnaireColemanData,  List<LinkedHashMap<String,Object>> partition, int sexe){

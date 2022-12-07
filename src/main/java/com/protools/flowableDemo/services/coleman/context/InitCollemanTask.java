@@ -3,9 +3,7 @@ package com.protools.flowableDemo.services.coleman.context;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.protools.flowableDemo.helpers.WebClientHelper;
-import com.protools.flowableDemo.keycloak.KeycloakHeadersConsumerJSON;
-import com.protools.flowableDemo.keycloak.KeycloakService;
+import com.protools.flowableDemo.helpers.client.WebClientHelper;
 import com.protools.flowableDemo.services.coleman.context.dto.Campaign;
 import com.protools.flowableDemo.services.coleman.context.dto.Nomenclature;
 import com.protools.flowableDemo.services.coleman.context.dto.QuestionnaireModel;
@@ -17,16 +15,10 @@ import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
-import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
@@ -41,9 +33,8 @@ public class InitCollemanTask implements JavaDelegate {
     @Value("${fr.insee.coleman.questionnaire.uri:#{null}}")
     private String colemanQuestionnaireUri;
 
-    @Autowired
-    private KeycloakService keycloakService;
-
+    //TODO : définir réalm
+    private String realm = " a definir ";
 
     @Autowired
     private NomenclatureValueProvider nomenclatureValueProvider;
@@ -112,13 +103,10 @@ public class InitCollemanTask implements JavaDelegate {
     }
 
     private void postNomenclature(Nomenclature nomenclature) {
-        String uri = colemanQuestionnaireUri + "/nomenclature";
 
-        ;
         Nomenclature nomenclatureRécupérée =
-            WebClientHelper.getWebClient(colemanQuestionnaireUri).post()
-            .uri(uri)
-            .headers(new KeycloakHeadersConsumerJSON(keycloakService))
+            webClientHelper.getWebClientForRealm(realm,colemanQuestionnaireUri).post()
+            .uri("/nomenclature")
             .bodyValue(nomenclature)
             .retrieve()
             .bodyToMono(Nomenclature.class)
@@ -131,9 +119,9 @@ public class InitCollemanTask implements JavaDelegate {
     private void postQuestionnaireModel(QuestionnaireModel questionnaireModel) {
         String uri =  "/questionnaire-models";
         log.info("postQuestionnaireModel: {}",questionnaireModel);
-        QuestionnaireModel response = WebClientHelper.getWebClient(colemanQuestionnaireUri).post()
+        QuestionnaireModel response = webClientHelper.getWebClientForRealm(realm,colemanQuestionnaireUri)
+            .post()
             .uri(uri)
-            .headers(new KeycloakHeadersConsumerJSON(keycloakService))
             .body(Mono.just(questionnaireModel),QuestionnaireModel.class)
             .retrieve()
             .bodyToMono(QuestionnaireModel.class)
