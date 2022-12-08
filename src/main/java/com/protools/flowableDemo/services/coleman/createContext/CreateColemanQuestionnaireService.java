@@ -65,7 +65,7 @@ public class CreateColemanQuestionnaireService {
             try {
                 response = client.send(request,
                         HttpResponse.BodyHandlers.ofString());
-                log.info("\t \t \t Naming sent to Coleman Pilotage with response code  : "+ response.statusCode());
+                log.info("\t \t \t >> Naming sent to Coleman Pilotage with response code  : "+ response.statusCode());
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -106,7 +106,7 @@ public class CreateColemanQuestionnaireService {
         try {
             response = client.send(request,
                     HttpResponse.BodyHandlers.ofString());
-            log.info("\t \t \t Questionnaire sent to Coleman Questionnaire with response code  : "+ response.statusCode());
+            log.info("\t \t \t >> Questionnaire sent to Coleman Questionnaire with response code  : "+ response.statusCode());
 
         } catch (Exception e) {
             e.printStackTrace();
