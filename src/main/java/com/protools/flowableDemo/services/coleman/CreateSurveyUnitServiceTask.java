@@ -20,7 +20,7 @@ import java.util.Map;
 @Component
 @Slf4j
 public class CreateSurveyUnitServiceTask implements JavaDelegate {
-
+    //TODO : Déplacer dans un sous package
     @Value("${fr.insee.coleman.questionnaire.uri}")
     private String colemanQuestionnaireUri;
 

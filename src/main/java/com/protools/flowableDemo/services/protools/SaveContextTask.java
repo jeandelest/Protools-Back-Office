@@ -39,6 +39,8 @@ public class SaveContextTask implements JavaDelegate {
             LinkedHashMap<Object,Object> partitionsStr = (LinkedHashMap<Object, Object>) partitionsList.get(0);
             String dateFinCampagne = getDateFinCampagne(partitionsStr);
             delegateExecution.setVariable("dateFinCampagne",dateFinCampagne);
+            String dateDebutCampagne = getCollectionStartDate(partitionsStr);
+            delegateExecution.setVariable("dateDebutCampagne",dateDebutCampagne);
         } catch (Exception e) {
             log.info("Could not extract dateFinCampagne from context file, error: " + e.getMessage());
         }
@@ -54,7 +56,7 @@ public class SaveContextTask implements JavaDelegate {
         JsonNode node = null;
         try {
             node = xmlMapper.readTree(xmlFile);
-            log.info("Xml file parsed into JsonNode: " + node);
+            log.info("\t >>Xml file parsed into JsonNode: " + node);
 
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
@@ -95,7 +97,19 @@ public class SaveContextTask implements JavaDelegate {
         Map<String, Object> dateObject = (Map<String, Object>) partitions.get("Dates");
         dateFinCampagne = ((String)dateObject.get("CollectionEndDate")).substring(0, 10);
 
-        log.info("Date de fin de campagne: " + dateFinCampagne);
+        log.info("\t \t >> Date de fin de campagne: " + dateFinCampagne);
         return dateFinCampagne;
+    }
+    public String getCollectionStartDate(LinkedHashMap<Object,Object> partitionsStr){
+        Gson gson = new Gson();
+        Map<String, Object> partitions = gson.fromJson(gson.toJson(partitionsStr),Map.class);
+
+        String dateStartCampagne = "2000-01-01";
+
+        Map<String, Object> dateObject = (Map<String, Object>) partitions.get("Dates");
+        dateStartCampagne = ((String)dateObject.get("CollectionStartDate")).substring(0, 10);
+
+        log.info("\t \t >> Date de début de campagne: " + dateStartCampagne);
+        return dateStartCampagne;
     }
 }
