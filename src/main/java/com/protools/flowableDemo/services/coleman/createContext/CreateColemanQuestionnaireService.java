@@ -26,7 +26,6 @@ public class CreateColemanQuestionnaireService {
     @Value("${fr.insee.coleman.questionnaire.uri}")
     private String colemanQuestionnaireUri;
 
-
     @Value("${fr.insee.keycloak.realm.survey:#{null}}")
     private String realm;
 
@@ -34,6 +33,9 @@ public class CreateColemanQuestionnaireService {
     private String clientSecret;
     @Autowired
     KeycloakService keycloakService;
+
+    @Autowired
+    NamingQuestionnaireService namingQuestionnaireService;
 
     public void createAndPostNaming(List<LinkedHashMap<String,Object>> naming){
         log.info("\t >> Create Naming object to be send to Coleman in the Create Context in Coleman Service task <<  ");
@@ -48,6 +50,7 @@ public class CreateColemanQuestionnaireService {
             JSONObject namingObject = new JSONObject();
             namingObject.put("id", nomenclature.get("Id"));
             namingObject.put("label", nomenclature.get("Label"));
+            namingObject.put("value", namingQuestionnaireService.getNamingModelValue(nomenclature.get("Id").toString()));
             // Fetch value from external service but I don't know which one yet
 
             // Send the JSON Object to Coleman Questionnaire
@@ -88,6 +91,7 @@ public class CreateColemanQuestionnaireService {
         questionnaireObject.put("id", questionnaire.get("Id"));
         questionnaireObject.put("label", questionnaire.get("Label"));
         questionnaireObject.put("requiredNomenclaturesIds", listOfNamingIds);
+        questionnaireObject.put("value", namingQuestionnaireService.getNamingModelValue(questionnaire.get("Id").toString()));
         // Fetch value from external service but I don't know which one yet
 
         // Send the JSON Object to Coleman Questionnaire
@@ -147,7 +151,7 @@ public class CreateColemanQuestionnaireService {
         try {
             response = client.send(request,
                     HttpResponse.BodyHandlers.ofString());
-            log.info("\t \t \t Metadata sent to Coleman Questionnaire with response code  : " + response.statusCode());
+            log.info("\t \t \t >> Metadata sent to Coleman Questionnaire with response code  : " + response.statusCode());
 
         } catch (Exception e) {
             e.printStackTrace();
