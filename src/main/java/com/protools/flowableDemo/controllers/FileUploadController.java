@@ -27,12 +27,6 @@ public class FileUploadController {
     UploadFileToEngineService uploadFileToEngineService;
 
 
-    //TODO : TO BE REMOVE
-    @Autowired DrawDailySampleServiceTask era;
-    public FileUploadController(UploadFileToEngineService uploadFileToEngineService) {
-        this.uploadFileToEngineService = uploadFileToEngineService;
-    }
-
     @CrossOrigin
     @Operation(summary = "Upload context file to the engine, the context file must be an xml file following a (not yet) defined format")
     @PostMapping("/upload-context")
@@ -45,11 +39,4 @@ public class FileUploadController {
 
     }
 
-    //TODO : to be removed
-    @GetMapping("/toto")
-    public ResponseEntity<List<Map>> toto(
-          ) throws ParseException, JsonProcessingException {
-        var res = era.getSampleIDs();
-        return ResponseEntity.ok(res);
-    }
 }
