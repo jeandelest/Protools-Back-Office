@@ -51,4 +51,10 @@ public class WebClientHelper {
                     .baseUrl(baseUrl)
                     .build();
         }
+
+        public WebClient getWebClientForBaseUrl(String baseUrl) {
+                return webClientBuilder
+                    .baseUrl(baseUrl)
+                    .build();
+        }
 }
