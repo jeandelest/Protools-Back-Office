@@ -10,9 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Create Naming (Nomenclature) & Questionnaire objects to be sent to Coleman Questionnaire
@@ -94,7 +92,7 @@ public class CreateColemanQuestionnaireService {
      * This object is a bit long, it might be interesting to create a dto for it
      *    - This might help to autogenerate empty fields
      */
-    public void createAndPostMetadataObject(List<LinkedHashMap<String,Object>> variables, String id, String label, LinkedHashMap<String,Object> questionnaire){
+    public void createAndPostMetadataObject(String id, String label, LinkedHashMap<String,Object> questionnaire, List<Map<String, Object>> variables, String inseeContext){
         log.info("\t >> Create Metadata object to be send to Coleman in the Create Context in Coleman Service task <<  ");
 
 
@@ -108,8 +106,11 @@ public class CreateColemanQuestionnaireService {
         JSONObject metadataObject = new JSONObject();
         metadataObject.put("id", id);
         metadataObject.put("label", label);
-        metadataObject.put("metadata", variables);
+        metadataObject.put("metadata", new HashMap<>() {{
+            put("variables", variables);
+        }});
         metadataObject.put("questionnaireIds", listOfQuestionnaireIds);
+        metadataObject.put("inseeContext", inseeContext);
         // Fetch value from external service but I don't know which one yet
 
         // Send the JSON Object to Coleman Questionnaire

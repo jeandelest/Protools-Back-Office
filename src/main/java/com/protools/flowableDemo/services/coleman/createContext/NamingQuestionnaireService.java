@@ -28,6 +28,8 @@ public class NamingQuestionnaireService {
     @Autowired
     WebClientHelper webClientHelper;
 
+
+
     String getNamingModelValue(String namingId) {
         // Get path to the naming file
         Matcher matcher = Pattern.compile("^._(.*)-\\d+-\\d+-\\d+$").matcher(namingId);
