@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 
 import java.util.regex.Matcher;
@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 /**
  * Retrieve questionnaire & namings model value from Gitlab, it is a temporary solution, so it is dirty coded
  */
-@Component
+@Service
 @Slf4j
 public class NamingQuestionnaireService {
 
@@ -49,7 +49,7 @@ public class NamingQuestionnaireService {
         return jsonResponse.toString();
     }
 
-    private String getQuestionnaireModelValue(String questionnaireModelId) {
+    String getQuestionnaireModelValue(String questionnaireModelId) {
         log.info("\t \t \t >> Get Questionnaire Model Value from Gitlab");
 
         JSONObject jsonResponse =

@@ -36,9 +36,8 @@ public class CreateColemanPilotageService {
         pilotageObject.put("label", label);
         pilotageObject.put("collectionStartDate", collectionStartDate);
         pilotageObject.put("collectionEndDate", collectionEndDate);
-        // Fetch value from external service but I don't know which one yet
 
-        // Send the JSON Object to Coleman Questionnaire
+        // Send the JSON Object to Coleman Pilotage
         webClientHelper.getWebClientForRealm(realm,colemanPilotageUri)
                 .post()
                 .uri("/api/campagnes")

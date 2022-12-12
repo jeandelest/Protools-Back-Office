@@ -73,7 +73,7 @@ public class CreateColemanQuestionnaireService {
         questionnaireObject.put("id", questionnaire.get("Id"));
         questionnaireObject.put("label", questionnaire.get("Label"));
         questionnaireObject.put("requiredNomenclaturesIds", listOfNamingIds);
-        questionnaireObject.put("value", namingQuestionnaireService.getNamingModelValue(questionnaire.get("Id").toString()));
+        questionnaireObject.put("value", namingQuestionnaireService.getQuestionnaireModelValue(questionnaire.get("Id").toString()));
         // Fetch value from external service but I don't know which one yet
 
         // Send the JSON Object to Coleman Questionnaire
