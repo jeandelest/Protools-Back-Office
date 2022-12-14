@@ -1,8 +1,12 @@
 package com.protools.flowableDemo.helpers.client;
 
+import com.protools.flowableDemo.helpers.client.configuration.APIProperties;
 import io.netty.handler.logging.LogLevel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -39,16 +43,20 @@ public class WebClientHelper {
                     .build();
         }
 
-        public WebClient getWebClientForRealm(String realm) {
+        /**
+         * Get a webclient preconfigured for proxy and able to get the JWT token required for authentification
+         * @param properties
+         * @return preconfigured WebClient
+         */
+        public WebClient getWebClient(APIProperties properties) {
                 return webClientBuilder
-                    .defaultHeaders(new KeycloakHeadersConsumerJSON(realm, keycloakService))
+                    .defaultHeaders(new KeycloakHeadersConsumerJSON(properties.getRealm(), keycloakService))
+                    .baseUrl(properties.getUrl())
                     .build();
         }
 
-        public WebClient getWebClientForRealm(String realm, String baseUrl) {
-                return webClientBuilder
-                    .defaultHeaders(new KeycloakHeadersConsumerJSON(realm, keycloakService))
-                    .baseUrl(baseUrl)
-                    .build();
+        @Bean
+        public WebClient colemanQuestionnaireWebClient() {
+
         }
 }

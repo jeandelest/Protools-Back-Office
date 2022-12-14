@@ -1,10 +1,11 @@
 package com.protools.flowableDemo.services.messhugah;
 
 import com.protools.flowableDemo.helpers.client.WebClientHelper;
+import com.protools.flowableDemo.helpers.client.configuration.APIProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
 
@@ -13,18 +14,16 @@ import org.springframework.web.reactive.function.BodyInserters;
 @Component
 @Slf4j
 class SendMailService {
-    @Value("${fr.insee.coleman.pilotage.uri}")
-    private String colemanPilotageUri;
 
-    @Value("${fr.insee.keycloak.realm.survey:#{null}}")
-    private String realm;
+    @Autowired @Qualifier("colemanPilotageApiProperties")
+    APIProperties colemanPilotageApiProperties;
     @Autowired
     WebClientHelper webClientHelper;
 
     public void sendMail(String mailContent)  {
         log.info("\t \t >> Send Mail Task ");
 
-        webClientHelper.getWebClientForRealm(realm,colemanPilotageUri)
+        webClientHelper.getWebClient(colemanPilotageApiProperties)
             .post()
             .uri("/contact/send-mail")
             .body(BodyInserters.fromValue(mailContent))

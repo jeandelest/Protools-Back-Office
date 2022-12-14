@@ -2,11 +2,13 @@ package com.protools.flowableDemo.services.era;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.protools.flowableDemo.helpers.client.WebClientHelper;
+import com.protools.flowableDemo.helpers.client.configuration.APIProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.text.ParseException;
 import java.util.Arrays;
@@ -17,13 +19,11 @@ import java.util.Map;
 @Component
 @Slf4j
 public class DrawDailySampleServiceTask implements JavaDelegate {
-    @Value("${fr.insee.era.api}")
-    private String eraUrl;
-
-    @Value("${fr.insee.keycloak.realm.internal:#{null}}")
-    private String realm;
 
     @Autowired WebClientHelper webClientHelper;
+    @Autowired @Qualifier("eraApiProperties") APIProperties eraAPIProperties;
+
+    WebClient eraWebClient;
 
     @Override
     public void execute(org.flowable.engine.delegate.DelegateExecution delegateExecution) {
@@ -67,10 +67,11 @@ public class DrawDailySampleServiceTask implements JavaDelegate {
         String endDate = "2022-01-25";
 
 
-        log.info("\t \t >> Get survey sample for today : {} << ", endDate.toString());
+        log.info("\t \t >> Get survey sample for today : {} << ", endDate);
 
-        var responseList =
-            webClientHelper.getWebClientForRealm(realm,eraUrl).get()
+        LinkedHashMap[] responseList =
+            webClientHelper.getWebClient(eraAPIProperties)
+                .get()
                 .uri(uriBuilder -> uriBuilder
                     .path("/extraction-survey-unit/survey-units-for-period")
                     .queryParam("startDate", startDate)

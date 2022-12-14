@@ -1,7 +1,9 @@
 package com.protools.flowableDemo.services.coleman.context.providers;
 
 import com.protools.flowableDemo.helpers.client.WebClientHelper;
+import com.protools.flowableDemo.helpers.client.configuration.APIProperties;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -15,17 +17,16 @@ public class NomenclatureValueProviderImpl implements NomenclatureValueProvider 
     @Value("${fr.insee.nomenclature.value.provider.uri:#{null}}")
     private String nomenclatureValueProviderUri;
 
-    //TODO : définir realm
-    String realm = " to be defined";
     @Autowired
     private WebClientHelper webClientHelper;
 
     @Override
     public Collection<?> getNomenclatureValue(String nomenclatureId) {
+        //Webclient without token bearer as we only read a file
         Collection response =
-            webClientHelper.getWebClientForRealm(realm, nomenclatureValueProviderUri)
+            webClientHelper.getWebClient()
             .get()
-            .uri("/"+getPath(nomenclatureId))
+            .uri(nomenclatureValueProviderUri+"/"+getPath(nomenclatureId))
             .retrieve()
             .bodyToMono(Collection.class)
             .block();

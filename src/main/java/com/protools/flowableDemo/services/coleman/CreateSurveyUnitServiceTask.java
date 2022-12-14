@@ -3,11 +3,13 @@ package com.protools.flowableDemo.services.coleman;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.protools.flowableDemo.helpers.client.WebClientHelper;
+import com.protools.flowableDemo.helpers.client.configuration.APIProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -21,15 +23,11 @@ import java.util.Map;
 @Slf4j
 public class CreateSurveyUnitServiceTask implements JavaDelegate {
 
-    @Value("${fr.insee.coleman.questionnaire.uri}")
-    private String colemanQuestionnaireUri;
+    @Autowired @Qualifier("colemanPilotageApiProperties")
+    APIProperties colemanPilotageApiProperties;
 
-    @Value("${fr.insee.coleman.pilotage.uri}")
-    private String colemanPilotageUri;
-
-    @Value("${fr.insee.keycloak.realm.survey:#{null}}")
-    private String realm;
-
+    @Autowired @Qualifier("colemanQuestionnaireApiProperties")
+    APIProperties colemanQuestionnaireApiProperties;
     @Autowired
     WebClientHelper webClientHelper;
 
@@ -69,7 +67,7 @@ public class CreateSurveyUnitServiceTask implements JavaDelegate {
             e.printStackTrace();
         }
 
-        String responsePilotage = webClientHelper.getWebClientForRealm(realm,colemanPilotageUri)
+        String responsePilotage = webClientHelper.getWebClient(colemanPilotageApiProperties)
             .post()
             .uri(uriBuilder -> uriBuilder
                 .path("/rest-survey-unit/campaigns/{idCampaign}/survey-units")
@@ -93,7 +91,7 @@ public class CreateSurveyUnitServiceTask implements JavaDelegate {
             e.printStackTrace();
         }
 
-        String responseQuestionnaire = webClientHelper.getWebClientForRealm(realm,colemanQuestionnaireUri)
+        String responseQuestionnaire = webClientHelper.getWebClient(colemanQuestionnaireApiProperties)
             .post()
             .uri(uriBuilder -> uriBuilder
                 .path("/api/campaign/{idUnit}/survey-unit")

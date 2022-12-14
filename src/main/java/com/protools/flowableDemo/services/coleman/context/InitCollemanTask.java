@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.protools.flowableDemo.helpers.client.WebClientHelper;
+import com.protools.flowableDemo.helpers.client.configuration.APIProperties;
 import com.protools.flowableDemo.services.coleman.context.dto.Campaign;
 import com.protools.flowableDemo.services.coleman.context.dto.Nomenclature;
 import com.protools.flowableDemo.services.coleman.context.dto.QuestionnaireModel;
@@ -14,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import reactor.core.publisher.Mono;
@@ -29,13 +30,6 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class InitCollemanTask implements JavaDelegate {
-
-    @Value("${fr.insee.coleman.questionnaire.uri:#{null}}")
-    private String colemanQuestionnaireUri;
-
-    //TODO : définir réalm
-    private String realm = " a definir ";
-
     @Autowired
     private NomenclatureValueProvider nomenclatureValueProvider;
 
@@ -43,6 +37,8 @@ public class InitCollemanTask implements JavaDelegate {
     @Autowired
     private QuestionnaireModelValueProvider questionnaireModelValueProvider;
 
+    @Autowired @Qualifier("colemanQuestionnaireApiProperties")
+    APIProperties colemanQuestionnaireAPIProperties;
     @Autowired
     WebClientHelper webClientHelper;
 
@@ -105,7 +101,7 @@ public class InitCollemanTask implements JavaDelegate {
     private void postNomenclature(Nomenclature nomenclature) {
 
         Nomenclature nomenclatureRécupérée =
-            webClientHelper.getWebClientForRealm(realm,colemanQuestionnaireUri).post()
+            webClientHelper.getWebClient(colemanQuestionnaireAPIProperties).post()
             .uri("/nomenclature")
             .bodyValue(nomenclature)
             .retrieve()
@@ -119,7 +115,8 @@ public class InitCollemanTask implements JavaDelegate {
     private void postQuestionnaireModel(QuestionnaireModel questionnaireModel) {
         String uri =  "/questionnaire-models";
         log.info("postQuestionnaireModel: {}",questionnaireModel);
-        QuestionnaireModel response = webClientHelper.getWebClientForRealm(realm,colemanQuestionnaireUri)
+        //TODO: reuse the same client in this class? warning, in this case, can it be a singleton?
+        QuestionnaireModel response = webClientHelper.getWebClient(colemanQuestionnaireAPIProperties)
             .post()
             .uri(uri)
             .body(Mono.just(questionnaireModel),QuestionnaireModel.class)
