@@ -7,6 +7,7 @@ import org.flowable.engine.delegate.JavaDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -43,18 +44,9 @@ public class CreateContextColemanServiceTask implements JavaDelegate {
         String dateFinCampagne = ((String) dateObject.get(DATE_FIN_COLLECTE));
 
 
-        LocalDateTime startDate = LocalDateTime.parse(dateDebutCampagne,
-                DateTimeFormatter.ofPattern("yyyy-MM-ddTHH:mm:ss") );
+        long collectionStartDate = Instant.parse(dateDebutCampagne).toEpochMilli();
 
-        long collectionStartDate = startDate
-                .atZone(ZoneId.systemDefault())
-                .toInstant().toEpochMilli();
-
-        LocalDateTime endDate = LocalDateTime.parse(dateFinCampagne,
-                DateTimeFormatter.ofPattern("yyyy-MM-ddTHH:mm:ss") );
-        long collectionEndDate = endDate
-                .atZone(ZoneId.systemDefault())
-                .toInstant().toEpochMilli();
+        long collectionEndDate = Instant.parse(dateFinCampagne).toEpochMilli();
 
         createColemanPilotageService.createCampaign(collectionStartDate,collectionEndDate,id,label);
 
