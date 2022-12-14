@@ -12,6 +12,8 @@ import org.springframework.web.reactive.function.BodyInserters;
 
 import java.util.*;
 
+import static com.protools.flowableDemo.services.utils.ContextConstants.*;
+
 /**
  * Create Naming (Nomenclature) & Questionnaire objects to be sent to Coleman Questionnaire
  */
@@ -38,11 +40,11 @@ public class CreateColemanQuestionnaireService {
 
 
         for (LinkedHashMap<String,Object> nomenclature : naming) {
-            log.info("\t >> Found Naming with id : " + nomenclature.get("id") + " <<  ");
+            log.info("\t >> Found Naming with id : " + nomenclature.get(ID) + " <<  ");
             // Create a JSON Object
             JSONObject namingObject = new JSONObject();
-            namingObject.put("id", nomenclature.get("id"));
-            namingObject.put("label", nomenclature.get("Label"));
+            namingObject.put("id", nomenclature.get(ID));
+            namingObject.put("label", nomenclature.get(LABEL));
             namingObject.put("value","[ {\"id\": \"01\", \"label\": \"AIN (01)\"}]");
             //namingObject.put("value", namingQuestionnaireService.getNamingModelValue(nomenclature.get("id").toString()));
             // Fetch value from external service but I don't know which one yet
@@ -64,15 +66,15 @@ public class CreateColemanQuestionnaireService {
 
 
         List<String> listOfNamingIds = new ArrayList();
-        LinkedHashMap<String,Object> requiredNomenclatures = (LinkedHashMap<String,Object>) (questionnaire.get("RequiredNomenclatures"));
-        List<LinkedHashMap> listOfNaming = (List<LinkedHashMap>) requiredNomenclatures.get("Nomenclature");
+        LinkedHashMap<String,Object> requiredNomenclatures = (LinkedHashMap<String,Object>) (questionnaire.get(REQUIRED_NOMENCLATURES));
+        List<LinkedHashMap> listOfNaming = (List<LinkedHashMap>) requiredNomenclatures.get(NOMENCLATURE);
         for (LinkedHashMap<String,Object> nomenclature : listOfNaming) {
             listOfNamingIds.add((String) nomenclature.get("Id"));
         }
         // Create a JSON Object
         JSONObject questionnaireObject = new JSONObject();
-        questionnaireObject.put("id", questionnaire.get("Id"));
-        questionnaireObject.put("label", questionnaire.get("Label"));
+        questionnaireObject.put("id", questionnaire.get(ID));
+        questionnaireObject.put("label", questionnaire.get(LABEL));
         questionnaireObject.put("requiredNomenclaturesIds", listOfNamingIds);
         questionnaireObject.put("value", "{\"id\":\"lab5elzw\"," +
                 "\"modele\":\"ENQFAMI22\"," +
@@ -103,7 +105,7 @@ public class CreateColemanQuestionnaireService {
         //TODO: Re-do when there is more than one questionnaire
         List<String> listOfQuestionnaireIds = new ArrayList();
 
-        listOfQuestionnaireIds.add((String) questionnaire.get("Id"));
+        listOfQuestionnaireIds.add((String) questionnaire.get(ID));
 
 
         // Create a JSON Object

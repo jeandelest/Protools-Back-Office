@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
+import static com.protools.flowableDemo.services.utils.ContextConstants.*;
+
 @Component
 @Slf4j
 public class SurveyUnitFollowUpServiceTask implements JavaDelegate {
@@ -25,9 +27,9 @@ public class SurveyUnitFollowUpServiceTask implements JavaDelegate {
     @Override
     public void execute(org.flowable.engine.delegate.DelegateExecution delegateExecution) {
 
-        Map unit = (Map) delegateExecution.getVariable("unit");
-        String unitID = (String) unit.get("internaute").toString();
-        String idCampaign = (String) delegateExecution.getVariable("Id");
+        Map unit = (Map) delegateExecution.getVariable(UNIT);
+        String unitID = (String) unit.get(INTERNAUTE).toString();
+        String idCampaign = (String) delegateExecution.getVariable(ID);
         try {
             delegateExecution.setVariableLocal("followUp",checkIfUnitNeedsToBeFollowedUp(idCampaign,unitID).get("eligible"));
         } catch (Exception e){

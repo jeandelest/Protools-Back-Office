@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import static com.protools.flowableDemo.services.utils.ContextConstants.*;
+
 /**
  * Create Campaign objects to be sent to Coleman Pilotage
  */
@@ -32,8 +34,8 @@ public class CreateColemanPilotageService {
 
 
         JSONObject pilotageObject = new JSONObject();
-        pilotageObject.put("id", id);
-        pilotageObject.put("label", label);
+        pilotageObject.put(ID, id);
+        pilotageObject.put(LABEL, label);
         pilotageObject.put("collectionStartDate", collectionStartDate);
         pilotageObject.put("collectionEndDate", collectionEndDate);
 

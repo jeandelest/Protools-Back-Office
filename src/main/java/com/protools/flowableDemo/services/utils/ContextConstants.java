@@ -1,5 +1,7 @@
 package com.protools.flowableDemo.services.utils;
 
+import liquibase.pro.packaged.P;
+
 import javax.swing.plaf.PanelUI;
 
 public class ContextConstants {
@@ -19,7 +21,7 @@ public class ContextConstants {
     public static final String CARACTERE_OBLIGATOIRE = "CaractereObligatoire";
     public static final String QUALITE_STATISTIQUE = "QualiteStatistique";
     public static final String ANNEE_VISA = "AnneeVisa";
-    public static final String NUMEROVISA = "NumeroVisa";
+    public static final String NUMERO_VISA = "NumeroVisa";
     public static final String MINISTERE_TUTELLE = "MinistereTutelle";
     public static final String PARUTION_JO = "ParutionJo";
     public static final String DATE_PARUTION_JO = "DateParutionJo";
@@ -44,6 +46,7 @@ public class ContextConstants {
     public static final String DATE_DEBUT_COLLECTE = "DateDebutCollecte";
     public static final String DATE_FIN_COLLECTE = "DateFinCollecte";
     public static final String DATE_RETOUR = "DateRetour";
+    public static final String COMMUNICATIONS = "Communications";
     public static final String COMMUNICATION = "Communication";
     public static final String PROTOCOLE = "Protocole";
     public static final String MOYEN_COMMUNICATION = "MoyenCommunication";
@@ -51,7 +54,7 @@ public class ContextConstants {
     public static final String MODELE_COMMUNICATION = "ModeleCommunication";
     public static final String ECHEANCE = "Echeance";
     public static final String OBJET = "Objet";
-    public static final String MAILRETOUR = "MailRetour";
+    public static final String MAIL_RETOUR = "MailRetour";
     public static final String CONTENU_COMMUNICATION = "ContenuCommunication";
 
 
@@ -61,4 +64,15 @@ public class ContextConstants {
 
     // Campaign context constants - Naming
     public static final String NOMENCLATURE = "Nomenclature";
+
+    // Context constants - Variables - UNIT
+    public static final String SAMPLE = "Sample";
+    public static final String UNIT = "Unit";
+    public static final String SEXE = "sexe";
+    public static final String MAIL = "mail";
+    public static final String INTERNAUTE = "internaute";
+
+    // Context constants - Variables - Coleman
+    public static final String QUESTIONNAIRE_COLEMAN_DATA = "questionnaireColemanData";
+    public static final String PILOTAGE_COLEMAN_DATA= "pilotageColemanData";
 }

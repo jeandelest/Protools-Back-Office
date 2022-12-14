@@ -12,6 +12,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.protools.flowableDemo.services.utils.ContextConstants.*;
+
 @Component
 @Slf4j
 public class SendMailOuvertureServiceTask implements JavaDelegate {
@@ -21,39 +23,39 @@ public class SendMailOuvertureServiceTask implements JavaDelegate {
     public void execute(org.flowable.engine.delegate.DelegateExecution delegateExecution) {
         log.info("\t >> SendMailOuvertureServiceTask");
         // Retrieve email content data
-        Map unit = (Map) delegateExecution.getVariable("unit");
-        int sexe = Integer.valueOf((String) unit.get("sexe"));
-        List<LinkedHashMap<String,Object>> partition = (List<LinkedHashMap<String,Object>>) delegateExecution.getVariable("Partition");
-        LinkedHashMap<String,Object> communications = (LinkedHashMap<String,Object>) partition.get(sexe - 1).get("Communications");
-        List<LinkedHashMap<String,Object>> communication = (List<LinkedHashMap<String, Object>>) communications.get("Communication");
+        Map unit = (Map) delegateExecution.getVariable(UNIT);
+        int sexe = Integer.valueOf((String) unit.get(SEXE));
+        List<LinkedHashMap<String,Object>> partition = (List<LinkedHashMap<String,Object>>) delegateExecution.getVariable(PARTITION);
+        LinkedHashMap<String,Object> communications = (LinkedHashMap<String,Object>) partition.get(sexe - 1).get(COMMUNICATIONS);
+        List<LinkedHashMap<String,Object>> communication = (List<LinkedHashMap<String, Object>>) communications.get(COMMUNICATION);
 
-        //TODO : Faire moins degueu
-        LinkedHashMap<String,Object> communicationRelance = null;
+        LinkedHashMap<String,Object> communicationOpening = null;
         LinkedHashMap<String,Object> contenuCommunication = null;
         for (LinkedHashMap<String,Object> comm: communication ){
             //log.info("Comm: " + comm.toString());
             //log.info("Comm type: " + comm.get("MoyenCommunication")+" - "+ comm.get("TypeCommunication"));
-            if (comm.get("MoyenCommunication").equals("mail") && comm.get("TypeCommunication").equals("ouverture")){
+            if (comm.get(MOYEN_COMMUNICATION).equals("mail") && comm.get(TYPE_COMMUNICATION).equals("ouverture")){
 
-                communicationRelance = comm;
+                communicationOpening = comm;
                 contenuCommunication = (LinkedHashMap<String,Object>) comm.get("ContenuCommunication");
 
                 // Retrieve Campaign data
                 // This part is not mandatory, it only serves as a mark to not get lost in all those variables
-                String Enq_ServiceCollecteurSignataireFonction = (String) delegateExecution.getVariable("Enq_ServiceCollecteurSignataireFonction");
-                String Enq_ServiceCollecteurSignataireNom = (String) delegateExecution.getVariable("Enq_ServiceCollecteurSignataireNom");
-                String Enq_RespTraitement = (String) delegateExecution.getVariable("Enq_RespTraitement");
-                String Enq_RespOperationnel = (String) delegateExecution.getVariable("Enq_RespOperationnel");
-                String Enq_MailRespOperationnel = (String) delegateExecution.getVariable("Enq_MailRespOperationnel");
-                String Enq_UrlEnquete = (String) delegateExecution.getVariable("Enq_UrlEnquete");
-                String Enq_LogoPrestataire = (String) delegateExecution.getVariable("Enq_LogoPrestataire");
-                String Enq_Prestataire = (String) delegateExecution.getVariable("Enq_Prestataire");
+                String Enq_ServiceCollecteurSignataireFonction = (String) delegateExecution.getVariable(SERVICE_COLLECTEUR_SIGNATAIRE_FONCTION);
+                String Enq_ServiceCollecteurSignataireNom = (String) delegateExecution.getVariable(SERVICE_COLLECTEUR_SIGNATAIRE_NOM);
+                String Enq_RespTraitement = (String) delegateExecution.getVariable(RESPONSABLE_TRAITEMENT);
+                String Enq_RespOperationnel = (String) delegateExecution.getVariable(RESPONSABLE_OPERATIONNEL);
+                String Enq_MailRespOperationnel = (String) delegateExecution.getVariable(MAIL_RESPONSABLE_OPERATIONNEL);
+                String Enq_UrlEnquete = (String) delegateExecution.getVariable(URL_ENQUETE);
+                String Enq_LogoPrestataire = (String) delegateExecution.getVariable(LOGO_PRESTATAIRE);
+                String Enq_Prestataire = (String) delegateExecution.getVariable(PRESTATAIRE);
 
                 // Create Email request body
                 LinkedHashMap<String,Object> finalContenuCommunication = contenuCommunication;
-                LinkedHashMap<String,Object> finalCommunicationRelance = communicationRelance;
+                LinkedHashMap<String,Object> finalCommunicationRelance = communicationOpening;
+                // TODO : Retester avec le bon contenu
                 var data = new HashMap<String, Object>() {{
-                    put("Ue_CalcIdentifiant", unit.get("internaute"));
+                    put("Ue_CalcIdentifiant", unit.get(INTERNAUTE));
                     put("Enq_ThemeMieuxConnaitreMail", finalContenuCommunication.get("ThemeMieuxConnaitreMail"));
                     put("Enq_ServiceCollecteurSignataireFonction", Enq_ServiceCollecteurSignataireFonction);
                     put("Enq_ServiceCollecteurSignataireNom", Enq_ServiceCollecteurSignataireNom);
@@ -72,7 +74,7 @@ public class SendMailOuvertureServiceTask implements JavaDelegate {
                     put("Enq_ComplementConnexion", finalContenuCommunication.get("ComplementConnexion"));
                 }};
                 var values = new HashMap<String, Object>() {{
-                    put("email", unit.get("mail"));
+                    put("email", unit.get(MAIL));
                     put("data", data);
 
                 }};

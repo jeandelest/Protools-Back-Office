@@ -17,6 +17,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.protools.flowableDemo.services.utils.ContextConstants.*;
+
 @Component
 @Slf4j
 public class CreateSurveyUnitServiceTask implements JavaDelegate {
@@ -37,13 +39,13 @@ public class CreateSurveyUnitServiceTask implements JavaDelegate {
     public void execute(DelegateExecution delegateExecution){
         log.info("\t >> Create Survey Unit into Coleman Pilotage & Questionnaire Service Task <<  ");
 
-        JSONObject questionnaireColemanData = (JSONObject) delegateExecution.getVariableLocal("questionnaireColemanData");
-        JSONObject pilotageColemanData = (JSONObject) delegateExecution.getVariableLocal("pilotageColemanData");
-        List<LinkedHashMap<String,Object>> partition = (List<LinkedHashMap<String,Object>>) delegateExecution.getVariable("Partition");
-        String idCampaign = (String) delegateExecution.getVariable("Id");
-        Map unit = (Map) delegateExecution.getVariable("unit");
-        int sexe = Integer.valueOf((String) unit.get("sexe"));
-        String unitID = (String) unit.get("internaute");
+        JSONObject questionnaireColemanData = (JSONObject) delegateExecution.getVariableLocal(QUESTIONNAIRE_COLEMAN_DATA);
+        JSONObject pilotageColemanData = (JSONObject) delegateExecution.getVariableLocal(PILOTAGE_COLEMAN_DATA);
+        List<LinkedHashMap<String,Object>> partition = (List<LinkedHashMap<String,Object>>) delegateExecution.getVariable(PARTITION);
+        String idCampaign = (String) delegateExecution.getVariable(ID);
+        Map unit = (Map) delegateExecution.getVariable(UNIT);
+        int sexe = Integer.valueOf((String) unit.get(SEXE));
+        String unitID = (String) unit.get(INTERNAUTE).toString();
 
         questionnaireColemanData = transformColemanQuestionnaireData(questionnaireColemanData, partition,sexe);
         sendColemanPilotageData(pilotageColemanData,idCampaign);

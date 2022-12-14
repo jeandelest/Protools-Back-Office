@@ -12,6 +12,8 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static com.protools.flowableDemo.services.utils.ContextConstants.*;
+
 /**
  * Retrieve the content of the context file and create the context in Coleman Pilotage & Questionnaire
  */
@@ -30,15 +32,15 @@ public class CreateContextColemanServiceTask implements JavaDelegate {
         log.info("\t >> Create Context into Coleman Pilotage & Questionnaire Service Task <<  ");
 
 
-        String id = (String) delegateExecution.getVariable("Id");
-        String label = (String) delegateExecution.getVariable("Label");
-        List<Object> partitionsList = (List<Object>) delegateExecution.getVariable("Partition");
+        String id = (String) delegateExecution.getVariable(ID);
+        String label = (String) delegateExecution.getVariable(LABEL);
+        List<Object> partitionsList = (List<Object>) delegateExecution.getVariable(PARTITION);
         LinkedHashMap<Object,Object> partitionsStr = (LinkedHashMap<Object, Object>) partitionsList.get(0);
         Gson gson = new Gson();
         Map<String, Object> partitions = gson.fromJson(gson.toJson(partitionsStr),Map.class);
-        Map<String, Object> dateObject = (Map<String, Object>) partitions.get("Dates");
-        String dateDebutCampagne = ((String) dateObject.get("CollectionStartDate"));
-        String dateFinCampagne = ((String) dateObject.get("CollectionEndDate"));
+        Map<String, Object> dateObject = (Map<String, Object>) partitions.get(DATES);
+        String dateDebutCampagne = ((String) dateObject.get(DATE_DEBUT_COLLECTE));
+        String dateFinCampagne = ((String) dateObject.get(DATE_FIN_COLLECTE));
 
 
         LocalDateTime startDate = LocalDateTime.parse(dateDebutCampagne,
@@ -60,64 +62,64 @@ public class CreateContextColemanServiceTask implements JavaDelegate {
         //TODO : Message Quentin pour le contexte xml
         //For now I'll assume the context is correctly imported with the right name
         //I'll also assume that there is more than one naming
-        List<LinkedHashMap<String,Object>> naming = (List<LinkedHashMap<String,Object>>) delegateExecution.getVariable("Nomenclature");
+        List<LinkedHashMap<String,Object>> naming = (List<LinkedHashMap<String,Object>>) delegateExecution.getVariable(NOMENCLATURE);
         createColemanQuestionnaireService.createAndPostNaming(naming);
 
-        LinkedHashMap<String,Object> questionnaire = (LinkedHashMap<String,Object>) delegateExecution.getVariable("QuestionnaireModel");
+        LinkedHashMap<String,Object> questionnaire = (LinkedHashMap<String,Object>) delegateExecution.getVariable(QUESTIONNAIRE_MODEL);
         createColemanQuestionnaireService.createAndPostQuestionnaires(questionnaire);
         // Create Metadata object
         // TODO : Ask if we need to create a metadata dto object
         List<Map<String,Object>> variables = new ArrayList<>();
-        String inseeContext= (String) delegateExecution.getVariable("InseeContext");
+        String inseeContext= (String) delegateExecution.getVariable(CONTEXTE);
 
         variables.add(new HashMap<>() {{
             put("name", "Enq_Libelle_Enquete");
-            put("value", delegateExecution.getVariable("LabelOperation"));
+            put("value", delegateExecution.getVariable(LABEL_COURT_OPERATION));
         }});
 
         variables.add(new HashMap<>() {{
             put("name", "Enq_Objectif_Courts");
-            put("value", delegateExecution.getVariable("Enq_Objectif_Courts"));
+            put("value", delegateExecution.getVariable(OBJECTIFS_COURTS));
         }});
 
         variables.add(new HashMap<>() {{
             put("name", "Enq_CaractereObligatoire");
-            put("value", delegateExecution.getVariable("Enq_CaractereObligatoire"));
+            put("value", delegateExecution.getVariable(CARACTERE_OBLIGATOIRE));
         }});
 
         variables.add(new HashMap<>() {{
             put("name", "Enq_NumeroVisa");
-            put("value", delegateExecution.getVariable("Enq_NumeroVisa"));
+            put("value", delegateExecution.getVariable(NUMERO_VISA));
         }});
 
         variables.add(new HashMap<>() {{
             put("name", "Enq_MinistereTutelle");
-            put("value", delegateExecution.getVariable("Enq_MinistereTutelle"));
+            put("value", delegateExecution.getVariable(MINISTERE_TUTELLE));
         }});
 
         variables.add(new HashMap<>() {{
             put("name", "Enq_ParutionJo");
-            put("value", delegateExecution.getVariable("Enq_ParutionJo"));
+            put("value", delegateExecution.getVariable(PARUTION_JO));
         }});
 
         variables.add(new HashMap<>() {{
             put("name", "Enq_RespOperationnel");
-            put("value", delegateExecution.getVariable("Enq_RespOperationnel"));
+            put("value", delegateExecution.getVariable(RESPONSABLE_OPERATIONNEL));
         }});
 
         variables.add(new HashMap<>() {{
             put("name", "Enq_RespTraitement");
-            put("value", delegateExecution.getVariable("Enq_RespTraitement"));
+            put("value", delegateExecution.getVariable(RESPONSABLE_TRAITEMENT));
         }});
 
         variables.add(new HashMap<>() {{
             put("name", "Enq_AnneeVisa");
-            put("value", delegateExecution.getVariable("Enq_AnneeVisa"));
+            put("value", delegateExecution.getVariable(ANNEE_VISA));
         }});
 
         variables.add(new HashMap<>() {{
             put("name", "Enq_QualiteStatistique");
-            put("value", delegateExecution.getVariable("Enq_QualiteStatistique"));
+            put("value", delegateExecution.getVariable(QUALITE_STATISTIQUE));
         }});
 
         variables.add(new HashMap<>() {{
