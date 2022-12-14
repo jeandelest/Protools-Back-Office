@@ -29,6 +29,33 @@ public class CreateContextColemanServiceTask implements JavaDelegate {
     public void execute(org.flowable.engine.delegate.DelegateExecution delegateExecution) {
         log.info("\t >> Create Context into Coleman Pilotage & Questionnaire Service Task <<  ");
 
+
+        String id = (String) delegateExecution.getVariable("Id");
+        String label = (String) delegateExecution.getVariable("Label");
+        List<Object> partitionsList = (List<Object>) delegateExecution.getVariable("Partition");
+        LinkedHashMap<Object,Object> partitionsStr = (LinkedHashMap<Object, Object>) partitionsList.get(0);
+        Gson gson = new Gson();
+        Map<String, Object> partitions = gson.fromJson(gson.toJson(partitionsStr),Map.class);
+        Map<String, Object> dateObject = (Map<String, Object>) partitions.get("Dates");
+        String dateDebutCampagne = ((String) dateObject.get("CollectionStartDate"));
+        String dateFinCampagne = ((String) dateObject.get("CollectionEndDate"));
+
+
+        LocalDateTime startDate = LocalDateTime.parse(dateDebutCampagne,
+                DateTimeFormatter.ofPattern("yyyy-MM-ddTHH:mm:ss") );
+
+        long collectionStartDate = startDate
+                .atZone(ZoneId.systemDefault())
+                .toInstant().toEpochMilli();
+
+        LocalDateTime endDate = LocalDateTime.parse(dateFinCampagne,
+                DateTimeFormatter.ofPattern("yyyy-MM-ddTHH:mm:ss") );
+        long collectionEndDate = endDate
+                .atZone(ZoneId.systemDefault())
+                .toInstant().toEpochMilli();
+
+        createColemanPilotageService.createCampaign(collectionStartDate,collectionEndDate,id,label);
+
         // Coleman Questionnaire part
         //TODO : Message Quentin pour le contexte xml
         //For now I'll assume the context is correctly imported with the right name
@@ -40,8 +67,6 @@ public class CreateContextColemanServiceTask implements JavaDelegate {
         createColemanQuestionnaireService.createAndPostQuestionnaires(questionnaire);
         // Create Metadata object
         // TODO : Ask if we need to create a metadata dto object
-        String id = (String) delegateExecution.getVariable("Id");
-        String label = (String) delegateExecution.getVariable("Label");
         List<Map<String,Object>> variables = new ArrayList<>();
         String inseeContext= (String) delegateExecution.getVariable("InseeContext");
 
@@ -114,28 +139,6 @@ public class CreateContextColemanServiceTask implements JavaDelegate {
 
         //Coleman Pilotage Part
 
-        List<Object> partitionsList = (List<Object>) delegateExecution.getVariable("Partition");
-        LinkedHashMap<Object,Object> partitionsStr = (LinkedHashMap<Object, Object>) partitionsList.get(0);
-        Gson gson = new Gson();
-        Map<String, Object> partitions = gson.fromJson(gson.toJson(partitionsStr),Map.class);
-        Map<String, Object> dateObject = (Map<String, Object>) partitions.get("Dates");
-        String dateDebutCampagne = ((String) dateObject.get("CollectionStartDate"));
-        String dateFinCampagne = ((String) dateObject.get("CollectionEndDate"));
 
-
-        LocalDateTime startDate = LocalDateTime.parse(dateDebutCampagne,
-                DateTimeFormatter.ofPattern("yyyy-MM-ddTHH:mm:ss") );
-
-        long collectionStartDate = startDate
-                .atZone(ZoneId.systemDefault())
-                .toInstant().toEpochMilli();
-
-        LocalDateTime endDate = LocalDateTime.parse(dateFinCampagne,
-                DateTimeFormatter.ofPattern("yyyy-MM-ddTHH:mm:ss") );
-        long collectionEndDate = endDate
-                .atZone(ZoneId.systemDefault())
-                .toInstant().toEpochMilli();
-
-        createColemanPilotageService.createCampaign(collectionStartDate,collectionEndDate,id,label);
     }
 }

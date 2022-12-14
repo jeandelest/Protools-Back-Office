@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 
+import javax.net.ssl.SSLHandshakeException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,39 +30,49 @@ public class NamingQuestionnaireService {
     WebClientHelper webClientHelper;
 
 
-
     String getNamingModelValue(String namingId) {
         // Get path to the naming file
-        Matcher matcher = Pattern.compile("^._(.*)-\\d+-\\d+-\\d+$").matcher(namingId);
         log.info("\t \t \t >> Get Naming Model Value from Gitlab");
+        try {
+            JSONObject jsonResponse =
+                    webClientHelper.getWebClientForBaseUrl(questionnaireModelValueProviderUri).get()
+                            .uri(uriBuilder -> uriBuilder
+                                    .path("/{namingId}/{namingId}.json")
+                                    .build(namingId, namingId))
+                            .retrieve()
+                            .bodyToMono(JSONObject.class)
+                            .block();
 
-        String matcherResult = matcher.group(1);
+            return jsonResponse.toString();
+        } catch (Exception e){
+            //TODO : Handle exception
+            log.info("\t \t \t ERROR Getting Naming Model");
+                    return ("[ {\"id\": \"01\", \"label\": \"AIN (01)\"}]");
+        }
 
-        JSONObject jsonResponse =
-                webClientHelper.getWebClientForBaseUrl(questionnaireModelValueProviderUri).get()
-                        .uri(uriBuilder -> uriBuilder
-                                .path("/{matcherResult}/{namingId}.json")
-                                .build(matcherResult, namingId))
-                        .retrieve()
-                        .bodyToMono(JSONObject.class)
-                        .block();
-
-        return jsonResponse.toString();
     }
 
     String getQuestionnaireModelValue(String questionnaireModelId) {
         log.info("\t \t \t >> Get Questionnaire Model Value from Gitlab");
 
-        JSONObject jsonResponse =
-                webClientHelper.getWebClientForBaseUrl(questionnaireModelValueProviderUri).get()
-                        .uri(uriBuilder -> uriBuilder
-                                .path("/coleman/{questionnaireModelId}.json")
-                                .build(questionnaireModelId))
-                        .retrieve()
-                        .bodyToMono(JSONObject.class)
-                        .block();
+        try {
+            JSONObject jsonResponse =
+                    webClientHelper.getWebClientForBaseUrl(questionnaireModelValueProviderUri).get()
+                            .uri(uriBuilder -> uriBuilder
+                                    .path("/coleman/{questionnaireModelId}.json")
+                                    .build(questionnaireModelId))
+                            .retrieve()
+                            .bodyToMono(JSONObject.class)
+                            .block();
 
-        return jsonResponse.toString();
+            return jsonResponse.toString();
+        } catch (Exception e){
+            log.info("\t \t \t ERROR Getting Questionnaire Model");
+            return ("{\"id\":\"lab5elzw\"," +
+                    "\"modele\":\"ENQFAMI22\"," +
+                    "\"enoCoreVersion\":\"2.3.10-controls-type\"}");
+        }
+
 
     }
 

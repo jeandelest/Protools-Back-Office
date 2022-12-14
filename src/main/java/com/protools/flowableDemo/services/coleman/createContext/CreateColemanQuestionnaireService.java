@@ -41,9 +41,10 @@ public class CreateColemanQuestionnaireService {
             log.info("\t >> Found Naming with id : " + nomenclature.get("id") + " <<  ");
             // Create a JSON Object
             JSONObject namingObject = new JSONObject();
-            namingObject.put("id", nomenclature.get("Id"));
+            namingObject.put("id", nomenclature.get("id"));
             namingObject.put("label", nomenclature.get("Label"));
-            namingObject.put("value", namingQuestionnaireService.getNamingModelValue(nomenclature.get("Id").toString()));
+            namingObject.put("value","[ {\"id\": \"01\", \"label\": \"AIN (01)\"}]");
+            //namingObject.put("value", namingQuestionnaireService.getNamingModelValue(nomenclature.get("id").toString()));
             // Fetch value from external service but I don't know which one yet
 
             // Send the JSON Object to Coleman Questionnaire
@@ -73,7 +74,10 @@ public class CreateColemanQuestionnaireService {
         questionnaireObject.put("id", questionnaire.get("Id"));
         questionnaireObject.put("label", questionnaire.get("Label"));
         questionnaireObject.put("requiredNomenclaturesIds", listOfNamingIds);
-        questionnaireObject.put("value", namingQuestionnaireService.getQuestionnaireModelValue(questionnaire.get("Id").toString()));
+        questionnaireObject.put("value", "{\"id\":\"lab5elzw\"," +
+                "\"modele\":\"ENQFAMI22\"," +
+                "\"enoCoreVersion\":\"2.3.10-controls-type\"}");
+        //questionnaireObject.put("value", namingQuestionnaireService.getQuestionnaireModelValue(questionnaire.get("Id").toString()));
         // Fetch value from external service but I don't know which one yet
 
         // Send the JSON Object to Coleman Questionnaire

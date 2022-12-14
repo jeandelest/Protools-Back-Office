@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/fileuploadcontroller")
 public class FileUploadController {
     @Autowired
     UploadFileToEngineService uploadFileToEngineService;

@@ -21,7 +21,7 @@
     <userTask id="final_check" name="Check Final" flowable:formFieldValidation="true"></userTask>
     <sequenceFlow id="sid-00B2C792-ACEE-4BB7-A9F2-D9DB37071527" sourceRef="create_context_coleman" targetRef="final_check"></sequenceFlow>
     <sequenceFlow id="sid-54F3225D-0FD2-4C3D-99CC-A38194003B69" sourceRef="final_check" targetRef="end_process"></sequenceFlow>
-    <serviceTask id="create_context_coleman" name="Create Context Coleman" flowable:delegateExpression="createContextColemanServiceTask">
+    <serviceTask id="create_context_coleman" name="Create Context Coleman" flowable:delegateExpression="${createContextColemanServiceTask}">
       <documentation>Create context in Coleman Pilotage &amp; Questionnaire</documentation>
     </serviceTask>
   </process>

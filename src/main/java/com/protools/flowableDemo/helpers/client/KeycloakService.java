@@ -59,7 +59,7 @@ class KeycloakService {
         var token = tokenByRealm.get(realm);
         //We refresh any token that is expire or will exipre within 1second
         if(token==null || System.currentTimeMillis() >= (token.endValidityTimeMillis-1000)){
-            refreshToken(realm);
+              refreshToken(realm);
         }
         return tokenByRealm.get(realm).value;
     }
