@@ -1,23 +1,20 @@
 package com.protools.flowableDemo.services.messhugah;
 
 import com.protools.flowableDemo.helpers.client.WebClientHelper;
-import com.protools.flowableDemo.helpers.client.configuration.APIProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+
+import static com.protools.flowableDemo.helpers.client.configuration.ApiConfigProperties.KNOWN_API.KNOWN_API_COLEMAN_PILOTAGE;
 
 @Component
 @Slf4j
 public class SurveyUnitFollowUpServiceTask implements JavaDelegate {
 
-    @Autowired @Qualifier("colemanPilotageApiProperties")
-    APIProperties colemanPilotageApiProperties;
     @Autowired WebClientHelper webClientHelper;
 
     @Override
@@ -38,7 +35,7 @@ public class SurveyUnitFollowUpServiceTask implements JavaDelegate {
         log.info("\t \t >> Check If Unit Needs To Be Followed Up Service task");
 
         JSONObject jsonResponse =
-            webClientHelper.getWebClient(colemanPilotageApiProperties)
+            webClientHelper.getWebClient(KNOWN_API_COLEMAN_PILOTAGE)
             .get()
             .uri(uriBuilder -> uriBuilder
                 .path("/campaigns/{idCampaign}/survey-units/{unitID}/follow-up")

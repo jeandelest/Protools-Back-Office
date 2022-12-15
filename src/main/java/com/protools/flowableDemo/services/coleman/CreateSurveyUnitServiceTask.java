@@ -3,14 +3,11 @@ package com.protools.flowableDemo.services.coleman;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.protools.flowableDemo.helpers.client.WebClientHelper;
-import com.protools.flowableDemo.helpers.client.configuration.APIProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
 
@@ -19,15 +16,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.protools.flowableDemo.helpers.client.configuration.ApiConfigProperties.KNOWN_API.KNOWN_API_COLEMAN_PILOTAGE;
+import static com.protools.flowableDemo.helpers.client.configuration.ApiConfigProperties.KNOWN_API.KNOWN_API_COLEMAN_QUESTIONNAIRE;
+
 @Component
 @Slf4j
 public class CreateSurveyUnitServiceTask implements JavaDelegate {
 
-    @Autowired @Qualifier("colemanPilotageApiProperties")
-    APIProperties colemanPilotageApiProperties;
-
-    @Autowired @Qualifier("colemanQuestionnaireApiProperties")
-    APIProperties colemanQuestionnaireApiProperties;
     @Autowired
     WebClientHelper webClientHelper;
 
@@ -67,7 +62,7 @@ public class CreateSurveyUnitServiceTask implements JavaDelegate {
             e.printStackTrace();
         }
 
-        String responsePilotage = webClientHelper.getWebClient(colemanPilotageApiProperties)
+        String responsePilotage = webClientHelper.getWebClient(KNOWN_API_COLEMAN_PILOTAGE)
             .post()
             .uri(uriBuilder -> uriBuilder
                 .path("/rest-survey-unit/campaigns/{idCampaign}/survey-units")
@@ -91,7 +86,7 @@ public class CreateSurveyUnitServiceTask implements JavaDelegate {
             e.printStackTrace();
         }
 
-        String responseQuestionnaire = webClientHelper.getWebClient(colemanQuestionnaireApiProperties)
+        String responseQuestionnaire = webClientHelper.getWebClient(KNOWN_API_COLEMAN_QUESTIONNAIRE)
             .post()
             .uri(uriBuilder -> uriBuilder
                 .path("/api/campaign/{idUnit}/survey-unit")

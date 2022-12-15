@@ -1,22 +1,20 @@
 package com.protools.flowableDemo.services.era;
 
 import com.protools.flowableDemo.helpers.client.WebClientHelper;
-import com.protools.flowableDemo.helpers.client.configuration.APIProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+
+import static com.protools.flowableDemo.helpers.client.configuration.ApiConfigProperties.KNOWN_API.KNOWN_API_ERA;
 
 @Component
 @Slf4j
 public class ExtractSplitSurveyUnitServiceTask implements JavaDelegate {
 
-    @Autowired @Qualifier("eraApiProperties") APIProperties eraAPIProperties;
     @Autowired WebClientHelper webClientHelper;
 
     @Override
@@ -37,7 +35,7 @@ public class ExtractSplitSurveyUnitServiceTask implements JavaDelegate {
 
     public JSONObject extractSurveyUnit(Integer unitID, String idCampaign){
              JSONObject jsonResponse =
-                 webClientHelper.getWebClient(eraAPIProperties).get()
+                 webClientHelper.getWebClient(KNOWN_API_ERA).get()
                 .uri(uriBuilder -> uriBuilder
                     .path("/extraction-survey-unit/{unitID}")
                     .queryParam("idCampaign", idCampaign)

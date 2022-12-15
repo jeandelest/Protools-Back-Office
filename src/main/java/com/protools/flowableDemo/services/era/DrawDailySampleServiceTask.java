@@ -2,13 +2,10 @@ package com.protools.flowableDemo.services.era;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.protools.flowableDemo.helpers.client.WebClientHelper;
-import com.protools.flowableDemo.helpers.client.configuration.APIProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import java.text.ParseException;
 import java.util.Arrays;
@@ -16,14 +13,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.protools.flowableDemo.helpers.client.configuration.ApiConfigProperties.KNOWN_API.KNOWN_API_ERA;
+
 @Component
 @Slf4j
 public class DrawDailySampleServiceTask implements JavaDelegate {
 
     @Autowired WebClientHelper webClientHelper;
-    @Autowired @Qualifier("eraApiProperties") APIProperties eraAPIProperties;
-
-    WebClient eraWebClient;
 
     @Override
     public void execute(org.flowable.engine.delegate.DelegateExecution delegateExecution) {
@@ -70,7 +66,7 @@ public class DrawDailySampleServiceTask implements JavaDelegate {
         log.info("\t \t >> Get survey sample for today : {} << ", endDate);
 
         LinkedHashMap[] responseList =
-            webClientHelper.getWebClient(eraAPIProperties)
+            webClientHelper.getWebClient(KNOWN_API_ERA)
                 .get()
                 .uri(uriBuilder -> uriBuilder
                     .path("/extraction-survey-unit/survey-units-for-period")
@@ -81,7 +77,7 @@ public class DrawDailySampleServiceTask implements JavaDelegate {
                 .bodyToMono(LinkedHashMap[].class)
                 .block();
 
-        log.info("\t \t >>> Got today's sample from ERA  : " + responseList.toString());
+        log.info("\t \t >>> Got today's sample from ERA  : nbValues={} - FirstValue={}",responseList.length, Arrays.stream(responseList).findFirst());
         return Arrays.asList(responseList);
     }
 }

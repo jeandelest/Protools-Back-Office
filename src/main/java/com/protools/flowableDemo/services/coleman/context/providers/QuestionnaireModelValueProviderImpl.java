@@ -1,17 +1,12 @@
 package com.protools.flowableDemo.services.coleman.context.providers;
 
 import com.protools.flowableDemo.helpers.client.WebClientHelper;
-import com.protools.flowableDemo.helpers.client.configuration.APIProperties;
 import com.protools.flowableDemo.services.coleman.context.enums.CollectionPlatform;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.Map;
 
 @Service

@@ -7,5 +7,6 @@ public class APIProperties {
 
    private String url;
    private String realm;
+   private Boolean enabled=Boolean.FALSE;
 
 }

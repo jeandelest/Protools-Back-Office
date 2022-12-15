@@ -1,29 +1,25 @@
 package com.protools.flowableDemo.services.messhugah;
 
 import com.protools.flowableDemo.helpers.client.WebClientHelper;
-import com.protools.flowableDemo.helpers.client.configuration.APIProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
 
-
+import static com.protools.flowableDemo.helpers.client.configuration.ApiConfigProperties.KNOWN_API.KNOWN_API_COLEMAN_PILOTAGE;
 
 @Component
 @Slf4j
 class SendMailService {
 
-    @Autowired @Qualifier("colemanPilotageApiProperties")
-    APIProperties colemanPilotageApiProperties;
     @Autowired
     WebClientHelper webClientHelper;
 
     public void sendMail(String mailContent)  {
         log.info("\t \t >> Send Mail Task ");
 
-        webClientHelper.getWebClient(colemanPilotageApiProperties)
+        webClientHelper.getWebClient(KNOWN_API_COLEMAN_PILOTAGE)
             .post()
             .uri("/contact/send-mail")
             .body(BodyInserters.fromValue(mailContent))

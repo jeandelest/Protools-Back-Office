@@ -1,17 +1,18 @@
 package com.protools.flowableDemo.helpers.client;
 
 import com.protools.flowableDemo.helpers.client.configuration.APIProperties;
+import com.protools.flowableDemo.helpers.client.configuration.ApiConfigProperties;
+import com.protools.flowableDemo.helpers.client.exception.ApiNotConfiguredException;
 import io.netty.handler.logging.LogLevel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
 import reactor.netty.transport.logging.AdvancedByteBufFormat;
+
+import java.util.EnumMap;
 
 /**
  * Helper class for WebClient
@@ -22,6 +23,11 @@ public class WebClientHelper {
 
         private WebClient.Builder webClientBuilder;
         @Autowired private KeycloakService keycloakService;
+        @Autowired private ApiConfigProperties apiConfigProperties;
+
+
+        private EnumMap<ApiConfigProperties.KNOWN_API,WebClient>  initializedClients = new EnumMap<>(ApiConfigProperties.KNOWN_API.class);
+
         public WebClientHelper() {
 
                 webClientBuilder = WebClient.builder()
@@ -45,18 +51,19 @@ public class WebClientHelper {
 
         /**
          * Get a webclient preconfigured for proxy and able to get the JWT token required for authentification
-         * @param properties
-         * @return preconfigured WebClient
+         * @param api the client will connect to this api
+         * @return preconfigured WebClient for the api
          */
-        public WebClient getWebClient(APIProperties properties) {
-                return webClientBuilder
-                    .defaultHeaders(new KeycloakHeadersConsumerJSON(properties.getRealm(), keycloakService))
-                    .baseUrl(properties.getUrl())
-                    .build();
-        }
-
-        @Bean
-        public WebClient colemanQuestionnaireWebClient() {
-
+        public WebClient getWebClient(ApiConfigProperties.KNOWN_API api) {
+                APIProperties apiProperties = apiConfigProperties.getAPIProperties(api);
+                if(apiProperties==null  || !apiProperties.getEnabled()){
+                        throw new ApiNotConfiguredException(String.format("API %s is not configured in properties",api));
+                }
+                return initializedClients.computeIfAbsent(api,
+                    knownApi ->
+                        webClientBuilder
+                            .defaultHeaders(new KeycloakHeadersConsumerJSON(apiProperties.getRealm(), keycloakService))
+                            .baseUrl(apiProperties.getUrl())
+                            .build());
         }
 }
