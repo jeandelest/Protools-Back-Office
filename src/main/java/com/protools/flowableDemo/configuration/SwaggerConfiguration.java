@@ -17,8 +17,8 @@ public class SwaggerConfiguration {
     @Autowired
     BuildProperties buildProperties;
 
-    @Value("${fr.insee.protools.server.uri}")
-    String serverUri;
+   // @Value("${fr.insee.protools.server.uri}")
+    //String serverUri;
 
     Contact contact = new Contact()
         .name("Protools")
@@ -30,7 +30,7 @@ public class SwaggerConfiguration {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .components(new Components())
-                .addServersItem(new Server().url(serverUri))
+        //        .addServersItem(new Server().url(serverUri))
                 .info(new Info()
                         .title(buildProperties.getName())
                         .description("Back-Office Service for Protools orchestrator")
