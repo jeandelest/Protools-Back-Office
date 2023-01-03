@@ -1,11 +1,14 @@
 package com.protools.flowableDemo.services.coleman.createContext;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.protools.flowableDemo.helpers.client.WebClientHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 
@@ -42,18 +45,26 @@ public class CreateColemanQuestionnaireService {
         for (LinkedHashMap<String,Object> nomenclature : naming) {
             log.info("\t >> Found Naming with id : " + nomenclature.get(ID) + " <<  ");
             // Create a JSON Object
-            JSONObject namingObject = new JSONObject();
+            var namingObject = new HashMap<String, Object>();
             namingObject.put("id", nomenclature.get(ID));
             namingObject.put("label", nomenclature.get(LABEL));
-            namingObject.put("value","[ {\"id\": \"01\", \"label\": \"AIN (01)\"}]");
-            //namingObject.put("value", namingQuestionnaireService.getNamingModelValue(nomenclature.get("id").toString()));
+            //namingObject.put("value","[ {\"id\": \"01\", \"label\": \"AIN (01)\"}]");
+            namingObject.put("value", namingQuestionnaireService.getNamingModelValue(nomenclature.get("id").toString()));
             // Fetch value from external service but I don't know which one yet
-
+            var objectMapper = new ObjectMapper();
+            String requestBody =null;
+            try {
+                requestBody = objectMapper
+                        .writeValueAsString(namingObject);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
             // Send the JSON Object to Coleman Questionnaire
             webClientHelper.getWebClientForRealm(realm,colemanQuestionnaireUri)
                     .post()
-                    .uri("/api/nomenclature")
-                    .body(BodyInserters.fromValue(namingObject))
+                    .uri(uriBuilder -> uriBuilder.path("/api/nomenclature").build())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(requestBody)
                     .retrieve()
                     .bodyToMono(JSONObject.class)
                     .block();
@@ -72,21 +83,30 @@ public class CreateColemanQuestionnaireService {
             listOfNamingIds.add((String) nomenclature.get("Id"));
         }
         // Create a JSON Object
-        JSONObject questionnaireObject = new JSONObject();
+        var questionnaireObject = new HashMap<String, Object>();
         questionnaireObject.put("id", questionnaire.get(ID));
         questionnaireObject.put("label", questionnaire.get(LABEL));
         questionnaireObject.put("requiredNomenclaturesIds", listOfNamingIds);
-        questionnaireObject.put("value", "{\"id\":\"lab5elzw\"," +
+        /* questionnaireObject.put("value", "{\"id\":\"lab5elzw\"," +
                 "\"modele\":\"ENQFAMI22\"," +
-                "\"enoCoreVersion\":\"2.3.10-controls-type\"}");
-        //questionnaireObject.put("value", namingQuestionnaireService.getQuestionnaireModelValue(questionnaire.get("Id").toString()));
+                "\"enoCoreVersion\":\"2.3.10-controls-type\"}"); */
+        questionnaireObject.put("value", namingQuestionnaireService.getQuestionnaireModelValue(questionnaire.get("Id").toString()));
         // Fetch value from external service but I don't know which one yet
 
+        var objectMapper = new ObjectMapper();
+        String requestBody =null;
+        try {
+            requestBody = objectMapper
+                    .writeValueAsString(questionnaireObject);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
         // Send the JSON Object to Coleman Questionnaire
         webClientHelper.getWebClientForRealm(realm,colemanQuestionnaireUri)
                 .post()
-                .uri("/api/questionnaire-models")
-                .body(BodyInserters.fromValue(questionnaireObject))
+                .uri(uriBuilder -> uriBuilder.path("/api/questionnaire-models").build())
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(requestBody)
                 .retrieve()
                 .bodyToMono(JSONObject.class)
                 .block();
@@ -109,7 +129,7 @@ public class CreateColemanQuestionnaireService {
 
 
         // Create a JSON Object
-        JSONObject metadataObject = new JSONObject();
+        var metadataObject = new HashMap<String, Object>();
         metadataObject.put("id", id);
         metadataObject.put("label", label);
         metadataObject.put("metadata", new HashMap<>() {{
@@ -118,15 +138,22 @@ public class CreateColemanQuestionnaireService {
         metadataObject.put("questionnaireIds", listOfQuestionnaireIds);
         metadataObject.put("inseeContext", inseeContext);
         // Fetch value from external service but I don't know which one yet
-
+        var objectMapper = new ObjectMapper();
+        String requestBody =null;
+        try {
+            requestBody = objectMapper
+                    .writeValueAsString(metadataObject);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
         // Send the JSON Object to Coleman Questionnaire
         webClientHelper.getWebClientForRealm(realm,colemanQuestionnaireUri)
                 .post()
-                .uri("/api/metadata")
-                .body(BodyInserters.fromValue(metadataObject))
+                .uri(uriBuilder -> uriBuilder.path("/api/campaigns").build())
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(requestBody)
                 .retrieve()
                 .bodyToMono(JSONObject.class)
                 .block();
-
     }
 }

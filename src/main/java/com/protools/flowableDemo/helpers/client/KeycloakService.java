@@ -4,6 +4,7 @@ import com.protools.flowableDemo.helpers.client.exception.KeycloakTokenConfigExc
 import io.netty.handler.logging.LogLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -26,6 +27,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 @Getter
 @Setter
+@Slf4j
 class KeycloakService {
 
     @Autowired
@@ -50,7 +52,7 @@ class KeycloakService {
     }
 
     public String getToken(String realm) throws KeycloakTokenConfigException {
-
+        log.info("\t \t Attempt to get Keycloack Token for realm : " + realm);
         if(!clientSecretByRealm.containsKey(realm))
         {
             throw new KeycloakTokenConfigException(String.format("Realm %s is not configured",realm));
@@ -65,6 +67,7 @@ class KeycloakService {
     }
 
     private void refreshToken(String realm) {
+        log.info("\t \t Refresh Keycloack Token for realm : " + realm);
         String uri = String.format("/realms/%s/protocol/openid-connect/token",realm);
 
         HttpHeaders headers = new HttpHeaders();
@@ -76,7 +79,8 @@ class KeycloakService {
         requestBody.add("client_secret", clientSecretByRealm.get(realm));
 
         long endValidityTimeMillis = System.currentTimeMillis();
-
+        log.info("\t \t Refresh Token body : " + requestBody.toString());
+        log.info("\t \t Refresh Token URI : " + uri);
 
         KeycloakResponse response = webClient.post()
             .uri(uri)
@@ -89,9 +93,11 @@ class KeycloakService {
             .block();
         //TODO: timeout configurable ; handling des exceptions (ex: block) ; codes erreur http
        //TODO : voir aussi cette histoire de timeout
-
+        log.info("\t \t Keycloack Response : " + response.toString());
         endValidityTimeMillis += TimeUnit.SECONDS.toMillis(response.getExpires_in());
-        tokenByRealm.put(realm,new Token(response.getAccess_token(), endValidityTimeMillis));
+        Token token = new Token(response.getAccess_token(), endValidityTimeMillis);
+        log.info("\t \t Got refreshed token : " + token.toString());
+        tokenByRealm.put(realm,token);
     }
 
     @PostConstruct

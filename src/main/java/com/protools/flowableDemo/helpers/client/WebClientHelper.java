@@ -20,15 +20,12 @@ public class WebClientHelper {
         @Autowired private KeycloakService keycloakService;
         public WebClientHelper() {
 
-                webClientBuilder = WebClient.builder()
-                    .clientConnector(
-                        new ReactorClientHttpConnector(
-                        HttpClient.create()
-                            //Handles a proxy conf passed on system properties
-                            .proxyWithSystemProperties()
-                            //enable logging of request/responses
-                            //configurable in properties as if it was this class logers
-                            .wiretap(this.getClass().getCanonicalName(), LogLevel.DEBUG, AdvancedByteBufFormat.TEXTUAL)));
+                webClientBuilder = WebClient.builder().clientConnector(new ReactorClientHttpConnector(HttpClient.create()
+                        // Handles a proxy conf passed on system properties
+                        .proxyWithSystemProperties()
+                        // enable logging of request/responses
+                        // configurable in properties as if it was this class logers
+                        .wiretap(this.getClass().getCanonicalName(), LogLevel.INFO, AdvancedByteBufFormat.TEXTUAL)));
         }
         /**
          * init a new WebClient proxy aware (default one ignore system proxy)

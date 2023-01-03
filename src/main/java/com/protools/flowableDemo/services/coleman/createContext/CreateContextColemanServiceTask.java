@@ -34,6 +34,7 @@ public class CreateContextColemanServiceTask implements JavaDelegate {
 
 
         String id = (String) delegateExecution.getVariable(ID);
+        log.info("ID suvey: "+id);
         String label = (String) delegateExecution.getVariable(LABEL);
         List<Object> partitionsList = (List<Object>) delegateExecution.getVariable(PARTITION);
         LinkedHashMap<Object,Object> partitionsStr = (LinkedHashMap<Object, Object>) partitionsList.get(0);
@@ -44,6 +45,8 @@ public class CreateContextColemanServiceTask implements JavaDelegate {
         String dateFinCampagne = ((String) dateObject.get(DATE_FIN_COLLECTE));
 
 
+        //Coleman Pilotage Part
+
         long collectionStartDate = Instant.parse(dateDebutCampagne).toEpochMilli();
 
         long collectionEndDate = Instant.parse(dateFinCampagne).toEpochMilli();
@@ -51,7 +54,6 @@ public class CreateContextColemanServiceTask implements JavaDelegate {
         createColemanPilotageService.createCampaign(collectionStartDate,collectionEndDate,id,label);
 
         // Coleman Questionnaire part
-        //TODO : Message Quentin pour le contexte xml
         //For now I'll assume the context is correctly imported with the right name
         //I'll also assume that there is more than one naming
         List<LinkedHashMap<String,Object>> naming = (List<LinkedHashMap<String,Object>>) delegateExecution.getVariable(NOMENCLATURE);
@@ -131,7 +133,6 @@ public class CreateContextColemanServiceTask implements JavaDelegate {
 
         createColemanQuestionnaireService.createAndPostMetadataObject(id,label,questionnaire,variables,inseeContext);
 
-        //Coleman Pilotage Part
 
 
     }

@@ -42,12 +42,12 @@ public class NamingQuestionnaireService {
                             .retrieve()
                             .bodyToMono(JSONObject.class)
                             .block();
-
+            log.info("\t \t Sucessfully retrieved naming files from gitlab");
             return jsonResponse.toString();
         } catch (Exception e){
             //TODO : Handle exception
             log.info("\t \t \t ERROR Getting Naming Model");
-                    return ("[ {\"id\": \"01\", \"label\": \"AIN (01)\"}]");
+            throw (e);
         }
 
     }
@@ -64,13 +64,11 @@ public class NamingQuestionnaireService {
                             .retrieve()
                             .bodyToMono(JSONObject.class)
                             .block();
-
+            log.info("\t \t Sucessfully retrieved questionnaire files from gitlab");
             return jsonResponse.toString();
         } catch (Exception e){
             log.info("\t \t \t ERROR Getting Questionnaire Model");
-            return ("{\"id\":\"lab5elzw\"," +
-                    "\"modele\":\"ENQFAMI22\"," +
-                    "\"enoCoreVersion\":\"2.3.10-controls-type\"}");
+            throw (e);
         }
 
 

@@ -1,11 +1,17 @@
 package com.protools.flowableDemo.services.coleman.createContext;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.protools.flowableDemo.helpers.client.WebClientHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.BodyInserters;
+
+import java.util.HashMap;
 
 import static com.protools.flowableDemo.services.utils.ContextConstants.*;
 
@@ -33,20 +39,32 @@ public class CreateColemanPilotageService {
         log.info("\t >> Create Campaign object to be send to Coleman in the Create Context in Coleman Service task <<  ");
 
 
-        JSONObject pilotageObject = new JSONObject();
+        var pilotageObject = new HashMap<String, Object>();
         pilotageObject.put(ID, id);
         pilotageObject.put(LABEL, label);
         pilotageObject.put("collectionStartDate", collectionStartDate);
         pilotageObject.put("collectionEndDate", collectionEndDate);
 
+
+        var objectMapper = new ObjectMapper();
+        String requestBodyPilotage = null;
+        try {
+            requestBodyPilotage = objectMapper
+                    .writeValueAsString(pilotageObject);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        log.info("Pilotage object : "+ requestBodyPilotage);
         // Send the JSON Object to Coleman Pilotage
         webClientHelper.getWebClientForRealm(realm,colemanPilotageUri)
                 .post()
-                .uri("/api/campagnes")
-                .bodyValue(pilotageObject)
+                .uri(uriBuilder -> uriBuilder.path("/campaigns").build())
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(requestBodyPilotage)
                 .retrieve()
                 .bodyToMono(JSONObject.class)
                 .block();
         log.info("\t \t \t >> Campaign sent to Coleman Pilotage <<  ");
+
     }
 }
