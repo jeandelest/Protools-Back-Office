@@ -45,14 +45,6 @@ public class CreateContextColemanServiceTask implements JavaDelegate {
         String dateFinCampagne = ((String) dateObject.get(DATE_FIN_COLLECTE));
 
 
-        //Coleman Pilotage Part
-
-        long collectionStartDate = Instant.parse(dateDebutCampagne).toEpochMilli();
-
-        long collectionEndDate = Instant.parse(dateFinCampagne).toEpochMilli();
-
-        createColemanPilotageService.createCampaign(collectionStartDate,collectionEndDate,id,label);
-
         // Coleman Questionnaire part
         //For now I'll assume the context is correctly imported with the right name
         //I'll also assume that there is more than one naming
@@ -132,6 +124,16 @@ public class CreateContextColemanServiceTask implements JavaDelegate {
         }});
 
         createColemanQuestionnaireService.createAndPostMetadataObject(id,label,questionnaire,variables,inseeContext);
+
+        //Coleman Pilotage Part
+
+        long collectionStartDate = Instant.parse(dateDebutCampagne).toEpochMilli();
+
+        long collectionEndDate = Instant.parse(dateFinCampagne).toEpochMilli();
+
+        createColemanPilotageService.createCampaign(collectionStartDate,collectionEndDate,id,label);
+
+
 
 
 

@@ -110,7 +110,7 @@ public class CreateColemanQuestionnaireService {
                 .retrieve()
                 .bodyToMono(JSONObject.class)
                 .block();
-        log.info("\t \t \t >> Naming sent to Coleman Questionnaire <<  ");
+        log.info("\t \t \t >> Questionnaire sent to Coleman Questionnaire <<  ");
     }
 
     /**

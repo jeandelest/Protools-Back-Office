@@ -32,42 +32,45 @@ public class NamingQuestionnaireService {
 
     String getNamingModelValue(String namingId) {
         // Get path to the naming file
-        log.info("\t \t \t >> Get Naming Model Value from Gitlab");
+        log.info("\t \t >> Get Naming Model Value from Gitlab");
+        String namingIdTitle = namingId.substring(2, namingId.length()-6);
         try {
-            JSONObject jsonResponse =
-                    webClientHelper.getWebClientForBaseUrl(questionnaireModelValueProviderUri).get()
+            String jsonResponse =
+                    webClientHelper.getWebClientForBaseUrl(nomenclatureValueProviderUri).get()
                             .uri(uriBuilder -> uriBuilder
-                                    .path("/{namingId}/{namingId}.json")
-                                    .build(namingId, namingId))
+                                    .path("/{namingIdTitle}/{namingId}.json")
+                                    .build(namingIdTitle, namingId))
                             .retrieve()
-                            .bodyToMono(JSONObject.class)
+                            .bodyToMono(String.class)
                             .block();
-            log.info("\t \t Sucessfully retrieved naming files from gitlab");
-            return jsonResponse.toString();
+            log.info("\t \t Successfully retrieved naming files from gitlab");
+            log.info("\t \t >> Start of naming value : " + jsonResponse.substring(0,10));
+            return jsonResponse;
         } catch (Exception e){
             //TODO : Handle exception
-            log.info("\t \t \t ERROR Getting Naming Model");
+            log.error("\t \t >> ERROR Getting Naming Model");
             throw (e);
         }
 
     }
 
     String getQuestionnaireModelValue(String questionnaireModelId) {
-        log.info("\t \t \t >> Get Questionnaire Model Value from Gitlab");
+        log.info("\t \t >> Get Questionnaire Model Value from Gitlab, id: "+ questionnaireModelId);
 
         try {
-            JSONObject jsonResponse =
+            String jsonResponse =
                     webClientHelper.getWebClientForBaseUrl(questionnaireModelValueProviderUri).get()
                             .uri(uriBuilder -> uriBuilder
                                     .path("/coleman/{questionnaireModelId}.json")
                                     .build(questionnaireModelId))
                             .retrieve()
-                            .bodyToMono(JSONObject.class)
+                            .bodyToMono(String.class)
                             .block();
-            log.info("\t \t Sucessfully retrieved questionnaire files from gitlab");
-            return jsonResponse.toString();
+            log.info("\t \t Successfully retrieved questionnaire files from gitlab");
+            log.info("\t \t >> Start of questionnaire value : " + jsonResponse.substring(0,10));
+            return jsonResponse;
         } catch (Exception e){
-            log.info("\t \t \t ERROR Getting Questionnaire Model");
+            log.error("\t \t \t ERROR Getting Questionnaire Model");
             throw (e);
         }
 
