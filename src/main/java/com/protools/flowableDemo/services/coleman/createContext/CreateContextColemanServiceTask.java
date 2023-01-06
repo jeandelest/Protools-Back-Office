@@ -46,13 +46,6 @@ public class CreateContextColemanServiceTask implements JavaDelegate {
 
 
         // Coleman Questionnaire part
-        //For now I'll assume the context is correctly imported with the right name
-        //I'll also assume that there is more than one naming
-        List<LinkedHashMap<String,Object>> naming = (List<LinkedHashMap<String,Object>>) delegateExecution.getVariable(NOMENCLATURE);
-        createColemanQuestionnaireService.createAndPostNaming(naming);
-
-        LinkedHashMap<String,Object> questionnaire = (LinkedHashMap<String,Object>) delegateExecution.getVariable(QUESTIONNAIRE_MODEL);
-        createColemanQuestionnaireService.createAndPostQuestionnaires(questionnaire);
         // Create Metadata object
         // TODO : Ask if we need to create a metadata dto object
         List<Map<String,Object>> variables = new ArrayList<>();
@@ -123,7 +116,18 @@ public class CreateContextColemanServiceTask implements JavaDelegate {
             put("value", "");
         }});
 
+
+        //For now I'll assume the context is correctly imported with the right name
+        //I'll also assume that there is more than one naming
+        List<LinkedHashMap<String,Object>> naming = (List<LinkedHashMap<String,Object>>) delegateExecution.getVariable(NOMENCLATURE);
+        createColemanQuestionnaireService.createAndPostNaming(naming);
+
+        ArrayList<LinkedHashMap<String,Object>> questionnaire = (ArrayList) delegateExecution.getVariable(QUESTIONNAIRE_MODEL);
         createColemanQuestionnaireService.createAndPostMetadataObject(id,label,questionnaire,variables,inseeContext);
+        for (LinkedHashMap<String,Object> questionnaireModel: questionnaire){
+            createColemanQuestionnaireService.createAndPostQuestionnaires(questionnaireModel);
+        }
+
 
         //Coleman Pilotage Part
 

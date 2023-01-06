@@ -118,25 +118,33 @@ public class CreateColemanQuestionnaireService {
      * This object is a bit long, it might be interesting to create a dto for it
      *    - This might help to autogenerate empty fields
      */
-    public void createAndPostMetadataObject(String id, String label, LinkedHashMap<String,Object> questionnaire, List<Map<String, Object>> variables, String inseeContext){
+    public void createAndPostMetadataObject(String id, String label,List<LinkedHashMap<String,Object>> questionnaire, List<Map<String, Object>> variables, String inseeContext){
         log.info("\t >> Create Metadata object to be send to Coleman in the Create Context in Coleman Service task <<  ");
 
 
         //TODO: Re-do when there is more than one questionnaire
         List<String> listOfQuestionnaireIds = new ArrayList();
+        for (LinkedHashMap<String,Object> questionnaireModel: questionnaire){
+            listOfQuestionnaireIds.add((String) questionnaireModel.get(ID));
 
-        listOfQuestionnaireIds.add((String) questionnaire.get(ID));
+        }
 
 
         // Create a JSON Object
         var metadataObject = new HashMap<String, Object>();
         metadataObject.put("id", id);
         metadataObject.put("label", label);
-        metadataObject.put("metadata", new HashMap<>() {{
-            put("variables", variables);
+        metadataObject.put("metadata",  new HashMap<>() {{
+            put("value",new HashMap<>() {{
+                put("variables", variables);
+                put("inseeContext", inseeContext);
+            }}
+            );
+
+
         }});
         metadataObject.put("questionnaireIds", listOfQuestionnaireIds);
-        metadataObject.put("inseeContext", inseeContext);
+
         // Fetch value from external service but I don't know which one yet
         var objectMapper = new ObjectMapper();
         String requestBody =null;

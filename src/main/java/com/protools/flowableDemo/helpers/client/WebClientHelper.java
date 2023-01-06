@@ -38,7 +38,6 @@ public class WebClientHelper {
                         .secure(t -> t.sslContext(sslContext))
                         .proxyWithSystemProperties()
                         .wiretap(this.getClass().getCanonicalName(), LogLevel.INFO, AdvancedByteBufFormat.TEXTUAL);
-
                 webClientBuilder = WebClient.builder()
                         .exchangeStrategies(strategies)
                         .clientConnector(new ReactorClientHttpConnector(httpClient));

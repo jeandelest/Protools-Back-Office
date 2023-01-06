@@ -44,7 +44,6 @@ public class NamingQuestionnaireService {
                             .bodyToMono(String.class)
                             .block();
             log.info("\t \t Successfully retrieved naming files from gitlab");
-            log.info("\t \t >> Start of naming value : " + jsonResponse.substring(0,10));
             return jsonResponse;
         } catch (Exception e){
             //TODO : Handle exception
@@ -67,7 +66,6 @@ public class NamingQuestionnaireService {
                             .bodyToMono(String.class)
                             .block();
             log.info("\t \t Successfully retrieved questionnaire files from gitlab");
-            log.info("\t \t >> Start of questionnaire value : " + jsonResponse.substring(0,10));
             return jsonResponse;
         } catch (Exception e){
             log.error("\t \t \t ERROR Getting Questionnaire Model");
