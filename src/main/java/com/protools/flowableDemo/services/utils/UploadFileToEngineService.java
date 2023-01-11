@@ -1,5 +1,6 @@
 package com.protools.flowableDemo.services.utils;
 
+import com.protools.flowableDemo.model.exceptions.FileNotFoundException;
 import com.protools.flowableDemo.services.engineService.WorkflowService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,10 @@ public class UploadFileToEngineService {
 		return fileNameParts[fileNameParts.length - 1];
 	}
 
-	public String storeFile(MultipartFile file, String taskID) {
+	public String storeFile(MultipartFile file, String taskID) throws FileNotFoundException {
+		if (file == null) {
+			throw new FileNotFoundException(taskID);
+		}
 		// Normalize file name
 		String fileName = new Date().getTime() + "-file." + getFileExtension(file.getOriginalFilename());
 

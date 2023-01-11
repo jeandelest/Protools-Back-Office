@@ -1,6 +1,6 @@
 package com.protools.flowableDemo.services.utils;
 
-import com.protools.flowableDemo.beans.XmlErrorHandler;
+import com.protools.flowableDemo.model.XmlErrorHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.xml.sax.SAXException;

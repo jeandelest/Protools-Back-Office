@@ -1,4 +1,4 @@
-package com.protools.flowableDemo.beans;
+package com.protools.flowableDemo.model;
 
 import lombok.Getter;
 import lombok.Setter;

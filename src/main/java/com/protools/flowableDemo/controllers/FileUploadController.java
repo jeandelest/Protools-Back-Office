@@ -1,6 +1,7 @@
 package com.protools.flowableDemo.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.protools.flowableDemo.model.exceptions.FileNotFoundException;
 import com.protools.flowableDemo.services.era.DrawDailySampleServiceTask;
 import com.protools.flowableDemo.services.utils.UploadFileToEngineService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class FileUploadController {
     public ResponseEntity<Void> uploadFile(
             @RequestParam(name = "file", required = false) MultipartFile file,
             @RequestParam("taskID") String taskID
-    ) {
+    ) throws FileNotFoundException {
         uploadFileToEngineService.storeFile(file, taskID);
         return new ResponseEntity<>(HttpStatus.OK);
 

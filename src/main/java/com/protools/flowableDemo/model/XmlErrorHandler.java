@@ -1,4 +1,4 @@
-package com.protools.flowableDemo.beans;
+package com.protools.flowableDemo.model;
 
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXParseException;
