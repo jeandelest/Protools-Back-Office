@@ -35,6 +35,7 @@ public class FileUploadController {
             @RequestParam("taskID") String taskID
     ) throws FileNotFoundException {
         uploadFileToEngineService.storeFile(file, taskID);
+
         return new ResponseEntity<>(HttpStatus.OK);
 
     }
