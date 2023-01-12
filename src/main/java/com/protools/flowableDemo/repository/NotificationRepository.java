@@ -12,7 +12,6 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     List<Notification> findAllByProcessName(String processName);
     List<Notification> findAllByTaskName(String taskName);
     List<Notification> findAll();
-    List<Notification> findAllOrderByDateDesc();
     List<Notification> findAllByType(NotificationType type);
 }
 

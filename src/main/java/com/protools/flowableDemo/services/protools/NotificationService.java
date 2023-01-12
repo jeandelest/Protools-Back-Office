@@ -6,6 +6,7 @@ import com.protools.flowableDemo.model.notifications.NotificationType;
 import com.protools.flowableDemo.repository.NotificationRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -38,7 +39,7 @@ public class NotificationService {
     }
 
     public List<Notification> findAllOrderByDateDesc() {
-        return notificationRepository.findAllOrderByDateDesc();
+        return notificationRepository.findAll(Sort.by(Sort.Direction.DESC, "date"));
     }
 
 
