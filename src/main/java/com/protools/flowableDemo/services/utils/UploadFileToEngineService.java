@@ -1,7 +1,9 @@
 package com.protools.flowableDemo.services.utils;
 
 import com.protools.flowableDemo.model.exceptions.FileNotFoundException;
+import com.protools.flowableDemo.model.notifications.NotificationType;
 import com.protools.flowableDemo.services.engineService.WorkflowService;
+import com.protools.flowableDemo.services.protools.NotificationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +24,9 @@ import java.util.HashMap;
 public class UploadFileToEngineService {
 
 	private final Path fileStorageLocation;
+
+	@Autowired
+	private NotificationService notificationService;
 
 	@Autowired
 	private WorkflowService workflowService;
@@ -48,6 +53,7 @@ public class UploadFileToEngineService {
 
 	public String storeFile(MultipartFile file, String taskID) throws FileNotFoundException {
 		if (file == null) {
+			notificationService.saveNotification("Fichier non trouvé", "UploadFile", NotificationType.ERROR);
 			throw new FileNotFoundException(taskID);
 		}
 		// Normalize file name
@@ -69,6 +75,7 @@ public class UploadFileToEngineService {
 
 			workflowService.completeTask(taskID, values, "user");
 			log.info("\t >> Context File uploaded to process engine");
+			notificationService.saveNotification("Fichier uploadé avec succès", "UploadFile", NotificationType.SUCCESS);
 			return fileName;
 		} catch (IOException ex) {
 			throw new RuntimeException("Could not store file " + fileName, ex);

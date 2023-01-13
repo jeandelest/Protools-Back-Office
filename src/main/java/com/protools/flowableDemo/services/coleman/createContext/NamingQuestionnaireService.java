@@ -2,6 +2,8 @@ package com.protools.flowableDemo.services.coleman.createContext;
 
 
 import com.protools.flowableDemo.helpers.client.WebClientHelper;
+import com.protools.flowableDemo.model.notifications.NotificationType;
+import com.protools.flowableDemo.services.protools.NotificationService;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,9 @@ public class NamingQuestionnaireService {
     @Autowired
     WebClientHelper webClientHelper;
 
+    private NotificationService notificationService;
+
+
 
     String getNamingModelValue(String namingId) {
         // Get path to the naming file
@@ -44,6 +49,8 @@ public class NamingQuestionnaireService {
                             .bodyToMono(String.class)
                             .block();
             log.info("\t \t Successfully retrieved naming files from gitlab");
+            notificationService.saveNotification("Retrieved naming files from gitlab", NotificationType.INFO);
+
             return jsonResponse;
         } catch (Exception e){
             //TODO : Handle exception
@@ -66,6 +73,7 @@ public class NamingQuestionnaireService {
                             .bodyToMono(String.class)
                             .block();
             log.info("\t \t Successfully retrieved questionnaire files from gitlab");
+            notificationService.saveNotification("Retrieved questionnaire files from gitlab", NotificationType.INFO);
             return jsonResponse;
         } catch (Exception e){
             log.error("\t \t \t ERROR Getting Questionnaire Model");

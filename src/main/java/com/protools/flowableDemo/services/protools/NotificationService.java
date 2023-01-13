@@ -18,18 +18,26 @@ public class NotificationService {
     @Autowired
     private NotificationRepository notificationRepository;
 
-    public void saveNotification(String processName, String taskName, String message, NotificationType type, LocalDateTime date) {
-        log.info("\t \t >> Saving notification for processName: {}, taskName: {}, message: {}, type: {}", processName, taskName, message, type);
-        notificationRepository.save(new Notification(processName, date, taskName, message, type));
+    public void saveNotification(String message, NotificationType type) {
+
+        log.info("\t >> Saving notification for, message: {}, type: {}", message, type.getId());
+        LocalDateTime lt
+                = LocalDateTime.now();
+        notificationRepository.save(new Notification(message, lt, type.getId()));
+    }
+
+    public void saveNotification(String message, String taskName, NotificationType type) {
+
+        log.info("\t \t >> Saving notification for taskName: {}, message: {}, type: {}", taskName, message, type.getId());
+        LocalDateTime lt
+                = LocalDateTime.now();
+        notificationRepository.save(new Notification(message, lt, taskName , type.getId()));
     }
 
     public List<Notification> findAll() {
         return notificationRepository.findAll();
     }
 
-    public List<Notification> findAllByProcessName(String processName) {
-        return notificationRepository.findAllByProcessName(processName);
-    }
     public List<Notification> findAllByTaskName(String taskName) throws RessourceNotFoundException{
         return notificationRepository.findAllByTaskName(taskName);
     }

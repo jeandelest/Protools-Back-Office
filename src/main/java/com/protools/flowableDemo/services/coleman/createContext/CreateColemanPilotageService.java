@@ -3,6 +3,8 @@ package com.protools.flowableDemo.services.coleman.createContext;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.protools.flowableDemo.helpers.client.WebClientHelper;
+import com.protools.flowableDemo.model.notifications.NotificationType;
+import com.protools.flowableDemo.services.protools.NotificationService;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,9 @@ public class CreateColemanPilotageService {
     @Autowired
     WebClientHelper webClientHelper;
 
+    @Autowired
+    NotificationService notificationService;
+
     public void createCampaign(long collectionStartDate,long collectionEndDate, String id, String label){
         log.info("\t >> Create Campaign object to be send to Coleman in the Create Context in Coleman Service task <<  ");
 
@@ -64,6 +69,7 @@ public class CreateColemanPilotageService {
                 .retrieve()
                 .bodyToMono(JSONObject.class)
                 .block();
+        notificationService.saveNotification("Campaign created in Coleman Pilotage", NotificationType.SUCCESS);
         log.info("\t \t \t >> Campaign sent to Coleman Pilotage <<  ");
 
     }

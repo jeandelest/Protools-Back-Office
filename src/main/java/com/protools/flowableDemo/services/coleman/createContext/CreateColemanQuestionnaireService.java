@@ -4,6 +4,8 @@ package com.protools.flowableDemo.services.coleman.createContext;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.protools.flowableDemo.helpers.client.WebClientHelper;
+import com.protools.flowableDemo.model.notifications.NotificationType;
+import com.protools.flowableDemo.services.protools.NotificationService;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,9 @@ public class CreateColemanQuestionnaireService {
 
     @Autowired
     NamingQuestionnaireService namingQuestionnaireService;
+
+    @Autowired
+    NotificationService notificationService;
 
     public void createAndPostNaming(List<LinkedHashMap<String,Object>> naming){
         log.info("\t >> Create Naming object to be send to Coleman in the Create Context in Coleman Service task <<  ");
@@ -163,5 +168,7 @@ public class CreateColemanQuestionnaireService {
                 .retrieve()
                 .bodyToMono(JSONObject.class)
                 .block();
+
+        notificationService.saveNotification("Campaign created in Coleman Questionnaires", NotificationType.SUCCESS);
     }
 }

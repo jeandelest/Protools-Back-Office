@@ -24,14 +24,17 @@ public class Notification {
     private String message;
     private LocalDateTime date;
     private String taskName;
-    private String processName;
-    private NotificationType type;
+    private String type;
 
-    public Notification(String message, LocalDateTime date, String taskName, String processName, NotificationType type) {
+    public Notification(String message, LocalDateTime date, String type) {
+        this.message = message;
+        this.date = date;
+        this.type = type;
+    }
+    public Notification(String message, LocalDateTime date, String taskName, String type) {
         this.message = message;
         this.date = date;
         this.taskName = taskName;
-        this.processName = processName;
         this.type = type;
     }
 }

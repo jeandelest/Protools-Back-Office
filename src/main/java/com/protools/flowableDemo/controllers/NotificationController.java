@@ -43,14 +43,6 @@ public class NotificationController {
 
     }
 
-    @CrossOrigin
-    @Operation(summary= "Get all notifications by process name")
-    @GetMapping(value = "/notifications/process/{processName}", produces = "application/json")
-    public ResponseEntity<List<Notification>> getNotificationsByProcessName(@RequestParam("processName") String processName) {
-        log.info("\t >> Getting all notifications by process name");
-        return new ResponseEntity<>(notificationService.findAllByProcessName(processName), HttpStatus.OK);
-
-    }
 
     @CrossOrigin
     @Operation(summary= "Get all notifications by task name")
