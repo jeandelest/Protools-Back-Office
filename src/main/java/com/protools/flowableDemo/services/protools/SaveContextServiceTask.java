@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.google.gson.Gson;
+import com.protools.flowableDemo.model.notifications.NotificationType;
 import com.protools.flowableDemo.services.engineService.WorkflowService;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.JavaDelegate;
@@ -22,6 +23,9 @@ import java.util.Map;
 public class SaveContextServiceTask implements JavaDelegate {
     @Autowired
     private WorkflowService workflowService;
+
+    @Autowired
+    private NotificationService notificationService;
     @Override
     public void execute(org.flowable.engine.delegate.DelegateExecution delegateExecution) {
         log.info("\t >> Save Context Service Task <<  ");
@@ -43,7 +47,6 @@ public class SaveContextServiceTask implements JavaDelegate {
         } catch (Exception e) {
             log.info("Could not extract dateFinCampagne from context file, error: " + e.getMessage());
         }
-
 
         // Purge de la variable initiale
         //TODO: je pense qu'il ne faut pas l'enlever

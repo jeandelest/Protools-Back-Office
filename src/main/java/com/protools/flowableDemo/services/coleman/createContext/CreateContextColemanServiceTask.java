@@ -35,15 +35,14 @@ public class CreateContextColemanServiceTask implements JavaDelegate {
     @Override
     public void execute(org.flowable.engine.delegate.DelegateExecution delegateExecution) {
         log.info("\t >> Create Context into Coleman Pilotage & Questionnaire Service Task <<  ");
-        notificationService.saveNotification("Started creating context in Coleman","CreateContext", NotificationType.INFO);
 
         String id = (String) delegateExecution.getVariable(ID);
-        log.info("ID suvey: "+id);
+        log.info("ID suvey: " + id);
         String label = (String) delegateExecution.getVariable(LABEL);
         List<Object> partitionsList = (List<Object>) delegateExecution.getVariable(PARTITION);
-        LinkedHashMap<Object,Object> partitionsStr = (LinkedHashMap<Object, Object>) partitionsList.get(0);
+        LinkedHashMap<Object, Object> partitionsStr = (LinkedHashMap<Object, Object>) partitionsList.get(0);
         Gson gson = new Gson();
-        Map<String, Object> partitions = gson.fromJson(gson.toJson(partitionsStr),Map.class);
+        Map<String, Object> partitions = gson.fromJson(gson.toJson(partitionsStr), Map.class);
         Map<String, Object> dateObject = (Map<String, Object>) partitions.get(DATES);
         String dateDebutCampagne = ((String) dateObject.get(DATE_DEBUT_COLLECTE));
         String dateFinCampagne = ((String) dateObject.get(DATE_FIN_COLLECTE));
@@ -52,8 +51,8 @@ public class CreateContextColemanServiceTask implements JavaDelegate {
         // Coleman Questionnaire part
         // Create Metadata object
         // TODO : Ask if we need to create a metadata dto object
-        List<Map<String,Object>> variables = new ArrayList<>();
-        String inseeContext= (String) delegateExecution.getVariable(CONTEXTE);
+        List<Map<String, Object>> variables = new ArrayList<>();
+        String inseeContext = (String) delegateExecution.getVariable(CONTEXTE);
 
         variables.add(new HashMap<>() {{
             put("name", "Enq_Libelle_Enquete");
@@ -123,12 +122,12 @@ public class CreateContextColemanServiceTask implements JavaDelegate {
 
         //For now I'll assume the context is correctly imported with the right name
         //I'll also assume that there is more than one naming
-        List<LinkedHashMap<String,Object>> naming = (List<LinkedHashMap<String,Object>>) delegateExecution.getVariable(NOMENCLATURE);
+        List<LinkedHashMap<String, Object>> naming = (List<LinkedHashMap<String, Object>>) delegateExecution.getVariable(NOMENCLATURE);
         createColemanQuestionnaireService.createAndPostNaming(naming);
 
-        ArrayList<LinkedHashMap<String,Object>> questionnaire = (ArrayList) delegateExecution.getVariable(QUESTIONNAIRE_MODEL);
-        createColemanQuestionnaireService.createAndPostMetadataObject(id,label,questionnaire,variables,inseeContext);
-        for (LinkedHashMap<String,Object> questionnaireModel: questionnaire){
+        ArrayList<LinkedHashMap<String, Object>> questionnaire = (ArrayList) delegateExecution.getVariable(QUESTIONNAIRE_MODEL);
+        createColemanQuestionnaireService.createAndPostMetadataObject(id, label, questionnaire, variables, inseeContext);
+        for (LinkedHashMap<String, Object> questionnaireModel : questionnaire) {
             createColemanQuestionnaireService.createAndPostQuestionnaires(questionnaireModel);
         }
 
@@ -139,7 +138,7 @@ public class CreateContextColemanServiceTask implements JavaDelegate {
 
         long collectionEndDate = Instant.parse(dateFinCampagne).toEpochMilli();
 
-        createColemanPilotageService.createCampaign(collectionStartDate,collectionEndDate,id,label);
+        createColemanPilotageService.createCampaign(collectionStartDate, collectionEndDate, id, label);
 
 
 

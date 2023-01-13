@@ -49,11 +49,13 @@ public class NamingQuestionnaireService {
                             .bodyToMono(String.class)
                             .block();
             log.info("\t \t Successfully retrieved naming files from gitlab");
-            notificationService.saveNotification("Retrieved naming files from gitlab", "CreateContext", NotificationType.SUCCESS);
+            notificationService.saveNotification("Les questionnaires ont été récupérés", "Create Context", NotificationType.SUCCESS);
             return jsonResponse;
         } catch (Exception e){
             //TODO : Handle exception
-            log.error("\t \t >> ERROR Getting Naming Model");
+            log.error("\t \t >> ERROR Getting Naming Model: "  + e.getMessage());
+            notificationService.saveNotification("Erreur de récupération des nomenclatures","Create Context", NotificationType.ERROR);
+
             throw (e);
         }
     }
@@ -70,10 +72,11 @@ public class NamingQuestionnaireService {
                             .bodyToMono(String.class)
                             .block();
             log.info("\t \t Successfully retrieved questionnaire files from gitlab");
-            notificationService.saveNotification("Retrieved questionnaire files from gitlab","CreateContext", NotificationType.SUCCESS);
+            notificationService.saveNotification("Les questionnaires ont été récupérés","Create Context", NotificationType.SUCCESS);
             return jsonResponse;
         } catch (Exception e){
-            log.error("\t \t \t ERROR Getting Questionnaire Model");
+            log.error("\t \t \t ERROR Getting Questionnaire Model: " + e.getMessage());
+            notificationService.saveNotification("Erreur de récupération des questionnaires","Create Context", NotificationType.ERROR);
             throw (e);
         }
 
