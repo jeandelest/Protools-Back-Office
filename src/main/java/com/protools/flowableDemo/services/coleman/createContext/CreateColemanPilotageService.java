@@ -69,7 +69,7 @@ public class CreateColemanPilotageService {
                 .retrieve()
                 .bodyToMono(JSONObject.class)
                 .block();
-        notificationService.saveNotification("Campaign created in Coleman Pilotage", NotificationType.SUCCESS);
+        notificationService.saveNotification("Campaign created in Coleman Pilotage", "UploadFile", NotificationType.SUCCESS);
         log.info("\t \t \t >> Campaign sent to Coleman Pilotage <<  ");
 
     }

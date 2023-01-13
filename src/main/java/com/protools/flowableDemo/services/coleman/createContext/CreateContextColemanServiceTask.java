@@ -2,6 +2,7 @@ package com.protools.flowableDemo.services.coleman.createContext;
 
 
 import com.google.gson.Gson;
+import com.protools.flowableDemo.model.notifications.NotificationType;
 import com.protools.flowableDemo.services.protools.NotificationService;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.JavaDelegate;
@@ -29,11 +30,12 @@ public class CreateContextColemanServiceTask implements JavaDelegate {
     @Autowired
     private CreateColemanQuestionnaireService createColemanQuestionnaireService;
 
-
+    @Autowired
+    private NotificationService notificationService;
     @Override
     public void execute(org.flowable.engine.delegate.DelegateExecution delegateExecution) {
         log.info("\t >> Create Context into Coleman Pilotage & Questionnaire Service Task <<  ");
-
+        notificationService.saveNotification("Started creating context in Coleman","CreateContext", NotificationType.INFO);
 
         String id = (String) delegateExecution.getVariable(ID);
         log.info("ID suvey: "+id);

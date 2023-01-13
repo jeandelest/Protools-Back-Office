@@ -169,6 +169,6 @@ public class CreateColemanQuestionnaireService {
                 .bodyToMono(JSONObject.class)
                 .block();
 
-        notificationService.saveNotification("Campaign created in Coleman Questionnaires", NotificationType.SUCCESS);
+        notificationService.saveNotification("Campaign created in Coleman Questionnaires", "UploadFile",NotificationType.SUCCESS);
     }
 }

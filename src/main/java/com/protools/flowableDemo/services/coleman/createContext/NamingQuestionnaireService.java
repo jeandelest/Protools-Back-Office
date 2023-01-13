@@ -31,8 +31,8 @@ public class NamingQuestionnaireService {
     @Autowired
     WebClientHelper webClientHelper;
 
+    @Autowired
     private NotificationService notificationService;
-
 
 
     String getNamingModelValue(String namingId) {
@@ -49,20 +49,17 @@ public class NamingQuestionnaireService {
                             .bodyToMono(String.class)
                             .block();
             log.info("\t \t Successfully retrieved naming files from gitlab");
-            notificationService.saveNotification("Retrieved naming files from gitlab", NotificationType.INFO);
-
+            notificationService.saveNotification("Retrieved naming files from gitlab", "CreateContext", NotificationType.SUCCESS);
             return jsonResponse;
         } catch (Exception e){
             //TODO : Handle exception
             log.error("\t \t >> ERROR Getting Naming Model");
             throw (e);
         }
-
     }
 
     String getQuestionnaireModelValue(String questionnaireModelId) {
         log.info("\t \t >> Get Questionnaire Model Value from Gitlab, id: "+ questionnaireModelId);
-
         try {
             String jsonResponse =
                     webClientHelper.getWebClientForBaseUrl(questionnaireModelValueProviderUri).get()
@@ -73,7 +70,7 @@ public class NamingQuestionnaireService {
                             .bodyToMono(String.class)
                             .block();
             log.info("\t \t Successfully retrieved questionnaire files from gitlab");
-            notificationService.saveNotification("Retrieved questionnaire files from gitlab", NotificationType.INFO);
+            notificationService.saveNotification("Retrieved questionnaire files from gitlab","CreateContext", NotificationType.SUCCESS);
             return jsonResponse;
         } catch (Exception e){
             log.error("\t \t \t ERROR Getting Questionnaire Model");

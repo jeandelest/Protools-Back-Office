@@ -18,20 +18,12 @@ public class NotificationService {
     @Autowired
     private NotificationRepository notificationRepository;
 
-    public void saveNotification(String message, NotificationType type) {
-
-        log.info("\t >> Saving notification for, message: {}, type: {}", message, type.getId());
-        LocalDateTime lt
-                = LocalDateTime.now();
-        notificationRepository.save(new Notification(message, lt, type.getId()));
-    }
-
     public void saveNotification(String message, String taskName, NotificationType type) {
 
-        log.info("\t \t >> Saving notification for taskName: {}, message: {}, type: {}", taskName, message, type.getId());
         LocalDateTime lt
                 = LocalDateTime.now();
         notificationRepository.save(new Notification(message, lt, taskName , type.getId()));
+        log.info("\t \t >> Saving notification for taskName: {}, message: {}, type: {}", taskName, message, type.getId());
     }
 
     public List<Notification> findAll() {
