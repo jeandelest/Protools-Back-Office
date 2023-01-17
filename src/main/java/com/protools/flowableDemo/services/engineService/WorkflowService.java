@@ -72,7 +72,6 @@ public class WorkflowService {
         }
     }
 
-    @Transactional
     public void completeTask(String taskID, HashMap<String,Object> variables, String assignee){
         List<Task> taskInstances = taskService.createTaskQuery().taskId(taskID).taskAssignee(assignee).list();
         log.info("> Completing task from process : " + taskID);
