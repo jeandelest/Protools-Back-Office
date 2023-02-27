@@ -41,7 +41,7 @@ public class SecurityConfig {
         @Bean
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-                http.csrf().disable()
+               /* http.csrf().disable()
                     .authorizeHttpRequests(authorize ->
                         authorize.requestMatchers(whiteList).permitAll()
                             .requestMatchers("/starter/healthcheck").permitAll()
@@ -49,7 +49,12 @@ public class SecurityConfig {
                     )
                     .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
                     .oauth2ResourceServer(oauth2 -> oauth2.jwt().jwtAuthenticationConverter(jwtAuthenticationConverter()));
+                */
+                http.authorizeRequests().anyRequest().permitAll();
+
+
                 return http.build();
+
         }
         @Bean
         JwtAuthenticationConverter jwtAuthenticationConverter() {
