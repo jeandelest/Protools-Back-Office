@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions
+        xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+        xmlns:flowable="http://flowable.org/bpmn"
+        targetNamespace="Examples">
+
+    <process id="oneTaskProcess" name="The One Task Process">
+        <startEvent id="theStart" />
+        <sequenceFlow id="flow1" sourceRef="theStart" targetRef="theTask" />
+        <userTask id="theTask" name="my task" flowable:assignee="kermit" />
+
+        <endEvent id="theEnd" />
+
+        <sequenceFlow id="flow2" sourceRef="theTask" targetRef="testGateway" />
+        <userTask id="traitementErreurTask" name="traiter erreur" flowable:assignee="kermit" />
+
+
+        <exclusiveGateway id="testGateway" name="TOTO" />
+        <sequenceFlow id="flow3" sourceRef="testGateway" targetRef="traitementErreurTask">
+            <conditionExpression>${variableTestError == 'true'}</conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="flow4" sourceRef="testGateway" targetRef="theEnd">
+            <conditionExpression>${variableTestError == 'false'}</conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="flow5" sourceRef="traitementErreurTask" targetRef="theEnd" />
+
+
+
+
+    </process>
+
+</definitions>
