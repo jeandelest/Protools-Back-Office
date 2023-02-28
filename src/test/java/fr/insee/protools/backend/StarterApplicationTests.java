@@ -1,4 +1,4 @@
-package fr.insee.sndil.starter;
+package fr.insee.protools.backend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

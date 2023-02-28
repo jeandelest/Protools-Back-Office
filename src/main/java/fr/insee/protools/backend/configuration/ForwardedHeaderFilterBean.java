@@ -1,4 +1,4 @@
-package fr.insee.sndil.starter.configuration;
+package fr.insee.protools.backend.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.filter.ForwardedHeaderFilter;

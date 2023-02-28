@@ -1,4 +1,4 @@
-package fr.insee.sndil.starter.configuration;
+package fr.insee.protools.backend.configuration;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

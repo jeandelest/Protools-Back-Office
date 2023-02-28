@@ -1,7 +1,6 @@
-package fr.insee.sndil.starter;
+package fr.insee.protools.backend;
 
-import fr.insee.sndil.starter.configuration.PropertiesLogger;
-import org.springframework.boot.SpringApplication;
+import fr.insee.protools.backend.configuration.PropertiesLogger;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 

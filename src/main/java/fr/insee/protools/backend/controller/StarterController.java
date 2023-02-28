@@ -1,4 +1,4 @@
-package fr.insee.sndil.starter.controller;
+package fr.insee.protools.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.info.BuildProperties;

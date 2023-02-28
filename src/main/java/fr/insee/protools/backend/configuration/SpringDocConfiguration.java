@@ -1,4 +1,4 @@
-package fr.insee.sndil.starter.configuration;
+package fr.insee.protools.backend.configuration;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;

@@ -1,4 +1,4 @@
-package fr.insee.sndil.starter.configuration;
+package fr.insee.protools.backend.configuration;
 
 import lombok.Data;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;

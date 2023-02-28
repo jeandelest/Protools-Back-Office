@@ -2,7 +2,7 @@
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://flowable.org/bpmn20" exporter="Flowable Open Source Modeler" exporterVersion="6.7.2">
     <process id="EnqueteTest" name="Enquête Test" isExecutable="true">
         <documentation>Enquête de test - prototype stage Protools</documentation>
-        <serviceTask id="CheckSurveyInfo" name="Check New Survey" flowable:class="com.example.testflowable.services.delegates.SampleServiceTask">
+        <serviceTask id="CheckSurveyInfo" name="Check New Survey" flowable:class="fr.insee.protools.backend.service.delegate.SampleServiceTask">
             <documentation>Vérifie la taille de l'échantillon, un échantillon est désigné comme valide s'il contient plus de 5 unités d'enquête</documentation>
         </serviceTask>
         <subProcess id="Activity_0xukvyb" name="Draw Sample &amp; Add to survey" flowable:async="true" flowable:exclusive="false">
