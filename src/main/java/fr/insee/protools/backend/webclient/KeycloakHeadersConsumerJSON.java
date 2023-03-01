@@ -1,8 +1,8 @@
-package fr.insee.protools.backend.client;
+package fr.insee.protools.backend.webclient;
 
 
-import fr.insee.protools.backend.client.exception.KeycloakTokenConfigException;
-import fr.insee.protools.backend.client.exception.KeycloakTokenConfigUncheckedException;
+import fr.insee.protools.backend.webclient.exception.KeycloakTokenConfigException;
+import fr.insee.protools.backend.webclient.exception.KeycloakTokenConfigUncheckedException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;

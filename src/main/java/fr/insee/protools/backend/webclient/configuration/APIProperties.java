@@ -1,4 +1,4 @@
-package fr.insee.protools.backend.client.configuration;
+package fr.insee.protools.backend.webclient.configuration;
 
 import lombok.Data;
 

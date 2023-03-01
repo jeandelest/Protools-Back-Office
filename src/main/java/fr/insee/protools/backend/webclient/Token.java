@@ -1,4 +1,4 @@
-package fr.insee.protools.backend.client;
+package fr.insee.protools.backend.webclient;
 
 class Token {
     public final String value;

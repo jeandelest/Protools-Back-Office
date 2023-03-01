@@ -1,4 +1,4 @@
-package fr.insee.protools.backend.client.exception;
+package fr.insee.protools.backend.webclient.exception;
 
 public class KeycloakTokenConfigUncheckedException extends  RuntimeException{
 

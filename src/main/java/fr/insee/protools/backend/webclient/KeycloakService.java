@@ -1,6 +1,6 @@
-package fr.insee.protools.backend.client;
+package fr.insee.protools.backend.webclient;
 
-import fr.insee.protools.backend.client.exception.KeycloakTokenConfigException;
+import fr.insee.protools.backend.webclient.exception.KeycloakTokenConfigException;
 import io.netty.handler.logging.LogLevel;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
