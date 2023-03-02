@@ -1,9 +1,8 @@
 package fr.insee.protools.backend.webclient;
 
-
-import fr.insee.protools.backend.webclient.exception.ApiNotConfiguredException;
 import fr.insee.protools.backend.webclient.configuration.APIProperties;
 import fr.insee.protools.backend.webclient.configuration.ApiConfigProperties;
+import fr.insee.protools.backend.webclient.exception.ApiNotConfiguredException;
 import io.netty.handler.logging.LogLevel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
