@@ -84,7 +84,7 @@ public class SecurityConfig {
                                                 @Override public String toString() {
                                                         return getAuthority();
                                                 }
-                                        }).collect(Collectors.toList());
+                                        }).collect(Collectors.toUnmodifiableList());
                                 }
                                 catch (ClassCastException e) {
                                         // role path not correctly found, assume that no role for this user
