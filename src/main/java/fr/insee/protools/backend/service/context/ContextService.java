@@ -34,6 +34,7 @@ public class ContextService {
 
     @Autowired
     private TaskService taskService;
+
     private static final Gson gson = new Gson();
 
     /**
@@ -60,10 +61,10 @@ public class ContextService {
             // Extraction of campaign TIMER START/END dates
             // TODO : warning : currently we are only handling a single partition
             Object firstPartition = variables.getOrDefault(PARTITION, Collections.emptyList());
-            if(!(firstPartition instanceof Map firstPartitionMap )||firstPartitionMap.isEmpty()){
+            if(!(firstPartition instanceof List partitions )||partitions.isEmpty()){
                 throw new BadContextIncorrectException(String.format("Missing %s in context",PARTITION));
             }
-            Pair<LocalDateTime, LocalDateTime> startEndDT = getCollectionStartAndEndFromPartition(firstPartitionMap);
+            Pair<LocalDateTime, LocalDateTime> startEndDT = getCollectionStartAndEndFromPartition((Map<Object, Object>) partitions.get(0));
             //add these variables to the list
             variables.put(DATE_DEBUT_COLLECTE,startEndDT.getKey());
             variables.put(DATE_FIN_COLLECTE,startEndDT.getValue());
