@@ -1,6 +1,6 @@
 package fr.insee.protools.backend.controller;
 
-import fr.insee.protools.backend.exception.TaskNotFoundException;
+import fr.insee.protools.backend.service.exception.TaskNotFoundException;
 import fr.insee.protools.backend.service.context.exception.BadContextIOException;
 import fr.insee.protools.backend.service.context.exception.BadContextIncorrectException;
 import fr.insee.protools.backend.service.context.exception.BadContextNotXMLException;

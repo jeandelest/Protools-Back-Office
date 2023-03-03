@@ -2,6 +2,9 @@ package fr.insee.protools.backend.service.context;
 
 public final class ContextConstants {
 
+    //Name of the variable in flowable
+    public static final String VARNAME_CONTEXT="context";
+
     // Campaign context constants - Metadata
     public static final String ID = "id";
     public static final String LABEL = "label";
@@ -36,6 +39,7 @@ public final class ContextConstants {
     public static final String SUPPORT = "Support";
 
     // Campaign context constants - Partitions
+    public static final String PARTITIONS = "Partitions";
     public static final String PARTITION = "Partition";
     public static final String DATES = "Dates";
     public static final String DATE_DEBUT_COLLECTE = "DateDebutCollecte";

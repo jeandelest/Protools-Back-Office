@@ -1,19 +1,27 @@
-package fr.insee.protools.backend.service.delegate;
+package fr.insee.protools.backend.service.delegate.sample;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import fr.insee.protools.backend.service.context.ContextService;
+import fr.insee.protools.backend.service.context.ContextServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
 public class SampleServiceTask  implements JavaDelegate {
 
+    @Autowired ContextServiceImpl contextService;
     @Override
     public void execute(DelegateExecution delegateExecution) {
         String currentActivityId=delegateExecution.getCurrentActivityId();
         String messageLog = "";
 
+        JsonNode protoolsContext = contextService.getContextByProcessInstance(delegateExecution.getProcessInstanceId());
+
+        log.info("Variables : {}", delegateExecution.getVariables());
         String unit = delegateExecution.getVariable("unit", String.class);
         if (unit!=null) {
             messageLog+=" - unit="+unit;

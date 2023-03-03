@@ -1,4 +1,4 @@
-package fr.insee.protools.backend.exception;
+package fr.insee.protools.backend.service.exception;
 
 import org.flowable.common.engine.api.FlowableObjectNotFoundException;
 import org.flowable.task.api.Task;

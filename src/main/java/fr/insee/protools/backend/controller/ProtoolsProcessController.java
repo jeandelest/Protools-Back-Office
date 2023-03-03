@@ -1,6 +1,6 @@
 package fr.insee.protools.backend.controller;
 
-import fr.insee.protools.backend.service.context.ContextService;
+import fr.insee.protools.backend.service.context.ContextServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -19,7 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/protools-process")
 @Controller
 public class ProtoolsProcessController {
-    @Autowired ContextService contextService;
+    @Autowired ContextServiceImpl contextService;
 
     @PostMapping(value = "/upload-context", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Upload of the context file",
