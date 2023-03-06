@@ -1,7 +1,6 @@
 package fr.insee.protools.backend.service.delegate.sample;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import fr.insee.protools.backend.service.context.ContextService;
 import fr.insee.protools.backend.service.context.ContextServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;

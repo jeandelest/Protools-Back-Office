@@ -4,10 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
-import fr.insee.protools.backend.service.exception.TaskNotFoundException;
 import fr.insee.protools.backend.service.context.exception.BadContextIOException;
 import fr.insee.protools.backend.service.context.exception.BadContextIncorrectException;
 import fr.insee.protools.backend.service.context.exception.BadContextNotXMLException;
+import fr.insee.protools.backend.service.exception.TaskNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.flowable.common.engine.api.FlowableObjectNotFoundException;
@@ -24,7 +24,9 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static fr.insee.protools.backend.service.context.ContextConstants.*;
@@ -112,7 +114,7 @@ public class ContextServiceImpl implements ContextService{
             try {
                 result=defaultReader.readTree(contextStr);
             } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
+                throw new BadContextIncorrectException(String.format("Context retrieved from engine could not be parsed for processInstanceId=[%s]",processInstanceId),e);
             }
             contextCache.put(processInstanceId,result);
         }
