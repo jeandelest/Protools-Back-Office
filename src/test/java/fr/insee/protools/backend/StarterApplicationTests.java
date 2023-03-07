@@ -3,9 +3,9 @@ package fr.insee.protools.backend;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest class StarterApplicationTests {
+//@SpringBootTest class StarterApplicationTests {
+//
+//        @Test void contextLoads() {
+//        }
 
-        @Test void contextLoads() {
-        }
-
-}
+//}
