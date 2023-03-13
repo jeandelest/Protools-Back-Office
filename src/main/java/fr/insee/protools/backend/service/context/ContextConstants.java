@@ -40,7 +40,6 @@ public final class ContextConstants {
 
     // Campaign context constants - Partitions
     public static final String PARTITIONS = "Partitions";
-    public static final String PARTITION = "Partition";
     public static final String DATES = "Dates";
     public static final String DATE_DEBUT_COLLECTE = "DateDebutCollecte";
     public static final String DATE_FIN_COLLECTE = "DateFinCollecte";
@@ -71,9 +70,9 @@ public final class ContextConstants {
     public static final String MAIL = "mail";
     public static final String INTERNAUTE = "internaute";
 
-    // Context constants - Variables - Coleman
-    public static final String QUESTIONNAIRE_COLEMAN_DATA = "questionnaireColemanData";
-    public static final String PILOTAGE_COLEMAN_DATA= "pilotageColemanData";
+
+    public static final String NOMENCLATURES = "Nomenclatures";
+    public static final String QUESTIONNAIRE_MODELS = "QuestionnaireModels";
 
     //Constants class should not be initialized
     private ContextConstants() {

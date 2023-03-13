@@ -74,9 +74,7 @@ public class ContextServiceImpl implements ContextService{
             if(partitions.isMissingNode() ){
                 throw new BadContextIncorrectException(String.format("Missing %s in context",PARTITIONS));
             }
-            else if (partitions.path(PARTITION).isMissingNode()){
-                throw new BadContextIncorrectException(String.format("Missing %s in context",PARTITION));
-            }
+
             Pair<LocalDateTime, LocalDateTime> startEndDT = getCollectionStartAndEndFromPartition(rootContext);
             //add these variables to the list
             Map<String, Object> variables = new HashMap<>();
@@ -128,8 +126,9 @@ public class ContextServiceImpl implements ContextService{
     }
 
    private static Pair<LocalDateTime,LocalDateTime> getCollectionStartAndEndFromPartition(JsonNode rootNode){
-       String start =rootNode.path(PARTITIONS).path(PARTITION).get(DATES).get(DATE_DEBUT_COLLECTE).asText();
-       String end   =rootNode.path(PARTITIONS).path(PARTITION).get(DATES).get(DATE_DEBUT_COLLECTE).asText();
+       //TODO : handle multiple partition
+        String start =rootNode.path(PARTITIONS).get(0).get(DATES).get(DATE_DEBUT_COLLECTE).asText();
+       String end   =rootNode.path(PARTITIONS).get(0).get(DATES).get(DATE_DEBUT_COLLECTE).asText();
 
         try {
             LocalDateTime collectionStart = LocalDateTime.parse(start, DateTimeFormatter.ISO_DATE_TIME);

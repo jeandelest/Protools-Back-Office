@@ -8,15 +8,15 @@ import org.springframework.context.annotation.Configuration;
 public class ApiConfigProperties {
 
         public enum KNOWN_API {
-                KNOWN_API_COLEMAN_PILOTAGE,
-                KNOWN_API_COLEMAN_QUESTIONNAIRE,
+                KNOWN_API_PLATINE_PILOTAGE,
+                KNOWN_API_PLATINE_QUESTIONNAIRE,
                 KNOWN_API_ERA
         }
 
         public APIProperties getAPIProperties(KNOWN_API api){
                 switch (api){
-                        case KNOWN_API_COLEMAN_PILOTAGE: return colemanPilotageApiProperties();
-                        case KNOWN_API_COLEMAN_QUESTIONNAIRE: return colemanQuestionnaireApiProperties();
+                        case KNOWN_API_PLATINE_PILOTAGE: return platinePilotageApiProperties();
+                        case KNOWN_API_PLATINE_QUESTIONNAIRE: return platineQuestionnaireApiProperties();
                         case KNOWN_API_ERA: return eraApiProperties();
                 }
                 return new APIProperties();
@@ -28,15 +28,15 @@ public class ApiConfigProperties {
                 return new APIProperties();
         }
 
-        @Bean("colemanPilotageApiProperties")
-        @ConfigurationProperties("fr.insee.protools.api.coleman-pilotage")
-        public APIProperties colemanPilotageApiProperties() {
+        @Bean("platinePilotageApiProperties")
+        @ConfigurationProperties("fr.insee.protools.api.platine-pilotage")
+        public APIProperties platinePilotageApiProperties() {
                 return new APIProperties();
         }
 
-        @Bean("colemanQuestionnaireApiProperties")
-        @ConfigurationProperties("fr.insee.protools.api.coleman-questionnaire")
-        public APIProperties colemanQuestionnaireApiProperties() {
+        @Bean("platineQuestionnaireApiProperties")
+        @ConfigurationProperties("fr.insee.protools.api.platine-questionnaire")
+        public APIProperties platineQuestionnaireApiProperties() {
                 return new APIProperties();
         }
 

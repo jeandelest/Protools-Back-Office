@@ -63,13 +63,9 @@
                 <modeler:initiator-can-complete xmlns:modeler="http://flowable.org/modeler"><![CDATA[false]]></modeler:initiator-can-complete>
             </extensionElements>
         </userTask>
-        <userTask id="secondUserTask" name="secondUserTask" flowable:assignee="user" flowable:formFieldValidation="true">
-            <documentation>secondUserTask</documentation>
-            <extensionElements>
-                <modeler:initiator-can-complete xmlns:modeler="http://flowable.org/modeler"><![CDATA[false]]></modeler:initiator-can-complete>
-            </extensionElements>
-        </userTask>
+        <serviceTask id="CreateUEPlateformCollecte" name="créer l'ue dans la plateforme de collecte web" flowable:delegateExpression="${platineQuestionnaireCreateContextTask}"></serviceTask>
 
+        <serviceTask id="secondServiceTask" name="secondServiceTask" flowable:delegateExpression="${sampleServiceTask}"></serviceTask>
 
         <userTask id="CheckFinalState" name="Check Final State" flowable:assignee="user" flowable:formFieldValidation="true">
             <documentation>Visualisation de l'état final du processus avant validation</documentation>
@@ -78,9 +74,9 @@
             </extensionElements>
         </userTask>
         <sequenceFlow id="sid-B59A5914-F7DB-4A2C-B74A-C03D9E01B86A" sourceRef="CheckFinalState" targetRef="surverSetStateReady"></sequenceFlow>
-        <sequenceFlow id="Flow_2" sourceRef="firstUserTask" targetRef="secondUserTask"></sequenceFlow>
+        <sequenceFlow id="Flow_2" sourceRef="firstUserTask" targetRef="secondServiceTask"></sequenceFlow>
 
-        <sequenceFlow id="Flow_1hv6ani" sourceRef="secondUserTask" targetRef="CheckSurveyInfo"></sequenceFlow>
+        <sequenceFlow id="Flow_1hv6ani" sourceRef="secondServiceTask" targetRef="CheckSurveyInfo"></sequenceFlow>
         <sequenceFlow id="sid-58FAF948-EC3F-4DE9-8C9C-5CAD2F6426A3" sourceRef="Event_timer_1" targetRef="Activity_0xukvyb"></sequenceFlow>
         <sequenceFlow id="flow-subprocess-checkFinalState" sourceRef="Activity_0xukvyb" targetRef="CheckFinalState"></sequenceFlow>
         <sequenceFlow id="Flow_030lv4j" sourceRef="GW1" targetRef="saveSurveyInfoTask">

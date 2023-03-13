@@ -47,3 +47,4 @@ glowroot.jar
 
 ### Properties ###
 !**/src/main/**/local.properties
+/src/test/httpRequests/http-client.private.env.json

@@ -44,6 +44,7 @@ public class SecurityConfig {
                 http.csrf().disable()
                     .authorizeHttpRequests(authorize ->
                         authorize.requestMatchers(whiteList).permitAll()
+                                .requestMatchers("/**").permitAll()
                             .requestMatchers("/starter/healthcheck").permitAll()
                             .requestMatchers("/starter/healthcheckadmin").hasRole(administrateurRole)
                             //We allow admin to access everything
