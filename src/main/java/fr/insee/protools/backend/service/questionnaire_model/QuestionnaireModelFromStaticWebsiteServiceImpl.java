@@ -25,7 +25,7 @@ public class QuestionnaireModelFromStaticWebsiteServiceImpl implements Questionn
     public String getQuestionnaireModel(String questionnaireModelId){
         log.info("Get Questionnaire Model Value for questionnaireModelId={}", questionnaireModelId);
         return
-                webClientHelper.getWebClient()
+                webClientHelper.getWebClientForFile()
                         .get()
                         .uri(questionnaireModelUri + "/" + questionnaireModelId)
                         .retrieve()

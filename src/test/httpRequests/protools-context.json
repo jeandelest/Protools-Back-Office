@@ -2,6 +2,11 @@
   "id":"DEM2022X00",
   "label":"Enquête démo 2022 - séquence 1",
   "Contexte":"household",
+  "OperationId":"DEM2022",
+  "SerieId":"DEM",
+  "Annee": 2022,
+  "Periode": "X00",
+  "Periodicite": "X",
   "Metadonnees":{
     "LabelCourtOperation":"...",
     "LabelLongOperation":"...",

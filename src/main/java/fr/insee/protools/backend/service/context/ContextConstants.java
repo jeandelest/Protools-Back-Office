@@ -6,16 +6,24 @@ public final class ContextConstants {
     public static final String VARNAME_CONTEXT="context";
 
     // Campaign context constants - Metadata
+    public static final String CTX_METADONNEE = "Metadonnees";
+    public static final String TEST_NON_LABELLISE = "TestNonLabellise";
     public static final String ID = "id";
     public static final String LABEL = "label";
     public static final String CONTEXTE = "Contexte";
     public static final String LABEL_LONG_OPERATION = "LabelLongOperation";
     public static final String LABEL_COURT_OPERATION = "LabelCourtOperation";
+    public static final String SERIE_ID = "SerieId";
+    public static final String ANNEE = "Annee";
+    public static final String PERIODICITE = "Periodicite";
+    public static final String PERIODE = "Periode";
+
+
     public static final String LABEL_LONG_SERIE = "LabelLongSerie";
     public static final String LABEL_COURT_SERIE = "LabelCourtSerie";
     public static final String OBJECTIFS_LONGS = "ObjectifsLongs";
     public static final String OBJECTIFS_COURTS = "ObjectifsCourts";
-    public static final String PORTAIL_ENQUETE = "PortailMesEnquetesOperation";
+    public static final String PORTAIL_MES_ENQUETE_OPERATION = "PortailMesEnquetesOperation";
     public static final String CARACTERE_OBLIGATOIRE = "CaractereObligatoire";
     public static final String QUALITE_STATISTIQUE = "QualiteStatistique";
     public static final String ANNEE_VISA = "AnneeVisa";
@@ -34,13 +42,17 @@ public final class ContextConstants {
     public static final String CNIS_URL = "CnisUrl";
     public static final String DIFFUSION_URL = "DiffusionUrl";
     public static final String NOTICE_URL = "NoticeUrl";
-    public static final String SPECIMENT_URL = "SpecimentUrl";
-    public static final String PROPRIETAIRE = "Proprietaire";
+    public static final String SPECIMENT_URL = "SpecimenUrl";
+    public static final String ID_PROPRIETAIRE = "IdProprietaire";
+    public static final String LABEL_PROPRIETAIRE = "LabelProprietaire";
+    public static final String LOGO_PROPRIETAIRE = "LogoProprietaire";
+
+
     public static final String SUPPORT = "Support";
 
     // Campaign context constants - Partitions
     public static final String PARTITIONS = "Partitions";
-    public static final String DATES = "Dates";
+    public static final String LABEL_PARTITION = "label";
     public static final String DATE_DEBUT_COLLECTE = "DateDebutCollecte";
     public static final String DATE_FIN_COLLECTE = "DateFinCollecte";
     public static final String DATE_RETOUR = "DateRetour";
@@ -54,6 +66,18 @@ public final class ContextConstants {
     public static final String OBJET = "Objet";
     public static final String MAIL_RETOUR = "MailRetour";
     public static final String CONTENU_COMMUNICATION = "ContenuCommunication";
+
+    public static final String ID_ASSITANCE = "IdAssistance";
+    public static final String LABEL_ASSITANCE = "LabelAssistance";
+    public static final String TEL_ASSITANCE = "TelAssistance2";
+    public static final String MAIL_ASSITANCE = "MailAssistance2";
+    public static final String PAYS_ASSITANCE = "PaysAssistance";
+    public static final String NUMERO_VOIE_ASSITANCE = "NumeroVoieAssistance";
+    public static final String NOM_VOIE_ASSITANCE = "NomVoieAssistance";
+
+    public static final String COMMUNE_ASSITANCE = "CommuneAssistance";
+    public static final String CODE_POSTAL_ASSITANCE = "CodePostalAssistance";
+
 
 
     // Campaign context constants - QuestionnairesModel

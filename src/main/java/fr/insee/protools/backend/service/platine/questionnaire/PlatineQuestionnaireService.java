@@ -1,22 +1,21 @@
 package fr.insee.protools.backend.service.platine.questionnaire;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.insee.protools.backend.service.platine.questionnaire.model.NomenclatureDto;
-import fr.insee.protools.backend.service.platine.questionnaire.model.QuestionnaireModelCreateDto;
+import fr.insee.protools.backend.service.platine.questionnaire.dto.CampaignDto;
+import fr.insee.protools.backend.service.platine.questionnaire.dto.NomenclatureDto;
+import fr.insee.protools.backend.service.platine.questionnaire.dto.QuestionnaireModelCreateDto;
+import fr.insee.protools.backend.service.platine.questionnaire.dto.QuestionnaireModelDto;
 import fr.insee.protools.backend.webclient.WebClientHelper;
-import io.netty.resolver.dns.BiDnsQueryLifecycleObserver;
+import fr.insee.protools.backend.webclient.exception.runtime.WebClient4xxException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.BodyInserters;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static fr.insee.protools.backend.webclient.configuration.ApiConfigProperties.KNOWN_API.KNOWN_API_PLATINE_QUESTIONNAIRE;
 
@@ -36,7 +35,7 @@ public class PlatineQuestionnaireService {
                         .retrieve()
                         .bodyToMono(NomenclatureDto.class)
                         .block();
-        log.info("postNomenclature: response= "+response);
+        log.info("nomenclatureId={} - response={}",nomenclatureId,response);
         //TODO:  gestion des erreurs (ex: 403...)
     }
 
@@ -47,14 +46,64 @@ public class PlatineQuestionnaireService {
         QuestionnaireModelCreateDto response =
                 webClientHelper.getWebClient(KNOWN_API_PLATINE_QUESTIONNAIRE)
                         .post()
-                        //TODO : mettre l'uri en conf? idem pour nomenclatures
+                        //TODO : mettre l'uri en conf? idem pour nomenclatures et autres
                         .uri("/api/questionnaire-models")
-                        .bodyValue(QuestionnaireModelCreateDto.class)
+                        .bodyValue(dto)
                         .retrieve()
                         .bodyToMono(QuestionnaireModelCreateDto.class)
                         .block();
-        log.info("postQuestionnaireModel: response= "+response);
+        log.info("questionnaireId={} - response={}",questionnaireId,response);
         //TODO:  gestion des erreurs (ex: 403...)
 
+    }
+
+    public Set<String> getNomenclaturesId() {
+        List<String> response = webClientHelper.getWebClient(KNOWN_API_PLATINE_QUESTIONNAIRE)
+                .get()
+                .uri("/api/nomenclatures")
+                .retrieve()
+                .bodyToMono(List.class)
+                .block();
+        log.info("response= {}",response);
+        return response.stream().collect(Collectors.toSet());
+    }
+
+
+    public boolean questionnaireModelExists(String idQuestionnaireModel) {
+        boolean modelExists = false;
+        try{
+            var response = webClientHelper.getWebClient(KNOWN_API_PLATINE_QUESTIONNAIRE)
+                .get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/api/questionnaire/{id}")
+                        .build(idQuestionnaireModel))
+                .retrieve().toBodilessEntity().block();
+            modelExists=true;
+        }
+        catch (WebClient4xxException e){
+            if(e.getErrorCode().equals(HttpStatus.NOT_FOUND)){
+                modelExists=false;
+            }
+            else {
+                throw e;
+            }
+        }
+        log.info("idQuestionnaireModel={} - modelExists={}",idQuestionnaireModel,modelExists);
+        return modelExists;
+    }
+
+    public void postCampaign(CampaignDto campaignDto) {
+        //Http Status Codes : https://github.com/InseeFr/Queen-Back-Office/blob/3.5.36-rc/src/main/java/fr/insee/queen/api/controller/CampaignController.java
+        // HttpStatus.BAD_REQUEST(400) if campaign already exists
+        // HttpStatus.FORBIDDEN (403) if se a questionnaire does not exist or is already associated
+        // WARNING : 403 will also be returned if user does not have an authorized role
+        var response = webClientHelper.getWebClient(KNOWN_API_PLATINE_QUESTIONNAIRE)
+                .post()
+                .uri("/api/campaigns")
+                .bodyValue(campaignDto)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+        log.info("idCampaign={} -  response={} ",campaignDto.getId(),response);
     }
 }

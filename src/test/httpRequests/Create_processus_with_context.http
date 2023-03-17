@@ -53,11 +53,18 @@ Authorization: Bearer {{auth_token}}
 Content-Type: multipart/form-data; boundary=WebAppBoundary
 
 --WebAppBoundary
-Content-Disposition: form-data; name="file"; filename="protoools-context.json"
+Content-Disposition: form-data; name="file"; filename="contexte.json"
 
-< ./protools-context.json
+< ./protools-contexte-2.json
 
 --WebAppBoundary--
 
+### Récupération de la liste des nomenclatures sur Platine Questionnaire
+
+#GET https://api.questionnaire-particuliers.recette2.insee.fr/api/nomenclatures
+#accept: */*
+#authorization: Bearer  {{auth_token}}
+
 ###
+
 

@@ -2,7 +2,7 @@ package fr.insee.protools.backend.controller;
 
 import fr.insee.protools.backend.service.context.exception.BadContextIOException;
 import fr.insee.protools.backend.service.context.exception.BadContextIncorrectException;
-import fr.insee.protools.backend.service.context.exception.BadContextNotXMLException;
+import fr.insee.protools.backend.service.context.exception.BadContextNotJSONException;
 import fr.insee.protools.backend.service.exception.TaskNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -24,8 +24,8 @@ public class ProtoolsProcessControllerAdvice {
         return new ResponseEntity<>(exception, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({ BadContextNotXMLException.class })
-    public ResponseEntity<String> exceptionContextNotXMLHandler(final HttpServletRequest req, final BadContextNotXMLException exception) {
+    @ExceptionHandler({ BadContextNotJSONException.class })
+    public ResponseEntity<String> exceptionContextNotXMLHandler(final HttpServletRequest req, final BadContextNotJSONException exception) {
         log.error("exceptionContextNotXMLHandler  : "+exception.getMessage());
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.UNSUPPORTED_MEDIA_TYPE);
     }

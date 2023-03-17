@@ -1,4 +1,4 @@
-package fr.insee.protools.backend.service.platine.questionnaire.model;
+package fr.insee.protools.backend.service.platine.questionnaire.dto;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.AllArgsConstructor;

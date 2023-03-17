@@ -9,11 +9,14 @@
     <documentation>This is a process for testing purposes</documentation>
   
     <startEvent id="theStart" />
-    <sequenceFlow id="flow1" sourceRef="theStart" targetRef="task1" />
     <userTask id="task1" name="My Task" />
-    <sequenceFlow id="flow2" sourceRef="task1" targetRef="createPlatineContexte" />
-    <serviceTask id="createPlatineContexte" name="créer le contexte plateforme de collecte web" flowable:delegateExpression="${platineQuestionnaireCreateContextTask}"></serviceTask>
-    <sequenceFlow id="flow3" sourceRef="createPlatineContexte" targetRef="theEnd" />
+    <serviceTask id="createPlatineQuestionnaireContexte" name="créer le contexte plateforme de collecte web (partie Questionnaire)" flowable:delegateExpression="${platineQuestionnaireCreateContextTask}"></serviceTask>
+    <serviceTask id="createPlatinePilotageContexte" name="créer le contexte plateforme de collecte web (partie Pilotage)" flowable:delegateExpression="${platinePilotageCreateContextTask}"></serviceTask>
+
+    <sequenceFlow id="flow1" sourceRef="theStart" targetRef="task1" />
+    <sequenceFlow id="flow2" sourceRef="task1" targetRef="createPlatinePilotageContexte" />
+    <sequenceFlow id="flow3" sourceRef="createPlatinePilotageContexte" targetRef="createPlatineQuestionnaireContexte" />
+    <sequenceFlow id="flow4" sourceRef="createPlatineQuestionnaireContexte" targetRef="theEnd" />
     <endEvent id="theEnd" />
     
   </process>

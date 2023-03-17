@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import fr.insee.protools.backend.service.context.exception.BadContextIOException;
 import fr.insee.protools.backend.service.context.exception.BadContextIncorrectException;
-import fr.insee.protools.backend.service.context.exception.BadContextNotXMLException;
+import fr.insee.protools.backend.service.context.exception.BadContextNotJSONException;
 import fr.insee.protools.backend.service.exception.TaskNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
@@ -54,9 +54,9 @@ public class ContextServiceImpl implements ContextService{
         //Validate file name (JSON)
         var fileExtension = getFileExtension(file.getOriginalFilename());
         if (fileExtension.isEmpty()) {
-            throw new BadContextNotXMLException(String.format("Uploaded file %s has incorrect filename without extension", file.getOriginalFilename()));
+            throw new BadContextNotJSONException(String.format("Uploaded file %s has incorrect filename without extension", file.getOriginalFilename()));
         } else if (!fileExtension.get().equalsIgnoreCase("json")) {
-            throw new BadContextNotXMLException(String.format("Uploaded file %s has incorrect extension. Expected json", file.getOriginalFilename()));
+            throw new BadContextNotJSONException(String.format("Uploaded file %s has incorrect extension. Expected json", file.getOriginalFilename()));
         }
 
 
@@ -66,22 +66,28 @@ public class ContextServiceImpl implements ContextService{
 
             JsonNode rootContext = defaultReader.readTree(content);
 
+            //Variables to store for this process
+            Map<String, Object> variables = new HashMap<>();
+            //Store the raw json as string
+            variables.put(VARNAME_CONTEXT,content);
+
             // Extraction of campaign TIMER START/END dates
-            // TODO : warning : currently we are only handling a single partition
             //        Do extraction of important BPMN Variables in separates functions
-            //TODO : constants
             JsonNode partitions = rootContext.path(PARTITIONS);
             if(partitions.isMissingNode() ){
                 throw new BadContextIncorrectException(String.format("Missing %s in context",PARTITIONS));
             }
-
-            Pair<LocalDateTime, LocalDateTime> startEndDT = getCollectionStartAndEndFromPartition(rootContext);
-            //add these variables to the list
-            Map<String, Object> variables = new HashMap<>();
-            variables.put(VARNAME_CONTEXT,content);
-            //TODO : distinguer les noms dans le json des noms de variables?
-            variables.put(DATE_DEBUT_COLLECTE,startEndDT.getKey());
-            variables.put(DATE_FIN_COLLECTE,startEndDT.getValue());
+            var partitionsIterator = partitions.iterator();
+            while (partitionsIterator.hasNext()){
+                JsonNode partition = partitionsIterator.next();
+                Pair<LocalDateTime, LocalDateTime> startEndDT = getCollectionStartAndEndFromPartition(partition);
+                //add these variables to the list
+                //TODO : distinguer les noms dans le json des noms de variables?
+                String var_keyStart = String.format("partition_%s_%s",partition.path(ID),DATE_DEBUT_COLLECTE);
+                String var_keyEnd = String.format("partition_%s_%s",partition.path(ID),DATE_FIN_COLLECTE);
+                variables.put(var_keyStart,startEndDT.getKey());
+                variables.put(var_keyEnd,startEndDT.getValue());
+            }
 
             //Store in cache
             String processInstanceId = task.getProcessInstanceId();
@@ -125,10 +131,11 @@ public class ContextServiceImpl implements ContextService{
                 .map(f -> f.substring(filename.lastIndexOf(".") + 1));
     }
 
-   private static Pair<LocalDateTime,LocalDateTime> getCollectionStartAndEndFromPartition(JsonNode rootNode){
+    //TODO : soit les json schema permettent de valider les dates, soit il faudra valider toutes les dates comme ça
+   public static Pair<LocalDateTime,LocalDateTime> getCollectionStartAndEndFromPartition(JsonNode partitionNode){
        //TODO : handle multiple partition
-        String start =rootNode.path(PARTITIONS).get(0).get(DATES).get(DATE_DEBUT_COLLECTE).asText();
-       String end   =rootNode.path(PARTITIONS).get(0).get(DATES).get(DATE_DEBUT_COLLECTE).asText();
+       String start =partitionNode.get(DATE_DEBUT_COLLECTE).asText();
+       String end   =partitionNode.get(DATE_DEBUT_COLLECTE).asText();
 
         try {
             LocalDateTime collectionStart = LocalDateTime.parse(start, DateTimeFormatter.ISO_DATE_TIME);
