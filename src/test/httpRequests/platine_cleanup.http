@@ -16,7 +16,7 @@ grant_type=client_credentials&client_id={{client_id}}&client_secret={{client_sec
 %}
 
 ### suppression campagne dans platine
-DELETE https://api.questionnaire-particuliers.recette2.insee.fr/api/campaign/DEM2022X00?force=true
+DELETE https://api-questionnaire-enquetes.developpement2.insee.fr/api/campaign/DEM2022X00?force=true
 accept: */*
 Authorization: Bearer {{auth_token}}
 
