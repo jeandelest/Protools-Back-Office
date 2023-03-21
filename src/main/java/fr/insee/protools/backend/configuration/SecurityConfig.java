@@ -3,6 +3,7 @@ package fr.insee.protools.backend.configuration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -20,10 +21,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static org.springdoc.core.utils.Constants.SPRINGDOC_SWAGGER_UI_ENABLED;
+
 @Configuration
 @EnableWebSecurity
 @Slf4j
 public class SecurityConfig {
+
+        public static final String STARTER_SECURITY_ENABLED = "fr.insee.sndil.starter.security.enabled";
+
 
         // Démonstration avec un rôle protégeant l'accès à un des endpoints
         @Value("${fr.insee.sndil.starter.role.administrateur}")
@@ -38,13 +44,15 @@ public class SecurityConfig {
         @Value("#{'${fr.insee.sndil.starter.security.whitelist-matchers}'.split(',')}")
         private String[] whiteList;
 
+        //Filter with activated security
         @Bean
+        @ConditionalOnProperty(name = STARTER_SECURITY_ENABLED,  havingValue = "true")
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
                 http.csrf().disable()
                     .authorizeHttpRequests(authorize ->
                         authorize.requestMatchers(whiteList).permitAll()
-                                .requestMatchers("/**").permitAll()
+                              //  .requestMatchers("/**").permitAll()
                             .requestMatchers("/starter/healthcheck").permitAll()
                             .requestMatchers("/starter/healthcheckadmin").hasRole(administrateurRole)
                             //We allow admin to access everything
@@ -54,6 +62,21 @@ public class SecurityConfig {
                     .oauth2ResourceServer(oauth2 -> oauth2.jwt().jwtAuthenticationConverter(jwtAuthenticationConverter()));
                 return http.build();
         }
+        //Filter with disabled security
+        // @Bean
+        @ConditionalOnProperty(name = STARTER_SECURITY_ENABLED,  havingValue = "false", matchIfMissing = true)
+        public SecurityFilterChain filterChain_noSecurity(HttpSecurity http) throws Exception {
+
+                http.csrf().disable()
+                        .authorizeHttpRequests(authorize ->
+                                authorize.requestMatchers(whiteList).permitAll()
+                                          .requestMatchers("/**").permitAll()
+                        )
+                        .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
+                        .oauth2ResourceServer(oauth2 -> oauth2.jwt().jwtAuthenticationConverter(jwtAuthenticationConverter()));
+                return http.build();
+        }
+
         @Bean
         JwtAuthenticationConverter jwtAuthenticationConverter() {
                 JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();

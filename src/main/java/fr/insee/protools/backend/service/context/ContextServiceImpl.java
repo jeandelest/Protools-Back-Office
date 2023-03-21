@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VARNAME_CONTEXT;
 import static fr.insee.protools.backend.service.context.ContextConstants.*;
 
 @Service
@@ -73,9 +74,9 @@ public class ContextServiceImpl implements ContextService{
 
             // Extraction of campaign TIMER START/END dates
             //        Do extraction of important BPMN Variables in separates functions
-            JsonNode partitions = rootContext.path(PARTITIONS);
+            JsonNode partitions = rootContext.path(CTX_PARTITIONS);
             if(partitions.isMissingNode() ){
-                throw new BadContextIncorrectException(String.format("Missing %s in context",PARTITIONS));
+                throw new BadContextIncorrectException(String.format("Missing %s in context", CTX_PARTITIONS));
             }
             var partitionsIterator = partitions.iterator();
             while (partitionsIterator.hasNext()){
@@ -83,8 +84,8 @@ public class ContextServiceImpl implements ContextService{
                 Pair<LocalDateTime, LocalDateTime> startEndDT = getCollectionStartAndEndFromPartition(partition);
                 //add these variables to the list
                 //TODO : distinguer les noms dans le json des noms de variables?
-                String var_keyStart = String.format("partition_%s_%s",partition.path(ID),DATE_DEBUT_COLLECTE);
-                String var_keyEnd = String.format("partition_%s_%s",partition.path(ID),DATE_FIN_COLLECTE);
+                String var_keyStart = String.format("partition_%s_%s",partition.path(CTX_PARTITION_ID), CTX_PARTITION_DATE_DEBUT_COLLECTE);
+                String var_keyEnd = String.format("partition_%s_%s",partition.path(CTX_PARTITION_ID), CTX_PARTITION_DATE_FIN_COLLECTE);
                 variables.put(var_keyStart,startEndDT.getKey());
                 variables.put(var_keyEnd,startEndDT.getValue());
             }
@@ -134,8 +135,8 @@ public class ContextServiceImpl implements ContextService{
     //TODO : soit les json schema permettent de valider les dates, soit il faudra valider toutes les dates comme ça
    public static Pair<LocalDateTime,LocalDateTime> getCollectionStartAndEndFromPartition(JsonNode partitionNode){
        //TODO : handle multiple partition
-       String start =partitionNode.get(DATE_DEBUT_COLLECTE).asText();
-       String end   =partitionNode.get(DATE_DEBUT_COLLECTE).asText();
+       String start =partitionNode.get(CTX_PARTITION_DATE_DEBUT_COLLECTE).asText();
+       String end   =partitionNode.get(CTX_PARTITION_DATE_DEBUT_COLLECTE).asText();
 
         try {
             LocalDateTime collectionStart = LocalDateTime.parse(start, DateTimeFormatter.ISO_DATE_TIME);
@@ -144,7 +145,7 @@ public class ContextServiceImpl implements ContextService{
             return Pair.of(collectionStart, collectionEnd);
         }
         catch (DateTimeParseException e){
-            throw new BadContextIncorrectException(String.format("%s or %s cannot be casted to DateTime : %s",DATE_DEBUT_COLLECTE,DATE_FIN_COLLECTE,e.getMessage()));
+            throw new BadContextIncorrectException(String.format("%s or %s cannot be casted to DateTime : %s", CTX_PARTITION_DATE_DEBUT_COLLECTE, CTX_PARTITION_DATE_FIN_COLLECTE,e.getMessage()));
         }
     }
 }

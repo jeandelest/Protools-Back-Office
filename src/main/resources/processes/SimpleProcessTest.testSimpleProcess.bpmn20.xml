@@ -14,9 +14,15 @@
     <serviceTask id="createPlatinePilotageContexte" name="créer le contexte plateforme de collecte web (partie Pilotage)" flowable:delegateExpression="${platinePilotageCreateContextTask}"></serviceTask>
 
     <sequenceFlow id="flow1" sourceRef="theStart" targetRef="task1" />
+    <!-- Flow piloate => End
+      <sequenceFlow id="flow2" sourceRef="task1" targetRef="createPlatinePilotageContexte" />
+      <sequenceFlow id="flow4" sourceRef="createPlatinePilotageContexte" targetRef="theEnd" />
+  -->
+    <!-- Flow pilotage -> Questionnaire->End -->
     <sequenceFlow id="flow2" sourceRef="task1" targetRef="createPlatinePilotageContexte" />
     <sequenceFlow id="flow3" sourceRef="createPlatinePilotageContexte" targetRef="createPlatineQuestionnaireContexte" />
     <sequenceFlow id="flow4" sourceRef="createPlatineQuestionnaireContexte" targetRef="theEnd" />
+
     <endEvent id="theEnd" />
     
   </process>

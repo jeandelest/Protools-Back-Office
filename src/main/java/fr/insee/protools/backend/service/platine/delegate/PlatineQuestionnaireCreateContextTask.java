@@ -3,10 +3,8 @@ package fr.insee.protools.backend.service.platine.delegate;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.JsonNodeType;
 import fr.insee.protools.backend.service.DelegateContextVerifier;
 import fr.insee.protools.backend.service.context.ContextService;
-import fr.insee.protools.backend.service.context.exception.BadContextIncorrectException;
 import fr.insee.protools.backend.service.exception.JsonParsingException;
 import fr.insee.protools.backend.service.nomenclature.NomenclatureService;
 import fr.insee.protools.backend.service.platine.questionnaire.PlatineQuestionnaireService;
@@ -45,7 +43,7 @@ public class PlatineQuestionnaireCreateContextTask implements JavaDelegate, Dele
         checkContextOrThrow(log,execution.getProcessInstanceId(), contextRootNode);
 
         //Get the list of nomenclatures defined in Protools Context
-        var nomenclatureIterator =contextRootNode.get(NOMENCLATURES).elements();
+        var nomenclatureIterator =contextRootNode.get(CTX_NOMENCLATURES).elements();
         if(!nomenclatureIterator.hasNext()){
             log.info("ProcessInstanceId={} - does not declare any nomenclature",execution.getProcessInstanceId());
         }
@@ -53,15 +51,16 @@ public class PlatineQuestionnaireCreateContextTask implements JavaDelegate, Dele
             Set<String> platineExistingNomenclatures = platineQuestionnaireService.getNomenclaturesId();
             while (nomenclatureIterator.hasNext()) {
                 var node = nomenclatureIterator.next();
-                String nomenclatureId  = node.get(ID).asText();
-                String nomenclatureLabel= node.get(LABEL).asText();
-
+                String nomenclatureId  = node.get(CTX_NOMENCLATURE_ID).asText();
+                String nomenclatureCheminRepertoire  = node.get(CTX_NOMENCLATURE_CHEMIN_REPERTOIRE).asText();
+                String nomenclatureLabel= node.get(CTX_NOMENCLATURE_LABEL).asText();
                 //check if platine know this nomenclature
                 if(platineExistingNomenclatures.contains(nomenclatureId)){
                     log.info("ProcessInstanceId={} - nomenclature ID={} already exists in platine",execution.getProcessInstanceId(),nomenclatureId);
                 }
                 else {
-                    String nomenclatureValueStr = nomenclatureService.getNomenclatureContent(nomenclatureId);
+                    //Retrieve the nomenclature
+                    String nomenclatureValueStr = nomenclatureService.getNomenclatureContent(nomenclatureId,nomenclatureCheminRepertoire);
                     JsonNode nomenclatureValue = null;
                     try {
                         nomenclatureValue = objectMapper.readTree(nomenclatureValueStr);
@@ -74,18 +73,18 @@ public class PlatineQuestionnaireCreateContextTask implements JavaDelegate, Dele
                     //TODO : handles the exceptions here?
                     log.info("ProcessInstanceId={} - nomenclature ID={} created in platine",execution.getProcessInstanceId(),nomenclatureId);
                 }
-
             }
         }
 
 
         //Get the list of Questionnaire Models defined in Protools Context
-        var questionnaireModelIterator =contextRootNode.get(QUESTIONNAIRE_MODELS).elements();
+        var questionnaireModelIterator =contextRootNode.get(CTX_QUESTIONNAIRE_MODELS).elements();
         Set<String> questionnaireModelIds = new HashSet<>(); //Used to build the CampaignDto later
         while (questionnaireModelIterator.hasNext()) {
             var node = questionnaireModelIterator.next();
-            String questionnaireId  = node.get(ID).asText();
-            String questionnaireLabel= node.get(LABEL).asText();
+            String questionnaireId  = node.get(CTX_QUESTIONNAIRE_MODEL_ID).asText();
+            String questionnaireCheminRepertoire= node.get(CTX_QUESTIONNAIRE_MODEL_CHEMIN_REPERTOIRE).asText();
+            String questionnaireLabel= node.get(CTX_QUESTIONNAIRE_MODEL_LABEL).asText();
             questionnaireModelIds.add(questionnaireId);
 
             //check if platine know this questionnaire
@@ -94,7 +93,7 @@ public class PlatineQuestionnaireCreateContextTask implements JavaDelegate, Dele
             }
             else {
 
-                String questionnaireValueStr = questionnaireModelService.getQuestionnaireModel(questionnaireId);
+                String questionnaireValueStr = questionnaireModelService.getQuestionnaireModel(questionnaireId,questionnaireCheminRepertoire);
 
                 JsonNode questionnaireValue = null;
                 try {
@@ -103,7 +102,7 @@ public class PlatineQuestionnaireCreateContextTask implements JavaDelegate, Dele
                     throw new JsonParsingException("Error while parsing the json retrieved for Model questionnaireId=" + questionnaireId, e);
                 }
                 //get the list of nomenclatures needed by this Questionnaire Model
-                JsonNode nomenclaturesArrayNode = node.get(REQUIRED_NOMENCLATURES);
+                JsonNode nomenclaturesArrayNode = node.get(CTX_QUESTIONNAIRE_MODEL_REQUIRED_NOMENCLATURES);
                 Set<String> requiredNomenclatures = new HashSet<>(nomenclaturesArrayNode.size());
                 nomenclaturesArrayNode.forEach(jsonNode -> requiredNomenclatures.add(jsonNode.asText()));
 
@@ -114,8 +113,8 @@ public class PlatineQuestionnaireCreateContextTask implements JavaDelegate, Dele
             }
         }
         CampaignDto campaignDto= CampaignDto.builder()
-                .id(contextRootNode.path(ID).textValue())
-                .label(contextRootNode.path(LABEL).textValue())
+                .id(contextRootNode.path(CTX_CAMPAGNE_ID).textValue())
+                .label(contextRootNode.path(CTX_CAMPAGNE_LABEL).textValue())
                 .metadata(createMetadataDto(contextRootNode))
                 .questionnaireIds(questionnaireModelIds)
                 .build();
@@ -131,36 +130,58 @@ public class PlatineQuestionnaireCreateContextTask implements JavaDelegate, Dele
         Set<String> missingNodes = new HashSet<>();
 
         Set<String> requiredNodes =
-                Set.of(ID,LABEL,NOMENCLATURES,QUESTIONNAIRE_MODELS,CTX_METADONNEE);
+                Set.of(CTX_CAMPAGNE_ID, CTX_CAMPAGNE_LABEL, CTX_NOMENCLATURES, CTX_QUESTIONNAIRE_MODELS,CTX_METADONNEE);
         Set<String> requiredMetadonnes =
-                Set.of(LABEL_LONG_OPERATION,OBJECTIFS_COURTS,CARACTERE_OBLIGATOIRE,
-                        NUMERO_VISA,MINISTERE_TUTELLE,PARUTION_JO,DATE_PARUTION_JO,
-                        RESPONSABLE_OPERATIONNEL,RESPONSABLE_TRAITEMENT,ANNEE_VISA,
-                        QUALITE_STATISTIQUE,TEST_NON_LABELLISE);
+                Set.of(CTX_META_LABEL_LONG_OPERATION, CTX_META_OBJECTIFS_COURTS, CTX_META_CARACTERE_OBLIGATOIRE,
+                        CTX_META_NUMERO_VISA, CTX_META_MINISTERE_TUTELLE, CTX_META_PARUTION_JO, CTX_META_DATE_PARUTION_JO,
+                        CTX_META_RESPONSABLE_OPERATIONNEL, CTX_META_RESPONSABLE_TRAITEMENT, CTX_META_ANNEE_VISA,
+                        CTX_META_QUALITE_STATISTIQUE, CTX_META_TEST_NON_LABELLISE);
 
         missingNodes.addAll(computeMissingChildrenMessages(requiredNodes,contextRootNode,getClass()));
         if (contextRootNode.get(CTX_METADONNEE) != null) {
             missingNodes.addAll(computeMissingChildrenMessages(requiredMetadonnes,contextRootNode.path(CTX_METADONNEE),getClass()));
         }
+        //Check on nomenclatures
+        var nomenclatureIterator =contextRootNode.get(CTX_NOMENCLATURES).elements();
+        int i=0;
+        while (nomenclatureIterator.hasNext()) {
+            i++;
+            var nomenclatureNode = nomenclatureIterator.next();
+            if(nomenclatureNode.get(CTX_NOMENCLATURE_ID) == null || nomenclatureNode.get(CTX_NOMENCLATURE_ID).asText().isEmpty()){
+                    missingNodes.add(computeMissingMessage(String.format("%s[%s].%s",CTX_NOMENCLATURES,i,CTX_NOMENCLATURE_ID),getClass()));
+            }
+        }
+
+        //Check on questionnaire models
+        var questionnaireModelsIterator =contextRootNode.get(CTX_QUESTIONNAIRE_MODELS).elements();
+        i=0;
+        while (questionnaireModelsIterator.hasNext()) {
+            i++;
+            var nomenclatureNode = questionnaireModelsIterator.next();
+            if(nomenclatureNode.get(CTX_QUESTIONNAIRE_MODEL_ID) == null || nomenclatureNode.get(CTX_QUESTIONNAIRE_MODEL_ID).asText().isEmpty()){
+                missingNodes.add(computeMissingMessage(String.format("%s[%s].%s",CTX_QUESTIONNAIRE_MODELS,i,CTX_QUESTIONNAIRE_MODEL_ID),getClass()));
+            }
+        }
         return missingNodes;
     }
+
 
 
     private MetadataDto createMetadataDto(JsonNode contextRootNode){
         JsonNode metadataNode = contextRootNode.get(CTX_METADONNEE);
         return MetadataDto.builder()
-                .Enq_LibelleEnquete(metadataNode.path(LABEL_LONG_OPERATION).asText())
-                .Enq_ObjectifsCourts(metadataNode.path(OBJECTIFS_COURTS).asText())
-                .Enq_CaractereObligatoire(metadataNode.path(CARACTERE_OBLIGATOIRE).asText())
-                .Enq_NumeroVisa(metadataNode.path(NUMERO_VISA).asText())
-                .Enq_MinistereTutelle(metadataNode.path(MINISTERE_TUTELLE).asText())
-                .Enq_ParutionJo(metadataNode.path(PARUTION_JO).asText())
-                .Enq_DateParutionJo(metadataNode.path(DATE_PARUTION_JO).asText())
-                .Enq_RespOperationnel(metadataNode.path(RESPONSABLE_OPERATIONNEL).asText())
-                .Enq_RespTraitement(metadataNode.path(RESPONSABLE_TRAITEMENT).asText())
-                .Enq_AnneeVisa(metadataNode.path(ANNEE_VISA).asText())
-                .Enq_QualiteStatistique(metadataNode.path(QUALITE_STATISTIQUE).asText())
-                .Enq_TestNonLabellise(metadataNode.path(TEST_NON_LABELLISE).asText())
+                .Enq_LibelleEnquete(metadataNode.path(CTX_META_LABEL_LONG_OPERATION).asText())
+                .Enq_ObjectifsCourts(metadataNode.path(CTX_META_OBJECTIFS_COURTS).asText())
+                .Enq_CaractereObligatoire(metadataNode.path(CTX_META_CARACTERE_OBLIGATOIRE).asText())
+                .Enq_NumeroVisa(metadataNode.path(CTX_META_NUMERO_VISA).asText())
+                .Enq_MinistereTutelle(metadataNode.path(CTX_META_MINISTERE_TUTELLE).asText())
+                .Enq_ParutionJo(metadataNode.path(CTX_META_PARUTION_JO).asText())
+                .Enq_DateParutionJo(metadataNode.path(CTX_META_DATE_PARUTION_JO).asText())
+                .Enq_RespOperationnel(metadataNode.path(CTX_META_RESPONSABLE_OPERATIONNEL).asText())
+                .Enq_RespTraitement(metadataNode.path(CTX_META_RESPONSABLE_TRAITEMENT).asText())
+                .Enq_AnneeVisa(metadataNode.path(CTX_META_ANNEE_VISA).asText())
+                .Enq_QualiteStatistique(metadataNode.path(CTX_META_QUALITE_STATISTIQUE).asText())
+                .Enq_TestNonLabellise(metadataNode.path(CTX_META_TEST_NON_LABELLISE).asText())
                 .Loi_statistique("")
                 .Loi_rgpd("")
                 .Loi_informatique("")

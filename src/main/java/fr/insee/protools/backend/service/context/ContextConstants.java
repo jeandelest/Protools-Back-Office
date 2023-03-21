@@ -2,102 +2,76 @@ package fr.insee.protools.backend.service.context;
 
 public final class ContextConstants {
 
-    //Name of the variable in flowable
-    public static final String VARNAME_CONTEXT="context";
 
     // Campaign context constants - Metadata
-    public static final String CTX_METADONNEE = "Metadonnees";
-    public static final String TEST_NON_LABELLISE = "TestNonLabellise";
-    public static final String ID = "id";
-    public static final String LABEL = "label";
-    public static final String CONTEXTE = "Contexte";
-    public static final String LABEL_LONG_OPERATION = "LabelLongOperation";
-    public static final String LABEL_COURT_OPERATION = "LabelCourtOperation";
-    public static final String SERIE_ID = "SerieId";
-    public static final String ANNEE = "Annee";
-    public static final String PERIODICITE = "Periodicite";
-    public static final String PERIODE = "Periode";
+    public static final String CTX_CAMPAGNE_ID = "id";
+    public static final String CTX_CAMPAGNE_LABEL = "label";
+    public static final String CTX_CAMPAGNE_CONTEXTE = "contexte"; //ex: household...
+    public static final String CTX_OPERATION_ID = "operationId";
+    public static final String CTX_SERIE_ID = "serieId";
+    public static final String CTX_ANNEE = "annee";
+    public static final String CTX_PERIODE = "periode";
+    public static final String CTX_PERIODICITE = "periodicite";
+
+    //Metadonnees Part
+    public static final String CTX_METADONNEE = "metadonnees";
+    public static final String CTX_META_LABEL_COURT_OPERATION = "operationLabelCourt";
+    public static final String CTX_META_LABEL_LONG_OPERATION = "operationLabelLong";
+    public static final String CTX_META_SERIE_LABEL_COURT = "serieLabelCourt";
+    public static final String CTX_META_SERIE_LABEL_LONG = "serieLabelLong";
+    public static final String CTX_META_PORTAIL_MES_ENQUETE_OPERATION = "portailMesEnquetesOperation";
+    public static final String CTX_META_OBJECTIFS_COURTS = "objectifsCourts";
+    public static final String CTX_META_OBJECTIFS_LONGS = "objectifsLongs";
+    public static final String CTX_META_CARACTERE_OBLIGATOIRE = "caractereObligatoire";
+    public static final String CTX_META_QUALITE_STATISTIQUE = "qualiteStatistique";
+    public static final String CTX_META_TEST_NON_LABELLISE = "testNonLabellise";
+    public static final String CTX_META_ANNEE_VISA = "anneeVisa";
+    public static final String CTX_META_NUMERO_VISA = "numeroVisa";
+    public static final String CTX_META_MINISTERE_TUTELLE = "ministereTutelle";
+    public static final String CTX_META_PARUTION_JO = "parutionJo";
+    public static final String CTX_META_DATE_PARUTION_JO = "dateParutionJo";
+    public static final String CTX_META_RESPONSABLE_OPERATIONNEL =  "responsableOperationnel";
+    public static final String CTX_META_RESPONSABLE_TRAITEMENT = "responsableTraitement";
+    public static final String CTX_META_CNIS_URL = "cnisUrl";
+    public static final String CTX_META_DIFFUSION_URL = "diffusionUrl";
+    public static final String CTX_META_NOTICE_URL = "noticeUrl";
+    public static final String CTX_META_SPECIMENT_URL = "specimenUrl";
+    //Metadonnees proprietaire
+    public static final String CTX_META_PROPRIETAIRE_ID = "proprietaireId";
+    public static final String CTX_META_PROPRIETAIRE_LABEL = "proprietaireLabel";
+    public static final String CTX_META_PROPRIETAIRE_LOGO = "proprietaireLogo";
+    //Metadonnees assistance
+    public static final String CTX_META_ASSITANCE_ID = "assistanceId";
+    public static final String CTX_META_ASSISTANCE_LABEL = "assistanceLabel";
+    public static final String CTX_META_ASSITANCE_TEL = "assistanceTel2";
+    public static final String CTX_META_ASSISTANCE_MAIL = "assitanceMail2";
+    public static final String CTX_META_ASSISTANCE_PAYS = "asssistancePays";
+    public static final String CTX_META_ASSISTANCE_NUMERO_VOIE = "assistanceNumeroVoie";
+    public static final String CTX_META_ASSISTANCE_NOM_VOIE = "assistanceNomVoie";
+    public static final String CTX_META_ASSISTANCE_COMMUNE = "assistanceCommune";
+    public static final String CTX_META_ASSISTANCE_CODE_POSTAL = "assistanceCodePostal";
+
+    // Partitions
+    public static final String CTX_PARTITIONS = "partitions";
+    public static final String CTX_PARTITION_ID = "id";
+    public static final String CTX_PARTITION_LABEL = "label";
+    public static final String CTX_PARTITION_DATE_DEBUT_COLLECTE = "dateDebutCollecte";
+    public static final String CTX_PARTITION_DATE_FIN_COLLECTE = "dateFinCollecte";
+    public static final String CTX_PARTITION_DATE_RETOUR = "dateRetour";
 
 
-    public static final String LABEL_LONG_SERIE = "LabelLongSerie";
-    public static final String LABEL_COURT_SERIE = "LabelCourtSerie";
-    public static final String OBJECTIFS_LONGS = "ObjectifsLongs";
-    public static final String OBJECTIFS_COURTS = "ObjectifsCourts";
-    public static final String PORTAIL_MES_ENQUETE_OPERATION = "PortailMesEnquetesOperation";
-    public static final String CARACTERE_OBLIGATOIRE = "CaractereObligatoire";
-    public static final String QUALITE_STATISTIQUE = "QualiteStatistique";
-    public static final String ANNEE_VISA = "AnneeVisa";
-    public static final String NUMERO_VISA = "NumeroVisa";
-    public static final String MINISTERE_TUTELLE = "MinistereTutelle";
-    public static final String PARUTION_JO = "ParutionJo";
-    public static final String DATE_PARUTION_JO = "DateParutionJo";
-    public static final String RESPONSABLE_OPERATIONNEL = "ResponsableOperationnel";
-    public static final String RESPONSABLE_TRAITEMENT = "ResponsableTraitement";
-    public static final String PRESTATAIRE = "Prestataire";
-    public static final String LOGO_PRESTATAIRE = "LogoPrestataire";
-    public static final String URL_ENQUETE = "UrlEnquete";
-    public static final String SERVICE_COLLECTEUR_SIGNATAIRE_FONCTION = "ServiceCollecteurSignataireFonction";
-    public static final String SERVICE_COLLECTEUR_SIGNATAIRE_NOM = "ServiceCollecteurSignataireNom";
-    public static final String MAIL_RESPONSABLE_OPERATIONNEL = "MailResponsableOperationnel";
-    public static final String CNIS_URL = "CnisUrl";
-    public static final String DIFFUSION_URL = "DiffusionUrl";
-    public static final String NOTICE_URL = "NoticeUrl";
-    public static final String SPECIMENT_URL = "SpecimenUrl";
-    public static final String ID_PROPRIETAIRE = "IdProprietaire";
-    public static final String LABEL_PROPRIETAIRE = "LabelProprietaire";
-    public static final String LOGO_PROPRIETAIRE = "LogoProprietaire";
+    // QuestionnaireModels
+    public static final String CTX_QUESTIONNAIRE_MODELS = "questionnaireModels";
+    public static final String CTX_QUESTIONNAIRE_MODEL_ID = "id";
+    public static final String CTX_QUESTIONNAIRE_MODEL_CHEMIN_REPERTOIRE = "cheminRepertoire";
+    public static final String CTX_QUESTIONNAIRE_MODEL_LABEL = "label";
+    public static final String CTX_QUESTIONNAIRE_MODEL_REQUIRED_NOMENCLATURES = "requiredNomenclatureIds";
 
-
-    public static final String SUPPORT = "Support";
-
-    // Campaign context constants - Partitions
-    public static final String PARTITIONS = "Partitions";
-    public static final String LABEL_PARTITION = "label";
-    public static final String DATE_DEBUT_COLLECTE = "DateDebutCollecte";
-    public static final String DATE_FIN_COLLECTE = "DateFinCollecte";
-    public static final String DATE_RETOUR = "DateRetour";
-    public static final String COMMUNICATIONS = "Communications";
-    public static final String COMMUNICATION = "Communication";
-    public static final String PROTOCOLE = "Protocole";
-    public static final String MOYEN_COMMUNICATION = "MoyenCommunication";
-    public static final String TYPE_COMMUNICATION = "TypeCommunication";
-    public static final String MODELE_COMMUNICATION = "ModeleCommunication";
-    public static final String ECHEANCE = "Echeance";
-    public static final String OBJET = "Objet";
-    public static final String MAIL_RETOUR = "MailRetour";
-    public static final String CONTENU_COMMUNICATION = "ContenuCommunication";
-
-    public static final String ID_ASSITANCE = "IdAssistance";
-    public static final String LABEL_ASSITANCE = "LabelAssistance";
-    public static final String TEL_ASSITANCE = "TelAssistance2";
-    public static final String MAIL_ASSITANCE = "MailAssistance2";
-    public static final String PAYS_ASSITANCE = "PaysAssistance";
-    public static final String NUMERO_VOIE_ASSITANCE = "NumeroVoieAssistance";
-    public static final String NOM_VOIE_ASSITANCE = "NomVoieAssistance";
-
-    public static final String COMMUNE_ASSITANCE = "CommuneAssistance";
-    public static final String CODE_POSTAL_ASSITANCE = "CodePostalAssistance";
-
-
-
-    // Campaign context constants - QuestionnairesModel
-    public static final String QUESTIONNAIRE_MODEL = "QuestionnaireModel";
-    public static final String REQUIRED_NOMENCLATURES = "RequiredNomenclatures";
-
-    // Campaign context constants - Naming
-    public static final String NOMENCLATURE = "Nomenclature";
-
-    // Context constants - Variables - UNIT
-    public static final String SAMPLE = "Sample";
-    public static final String UNIT = "Unit";
-    public static final String SEXE = "sexe";
-    public static final String MAIL = "mail";
-    public static final String INTERNAUTE = "internaute";
-
-
-    public static final String NOMENCLATURES = "Nomenclatures";
-    public static final String QUESTIONNAIRE_MODELS = "QuestionnaireModels";
-
+    // Nomenclatures
+    public static final String CTX_NOMENCLATURES = "nomenclatures";
+    public static final String CTX_NOMENCLATURE_ID = "id";
+    public static final String CTX_NOMENCLATURE_CHEMIN_REPERTOIRE = "cheminRepertoire";
+    public static final String CTX_NOMENCLATURE_LABEL = "label";
     //Constants class should not be initialized
     private ContextConstants() {
     }

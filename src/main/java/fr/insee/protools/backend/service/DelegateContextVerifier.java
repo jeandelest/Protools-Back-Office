@@ -7,9 +7,10 @@ import org.slf4j.Logger;
 import java.util.HashSet;
 import java.util.Set;
 
-import static fr.insee.protools.backend.service.context.ContextConstants.*;
-import static fr.insee.protools.backend.service.context.ContextConstants.QUESTIONNAIRE_MODELS;
-
+/**
+ * All the delegate referenced in BPMN should implement this interface so we can make BPMN introspection to validate
+ * that the provided context contains all the required information for every task of the BPMN
+ */
 public interface DelegateContextVerifier {
 
     Set<String> getContextErrors(JsonNode contextRootNode);

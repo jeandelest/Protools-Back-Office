@@ -1,5 +1,6 @@
 package fr.insee.protools.backend.service.nomenclature;
 
+import fr.insee.protools.backend.service.context.exception.BadContextIncorrectException;
 import fr.insee.protools.backend.webclient.WebClientHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,9 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.ErrorResponse;
 import reactor.core.publisher.Mono;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import static org.apache.commons.io.FilenameUtils.getPath;
 
@@ -26,12 +30,20 @@ public class NomenclatureFromStaticWebsiteServiceImpl implements NomenclatureSer
     @Autowired WebClientHelper webClientHelper;
 
     @Override
-    public String getNomenclatureContent(String nomenclatureId) {
+    public String getNomenclatureContent(String nomenclatureId, String folderPath) {
         log.info("Get Naming Model Value for nomenclatureId={}", nomenclatureId);
+        String uri;
+        String fullPath=nomenclatureUri+ "/" +folderPath+"/"+nomenclatureId + ".json";
+        try {
+           uri = new URI(fullPath).normalize().toString();
+        } catch (URISyntaxException e) {
+            throw new BadContextIncorrectException(String.format("nomenclatureId=[%s] - folderPath=[%s] : fullPath=[%s] cannot be parsed: Error=[%s]"
+            ,nomenclatureId,folderPath,fullPath, e.getMessage()));
+        }
         return
                 webClientHelper.getWebClientForFile()
                         .get()
-                        .uri(nomenclatureUri + "/" + nomenclatureId + ".json")
+                        .uri(uri)
                         .retrieve()
                         .bodyToMono(String.class)
                         .block();
