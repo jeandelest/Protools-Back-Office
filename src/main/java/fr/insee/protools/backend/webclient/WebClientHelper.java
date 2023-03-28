@@ -14,7 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Component;
 import org.springframework.web.ErrorResponse;
-import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
@@ -47,7 +46,8 @@ public class WebClientHelper {
                                                 //Keycloak error?
                                                 errorMsg="HttpStatus.UNAUTHORIZED. WWW-Authenticate=["+String.join("",clientResponse.headers().header("WWW-Authenticate")+"]");
                                         }
-                                        if(clientResponse.headers().contentType().equals(MediaType.APPLICATION_JSON)) {
+                                        if(clientResponse.headers().contentType().isPresent()
+                                                && clientResponse.headers().contentType().get().equals(MediaType.APPLICATION_JSON)) {
                                                 String finalErrorHeaders = errorMsg;
                                                 result = clientResponse.bodyToMono(ErrorResponse.class)
                                                         .flatMap(error -> {

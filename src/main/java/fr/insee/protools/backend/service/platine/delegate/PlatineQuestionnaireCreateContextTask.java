@@ -130,7 +130,7 @@ public class PlatineQuestionnaireCreateContextTask implements JavaDelegate, Dele
         Set<String> missingNodes = new HashSet<>();
 
         Set<String> requiredNodes =
-                Set.of(CTX_CAMPAGNE_ID, CTX_CAMPAGNE_LABEL, CTX_NOMENCLATURES, CTX_QUESTIONNAIRE_MODELS,CTX_METADONNEE);
+                Set.of(CTX_CAMPAGNE_ID, CTX_CAMPAGNE_LABEL, CTX_NOMENCLATURES, CTX_QUESTIONNAIRE_MODELS, CTX_METADONNEES);
         Set<String> requiredMetadonnes =
                 Set.of(CTX_META_LABEL_LONG_OPERATION, CTX_META_OBJECTIFS_COURTS, CTX_META_CARACTERE_OBLIGATOIRE,
                         CTX_META_NUMERO_VISA, CTX_META_MINISTERE_TUTELLE, CTX_META_PARUTION_JO, CTX_META_DATE_PARUTION_JO,
@@ -138,8 +138,8 @@ public class PlatineQuestionnaireCreateContextTask implements JavaDelegate, Dele
                         CTX_META_QUALITE_STATISTIQUE, CTX_META_TEST_NON_LABELLISE);
 
         missingNodes.addAll(computeMissingChildrenMessages(requiredNodes,contextRootNode,getClass()));
-        if (contextRootNode.get(CTX_METADONNEE) != null) {
-            missingNodes.addAll(computeMissingChildrenMessages(requiredMetadonnes,contextRootNode.path(CTX_METADONNEE),getClass()));
+        if (contextRootNode.get(CTX_METADONNEES) != null) {
+            missingNodes.addAll(computeMissingChildrenMessages(requiredMetadonnes,contextRootNode.path(CTX_METADONNEES),getClass()));
         }
         //Check on nomenclatures
         var nomenclatureIterator =contextRootNode.get(CTX_NOMENCLATURES).elements();
@@ -168,7 +168,7 @@ public class PlatineQuestionnaireCreateContextTask implements JavaDelegate, Dele
 
 
     private MetadataDto createMetadataDto(JsonNode contextRootNode){
-        JsonNode metadataNode = contextRootNode.get(CTX_METADONNEE);
+        JsonNode metadataNode = contextRootNode.get(CTX_METADONNEES);
         return MetadataDto.builder()
                 .Enq_LibelleEnquete(metadataNode.path(CTX_META_LABEL_LONG_OPERATION).asText())
                 .Enq_ObjectifsCourts(metadataNode.path(CTX_META_OBJECTIFS_COURTS).asText())

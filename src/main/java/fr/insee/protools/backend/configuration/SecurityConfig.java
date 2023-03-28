@@ -21,8 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.springdoc.core.utils.Constants.SPRINGDOC_SWAGGER_UI_ENABLED;
-
 @Configuration
 @EnableWebSecurity
 @Slf4j

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.insee.protools.backend.service.platine.questionnaire.dto.CampaignDto;
 import fr.insee.protools.backend.service.platine.questionnaire.dto.NomenclatureDto;
 import fr.insee.protools.backend.service.platine.questionnaire.dto.QuestionnaireModelCreateDto;
-import fr.insee.protools.backend.service.platine.questionnaire.dto.QuestionnaireModelDto;
 import fr.insee.protools.backend.webclient.WebClientHelper;
 import fr.insee.protools.backend.webclient.exception.runtime.WebClient4xxException;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +34,7 @@ public class PlatineQuestionnaireService {
                         .retrieve()
                         .bodyToMono(NomenclatureDto.class)
                         .block();
-        log.info("nomenclatureId={} - response={}",nomenclatureId,response);
+        log.info("postNomenclature: nomenclatureId={} - response={}",nomenclatureId,response);
         //TODO:  gestion des erreurs (ex: 403...)
     }
 
@@ -52,7 +51,7 @@ public class PlatineQuestionnaireService {
                         .retrieve()
                         .bodyToMono(QuestionnaireModelCreateDto.class)
                         .block();
-        log.info("questionnaireId={} - response={}",questionnaireId,response);
+        log.info("postQuestionnaireModel: questionnaireId={} - response={}",questionnaireId,response);
         //TODO:  gestion des erreurs (ex: 403...)
 
     }
@@ -64,7 +63,7 @@ public class PlatineQuestionnaireService {
                 .retrieve()
                 .bodyToMono(List.class)
                 .block();
-        log.info("response= {}",response);
+        log.info("getNomenclaturesId: response= {}",response);
         return response.stream().collect(Collectors.toSet());
     }
 
@@ -88,7 +87,7 @@ public class PlatineQuestionnaireService {
                 throw e;
             }
         }
-        log.info("idQuestionnaireModel={} - modelExists={}",idQuestionnaireModel,modelExists);
+        log.info("questionnaireModelExists: idQuestionnaireModel={} - modelExists={}",idQuestionnaireModel,modelExists);
         return modelExists;
     }
 
@@ -104,6 +103,6 @@ public class PlatineQuestionnaireService {
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
-        log.info("idCampaign={} -  response={} ",campaignDto.getId(),response);
+        log.info("postCampaign: idCampaign={} -  response={} ",campaignDto.getId(),response);
     }
 }

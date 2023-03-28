@@ -10,8 +10,6 @@ import org.springframework.stereotype.Service;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import static org.apache.commons.io.FilenameUtils.getPath;
-
 /**
  * This service retrieves the nomenclatures from a static website based on a property uri
  */
@@ -29,7 +27,7 @@ public class QuestionnaireModelFromStaticWebsiteServiceImpl implements Questionn
     public String getQuestionnaireModel(String questionnaireModelId, String folderPath){
         log.info("Get Questionnaire Model Value for questionnaireModelId={}", questionnaireModelId);
         String uri;
-        String fullPath=questionnaireModelUri+ "/" +folderPath+"/"+folderPath + ".json";
+        String fullPath=questionnaireModelUri+ "/" +folderPath+"/"+questionnaireModelId + ".json";
         try {
             uri = new URI(fullPath).normalize().toString();
         } catch (URISyntaxException e) {

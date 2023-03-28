@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions
   xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
-  xmlns:activiti="http://activiti.org/bpmn"
   xmlns:flowable="http://flowable.org/bpmn"
   targetNamespace="Examples">
 
@@ -14,15 +13,19 @@
     <serviceTask id="createPlatinePilotageContexte" name="créer le contexte plateforme de collecte web (partie Pilotage)" flowable:delegateExpression="${platinePilotageCreateContextTask}"></serviceTask>
 
     <sequenceFlow id="flow1" sourceRef="theStart" targetRef="task1" />
-    <!-- Flow piloate => End
+    <!-- Flow Pilotage => End
       <sequenceFlow id="flow2" sourceRef="task1" targetRef="createPlatinePilotageContexte" />
       <sequenceFlow id="flow4" sourceRef="createPlatinePilotageContexte" targetRef="theEnd" />
   -->
-    <!-- Flow pilotage -> Questionnaire->End -->
+    <!-- Flow pilotage -> Questionnaire->End-->
     <sequenceFlow id="flow2" sourceRef="task1" targetRef="createPlatinePilotageContexte" />
     <sequenceFlow id="flow3" sourceRef="createPlatinePilotageContexte" targetRef="createPlatineQuestionnaireContexte" />
     <sequenceFlow id="flow4" sourceRef="createPlatineQuestionnaireContexte" targetRef="theEnd" />
 
+    <!-- Flow Questionnaire  -> End
+    <sequenceFlow id="flow2" sourceRef="task1" targetRef="createPlatineQuestionnaireContexte" />
+    <sequenceFlow id="flow4" sourceRef="createPlatineQuestionnaireContexte" targetRef="theEnd" />
+ -->
     <endEvent id="theEnd" />
     
   </process>

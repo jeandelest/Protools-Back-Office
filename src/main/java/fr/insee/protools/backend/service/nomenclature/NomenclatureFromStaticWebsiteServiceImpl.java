@@ -5,16 +5,10 @@ import fr.insee.protools.backend.webclient.WebClientHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
-import org.springframework.web.ErrorResponse;
-import reactor.core.publisher.Mono;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-
-import static org.apache.commons.io.FilenameUtils.getPath;
 
 /**
  * This service retrieves the nomenclatures from a static website based on a property uri

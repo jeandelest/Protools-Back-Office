@@ -1,7 +1,7 @@
 package fr.insee.protools.backend.service.platine.pilotage.dto;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 
 @Data

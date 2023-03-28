@@ -1,8 +1,7 @@
 package fr.insee.protools.backend.service.platine.pilotage.dto;
+
 import lombok.Builder;
 import lombok.Data;
-
-import java.util.Date;
 
 @Data
 @Builder

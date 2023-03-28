@@ -1,9 +1,6 @@
 package fr.insee.protools.backend.flowable.engine;
 
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-
 import org.flowable.engine.ProcessEngine;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.TaskService;
@@ -12,6 +9,8 @@ import org.flowable.engine.test.FlowableTest;
 import org.flowable.task.api.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @FlowableTest
 class SimpleProcessTest {

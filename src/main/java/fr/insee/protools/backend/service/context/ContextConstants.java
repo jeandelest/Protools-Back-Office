@@ -7,14 +7,16 @@ public final class ContextConstants {
     public static final String CTX_CAMPAGNE_ID = "id";
     public static final String CTX_CAMPAGNE_LABEL = "label";
     public static final String CTX_CAMPAGNE_CONTEXTE = "contexte"; //ex: household...
-    public static final String CTX_OPERATION_ID = "operationId";
-    public static final String CTX_SERIE_ID = "serieId";
-    public static final String CTX_ANNEE = "annee";
-    public static final String CTX_PERIODE = "periode";
-    public static final String CTX_PERIODICITE = "periodicite";
+
 
     //Metadonnees Part
-    public static final String CTX_METADONNEE = "metadonnees";
+    public static final String CTX_METADONNEES = "metadonnees";
+    public static final String CTX_META_OPERATION_ID = "operationId";//== platine : Survey
+    public static final String CTX_META_SERIE_ID = "serieId"; //== platine : source
+    public static final String CTX_META_ANNEE = "annee";
+    public static final String CTX_META_PERIODE = "periode";
+    public static final String CTX_META_PERIODICITE = "periodicite";
+
     public static final String CTX_META_LABEL_COURT_OPERATION = "operationLabelCourt";
     public static final String CTX_META_LABEL_LONG_OPERATION = "operationLabelLong";
     public static final String CTX_META_SERIE_LABEL_COURT = "serieLabelCourt";
@@ -41,15 +43,15 @@ public final class ContextConstants {
     public static final String CTX_META_PROPRIETAIRE_LABEL = "proprietaireLabel";
     public static final String CTX_META_PROPRIETAIRE_LOGO = "proprietaireLogo";
     //Metadonnees assistance
-    public static final String CTX_META_ASSITANCE_ID = "assistanceId";
-    public static final String CTX_META_ASSISTANCE_LABEL = "assistanceLabel";
-    public static final String CTX_META_ASSITANCE_TEL = "assistanceTel2";
-    public static final String CTX_META_ASSISTANCE_MAIL = "assitanceMail2";
-    public static final String CTX_META_ASSISTANCE_PAYS = "asssistancePays";
-    public static final String CTX_META_ASSISTANCE_NUMERO_VOIE = "assistanceNumeroVoie";
-    public static final String CTX_META_ASSISTANCE_NOM_VOIE = "assistanceNomVoie";
-    public static final String CTX_META_ASSISTANCE_COMMUNE = "assistanceCommune";
-    public static final String CTX_META_ASSISTANCE_CODE_POSTAL = "assistanceCodePostal";
+    public static final String CTX_META_ASSISTANCE_NIVO2_ID = "assistanceNiveau2Id";
+    public static final String CTX_META_ASSISTANCE_NIVO2_LABEL = "assistanceNiveau2Label";
+    public static final String CTX_META_ASSISTANCE_NIVO2_TEL = "assistanceNiveau2Tel";
+    public static final String CTX_META_ASSISTANCE_NIVO2_MAIL = "assitanceNiveau2Mail";
+    public static final String CTX_META_ASSISTANCE_NIVO2_PAYS = "asssistanceNiveau2Pays";
+    public static final String CTX_META_ASSISTANCE_NIVO2_NUMERO_VOIE = "assistanceNiveau2NumeroVoie";
+    public static final String CTX_META_ASSISTANCE_NIVO2_NOM_VOIE = "assistanceNiveau2NomVoie";
+    public static final String CTX_META_ASSISTANCE_NIVO2_COMMUNE = "assistanceNiveau2Commune";
+    public static final String CTX_META_ASSISTANCE_NIVO2_CODE_POSTAL = "assistanceNiveau2CodePostal";
 
     // Partitions
     public static final String CTX_PARTITIONS = "partitions";

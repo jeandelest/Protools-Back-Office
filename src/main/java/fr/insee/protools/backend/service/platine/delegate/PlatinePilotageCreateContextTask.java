@@ -44,14 +44,16 @@ public class PlatinePilotageCreateContextTask implements JavaDelegate, DelegateC
         Set<String> requiredNodes =
                 Set.of(
                         //Global & Campaign
-                        CTX_METADONNEE, CTX_CAMPAGNE_ID, CTX_CAMPAGNE_LABEL, CTX_SERIE_ID, CTX_ANNEE, CTX_PERIODE, CTX_PARTITIONS, CTX_PERIODICITE
+                        CTX_METADONNEES, CTX_CAMPAGNE_ID, CTX_CAMPAGNE_LABEL, CTX_PARTITIONS
                 );
         Set<String> requiredMetadonnees =
                 //For source/Serie
-                Set.of(CTX_META_SERIE_LABEL_LONG, CTX_META_SERIE_LABEL_COURT, CTX_META_PORTAIL_MES_ENQUETE_OPERATION,
+                Set.of(//Campaign
+                        CTX_META_OPERATION_ID, CTX_META_SERIE_ID,CTX_META_ANNEE,CTX_META_PERIODE,CTX_META_PERIODICITE,
+                        CTX_META_SERIE_LABEL_LONG, CTX_META_SERIE_LABEL_COURT, CTX_META_PORTAIL_MES_ENQUETE_OPERATION,
                         //For support
-                        CTX_META_ASSITANCE_ID, CTX_META_ASSISTANCE_LABEL, CTX_META_ASSITANCE_TEL, CTX_META_ASSISTANCE_MAIL, CTX_META_ASSISTANCE_PAYS,
-                        CTX_META_ASSISTANCE_NUMERO_VOIE, CTX_META_ASSISTANCE_NOM_VOIE, CTX_META_ASSISTANCE_COMMUNE, CTX_META_ASSISTANCE_CODE_POSTAL,
+                        CTX_META_ASSISTANCE_NIVO2_ID, CTX_META_ASSISTANCE_NIVO2_LABEL, CTX_META_ASSISTANCE_NIVO2_TEL, CTX_META_ASSISTANCE_NIVO2_MAIL, CTX_META_ASSISTANCE_NIVO2_PAYS,
+                        CTX_META_ASSISTANCE_NIVO2_NUMERO_VOIE, CTX_META_ASSISTANCE_NIVO2_NOM_VOIE, CTX_META_ASSISTANCE_NIVO2_COMMUNE, CTX_META_ASSISTANCE_NIVO2_CODE_POSTAL,
                         //For Owner
                         CTX_META_PROPRIETAIRE_ID, CTX_META_PROPRIETAIRE_LABEL, CTX_META_MINISTERE_TUTELLE, CTX_META_PROPRIETAIRE_LOGO,
                         //For Source/serie
@@ -62,7 +64,7 @@ public class PlatinePilotageCreateContextTask implements JavaDelegate, DelegateC
         Set<String> requiredPartition =
                 Set.of(CTX_PARTITION_LABEL, CTX_PARTITION_DATE_DEBUT_COLLECTE, CTX_PARTITION_DATE_FIN_COLLECTE, CTX_PARTITION_DATE_RETOUR);
         results.addAll(computeMissingChildrenMessages(requiredNodes,contextRootNode,getClass()));
-        results.addAll(computeMissingChildrenMessages(requiredMetadonnees,contextRootNode.path(CTX_METADONNEE),getClass()));
+        results.addAll(computeMissingChildrenMessages(requiredMetadonnees,contextRootNode.path(CTX_METADONNEES),getClass()));
 
         var partitionIterator =contextRootNode.get(CTX_PARTITIONS).elements();
         //Partitions
@@ -73,12 +75,14 @@ public class PlatinePilotageCreateContextTask implements JavaDelegate, DelegateC
 
 
         //Check value of PERIODE Enum
-        if(! EnumUtils.isValidEnum(PeriodEnum.class, contextRootNode.path(CTX_PERIODE).asText())){
-            results.add(computeIncorrectMessage(CTX_PERIODE,"Incorrect enum value. Expected one of "+ Arrays.toString(PeriodEnum.values()),getClass()));
+        String periode = contextRootNode.path(CTX_METADONNEES).path(CTX_META_PERIODE).asText();
+        if(! EnumUtils.isValidEnum(PeriodEnum.class, periode)){
+            results.add(computeIncorrectEnumMessage(CTX_META_PERIODE,periode,Arrays.toString(PeriodEnum.values()),getClass()));
         }
         //Check value of PERIODICITE Enum
-        if(! EnumUtils.isValidEnum(PeriodicityEnum.class, contextRootNode.path(CTX_PERIODICITE).asText())){
-            results.add(computeIncorrectMessage(CTX_PERIODICITE,"Incorrect enum value. Expected one of "+ Arrays.toString(PeriodEnum.values()),getClass()));
+        String periodicite = contextRootNode.path(CTX_METADONNEES).path(CTX_META_PERIODICITE).asText();
+        if(! EnumUtils.isValidEnum(PeriodicityEnum.class, periodicite)){
+            results.add(computeIncorrectEnumMessage(CTX_META_PERIODICITE,periodicite,Arrays.toString(PeriodicityEnum.values()),getClass()));
         }
         return results;
     }
@@ -111,15 +115,15 @@ public class PlatinePilotageCreateContextTask implements JavaDelegate, DelegateC
 
     private static SupportDto computeSupportDto(JsonNode contextRootNode) {
         return SupportDto.builder()
-                .id(CTX_META_ASSITANCE_ID)
-                .label(CTX_META_ASSISTANCE_LABEL)
-                .phoneNumber(CTX_META_ASSITANCE_TEL)
-                .mail(CTX_META_ASSISTANCE_MAIL)
-                .countryName(CTX_META_ASSISTANCE_PAYS)
-                .streetNumber(CTX_META_ASSISTANCE_NUMERO_VOIE)
-                .streetName(CTX_META_ASSISTANCE_NOM_VOIE)
-                .city(CTX_META_ASSISTANCE_COMMUNE)
-                .zipCode(CTX_META_ASSISTANCE_CODE_POSTAL)
+                .id(CTX_META_ASSISTANCE_NIVO2_ID)
+                .label(CTX_META_ASSISTANCE_NIVO2_LABEL)
+                .phoneNumber(CTX_META_ASSISTANCE_NIVO2_TEL)
+                .mail(CTX_META_ASSISTANCE_NIVO2_MAIL)
+                .countryName(CTX_META_ASSISTANCE_NIVO2_PAYS)
+                .streetNumber(CTX_META_ASSISTANCE_NIVO2_NUMERO_VOIE)
+                .streetName(CTX_META_ASSISTANCE_NIVO2_NOM_VOIE)
+                .city(CTX_META_ASSISTANCE_NIVO2_COMMUNE)
+                .zipCode(CTX_META_ASSISTANCE_NIVO2_CODE_POSTAL)
                 .build();
     }
 
@@ -137,11 +141,11 @@ public class PlatinePilotageCreateContextTask implements JavaDelegate, DelegateC
     }
 
     private static SourceDto computeSourceDto(JsonNode contextRootNode) {
-        String serieId = contextRootNode.path(CTX_SERIE_ID).asText();
-        String labelLongSerie = contextRootNode.path(CTX_METADONNEE).path(CTX_META_SERIE_LABEL_LONG).asText();
-        String labelCourtSerie = contextRootNode.path(CTX_METADONNEE).path(CTX_META_SERIE_LABEL_COURT).asText();
-        PeriodicityEnum periodicite = PeriodicityEnum.valueOf(contextRootNode.path(CTX_PERIODICITE).asText());
-        boolean mandatoryMySurveys = contextRootNode.path(CTX_METADONNEE).path(CTX_META_PORTAIL_MES_ENQUETE_OPERATION).asBoolean();
+        String serieId              = contextRootNode.path(CTX_METADONNEES).path(CTX_META_SERIE_ID).asText();
+        String labelLongSerie       = contextRootNode.path(CTX_METADONNEES).path(CTX_META_SERIE_LABEL_LONG).asText();
+        String labelCourtSerie      = contextRootNode.path(CTX_METADONNEES).path(CTX_META_SERIE_LABEL_COURT).asText();
+        PeriodicityEnum periodicite = PeriodicityEnum.valueOf(contextRootNode.path(CTX_METADONNEES).path(CTX_META_PERIODICITE).asText());
+        boolean mandatoryMySurveys  = contextRootNode.path(CTX_METADONNEES).path(CTX_META_PORTAIL_MES_ENQUETE_OPERATION).asBoolean();
         
         return SourceDto.builder()
                 .id(serieId)
@@ -153,9 +157,9 @@ public class PlatinePilotageCreateContextTask implements JavaDelegate, DelegateC
     }
 
     private static SurveyDto computeSurveyDto(JsonNode contextRootNode) {
-        String id = contextRootNode.path(CTX_OPERATION_ID).asText();
-        String serieId = contextRootNode.path(CTX_SERIE_ID).asText();
-        int year = contextRootNode.path(CTX_ANNEE).asInt();
+        String id = contextRootNode.path(CTX_METADONNEES).path(CTX_META_OPERATION_ID).asText();
+        String serieId = contextRootNode.path(CTX_METADONNEES).path(CTX_META_SERIE_ID).asText();
+        int year = contextRootNode.path(CTX_METADONNEES).path(CTX_META_ANNEE).asInt();
         String labelLongOperation = contextRootNode.path(CTX_META_LABEL_LONG_OPERATION).asText();
         String labelCourtOperation = contextRootNode.path(CTX_META_LABEL_COURT_OPERATION).asText();
         String labelLongObjectifs = contextRootNode.path(CTX_META_OBJECTIFS_LONGS).asText();
@@ -199,10 +203,10 @@ public class PlatinePilotageCreateContextTask implements JavaDelegate, DelegateC
 
     private static CampaignDto computeCampaignDto(JsonNode contextRootNode) {
         String campaignId = contextRootNode.path(CTX_CAMPAGNE_ID).asText();
-        String serieId = contextRootNode.path(CTX_SERIE_ID).asText();
-        int year = contextRootNode.path(CTX_ANNEE).asInt();
+        String serieId = contextRootNode.path(CTX_METADONNEES).path(CTX_META_SERIE_ID).asText();
+        int year = contextRootNode.path(CTX_METADONNEES).path(CTX_META_ANNEE).asInt();
         String campaignLabel = contextRootNode.path(CTX_CAMPAGNE_LABEL).asText();
-        PeriodEnum period = PeriodEnum.valueOf(contextRootNode.path(CTX_PERIODE).asText());
+        PeriodEnum period = PeriodEnum.valueOf(contextRootNode.path(CTX_METADONNEES).path(CTX_META_PERIODE).asText());
         return CampaignDto.builder()
                 .id(campaignId)
                 .surveyId(serieId)

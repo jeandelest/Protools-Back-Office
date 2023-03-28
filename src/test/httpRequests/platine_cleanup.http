@@ -10,15 +10,33 @@ grant_type=client_credentials&client_id={{client_id}}&client_secret={{client_sec
     });
   client.global.set("auth_token", response.body.access_token);
   client.log("TOKEN = "+client.global.get("auth_token"));
-    client.log("RESPONSE = "+client.global);
-
-
+  client.log("RESPONSE = "+client.global);
+  client.global.set("CAMPAGNE_ID", "DEM2022X00");
+  client.global.set("PARTITION_ID", "1");
+  client.global.set("SU_ID", "1");
+  client.global.set("SOURCE_ID", "DEM");
 %}
 
-### suppression campagne dans platine
-DELETE https://api-questionnaire-enquetes.developpement2.insee.fr/api/campaign/DEM2022X00?force=true
+### suppression campagne dans platine questionnaire (et des SU rattachées)
+DELETE https://api-questionnaire-enquetes.developpement2.insee.fr/api/campaign/{{CAMPAGNE_ID}}?force=true
 accept: */*
 Authorization: Bearer {{auth_token}}
 
-###
+### suppression campagne dans platine pilotage (part1)
+DELETE https://api-pilotage-enquetes.developpement2.insee.fr/api/partitionings/{{PARTITION_ID}}
+accept: */*
+Authorization: Bearer {{auth_token}}
+
+### suppression campagne dans platine pilotage (part2)
+DELETE https://api-pilotage-enquetes.developpement2.insee.fr/api/sources/{{SOURCE_ID}}
+accept: */*
+Authorization: Bearer {{auth_token}}
+
+
+### Suppression SU dans platine pilotage
+DELETE https://api-pilotage-enquetes.developpement2.insee.fr/api/survey-units/{{SU_ID}}
+accept: */*
+Authorization: Bearer {{auth_token}}
+
+
 

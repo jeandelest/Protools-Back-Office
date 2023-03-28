@@ -3,12 +3,9 @@ package fr.insee.protools.backend.service.platine.pilotage;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.insee.protools.backend.service.platine.pilotage.dto.MetadataDto;
-import fr.insee.protools.backend.service.platine.questionnaire.dto.CampaignDto;
 import fr.insee.protools.backend.webclient.WebClientHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 
 import static fr.insee.protools.backend.webclient.configuration.ApiConfigProperties.KNOWN_API.KNOWN_API_PLATINE_PILOTAGE;
