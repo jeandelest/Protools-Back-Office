@@ -8,8 +8,11 @@ import fr.insee.protools.backend.service.context.ContextService;
 import fr.insee.protools.backend.service.exception.JsonParsingException;
 import fr.insee.protools.backend.service.nomenclature.NomenclatureService;
 import fr.insee.protools.backend.service.platine.questionnaire.PlatineQuestionnaireService;
-import fr.insee.protools.backend.service.platine.questionnaire.dto.CampaignDto;
-import fr.insee.protools.backend.service.platine.questionnaire.dto.MetadataDto;
+import fr.insee.protools.backend.service.platine.questionnaire.dto.MetadataConstants;
+import fr.insee.protools.backend.service.platine.questionnaire.dto.campaign.CampaignDto;
+import fr.insee.protools.backend.service.platine.questionnaire.dto.campaign.MetadataValue;
+import fr.insee.protools.backend.service.platine.questionnaire.dto.campaign.MetadataValueItem;
+import fr.insee.protools.backend.service.platine.questionnaire.dto.campaign.MetadataVariables;
 import fr.insee.protools.backend.service.questionnaire_model.QuestionnaireModelService;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -18,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static fr.insee.protools.backend.service.context.ContextConstants.*;
@@ -167,24 +171,31 @@ public class PlatineQuestionnaireCreateContextTask implements JavaDelegate, Dele
 
 
 
-    private MetadataDto createMetadataDto(JsonNode contextRootNode){
+    private MetadataValue createMetadataDto(JsonNode contextRootNode){
         JsonNode metadataNode = contextRootNode.get(CTX_METADONNEES);
-        return MetadataDto.builder()
-                .Enq_LibelleEnquete(metadataNode.path(CTX_META_LABEL_LONG_OPERATION).asText())
-                .Enq_ObjectifsCourts(metadataNode.path(CTX_META_OBJECTIFS_COURTS).asText())
-                .Enq_CaractereObligatoire(metadataNode.path(CTX_META_CARACTERE_OBLIGATOIRE).asText())
-                .Enq_NumeroVisa(metadataNode.path(CTX_META_NUMERO_VISA).asText())
-                .Enq_MinistereTutelle(metadataNode.path(CTX_META_MINISTERE_TUTELLE).asText())
-                .Enq_ParutionJo(metadataNode.path(CTX_META_PARUTION_JO).asText())
-                .Enq_DateParutionJo(metadataNode.path(CTX_META_DATE_PARUTION_JO).asText())
-                .Enq_RespOperationnel(metadataNode.path(CTX_META_RESPONSABLE_OPERATIONNEL).asText())
-                .Enq_RespTraitement(metadataNode.path(CTX_META_RESPONSABLE_TRAITEMENT).asText())
-                .Enq_AnneeVisa(metadataNode.path(CTX_META_ANNEE_VISA).asText())
-                .Enq_QualiteStatistique(metadataNode.path(CTX_META_QUALITE_STATISTIQUE).asText())
-                .Enq_TestNonLabellise(metadataNode.path(CTX_META_TEST_NON_LABELLISE).asText())
-                .Loi_statistique("")
-                .Loi_rgpd("")
-                .Loi_informatique("")
+        return MetadataValue.builder()
+                .value(MetadataVariables.builder()
+                        .variables(
+                                List.of(
+                                        new MetadataValueItem(MetadataConstants.Enq_LibelleEnquete,metadataNode.path(CTX_META_LABEL_LONG_OPERATION).asText()),
+                                        new MetadataValueItem(MetadataConstants.Enq_ObjectifsCourts,metadataNode.path(CTX_META_OBJECTIFS_COURTS).asText()),
+                                        new MetadataValueItem(MetadataConstants.Enq_CaractereObligatoire,metadataNode.path(CTX_META_CARACTERE_OBLIGATOIRE).asBoolean()),
+                                        new MetadataValueItem(MetadataConstants.Enq_NumeroVisa,metadataNode.path(CTX_META_NUMERO_VISA).asText()),
+                                        new MetadataValueItem(MetadataConstants.Enq_MinistereTutelle,metadataNode.path(CTX_META_MINISTERE_TUTELLE).asText()),
+                                        new MetadataValueItem(MetadataConstants.Enq_ParutionJo,metadataNode.path(CTX_META_PARUTION_JO).asBoolean()),
+                                        new MetadataValueItem(MetadataConstants.Enq_DateParutionJo,metadataNode.path(CTX_META_DATE_PARUTION_JO).asText()),
+                                        new MetadataValueItem(MetadataConstants.Enq_RespOperationnel,metadataNode.path(CTX_META_RESPONSABLE_OPERATIONNEL).asText()),
+                                        new MetadataValueItem(MetadataConstants.Enq_RespTraitement,metadataNode.path(CTX_META_RESPONSABLE_TRAITEMENT).asText()),
+                                        new MetadataValueItem(MetadataConstants.Enq_AnneeVisa,metadataNode.path(CTX_META_ANNEE_VISA).asLong()),
+                                        new MetadataValueItem(MetadataConstants.Enq_QualiteStatistique,metadataNode.path(CTX_META_QUALITE_STATISTIQUE).asBoolean()),
+                                        new MetadataValueItem(MetadataConstants.Enq_TestNonLabellise,metadataNode.path(CTX_META_TEST_NON_LABELLISE).asBoolean()),
+                                        new MetadataValueItem(MetadataConstants.Loi_statistique,""),
+                                        new MetadataValueItem(MetadataConstants.Loi_rgpd,""),
+                                        new MetadataValueItem(MetadataConstants.Loi_informatique,"")
+                                        )
+                        )
+                        .inseeContext(contextRootNode.path(CTX_CAMPAGNE_CONTEXTE).asText())
+                        .build())
                 .build();
     }
 

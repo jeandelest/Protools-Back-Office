@@ -17,21 +17,21 @@ public interface DelegateContextVerifier {
 
     Set<String> getContextErrors(JsonNode contextRootNode);
 
-    default String computeMissingMessage(String missingElement, Class classUsingThisElement){
+    default String computeMissingMessage(String missingElement, Class<?> classUsingThisElement){
         return String.format("Class=%s : Missing Context element name=%s ", classUsingThisElement.getSimpleName(),missingElement);
     }
 
-    default String computeIncorrectMessage(String incorrectElement, String message,Class classUsingThisElement){
+    default String computeIncorrectMessage(String incorrectElement, String message,Class<?> classUsingThisElement){
         return String.format("Class=%s : Wrong Context element name=%s - message=%s ", classUsingThisElement.getSimpleName(),incorrectElement,message);
     }
-    default String computeIncorrectEnumMessage(String incorrectElement,String value, String enumValues, Class classUsingThisElement){
+    default String computeIncorrectEnumMessage(String incorrectElement,String value, String enumValues, Class<?> classUsingThisElement){
         return String.format("Class=%s : Incorrect enum name=%s - value=[%s] - expected one of %s"
                 ,classUsingThisElement.getSimpleName()
                 ,incorrectElement
                 , value
                 ,Arrays.toString(PeriodEnum.values()));
     }
-    default Set<String> computeMissingChildrenMessages(Set<String> requiredChildren, JsonNode parentNode, Class classUsingThisElement){
+    default Set<String> computeMissingChildrenMessages(Set<String> requiredChildren, JsonNode parentNode, Class<?> classUsingThisElement){
         Set<String> missingNodes = new HashSet<>();
         for (String child: requiredChildren  ) {
             if(parentNode.get(child) == null){

@@ -1,4 +1,4 @@
-package fr.insee.protools.backend.service.platine.questionnaire.dto;
+package fr.insee.protools.backend.service.platine.questionnaire.dto.campaign;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
@@ -12,11 +12,12 @@ import java.util.Set;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CampaignDto {
-	public String id;
+	String id;
+	String label;
+	Set<String> questionnaireIds;
+	MetadataValue metadata;
 
-	public String label;
 
-	public Set<String> questionnaireIds;
 
-	public MetadataDto metadata;
+
 }

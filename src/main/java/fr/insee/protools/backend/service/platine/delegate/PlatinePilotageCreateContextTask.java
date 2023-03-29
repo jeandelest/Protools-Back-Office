@@ -128,10 +128,10 @@ public class PlatinePilotageCreateContextTask implements JavaDelegate, DelegateC
     }
 
     private static OwnerDto computeOwnerDto(JsonNode contextRootNode) {
-        String idProprietaire = contextRootNode.path(CTX_META_PROPRIETAIRE_ID).asText();
-        String labelProprietaire = contextRootNode.path(CTX_META_PROPRIETAIRE_LABEL).asText();
-        String ministereTutelle = contextRootNode.path(CTX_META_MINISTERE_TUTELLE).asText();
-        String logoProprietaire = contextRootNode.path(CTX_META_PROPRIETAIRE_LOGO).asText();
+        String idProprietaire =     contextRootNode.path(CTX_METADONNEES).path(CTX_META_PROPRIETAIRE_ID).asText();
+        String labelProprietaire =  contextRootNode.path(CTX_METADONNEES).path(CTX_META_PROPRIETAIRE_LABEL).asText();
+        String ministereTutelle =   contextRootNode.path(CTX_METADONNEES).path(CTX_META_MINISTERE_TUTELLE).asText();
+        String logoProprietaire =   contextRootNode.path(CTX_METADONNEES).path(CTX_META_PROPRIETAIRE_LOGO).asText();
         return OwnerDto.builder()
                 .id(idProprietaire)
                 .label(labelProprietaire)
@@ -157,19 +157,20 @@ public class PlatinePilotageCreateContextTask implements JavaDelegate, DelegateC
     }
 
     private static SurveyDto computeSurveyDto(JsonNode contextRootNode) {
-        String id = contextRootNode.path(CTX_METADONNEES).path(CTX_META_OPERATION_ID).asText();
-        String serieId = contextRootNode.path(CTX_METADONNEES).path(CTX_META_SERIE_ID).asText();
-        int year = contextRootNode.path(CTX_METADONNEES).path(CTX_META_ANNEE).asInt();
-        String labelLongOperation = contextRootNode.path(CTX_META_LABEL_LONG_OPERATION).asText();
-        String labelCourtOperation = contextRootNode.path(CTX_META_LABEL_COURT_OPERATION).asText();
-        String labelLongObjectifs = contextRootNode.path(CTX_META_OBJECTIFS_LONGS).asText();
-        String labelCourtObjectifs = contextRootNode.path(CTX_META_OBJECTIFS_COURTS).asText();
-        String numeroVisa = contextRootNode.path(CTX_META_NUMERO_VISA).asText();
-        String cnisUrl = contextRootNode.path(CTX_META_CNIS_URL).asText();
-        String diffusionUrl = contextRootNode.path(CTX_META_DIFFUSION_URL).asText();
-        String noticeUrl = contextRootNode.path(CTX_META_NOTICE_URL).asText();
-        String specimenUrl = contextRootNode.path(CTX_META_SPECIMENT_URL).asText();
-        //boolean mandatory = contextRootNode.path(CARACTERE_OBLIGATOIRE).asBoolean();
+        JsonNode medatadata = contextRootNode.path(CTX_METADONNEES);
+        String id = medatadata.path(CTX_META_OPERATION_ID).asText();
+        String serieId = medatadata.path(CTX_META_SERIE_ID).asText();
+        int year = medatadata.path(CTX_META_ANNEE).asInt();
+        String labelLongOperation = medatadata.path(CTX_META_LABEL_LONG_OPERATION).asText();
+        String labelCourtOperation = medatadata.path(CTX_META_LABEL_COURT_OPERATION).asText();
+        String labelLongObjectifs = medatadata.path(CTX_META_OBJECTIFS_LONGS).asText();
+        String labelCourtObjectifs = medatadata.path(CTX_META_OBJECTIFS_COURTS).asText();
+        String numeroVisa = medatadata.path(CTX_META_NUMERO_VISA).asText();
+        String cnisUrl = medatadata.path(CTX_META_CNIS_URL).asText();
+        String diffusionUrl = medatadata.path(CTX_META_DIFFUSION_URL).asText();
+        String noticeUrl = medatadata.path(CTX_META_NOTICE_URL).asText();
+        String specimenUrl = medatadata.path(CTX_META_SPECIMENT_URL).asText();
+        //boolean mandatory = medatadata.path(CARACTERE_OBLIGATOIRE).asBoolean();
         return SurveyDto.builder()
                 .id(id)
                 .sourceId(serieId)
