@@ -73,7 +73,7 @@ Content-Type: application/json
 
 ### GET user créee
 
-GET https://api.gestion-comptes-utilisateurs.recette.insee.fr/v2/realms/questionnaire-particulier/storages/default/users?firstName=test-protools&size=20&offset=0&typeRecherche=AND
+GET https://api.gestion-comptes-utilisateurs.recette.insee.fr/v2/realms/questionnaire-particuliers/storages/default/users?firstName=test-protools&size=20&offset=0&typeRecherche=AND
 accept: application/json
 Authorization: Bearer {{auth_token}}
 
