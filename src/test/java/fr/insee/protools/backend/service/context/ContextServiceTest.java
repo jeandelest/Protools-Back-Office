@@ -33,7 +33,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @FlowableTest
-public class ContextServiceTest {
+class ContextServiceTest {
     final static String ressourceFolder = ClassUtils.convertClassNameToResourcePath(ContextServiceTest.class.getPackageName());
 
     @Spy

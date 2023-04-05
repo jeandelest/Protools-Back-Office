@@ -50,13 +50,13 @@ class PlatineQuestionnaireCreateContextTaskTest {
     @InjectMocks
     PlatineQuestionnaireCreateContextTask platineQuestTask;
 
-    private String nomenclatureContent1="{\"content\": \"content1\"}";
-    private String nomenclatureContent2="{\"content\": \"content2\"}";
-    private String nomenclatureID1="ID1";
-    private String nomenclatureID2="ID2";
-    private String nomenclatureLabel1="label1";
-    private String nomenclatureLabel2="label2";
-    private String questionnaireContent1 ="{\"id\": \"TOTO\"}";
+    private final String nomenclatureContent1="{\"content\": \"content1\"}";
+    private final String nomenclatureContent2="{\"content\": \"content2\"}";
+    private final String nomenclatureID1="ID1";
+    private final String nomenclatureID2="ID2";
+    private final String nomenclatureLabel1="label1";
+    private final String nomenclatureLabel2="label2";
+    private final String questionnaireContent1 ="{\"id\": \"TOTO\"}";
 
     private JsonNode initContexteMock(String contexteToLoad){
         JsonNode contextRootNode = ProtoolsTestUtils.asJsonNode(contexteToLoad);
@@ -126,7 +126,7 @@ class PlatineQuestionnaireCreateContextTaskTest {
     void initQuestionnaireModels_should_return_list_of_modelsId() {
         // preconditions
         JsonNode contextRootNode = ProtoolsTestUtils.asJsonNode(platine_context_json);
-        assertEquals(contextRootNode.path(ContextConstants.CTX_QUESTIONNAIRE_MODELS).size(),1, "Context error : expected exactly one questionnaire model");
+        assertEquals(1,contextRootNode.path(ContextConstants.CTX_QUESTIONNAIRE_MODELS).size(), "Context error : expected exactly one questionnaire model");
         when(questionnaireModelService.getQuestionnaireModel(anyString(), anyString())).thenReturn(questionnaireContent1);
 
         //Execute the unit under test
@@ -163,7 +163,7 @@ class PlatineQuestionnaireCreateContextTaskTest {
         DelegateExecution execution = mock(DelegateExecution.class);
         when(execution.getProcessInstanceId()).thenReturn("1");
         JsonNode contextRootNode = initContexteMock(platine_context_json);
-        assertEquals(contextRootNode.path(ContextConstants.CTX_QUESTIONNAIRE_MODELS).size(),1, "Context error : expected exactly one questionnaire model");
+        assertEquals(1,contextRootNode.path(ContextConstants.CTX_QUESTIONNAIRE_MODELS).size(), "Context error : expected exactly one questionnaire model");
         String idQuestionnaireModel = contextRootNode.path(ContextConstants.CTX_QUESTIONNAIRE_MODELS).get(0).path(CTX_QUESTIONNAIRE_MODEL_ID).asText();
         String labelQuestionnaireModel = contextRootNode.path(ContextConstants.CTX_QUESTIONNAIRE_MODELS).get(0).path(CTX_QUESTIONNAIRE_MODEL_LABEL).asText();
         String repertoireQuestionnaireModel = contextRootNode.path(ContextConstants.CTX_QUESTIONNAIRE_MODELS).get(0).path(CTX_QUESTIONNAIRE_MODEL_CHEMIN_REPERTOIRE).asText();

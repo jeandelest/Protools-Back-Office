@@ -7,8 +7,6 @@ import fr.insee.protools.backend.service.context.ContextService;
 import fr.insee.protools.backend.service.context.exception.BadContextIncorrectException;
 import fr.insee.protools.backend.service.platine.pilotage.PlatinePilotageService;
 import fr.insee.protools.backend.service.platine.pilotage.dto.MetadataDto;
-import fr.insee.protools.backend.service.platine.questionnaire.dto.campaign.CampaignDto;
-import fr.insee.protools.backend.service.platine.questionnaire.dto.campaign.MetadataValue;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.test.FlowableTest;
 import org.junit.jupiter.api.Test;
@@ -20,10 +18,8 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.util.ClassUtils;
 
-import java.io.IOException;
 import java.util.List;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -31,7 +27,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @FlowableTest
-public class PlatinePilotageCreateContextTaskTest {
+class PlatinePilotageCreateContextTaskTest {
     final static String ressourceFolder = ClassUtils.convertClassNameToResourcePath(PlatineQuestionnaireCreateContextTaskTest.class.getPackageName());
     final static String platine_context_json = ressourceFolder+"/protools-contexte-platine.json";
     final static String platine_context_incorrect_json = ressourceFolder+"/protools-contexte-platine-incorrect.json";
@@ -46,10 +42,9 @@ public class PlatinePilotageCreateContextTaskTest {
 
     String dumyId="ID1";
 
-    private JsonNode initContexteMock(String contexteToLoad){
+    private void initContexteMock(String contexteToLoad){
         JsonNode contextRootNode = ProtoolsTestUtils.asJsonNode(contexteToLoad);
         when(protoolsContext.getContextByProcessInstance(anyString())).thenReturn(contextRootNode);
-        return contextRootNode;
     }
 
     @Test

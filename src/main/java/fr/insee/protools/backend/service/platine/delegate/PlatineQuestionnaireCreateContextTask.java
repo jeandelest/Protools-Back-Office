@@ -151,7 +151,6 @@ public class PlatineQuestionnaireCreateContextTask implements JavaDelegate, Dele
         if(contextRootNode==null){
             return Set.of(String.format("Class=%s : Context is missing ", this.getClass().getSimpleName()));
         }
-        Set<String> missingNodes = new HashSet<>();
 
         Set<String> requiredNodes =
                 Set.of(CTX_CAMPAGNE_ID, CTX_CAMPAGNE_LABEL, CTX_NOMENCLATURES, CTX_QUESTIONNAIRE_MODELS, CTX_METADONNEES);
@@ -161,7 +160,7 @@ public class PlatineQuestionnaireCreateContextTask implements JavaDelegate, Dele
                         CTX_META_RESPONSABLE_OPERATIONNEL, CTX_META_RESPONSABLE_TRAITEMENT, CTX_META_ANNEE_VISA,
                         CTX_META_QUALITE_STATISTIQUE, CTX_META_TEST_NON_LABELLISE);
 
-        missingNodes.addAll(computeMissingChildrenMessages(requiredNodes,contextRootNode,getClass()));
+        Set<String> missingNodes = new HashSet<>(computeMissingChildrenMessages(requiredNodes, contextRootNode, getClass()));
         if (contextRootNode.get(CTX_METADONNEES) != null) {
             missingNodes.addAll(computeMissingChildrenMessages(requiredMetadonnes,contextRootNode.path(CTX_METADONNEES),getClass()));
         }
