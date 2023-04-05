@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -27,7 +28,7 @@ public class NomenclatureFromStaticWebsiteServiceImpl implements NomenclatureSer
     public String getNomenclatureContent(String nomenclatureId, String folderPath) {
         log.info("Get Naming Model Value for nomenclatureId={}", nomenclatureId);
         String uri;
-        String fullPath=nomenclatureUri+ "/" +folderPath+"/"+nomenclatureId + ".json";
+        String fullPath=nomenclatureUri+ File.separator +folderPath+ File.separator+nomenclatureId + ".json";
         try {
            uri = new URI(fullPath).normalize().toString();
         } catch (URISyntaxException e) {
@@ -41,6 +42,5 @@ public class NomenclatureFromStaticWebsiteServiceImpl implements NomenclatureSer
                         .retrieve()
                         .bodyToMono(String.class)
                         .block();
-        //TODO : should we validate response json content ?
     }
 }

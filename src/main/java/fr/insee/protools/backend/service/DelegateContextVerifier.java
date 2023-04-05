@@ -42,6 +42,9 @@ public interface DelegateContextVerifier {
     }
 
     default void checkContextOrThrow(Logger log,String processInstanceId, JsonNode contextRootNode) {
+        if(contextRootNode==null)
+            throw new BadContextIncorrectException(String.format("ProcessInstanceId=%s - context is missing", processInstanceId));
+
         var errors = getContextErrors(contextRootNode);
         if(!errors.isEmpty()){
             for (var msg: errors) {

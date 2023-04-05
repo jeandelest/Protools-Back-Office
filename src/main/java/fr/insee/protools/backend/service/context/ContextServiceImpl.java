@@ -43,7 +43,7 @@ public class ContextServiceImpl implements ContextService{
     private static final ObjectMapper mapper = new ObjectMapper();
     private static final ObjectReader defaultReader = mapper.reader(); // maybe with configs
 
-    private static  Map<String, JsonNode> contextCache = new ConcurrentHashMap<>();
+    private static final Map<String, JsonNode> contextCache = new ConcurrentHashMap<>();
     @Override
     public void processContextFileAndCompleteTask(MultipartFile file, String taskId) {
         //Check if task exists
@@ -78,16 +78,14 @@ public class ContextServiceImpl implements ContextService{
             if(partitions.isMissingNode() ){
                 throw new BadContextIncorrectException(String.format("Missing %s in context", CTX_PARTITIONS));
             }
-            var partitionsIterator = partitions.iterator();
-            while (partitionsIterator.hasNext()){
-                JsonNode partition = partitionsIterator.next();
+            for (JsonNode partition : partitions) {
                 Pair<LocalDateTime, LocalDateTime> startEndDT = getCollectionStartAndEndFromPartition(partition);
                 //add these variables to the list
                 //TODO : distinguer les noms dans le json des noms de variables?
-                String var_keyStart = String.format("partition_%s_%s",partition.path(CTX_PARTITION_ID), CTX_PARTITION_DATE_DEBUT_COLLECTE);
-                String var_keyEnd = String.format("partition_%s_%s",partition.path(CTX_PARTITION_ID), CTX_PARTITION_DATE_FIN_COLLECTE);
-                variables.put(var_keyStart,startEndDT.getKey());
-                variables.put(var_keyEnd,startEndDT.getValue());
+                String varKeyStart = String.format("partition_%s_%s", partition.path(CTX_PARTITION_ID), CTX_PARTITION_DATE_DEBUT_COLLECTE);
+                String varKeyEnd = String.format("partition_%s_%s", partition.path(CTX_PARTITION_ID), CTX_PARTITION_DATE_FIN_COLLECTE);
+                variables.put(varKeyStart, startEndDT.getKey());
+                variables.put(varKeyEnd, startEndDT.getValue());
             }
 
             //Store in cache
@@ -134,7 +132,6 @@ public class ContextServiceImpl implements ContextService{
 
     //TODO : soit les json schema permettent de valider les dates, soit il faudra valider toutes les dates comme ça
    public static Pair<LocalDateTime,LocalDateTime> getCollectionStartAndEndFromPartition(JsonNode partitionNode){
-       //TODO : handle multiple partition
        String start =partitionNode.get(CTX_PARTITION_DATE_DEBUT_COLLECTE).asText();
        String end   =partitionNode.get(CTX_PARTITION_DATE_DEBUT_COLLECTE).asText();
 

@@ -37,7 +37,7 @@ public class PlatinePilotageService {
                 String json = new ObjectMapper().writeValueAsString(dto);
                 log.debug(json);
             } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
+                log.error("Could not parse json");
             }
         }
     }

@@ -20,14 +20,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(value = StarterController.class)
 //@ActiveProfiles(value = "test")
-public class StarterControllerTest {
+class StarterControllerTest {
     @MockBean
     JwtDecoder jwtDecoder;
 
 
     @Autowired private MockMvc mockMvc;
     @Test
-    public void shouldReturnDefaultMessage() throws Exception {
+    void shouldReturnDefaultMessage() throws Exception {
         this.mockMvc.perform(get("/starter/healthcheck").with(jwt()))
                 .andDo(print()).andExpect(status().isOk())
                 .andExpect(content().string(containsString("OK")));

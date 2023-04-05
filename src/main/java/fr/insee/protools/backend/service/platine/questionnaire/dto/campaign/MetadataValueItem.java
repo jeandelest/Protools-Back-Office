@@ -1,8 +1,10 @@
 package fr.insee.protools.backend.service.platine.questionnaire.dto.campaign;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class MetadataValueItem{
 	String name;
 	Object value;

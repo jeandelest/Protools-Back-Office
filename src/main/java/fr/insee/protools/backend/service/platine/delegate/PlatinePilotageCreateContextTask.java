@@ -40,6 +40,9 @@ public class PlatinePilotageCreateContextTask implements JavaDelegate, DelegateC
     }
     @Override
     public Set<String> getContextErrors(JsonNode contextRootNode) {
+        if(contextRootNode==null){
+            return Set.of("Context is missing");
+        }
         Set<String> results=new HashSet<>();
         Set<String> requiredNodes =
                 Set.of(
@@ -91,7 +94,6 @@ public class PlatinePilotageCreateContextTask implements JavaDelegate, DelegateC
 
         Set<MetadataDto> result = new HashSet<>();
         String campainId = contextRootNode.path(CTX_CAMPAGNE_ID).asText();
-        //TODO : ici on gère différentes partitions
         //Get the list of partitions
         var partitionIterator =contextRootNode.get(CTX_PARTITIONS).elements();
 
@@ -114,16 +116,18 @@ public class PlatinePilotageCreateContextTask implements JavaDelegate, DelegateC
     }
 
     private static SupportDto computeSupportDto(JsonNode contextRootNode) {
+        JsonNode medatadata = contextRootNode.path(CTX_METADONNEES);
+
         return SupportDto.builder()
-                .id(CTX_META_ASSISTANCE_NIVO2_ID)
-                .label(CTX_META_ASSISTANCE_NIVO2_LABEL)
-                .phoneNumber(CTX_META_ASSISTANCE_NIVO2_TEL)
-                .mail(CTX_META_ASSISTANCE_NIVO2_MAIL)
-                .countryName(CTX_META_ASSISTANCE_NIVO2_PAYS)
-                .streetNumber(CTX_META_ASSISTANCE_NIVO2_NUMERO_VOIE)
-                .streetName(CTX_META_ASSISTANCE_NIVO2_NOM_VOIE)
-                .city(CTX_META_ASSISTANCE_NIVO2_COMMUNE)
-                .zipCode(CTX_META_ASSISTANCE_NIVO2_CODE_POSTAL)
+                .id(medatadata.path(CTX_META_ASSISTANCE_NIVO2_ID).asText())
+                .label(medatadata.path(CTX_META_ASSISTANCE_NIVO2_LABEL).asText())
+                .phoneNumber(medatadata.path(CTX_META_ASSISTANCE_NIVO2_TEL).asText())
+                .mail(medatadata.path(CTX_META_ASSISTANCE_NIVO2_MAIL).asText())
+                .countryName(medatadata.path(CTX_META_ASSISTANCE_NIVO2_PAYS).asText())
+                .streetNumber(medatadata.path(CTX_META_ASSISTANCE_NIVO2_NUMERO_VOIE).asText())
+                .streetName(medatadata.path(CTX_META_ASSISTANCE_NIVO2_NOM_VOIE).asText())
+                .city(medatadata.path(CTX_META_ASSISTANCE_NIVO2_COMMUNE).asText())
+                .zipCode(medatadata.path(CTX_META_ASSISTANCE_NIVO2_CODE_POSTAL).asText())
                 .build();
     }
 
@@ -170,7 +174,6 @@ public class PlatinePilotageCreateContextTask implements JavaDelegate, DelegateC
         String diffusionUrl = medatadata.path(CTX_META_DIFFUSION_URL).asText();
         String noticeUrl = medatadata.path(CTX_META_NOTICE_URL).asText();
         String specimenUrl = medatadata.path(CTX_META_SPECIMENT_URL).asText();
-        //boolean mandatory = medatadata.path(CARACTERE_OBLIGATOIRE).asBoolean();
         return SurveyDto.builder()
                 .id(id)
                 .sourceId(serieId)
@@ -186,7 +189,6 @@ public class PlatinePilotageCreateContextTask implements JavaDelegate, DelegateC
                 .noticeUrl(noticeUrl)
                 .specimenUrl(specimenUrl)
                 .communication("")
- //               .mandatory(mandatory)
                 .build();
     }
 

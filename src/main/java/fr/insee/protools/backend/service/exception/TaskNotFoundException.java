@@ -8,6 +8,7 @@ import org.flowable.task.api.Task;
  * 
  * @author Prabhat Tripathi
  */
+@java.lang.SuppressWarnings("squid:MaximumInheritanceDepth")
 public class TaskNotFoundException extends FlowableObjectNotFoundException {
 
     /** the id of the task */

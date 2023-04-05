@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatusCode;
 
 public class WebClient4xxException extends RuntimeException {
 
-    private HttpStatusCode errorCode;
+    private final HttpStatusCode errorCode;
     public WebClient4xxException(String message, HttpStatusCode errorCode) {
         super(message);
         this.errorCode=errorCode;

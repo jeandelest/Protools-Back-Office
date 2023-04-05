@@ -45,7 +45,6 @@ public class PlatineQuestionnaireService {
         QuestionnaireModelCreateDto response =
                 webClientHelper.getWebClient(KNOWN_API_PLATINE_QUESTIONNAIRE)
                         .post()
-                        //TODO : mettre l'uri en conf? idem pour nomenclatures et autres
                         .uri("/api/questionnaire-models")
                         .bodyValue(dto)
                         .retrieve()
@@ -78,6 +77,7 @@ public class PlatineQuestionnaireService {
                         .build(idQuestionnaireModel))
                 .retrieve().toBodilessEntity().block();
             modelExists=true;
+            log.debug("response={}",response);
         }
         catch (WebClient4xxException e){
             if(e.getErrorCode().equals(HttpStatus.NOT_FOUND)){

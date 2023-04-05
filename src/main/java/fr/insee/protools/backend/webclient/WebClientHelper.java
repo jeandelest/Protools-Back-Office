@@ -109,7 +109,7 @@ public class WebClientHelper {
                 if(apiProperties==null){
                         throw new ApiNotConfiguredException(String.format("API %s is not configured in properties",api));
                 }
-                else if(!apiProperties.getEnabled()){
+                else if(Boolean.FALSE.equals(apiProperties.getEnabled())){
                         throw new ApiNotConfiguredException(String.format("API %s is disabled in properties",api));
                 }
                 return initializedClients.computeIfAbsent(api,

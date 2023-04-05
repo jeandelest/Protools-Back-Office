@@ -1,5 +1,10 @@
 package fr.insee.protools.backend.service.platine.questionnaire.dto;
 
+/**
+ * Class defining names of the meta data to pass to the questionnaire
+ * suppress warning on var names so it can match with the values
+ */
+@java.lang.SuppressWarnings("squid:S115")
 public class MetadataConstants {
 
     public static final String Enq_LibelleEnquete="Enq_LibelleEnquete";

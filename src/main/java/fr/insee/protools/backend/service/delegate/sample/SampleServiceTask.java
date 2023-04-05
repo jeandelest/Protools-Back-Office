@@ -1,7 +1,7 @@
 package fr.insee.protools.backend.service.delegate.sample;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import fr.insee.protools.backend.service.context.ContextServiceImpl;
+import fr.insee.protools.backend.service.context.ContextService;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class SampleServiceTask  implements JavaDelegate {
 
-    @Autowired ContextServiceImpl contextService;
+    @Autowired ContextService contextService;
     @Override
     public void execute(DelegateExecution delegateExecution) {
         String currentActivityId=delegateExecution.getCurrentActivityId();

@@ -34,7 +34,7 @@ public class SecurityConfig {
         private String administrateurRole;
 
         //Par défaut, spring sécurity prefixe les rôles avec cette chaine
-        private String ROLE_PREFIX = "ROLE_";
+        private final String ROLE_PREFIX = "ROLE_";
 
         @Autowired InseeSecurityTokenProperties inseeSecurityTokenProperties;
 
@@ -61,7 +61,7 @@ public class SecurityConfig {
                 return http.build();
         }
         //Filter with disabled security
-        // @Bean
+        @Bean
         @ConditionalOnProperty(name = STARTER_SECURITY_ENABLED,  havingValue = "false", matchIfMissing = true)
         public SecurityFilterChain filterChain_noSecurity(HttpSecurity http) throws Exception {
 
