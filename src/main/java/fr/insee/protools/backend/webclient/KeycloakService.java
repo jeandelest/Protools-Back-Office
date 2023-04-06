@@ -31,14 +31,14 @@ class KeycloakService {
     @Autowired
     private Environment environment;
 
-    @Value("${fr.insee.keycloak.client.id:#{null}}")
+    @Value("${fr.insee.protools.keycloak.client.id:#{null}}")
     private String clientId;
     private WebClient webClient;
 
     @Value("${fr.insee.sndil.starter.auth.url}")
     String authServerUri;
 
-    @Value("#{'${fr.insee.token.provider.realms}'.split(',')}")
+    @Value("#{'${fr.insee.protools.token.provider.realms}'.split(',')}")
     private String[] realmsList;
     private Map<String,String> clientSecretByRealm=new HashMap<>();
 
@@ -101,7 +101,7 @@ class KeycloakService {
             realmsList = new String[0];
         }
         for (String realm: realmsList) {
-            String propertyRoot = "fr.insee.token.provider.realms."+realm;
+            String propertyRoot = "fr.insee.protools.token.provider.realms."+realm;
             String clientSecretKey=propertyRoot+".client-secret";
 
             String clientSecret = environment.getRequiredProperty(String.format("%s",clientSecretKey));

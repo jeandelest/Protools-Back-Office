@@ -10,7 +10,7 @@
     </parent>
     <groupId>fr.insee.sndil.protools</groupId>
     <artifactId>protools-back-office</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.3-SNAPSHOT</version>
     <name>Protools Back Office</name>
     <description>Protools Back Office</description>
     <properties>
@@ -20,6 +20,18 @@
         <pitest.version>1.11.0</pitest.version>
         <pitest.junit.version>1.1.2</pitest.junit.version>
     </properties>
+
+
+    <!-- to directly upload to nexus the snapshots with deploy goal-->
+    <distributionManagement>
+        <snapshotRepository>
+            <id>protools-back-office</id>
+            <name>Internal Releases</name>
+            <url>https://nexus.insee.fr/repository/depot-local-snapshot/preparation_collecte/protools/protlsbo/</url>
+            <uniqueVersion>false</uniqueVersion>
+        </snapshotRepository>
+    </distributionManagement>
+
     <dependencies>
 
         <dependency>
@@ -27,9 +39,16 @@
             <artifactId>flowable-spring-boot-starter-process-rest</artifactId>
             <version>${flowable.version}</version>
         </dependency>
+        <!--H2 used for development-->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <!-- postgre used when application is deployed-->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
         <dependency>

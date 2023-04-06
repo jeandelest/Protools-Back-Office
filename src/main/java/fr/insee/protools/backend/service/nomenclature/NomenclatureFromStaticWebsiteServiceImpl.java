@@ -19,7 +19,7 @@ import java.net.URISyntaxException;
 public class NomenclatureFromStaticWebsiteServiceImpl implements NomenclatureService{
 
     //TODO : expose mandatory configuration?
-    @Value("${fr.insee.nomenclature.uri}")
+    @Value("${fr.insee.protools.nomenclature.uri}")
     private String nomenclatureUri;
 
     @Autowired WebClientHelper webClientHelper;
