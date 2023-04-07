@@ -3,8 +3,8 @@ package fr.insee.protools.backend.webclient;
 import fr.insee.protools.backend.webclient.exception.KeycloakTokenConfigException;
 import io.netty.handler.logging.LogLevel;
 import jakarta.annotation.PostConstruct;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -24,8 +24,8 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Service
-@Getter
-@Setter
+@Data
+@Slf4j
 class KeycloakService {
 
     @Autowired
@@ -58,8 +58,8 @@ class KeycloakService {
         }
 
         var token = tokenByRealm.get(realm);
-        //We refresh any token that is expire or will exipre within 1second
-        if(token==null || System.currentTimeMillis() >= (token.endValidityTimeMillis-1000)){
+        //We refresh any token that is expire or will exipre within 10 second
+        if(token==null || System.currentTimeMillis() >= (token.endValidityTimeMillis-10*1000)){
             refreshToken(realm);
         }
         return tokenByRealm.get(realm).value;
@@ -75,7 +75,7 @@ class KeycloakService {
         requestBody.add("grant_type", "client_credentials");
         requestBody.add("client_id", clientId);
         requestBody.add("client_secret", clientSecretByRealm.get(realm));
-
+        log.debug("Refresh token for realm={}",realm);
         long endValidityTimeMillis = System.currentTimeMillis();
 
 

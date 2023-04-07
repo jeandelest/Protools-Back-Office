@@ -112,11 +112,11 @@ public class WebClientHelper {
                 else if(Boolean.FALSE.equals(apiProperties.getEnabled())){
                         throw new ApiNotConfiguredException(String.format("API %s is disabled in properties",api));
                 }
-                return initializedClients.computeIfAbsent(api,
+               return initializedClients.computeIfAbsent(api,
                     knownApi ->
                         webClientBuilder
-                            .defaultHeaders(new KeycloakHeadersConsumerJSON(apiProperties.getRealm(), keycloakService))
-                            .baseUrl(apiProperties.getUrl())
+                                .filter(new KeycloakHeadersConsumerJSON( keycloakService,apiProperties.getRealm()))
+                                .baseUrl(apiProperties.getUrl())
                             .build());
         }
 }
