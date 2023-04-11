@@ -77,7 +77,7 @@ public class PlatineQuestionnaireService {
                         .build(idQuestionnaireModel))
                 .retrieve().toBodilessEntity().block();
             modelExists=true;
-            log.debug("response={}",response);
+            log.debug("response code={}",response.getStatusCode());
         }
         catch (WebClient4xxException e){
             if(e.getErrorCode().equals(HttpStatus.NOT_FOUND)){
@@ -92,9 +92,10 @@ public class PlatineQuestionnaireService {
     }
 
     public void postCampaign(CampaignDto campaignDto) {
+        WebClientHelper.logDebugJson("postCampaign: ", campaignDto);
         //Http Status Codes : https://github.com/InseeFr/Queen-Back-Office/blob/3.5.36-rc/src/main/java/fr/insee/queen/api/controller/CampaignController.java
         // HttpStatus.BAD_REQUEST(400) if campaign already exists
-        // HttpStatus.FORBIDDEN (403) if se a questionnaire does not exist or is already associated
+        // HttpStatus.FORBIDDEN (403) if the questionnaire does not exist or is already associated
         // WARNING : 403 will also be returned if user does not have an authorized role
         var response = webClientHelper.getWebClient(KNOWN_API_PLATINE_QUESTIONNAIRE)
                 .post()

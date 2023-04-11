@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -28,7 +27,7 @@ public class QuestionnaireModelFromStaticWebsiteServiceImpl implements Questionn
     public String getQuestionnaireModel(String questionnaireModelId, String folderPath){
         log.info("Get Questionnaire Model Value for questionnaireModelId={}", questionnaireModelId);
         String uri;
-        String fullPath=questionnaireModelUri+File.separator +folderPath+ File.separator+questionnaireModelId + ".json";
+        String fullPath=questionnaireModelUri+"/" +folderPath+ "/"+questionnaireModelId + ".json";
         try {
             uri = new URI(fullPath).normalize().toString();
         } catch (URISyntaxException e) {

@@ -1,12 +1,12 @@
 package fr.insee.protools.backend.webclient;
 
+import fr.insee.protools.backend.webclient.configuration.APIProperties;
 import fr.insee.protools.backend.webclient.exception.KeycloakTokenConfigException;
 import io.netty.handler.logging.LogLevel;
 import jakarta.annotation.PostConstruct;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -19,6 +19,10 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
 import reactor.netty.transport.logging.AdvancedByteBufFormat;
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -31,51 +35,45 @@ class KeycloakService {
     @Autowired
     private Environment environment;
 
-    @Value("${fr.insee.protools.keycloak.client.id:#{null}}")
-    private String clientId;
     private WebClient webClient;
 
-    @Value("${fr.insee.sndil.starter.auth.url}")
-    String authServerUri;
 
-    @Value("#{'${fr.insee.protools.token.provider.realms}'.split(',')}")
-    private String[] realmsList;
-    private Map<String,String> clientSecretByRealm=new HashMap<>();
-
-    private Map<String,Token> tokenByRealm=new HashMap<>();
-
+    //We will keep one token by auth server / realm / clientId
+    Map<APIProperties.AuthProperties, Token> tokenByAuthRealm=new HashMap<>();
 
 
     public KeycloakService() {
         //Default constructor
     }
 
-    public String getToken(String realm) throws KeycloakTokenConfigException {
-
-        if(!clientSecretByRealm.containsKey(realm))
+    public String getToken(APIProperties.AuthProperties authProperties) throws KeycloakTokenConfigException {
+        log.debug("getToken for authProperties={}",authProperties);
+        if(!isValidURL(authProperties.getUrl()) || authProperties.getClientId().isBlank() || authProperties.getRealm().isBlank())
         {
-            throw new KeycloakTokenConfigException(String.format("Realm %s is not configured",realm));
+            throw new KeycloakTokenConfigException(String.format("Auth is not correctly configured for [%s]",authProperties));
         }
 
-        var token = tokenByRealm.get(realm);
+        var token = tokenByAuthRealm.get(authProperties);
         //We refresh any token that is expire or will exipre within 10 second
         if(token==null || System.currentTimeMillis() >= (token.endValidityTimeMillis-10*1000)){
-            refreshToken(realm);
+            refreshToken(authProperties);
         }
-        return tokenByRealm.get(realm).value;
+        return tokenByAuthRealm.get(authProperties).value;
     }
 
-    private void refreshToken(String realm) {
-        String uri = String.format("/realms/%s/protocol/openid-connect/token",realm);
+    private void refreshToken(APIProperties.AuthProperties authProperties) throws KeycloakTokenConfigException {
+        log.debug("refreshToken for authProperties={}",authProperties);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-
+        String uri = String.format("%s/realms/%s/protocol/openid-connect/token",authProperties.getUrl(),authProperties.getRealm());
+        try {
+            uri = new URI(uri).normalize().toString();
+        } catch (URISyntaxException e) {
+            throw new KeycloakTokenConfigException(String.format("Auth is not correctly configured for [%s]",authProperties));
+        }
         MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
         requestBody.add("grant_type", "client_credentials");
-        requestBody.add("client_id", clientId);
-        requestBody.add("client_secret", clientSecretByRealm.get(realm));
-        log.debug("Refresh token for realm={}",realm);
+        requestBody.add("client_id", authProperties.getClientId());
+        requestBody.add("client_secret", authProperties.getClientSecret());
         long endValidityTimeMillis = System.currentTimeMillis();
 
 
@@ -92,31 +90,34 @@ class KeycloakService {
        //TODO : voir aussi cette histoire de timeout
 
         endValidityTimeMillis += TimeUnit.SECONDS.toMillis(response.getExpiresIn());
-        tokenByRealm.put(realm,new Token(response.getAccesToken(), endValidityTimeMillis));
+        tokenByAuthRealm.put(authProperties,new Token(response.getAccesToken(), endValidityTimeMillis));
     }
 
     @PostConstruct
-    private void initialize(){
-        if(realmsList==null) {
-            realmsList = new String[0];
-        }
-        for (String realm: realmsList) {
-            String propertyRoot = "fr.insee.protools.token.provider.realms."+realm;
-            String clientSecretKey=propertyRoot+".client-secret";
+    private void initialize() {
+        webClient = WebClient.builder()
+                .clientConnector(
+                        new ReactorClientHttpConnector(
+                                HttpClient.create()
+                                        //Handles a proxy conf passed on system properties
+                                        .proxyWithSystemProperties()
+                                        //enable logging of request/responses
+                                        //configurable in properties as if it was this class logers
+                                        .wiretap(this.getClass().getCanonicalName(), LogLevel.DEBUG, AdvancedByteBufFormat.TEXTUAL)))
+                .build();
+    }
 
-            String clientSecret = environment.getRequiredProperty(String.format("%s",clientSecretKey));
-            clientSecretByRealm.put(realm,clientSecret);
+    boolean isValidURL(String url) {
+        if(url.isBlank()){
+            return false;
         }
-        webClient= WebClient.builder()
-            .baseUrl(authServerUri)
-            .clientConnector(
-                new ReactorClientHttpConnector(
-                    HttpClient.create()
-                        //Handles a proxy conf passed on system properties
-                        .proxyWithSystemProperties()
-                        //enable logging of request/responses
-                        //configurable in properties as if it was this class logers
-                        .wiretap(this.getClass().getCanonicalName(), LogLevel.DEBUG, AdvancedByteBufFormat.TEXTUAL)))
-            .build();
+        try {
+            new URL(url).toURI();
+            return true;
+        } catch (MalformedURLException e) {
+            return false;
+        } catch (URISyntaxException e) {
+            return false;
+        }
     }
 }

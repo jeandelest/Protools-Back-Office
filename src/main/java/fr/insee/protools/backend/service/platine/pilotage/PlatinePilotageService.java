@@ -1,7 +1,5 @@
 package fr.insee.protools.backend.service.platine.pilotage;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.insee.protools.backend.service.platine.pilotage.dto.MetadataDto;
 import fr.insee.protools.backend.webclient.WebClientHelper;
 import lombok.extern.slf4j.Slf4j;
@@ -16,8 +14,7 @@ public class PlatinePilotageService {
 
     @Autowired WebClientHelper webClientHelper;
     public void putMetadata(String partitionId , MetadataDto dto) {
-        log.info("partitionId={}",partitionId);
-        logDebugJson(dto);
+        WebClientHelper.logDebugJson(String.format("putMetadata - partitionId=%s : ",partitionId),dto);
         var response = webClientHelper.getWebClient(KNOWN_API_PLATINE_PILOTAGE)
                 .put()
                 .uri(uriBuilder -> uriBuilder
@@ -30,15 +27,4 @@ public class PlatinePilotageService {
         log.info("partitionId={} - response={} ",partitionId,response);
     }
 
-
-    private void logDebugJson(Object dto){
-        if(log.isDebugEnabled()) {
-            try {
-                String json = new ObjectMapper().writeValueAsString(dto);
-                log.debug(json);
-            } catch (JsonProcessingException e) {
-                log.error("Could not parse json");
-            }
-        }
-    }
 }
