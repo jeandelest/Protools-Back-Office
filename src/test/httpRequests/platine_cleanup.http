@@ -11,10 +11,10 @@ grant_type=client_credentials&client_id={{client_id}}&client_secret={{client_sec
   client.global.set("auth_token", response.body.access_token);
   client.log("TOKEN = "+client.global.get("auth_token"));
   client.log("RESPONSE = "+client.global);
-  client.global.set("CAMPAGNE_ID", "DEM2022X00");
-  client.global.set("PARTITION_ID", "1");
-  client.global.set("SU_ID", "1");
-  client.global.set("SOURCE_ID", "DEM");
+  client.global.set("CAMPAGNE_ID", "MBG2022X00");
+  client.global.set("PARTITION_ID", "123456");
+  client.global.set("SU_ID", "MBG0001");
+  client.global.set("SOURCE_ID", "MBG");
 %}
 
 ### suppression campagne dans platine questionnaire (et des SU rattachées)

@@ -86,7 +86,7 @@ Authorization: Bearer {{auth_token}}
 {
   "comment": {},
   "data": {},
-  "id": "1",
+  "id": "MBG0001",
   "personalization": {},
   "questionnaireId": "tic2023a00_web",
   "stateData": {

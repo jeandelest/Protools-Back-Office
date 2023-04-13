@@ -1,15 +1,15 @@
 {
-  "id": "DEM2022X00",
+  "id": "MBG2022X00",
   "label": "Enquête démo 2022 - séquence 1",
   "contexte": "household",
   "metadonnees": {
     "annee": 2022,
     "periodicite": "X",
     "periode": "X00",
-    "operationId": "DEM2022",
+    "operationId": "MBG2022",
     "operationLabelCourt": "operationLabelCourt",
     "operationLabelLong": "operationLabelLong",
-    "serieId": "DEM",
+    "serieId": "MBG",
     "serieLabelCourt": "serieLabelCourt",
     "serieLabelLong": "serieLabelLong",
     "portailMesEnquetesOperation": true,
@@ -43,14 +43,14 @@
     "assistanceNiveau2CodePostal": "assistanceNiveau2CodePostal"
   },
   "partitions": [{
-    "id": 1,
+    "id": 123456,
     "label": "lot hommes",
     "dateDebutCollecte": "2023-01-16T14:07:23.001Z",
     "dateFinCollecte": "2024-01-16T14:07:23.001Z",
     "dateRetour": "2024-01-16T14:07:23.001Z"
   }],
   "questionnaireModels": [{
-    "id": "tic2023a00_web",
+    "id": "tic2023a00_webMBG",
     "cheminRepertoire": "coleman",
     "label": "Super modèle 1",
     "requiredNomenclatureIds": [
