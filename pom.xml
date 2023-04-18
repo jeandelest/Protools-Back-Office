@@ -12,12 +12,12 @@
     <artifactId>protools-back-office</artifactId>
     <version>0.0.3-SNAPSHOT</version>
     <name>Protools Back Office</name>
-    <description>Protools Back Office</description>
+    <description>Protools Back Office: Survey Orchestrator and Management Tool - Built with Flowable Engine</description>
     <properties>
         <java.version>17</java.version>
         <springdoc.version>2.0.2</springdoc.version>
         <flowable.version>7.0.0.M1</flowable.version>
-        <pitest.version>1.11.0</pitest.version>
+        <pitest.version>1.11.7</pitest.version>
         <pitest.junit.version>1.1.2</pitest.junit.version>
     </properties>
 
@@ -115,7 +115,8 @@
                 <version>${pitest.version}</version>
                 <configuration>
                     <targetTests>
-                        <param>fr.insee.*</param>
+                        <param>fr.insee.protools.backend.service.*</param>
+                        <param>fr.insee.protools.backend.controller.StarterController</param>
                     </targetTests>
                     <mutators>
                         <mutator>STRONGER</mutator>
@@ -130,6 +131,26 @@
                 </dependencies>
             </plugin>
 
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.9</version>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
         </plugins>
     </build>
