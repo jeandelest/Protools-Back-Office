@@ -138,7 +138,7 @@ public class ContextServiceImpl implements ContextService{
         try {
             LocalDateTime collectionStart = LocalDateTime.parse(start, DateTimeFormatter.ISO_DATE_TIME);
             LocalDateTime collectionEnd = LocalDateTime.parse(end, DateTimeFormatter.ISO_DATE_TIME);
-            log.info("CollectionStartDate={} - CollectionEndDate={}", collectionStart, collectionEnd);
+            log.info("partition_id={} - CollectionStartDate={} - CollectionEndDate={}", partitionNode.path(CTX_PARTITION_ID),collectionStart, collectionEnd);
             return Pair.of(collectionStart, collectionEnd);
         }
         catch (DateTimeParseException e){
