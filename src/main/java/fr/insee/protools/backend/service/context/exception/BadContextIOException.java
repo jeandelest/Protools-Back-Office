@@ -6,11 +6,6 @@ package fr.insee.protools.backend.service.context.exception;
 public class BadContextIOException extends RuntimeException {
 
         public BadContextIOException(String message, Throwable cause) {
-                super(message, cause);
+                super(message+" - message="+cause.getMessage());
         }
-
-        public BadContextIOException(String message) {
-                super(message);
-        }
-
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
+import fr.insee.protools.backend.service.context.exception.BadContextDateTimeParseException;
 import fr.insee.protools.backend.service.context.exception.BadContextIOException;
 import fr.insee.protools.backend.service.context.exception.BadContextIncorrectException;
 import fr.insee.protools.backend.service.context.exception.BadContextNotJSONException;
@@ -21,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -76,7 +78,9 @@ public class ContextServiceImpl implements ContextService{
             //        Do extraction of important BPMN Variables in separates functions
             JsonNode partitions = rootContext.path(CTX_PARTITIONS);
             if(partitions.isMissingNode() ){
-                throw new BadContextIncorrectException(String.format("Missing %s in context", CTX_PARTITIONS));
+                String msg=String.format("Missing %s in context", CTX_PARTITIONS);
+                log.error(msg);
+                throw new BadContextIncorrectException(msg);
             }
             for (JsonNode partition : partitions) {
                 Pair<LocalDateTime, LocalDateTime> startEndDT = getCollectionStartAndEndFromPartition(partition);
@@ -143,6 +147,25 @@ public class ContextServiceImpl implements ContextService{
         }
         catch (DateTimeParseException e){
             throw new BadContextIncorrectException(String.format("%s or %s cannot be casted to DateTime : %s", CTX_PARTITION_DATE_DEBUT_COLLECTE, CTX_PARTITION_DATE_FIN_COLLECTE,e.getMessage()));
+        }
+    }
+
+    public static Instant getInstantFromPartition(JsonNode partitionNode , String subnode ) throws BadContextDateTimeParseException {
+        JsonNode instantNode = partitionNode.get(subnode);
+        if(instantNode==null){
+            throw new BadContextDateTimeParseException(String.format("node %s of partition %s does not exists", subnode,partitionNode.path(CTX_PARTITION_ID).asText()));
+        }
+        String valueTxt   =partitionNode.path(subnode).asText();
+        if(valueTxt.isBlank()){
+            throw new BadContextDateTimeParseException(String.format("node %s of partition %s is blank", subnode,partitionNode.path(CTX_PARTITION_ID).asText()));
+        }
+
+        try {
+            Instant ret = Instant.parse(valueTxt);
+            return ret;
+        }
+        catch (DateTimeParseException e){
+            throw new BadContextDateTimeParseException(String.format("node %s of partition %s having value [%s] cannot be parsed : %s", subnode, partitionNode.path(CTX_PARTITION_ID).asText(), valueTxt,e.getMessage()));
         }
     }
 }

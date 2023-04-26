@@ -42,14 +42,5 @@ public enum PeriodEnum {
     final PeriodicityEnum period;
 
     final String value;
-    
-    public static PeriodEnum fromValue(String v) {
-        for (PeriodEnum c : PeriodEnum.values()) {
-            if (c.value.equals(v)) {
-                return c;
-            }
-        }
-        throw new IllegalArgumentException(v);
-    }
 
 }

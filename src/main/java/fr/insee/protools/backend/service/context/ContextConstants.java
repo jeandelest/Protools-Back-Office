@@ -38,11 +38,11 @@ public final class ContextConstants {
     public static final String CTX_META_DIFFUSION_URL = "diffusionUrl";
     public static final String CTX_META_NOTICE_URL = "noticeUrl";
     public static final String CTX_META_SPECIMENT_URL = "specimenUrl";
-    //Metadonnees proprietaire
+    //Metadonnees proprietaire (platine)
     public static final String CTX_META_PROPRIETAIRE_ID = "proprietaireId";
     public static final String CTX_META_PROPRIETAIRE_LABEL = "proprietaireLabel";
     public static final String CTX_META_PROPRIETAIRE_LOGO = "proprietaireLogo";
-    //Metadonnees assistance
+    //Metadonnees assistance (platine)
     public static final String CTX_META_ASSISTANCE_NIVO2_ID = "assistanceNiveau2Id";
     public static final String CTX_META_ASSISTANCE_NIVO2_LABEL = "assistanceNiveau2Label";
     public static final String CTX_META_ASSISTANCE_NIVO2_TEL = "assistanceNiveau2Tel";
@@ -52,6 +52,17 @@ public final class ContextConstants {
     public static final String CTX_META_ASSISTANCE_NIVO2_NOM_VOIE = "assistanceNiveau2NomVoie";
     public static final String CTX_META_ASSISTANCE_NIVO2_COMMUNE = "assistanceNiveau2Commune";
     public static final String CTX_META_ASSISTANCE_NIVO2_CODE_POSTAL = "assistanceNiveau2CodePostal";
+    //Pour sabiane
+    public static final String CTX_META_REPERAGE = "reperage";
+    public static final String CTX_META_ESSAIS_CONTACT = "essaisContact";
+    public static final String CTX_META_BILAN_CONTACT = "bilanContact";
+    public static final String CTX_META_REFERENTS_PRINCIPAUX = "referentsPrincipaux";
+    public static final String CTX_META_REFERENTS_SECONDAIRES = "referentsSecondaires";
+    public static final String CTX_META_SITES_GESTION = "sitesGestion";
+    //Referents principaux et secondaires (sabiane)
+    public static final String CTX_META_REFERENT_NOM = "nom";
+    public static final String CTX_META_REFERENT_PRENOM = "prenom";
+    public static final String CTX_META_REFERENT_TELEPHONE = "telephone";
 
     // Partitions
     public static final String CTX_PARTITIONS = "partitions";
@@ -60,7 +71,11 @@ public final class ContextConstants {
     public static final String CTX_PARTITION_DATE_DEBUT_COLLECTE = "dateDebutCollecte";
     public static final String CTX_PARTITION_DATE_FIN_COLLECTE = "dateFinCollecte";
     public static final String CTX_PARTITION_DATE_RETOUR = "dateRetour";
-
+    //Partitions, specific sabiane
+    public static final String CTX_PARTITION_SABIANE_DATE_DEBUT_VISIBILITE_GESTIONNAIRE = "dateDebutVisibiliteGestionnaire";
+    public static final String CTX_PARTITION_SABIANE_DATE_DEBUT_VISIBILITE_ENQUETEUR = "dateDebutVisibiliteEnqueteur";
+    public static final String CTX_PARTITION_SABIANE_DATE_DEBUT_REPERAGE = "dateDebutReperage";
+    public static final String CTX_PARTITION_SABIANE_DATE_FIN_TRAITEMENT = "dateFinTraitement";
 
     // QuestionnaireModels
     public static final String CTX_QUESTIONNAIRE_MODELS = "questionnaireModels";

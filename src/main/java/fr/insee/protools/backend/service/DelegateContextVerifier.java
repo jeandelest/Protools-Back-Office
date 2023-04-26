@@ -2,10 +2,8 @@ package fr.insee.protools.backend.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import fr.insee.protools.backend.service.context.exception.BadContextIncorrectException;
-import fr.insee.protools.backend.service.platine.pilotage.dto.PeriodEnum;
 import org.slf4j.Logger;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,7 +27,7 @@ public interface DelegateContextVerifier {
                 ,classUsingThisElement.getSimpleName()
                 ,incorrectElement
                 , value
-                ,Arrays.toString(PeriodEnum.values()));
+                ,enumValues);
     }
     default Set<String> computeMissingChildrenMessages(Set<String> requiredChildren, JsonNode parentNode, Class<?> classUsingThisElement){
         Set<String> missingNodes = new HashSet<>();

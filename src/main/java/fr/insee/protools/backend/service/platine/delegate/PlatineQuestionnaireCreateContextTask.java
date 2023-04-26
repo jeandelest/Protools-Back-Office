@@ -48,7 +48,7 @@ public class PlatineQuestionnaireCreateContextTask implements JavaDelegate, Dele
 
         //Get the list of nomenclatures defined in Protools Context
         //Create them if needed
-        var nomenclatureIterator =contextRootNode.get(CTX_NOMENCLATURES).elements();
+        var nomenclatureIterator =contextRootNode.path(CTX_NOMENCLATURES).elements();
         if(!nomenclatureIterator.hasNext()){
             log.info("ProcessInstanceId={} - does not declare any nomenclature",execution.getProcessInstanceId());
         }
@@ -76,7 +76,7 @@ public class PlatineQuestionnaireCreateContextTask implements JavaDelegate, Dele
      * @return the set of questionnaireModel ids
      */
     Set<String> initQuestionnaireModels(String processInstanceId, JsonNode contextRootNode) {
-        var questionnaireModelIterator = contextRootNode.get(CTX_QUESTIONNAIRE_MODELS).elements();
+        var questionnaireModelIterator = contextRootNode.path(CTX_QUESTIONNAIRE_MODELS).elements();
         Set<String> questionnaireModelIds = new HashSet<>(); //Used to build the CampaignDto later
         while (questionnaireModelIterator.hasNext()) {
             var node = questionnaireModelIterator.next();
@@ -167,7 +167,7 @@ public class PlatineQuestionnaireCreateContextTask implements JavaDelegate, Dele
 
         if (contextRootNode.get(CTX_NOMENCLATURES) != null) {
             //Check on nomenclatures
-            var nomenclatureIterator =contextRootNode.get(CTX_NOMENCLATURES).elements();
+            var nomenclatureIterator =contextRootNode.path(CTX_NOMENCLATURES).elements();
             int i=0;
             while (nomenclatureIterator.hasNext()) {
                 i++;
@@ -209,7 +209,7 @@ public class PlatineQuestionnaireCreateContextTask implements JavaDelegate, Dele
 
 
     MetadataValue createMetadataDto(JsonNode contextRootNode){
-        JsonNode metadataNode = contextRootNode.get(CTX_METADONNEES);
+        JsonNode metadataNode = contextRootNode.path(CTX_METADONNEES);
         return MetadataValue.builder()
                 .value(MetadataVariables.builder()
                         .variables(

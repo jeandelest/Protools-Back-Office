@@ -69,7 +69,7 @@ public class PlatinePilotageCreateContextTask implements JavaDelegate, DelegateC
         results.addAll(computeMissingChildrenMessages(requiredNodes,contextRootNode,getClass()));
         results.addAll(computeMissingChildrenMessages(requiredMetadonnees,contextRootNode.path(CTX_METADONNEES),getClass()));
 
-        var partitionIterator =contextRootNode.get(CTX_PARTITIONS).elements();
+        var partitionIterator =contextRootNode.path(CTX_PARTITIONS).elements();
         //Partitions
         while (partitionIterator.hasNext()) {
             var partitionNode = partitionIterator.next();
@@ -95,7 +95,7 @@ public class PlatinePilotageCreateContextTask implements JavaDelegate, DelegateC
         Set<MetadataDto> result = new HashSet<>();
         String campainId = contextRootNode.path(CTX_CAMPAGNE_ID).asText();
         //Get the list of partitions
-        var partitionIterator =contextRootNode.get(CTX_PARTITIONS).elements();
+        var partitionIterator =contextRootNode.path(CTX_PARTITIONS).elements();
 
         //These parts are always the same
         CampaignDto campaignDto = computeCampaignDto(contextRootNode);

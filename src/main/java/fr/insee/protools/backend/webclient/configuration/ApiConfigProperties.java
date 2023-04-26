@@ -10,7 +10,9 @@ public class ApiConfigProperties {
         public enum KNOWN_API {
                 KNOWN_API_PLATINE_PILOTAGE,
                 KNOWN_API_PLATINE_QUESTIONNAIRE,
-                KNOWN_API_ERA
+                KNOWN_API_ERA,
+                KNOWN_API_SABIANE_PILOTAGE,
+                KNOWN_API_SABIANE_QUESTIONNAIRE
         }
 
         public APIProperties getAPIProperties(KNOWN_API api){
@@ -18,6 +20,9 @@ public class ApiConfigProperties {
                         case KNOWN_API_PLATINE_PILOTAGE: return platinePilotageApiProperties();
                         case KNOWN_API_PLATINE_QUESTIONNAIRE: return platineQuestionnaireApiProperties();
                         case KNOWN_API_ERA: return eraApiProperties();
+                        case KNOWN_API_SABIANE_PILOTAGE: return sabianePilotageApiProperties();
+                        case KNOWN_API_SABIANE_QUESTIONNAIRE: return sabianeQuestionnaireApiProperties();
+
                 }
                 return new APIProperties();
         }
@@ -37,6 +42,18 @@ public class ApiConfigProperties {
         @Bean("platineQuestionnaireApiProperties")
         @ConfigurationProperties("fr.insee.protools.api.platine-questionnaire")
         public APIProperties platineQuestionnaireApiProperties() {
+                return new APIProperties();
+        }
+
+        @Bean("sabianePilotageApiProperties")
+        @ConfigurationProperties("fr.insee.protools.api.sabiane-pilotage")
+        public APIProperties sabianePilotageApiProperties() {
+                return new APIProperties();
+        }
+
+        @Bean("sabianeQuestionnaireApiProperties")
+        @ConfigurationProperties("fr.insee.protools.api.sabiane-questionnaire")
+        public APIProperties sabianeQuestionnaireApiProperties() {
                 return new APIProperties();
         }
 
