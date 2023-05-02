@@ -6,7 +6,7 @@ public enum ContactOutcomeConfiguration {
     /**
      * label of the ContactOutcomeConfiguration
      */
-    private String label;
+    private final String label;
 
     /**
      * Defaut constructor for a ContactOutcomeConfiguration

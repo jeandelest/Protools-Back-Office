@@ -71,10 +71,9 @@ public class SabianePilotageCreateContextTask implements JavaDelegate, DelegateC
     }
 
     private List<ReferentDto> computeReferents(JsonNode contextRootNode) {
-        List<ReferentDto> result = new ArrayList<>();
 
         JsonNode referentsPrincipauxNode = contextRootNode.path(CTX_METADONNEES).path(CTX_META_REFERENTS_PRINCIPAUX);
-        result.addAll(getReferents(referentsPrincipauxNode.elements(),true));
+        List<ReferentDto> result = new ArrayList<>(getReferents(referentsPrincipauxNode.elements(), true));
 
         JsonNode referentsSecondairesNode = contextRootNode.path(CTX_METADONNEES).path(CTX_META_REFERENTS_SECONDAIRES);
         result.addAll(getReferents(referentsSecondairesNode.elements(),false));

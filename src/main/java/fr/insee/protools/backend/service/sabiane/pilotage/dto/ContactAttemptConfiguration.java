@@ -6,7 +6,7 @@ public enum ContactAttemptConfiguration {
     /**
      * label of the ContactAttemptConfiguration
      */
-    private String label;
+    private final String label;
 
     /**
      * Defaut constructor for a ContactAttemptConfiguration

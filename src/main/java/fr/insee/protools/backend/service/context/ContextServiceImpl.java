@@ -161,8 +161,7 @@ public class ContextServiceImpl implements ContextService{
         }
 
         try {
-            Instant ret = Instant.parse(valueTxt);
-            return ret;
+            return Instant.parse(valueTxt);
         }
         catch (DateTimeParseException e){
             throw new BadContextDateTimeParseException(String.format("node %s of partition %s having value [%s] cannot be parsed : %s", subnode, partitionNode.path(CTX_PARTITION_ID).asText(), valueTxt,e.getMessage()));

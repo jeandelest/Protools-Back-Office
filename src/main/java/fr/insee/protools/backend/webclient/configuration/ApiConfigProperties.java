@@ -16,15 +16,13 @@ public class ApiConfigProperties {
         }
 
         public APIProperties getAPIProperties(KNOWN_API api){
-                switch (api){
-                        case KNOWN_API_PLATINE_PILOTAGE: return platinePilotageApiProperties();
-                        case KNOWN_API_PLATINE_QUESTIONNAIRE: return platineQuestionnaireApiProperties();
-                        case KNOWN_API_ERA: return eraApiProperties();
-                        case KNOWN_API_SABIANE_PILOTAGE: return sabianePilotageApiProperties();
-                        case KNOWN_API_SABIANE_QUESTIONNAIRE: return sabianeQuestionnaireApiProperties();
-
-                }
-                return new APIProperties();
+                return switch (api) {
+                        case KNOWN_API_PLATINE_PILOTAGE -> platinePilotageApiProperties();
+                        case KNOWN_API_PLATINE_QUESTIONNAIRE -> platineQuestionnaireApiProperties();
+                        case KNOWN_API_ERA -> eraApiProperties();
+                        case KNOWN_API_SABIANE_PILOTAGE -> sabianePilotageApiProperties();
+                        case KNOWN_API_SABIANE_QUESTIONNAIRE -> sabianeQuestionnaireApiProperties();
+                };
         }
 
         @Bean("eraApiProperties")

@@ -8,7 +8,7 @@ public enum IdentificationConfiguration {
     /**
      * label of the IdentificationConfiguration
      */
-    private String label;
+    private final String label;
 
     /**
      * Defaut constructor for a IdentificationConfiguration

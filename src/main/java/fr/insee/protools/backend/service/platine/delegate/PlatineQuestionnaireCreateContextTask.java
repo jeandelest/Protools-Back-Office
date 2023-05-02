@@ -130,7 +130,7 @@ public class PlatineQuestionnaireCreateContextTask implements JavaDelegate, Dele
             else {
                 //Retrieve the nomenclature
                 String nomenclatureValueStr = nomenclatureService.getNomenclatureContent(nomenclatureId,nomenclatureCheminRepertoire);
-                JsonNode nomenclatureValue = null;
+                JsonNode nomenclatureValue;
                 try {
                     nomenclatureValue = objectMapper.readTree(nomenclatureValueStr);
                 } catch (JsonProcessingException e) {
