@@ -4,7 +4,6 @@ import fr.insee.protools.backend.service.context.exception.BadContextIOException
 import fr.insee.protools.backend.service.context.exception.BadContextIncorrectException;
 import fr.insee.protools.backend.service.context.exception.BadContextNotJSONException;
 import fr.insee.protools.backend.service.exception.TaskNotFoundException;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
