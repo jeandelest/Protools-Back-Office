@@ -1,4 +1,4 @@
-package fr.insee.protools.backend.service.platine.delegate;
+package fr.insee.protools.backend.service.sabiane.delegate;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,8 +10,8 @@ import fr.insee.protools.backend.service.common.platine_sabiane.dto.campaign.Met
 import fr.insee.protools.backend.service.common.platine_sabiane.dto.campaign.MetadataVariables;
 import fr.insee.protools.backend.service.context.ContextService;
 import fr.insee.protools.backend.service.nomenclature.NomenclatureService;
-import fr.insee.protools.backend.service.platine.questionnaire.PlatineQuestionnaireService;
 import fr.insee.protools.backend.service.questionnaire_model.QuestionnaireModelService;
+import fr.insee.protools.backend.service.sabiane.questionnaire.SabianeQuestionnaireService;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
@@ -23,16 +23,16 @@ import java.util.Set;
 
 import static fr.insee.protools.backend.service.context.ContextConstants.*;
 
-@Component
 @Slf4j
-public class PlatineQuestionnaireCreateContextTask implements JavaDelegate, DelegateContextVerifier {
+@Component
+public class SabianeQuestionnaireCreateContextTask implements JavaDelegate, DelegateContextVerifier {
 
     @Autowired ContextService protoolsContext;
     @Autowired ObjectMapper objectMapper;
     @Autowired NomenclatureService nomenclatureService;
     @Autowired QuestionnaireModelService questionnaireModelService;
 
-    @Autowired PlatineQuestionnaireService platineQuestionnaireService;
+    @Autowired SabianeQuestionnaireService sabianeQuestionnaireService;
 
     @Override
     public void execute(DelegateExecution execution) {
@@ -42,7 +42,7 @@ public class PlatineQuestionnaireCreateContextTask implements JavaDelegate, Dele
         checkContextOrThrow(log,execution.getProcessInstanceId(), contextRootNode);
 
         MetadataValue metadataDto = createMetadataDto(contextRootNode);
-        QuestionnaireHelper.createQuestionnaire(contextRootNode,platineQuestionnaireService,nomenclatureService,
+        QuestionnaireHelper.createQuestionnaire(contextRootNode,sabianeQuestionnaireService,nomenclatureService,
                 questionnaireModelService,execution.getProcessInstanceId(),metadataDto);
 
         log.info("ProcessInstanceId={}  end",execution.getProcessInstanceId());
@@ -58,12 +58,9 @@ public class PlatineQuestionnaireCreateContextTask implements JavaDelegate, Dele
         Set<String> missingNodes =
                 QuestionnaireHelper.getContextErrors(contextRootNode);
 
-        //Metadata used by platine
+        //Metadata used by sabiane
         Set<String> requiredMetadonnes =
-                Set.of(CTX_META_LABEL_LONG_OPERATION, CTX_META_OBJECTIFS_COURTS, CTX_META_CARACTERE_OBLIGATOIRE,
-                        CTX_META_NUMERO_VISA, CTX_META_MINISTERE_TUTELLE, CTX_META_PARUTION_JO, CTX_META_DATE_PARUTION_JO,
-                        CTX_META_RESPONSABLE_OPERATIONNEL, CTX_META_RESPONSABLE_TRAITEMENT, CTX_META_ANNEE_VISA,
-                        CTX_META_QUALITE_STATISTIQUE, CTX_META_TEST_NON_LABELLISE);
+                Set.of(CTX_META_LABEL_LONG_OPERATION);
 
         if (contextRootNode.get(CTX_METADONNEES) != null) {
             missingNodes.addAll(DelegateContextVerifier.computeMissingChildrenMessages(requiredMetadonnes,contextRootNode.path(CTX_METADONNEES),getClass()));
@@ -72,29 +69,13 @@ public class PlatineQuestionnaireCreateContextTask implements JavaDelegate, Dele
         return missingNodes;
     }
 
-
-
     MetadataValue createMetadataDto(JsonNode contextRootNode){
         JsonNode metadataNode = contextRootNode.path(CTX_METADONNEES);
         return MetadataValue.builder()
                 .value(MetadataVariables.builder()
                         .variables(
                                 List.of(
-                                        new MetadataValueItem(MetadataConstants.Enq_LibelleEnquete,metadataNode.path(CTX_META_LABEL_LONG_OPERATION).asText()),
-                                        new MetadataValueItem(MetadataConstants.Enq_ObjectifsCourts,metadataNode.path(CTX_META_OBJECTIFS_COURTS).asText()),
-                                        new MetadataValueItem(MetadataConstants.Enq_CaractereObligatoire,metadataNode.path(CTX_META_CARACTERE_OBLIGATOIRE).asBoolean()),
-                                        new MetadataValueItem(MetadataConstants.Enq_NumeroVisa,metadataNode.path(CTX_META_NUMERO_VISA).asText()),
-                                        new MetadataValueItem(MetadataConstants.Enq_MinistereTutelle,metadataNode.path(CTX_META_MINISTERE_TUTELLE).asText()),
-                                        new MetadataValueItem(MetadataConstants.Enq_ParutionJo,metadataNode.path(CTX_META_PARUTION_JO).asBoolean()),
-                                        new MetadataValueItem(MetadataConstants.Enq_DateParutionJo,metadataNode.path(CTX_META_DATE_PARUTION_JO).asText()),
-                                        new MetadataValueItem(MetadataConstants.Enq_RespOperationnel,metadataNode.path(CTX_META_RESPONSABLE_OPERATIONNEL).asText()),
-                                        new MetadataValueItem(MetadataConstants.Enq_RespTraitement,metadataNode.path(CTX_META_RESPONSABLE_TRAITEMENT).asText()),
-                                        new MetadataValueItem(MetadataConstants.Enq_AnneeVisa,metadataNode.path(CTX_META_ANNEE_VISA).asInt()),
-                                        new MetadataValueItem(MetadataConstants.Enq_QualiteStatistique,metadataNode.path(CTX_META_QUALITE_STATISTIQUE).asBoolean()),
-                                        new MetadataValueItem(MetadataConstants.Enq_TestNonLabellise,metadataNode.path(CTX_META_TEST_NON_LABELLISE).asBoolean()),
-                                        new MetadataValueItem(MetadataConstants.Loi_statistique,""),
-                                        new MetadataValueItem(MetadataConstants.Loi_rgpd,""),
-                                        new MetadataValueItem(MetadataConstants.Loi_informatique,"")
+                                        new MetadataValueItem(MetadataConstants.Enq_LibelleEnquete,metadataNode.path(CTX_META_LABEL_LONG_OPERATION).asText())
                                         )
                         )
                         .inseeContext(contextRootNode.path(CTX_CAMPAGNE_CONTEXTE).asText())

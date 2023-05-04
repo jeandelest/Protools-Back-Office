@@ -1,4 +1,4 @@
-package fr.insee.protools.backend.service.platine.questionnaire.dto;
+package fr.insee.protools.backend.service.common.platine_sabiane.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;

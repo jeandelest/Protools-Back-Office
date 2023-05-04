@@ -71,14 +71,11 @@ public class SabianePilotageCreateContextTask implements JavaDelegate, DelegateC
     }
 
     private List<ReferentDto> computeReferents(JsonNode contextRootNode) {
-
-        JsonNode referentsPrincipauxNode = contextRootNode.path(CTX_METADONNEES).path(CTX_META_REFERENTS_PRINCIPAUX);
-        List<ReferentDto> result = new ArrayList<>(getReferents(referentsPrincipauxNode.elements(), true));
-
+        JsonNode referentsPrincipauxNode  = contextRootNode.path(CTX_METADONNEES).path(CTX_META_REFERENTS_PRINCIPAUX);
         JsonNode referentsSecondairesNode = contextRootNode.path(CTX_METADONNEES).path(CTX_META_REFERENTS_SECONDAIRES);
+
+        List<ReferentDto> result = new ArrayList<>(getReferents(referentsPrincipauxNode.elements(), true));
         result.addAll(getReferents(referentsSecondairesNode.elements(),false));
-
-
         return result;
     }
 
@@ -200,26 +197,26 @@ public class SabianePilotageCreateContextTask implements JavaDelegate, DelegateC
                 requiredPartition.add(CTX_PARTITION_LABEL);
 
 
-        results.addAll(computeMissingChildrenMessages(requiredNodes,contextRootNode,getClass()));
-        results.addAll(computeMissingChildrenMessages(requiredMetadonnees,contextRootNode.path(CTX_METADONNEES),getClass()));
+        results.addAll(DelegateContextVerifier.computeMissingChildrenMessages(requiredNodes,contextRootNode,getClass()));
+        results.addAll(DelegateContextVerifier.computeMissingChildrenMessages(requiredMetadonnees,contextRootNode.path(CTX_METADONNEES),getClass()));
 
         var referentIterator=contextRootNode.path(CTX_META_REFERENTS_PRINCIPAUX).elements();
         while (referentIterator.hasNext()) {
             var referentNode = referentIterator.next();
-            results.addAll(computeMissingChildrenMessages(requiredReferent,referentNode,getClass()));
+            results.addAll(DelegateContextVerifier.computeMissingChildrenMessages(requiredReferent,referentNode,getClass()));
         }
 
         referentIterator=contextRootNode.path(CTX_META_REFERENTS_SECONDAIRES).elements();
         while (referentIterator.hasNext()) {
             var referentNode = referentIterator.next();
-            results.addAll(computeMissingChildrenMessages(requiredReferent,referentNode,getClass()));
+            results.addAll(DelegateContextVerifier.computeMissingChildrenMessages(requiredReferent,referentNode,getClass()));
         }
 
         var partitionIterator =contextRootNode.path(CTX_PARTITIONS).elements();
         //Partitions
         while (partitionIterator.hasNext()) {
             var partitionNode = partitionIterator.next();
-            results.addAll(computeMissingChildrenMessages(requiredPartition,partitionNode,getClass()));
+            results.addAll(DelegateContextVerifier.computeMissingChildrenMessages(requiredPartition,partitionNode,getClass()));
 
             for(var dateNode : requiredPartitionDates)
             //Check the date format
@@ -233,17 +230,17 @@ public class SabianePilotageCreateContextTask implements JavaDelegate, DelegateC
         //Check sites de gestion (an array with at least one element)
         JsonNode sitesGestionNode= contextRootNode.path(CTX_METADONNEES).path(CTX_META_SITES_GESTION);
         if(!sitesGestionNode.isArray()){
-            results.add(computeIncorrectMessage(CTX_META_SITES_GESTION," should be an array", getClass()));
+            results.add(DelegateContextVerifier.computeIncorrectMessage(CTX_META_SITES_GESTION," should be an array", getClass()));
         }
         else if(sitesGestionNode.isEmpty()){
-            results.add(computeIncorrectMessage(CTX_META_SITES_GESTION," should not be an empty an array", getClass()));
+            results.add(DelegateContextVerifier.computeIncorrectMessage(CTX_META_SITES_GESTION," should not be an empty an array", getClass()));
         }
         else{
             var iter = sitesGestionNode.elements();
             while (iter.hasNext()){
                 var value = iter.next();
                 if(!value.isTextual()){
-                    results.add(computeIncorrectMessage(CTX_META_SITES_GESTION," contains non textual values", getClass()));
+                    results.add(DelegateContextVerifier.computeIncorrectMessage(CTX_META_SITES_GESTION," contains non textual values", getClass()));
                     break;
                 }
             }
@@ -254,21 +251,21 @@ public class SabianePilotageCreateContextTask implements JavaDelegate, DelegateC
             String essaisContact = contextRootNode.path(CTX_METADONNEES).path(CTX_META_ESSAIS_CONTACT).asText();
             ContactAttemptConfiguration.valueOfLabel(essaisContact);
         }catch (IllegalArgumentException e){
-            results.add(computeIncorrectEnumMessage(CTX_META_ESSAIS_CONTACT,contextRootNode.path(CTX_METADONNEES).path(CTX_META_ESSAIS_CONTACT).asText(),Arrays.toString(ContactAttemptConfiguration.labels()),getClass()));
+            results.add(DelegateContextVerifier.computeIncorrectEnumMessage(CTX_META_ESSAIS_CONTACT,contextRootNode.path(CTX_METADONNEES).path(CTX_META_ESSAIS_CONTACT).asText(),Arrays.toString(ContactAttemptConfiguration.labels()),getClass()));
         }
 
         try {
             String bilanContact = contextRootNode.path(CTX_METADONNEES).path(CTX_META_BILAN_CONTACT).asText();
             ContactOutcomeConfiguration.valueOfLabel(bilanContact);
         }catch (IllegalArgumentException e){
-            results.add(computeIncorrectEnumMessage(CTX_META_BILAN_CONTACT,contextRootNode.path(CTX_METADONNEES).path(CTX_META_BILAN_CONTACT).asText(),Arrays.toString(ContactOutcomeConfiguration.labels()),getClass()));
+            results.add(DelegateContextVerifier.computeIncorrectEnumMessage(CTX_META_BILAN_CONTACT,contextRootNode.path(CTX_METADONNEES).path(CTX_META_BILAN_CONTACT).asText(),Arrays.toString(ContactOutcomeConfiguration.labels()),getClass()));
         }
 
         try {
             String reperage = contextRootNode.path(CTX_METADONNEES).path(CTX_META_REPERAGE).asText();
             IdentificationConfiguration.valueOfLabel(reperage);
         }catch (IllegalArgumentException e){
-            results.add(computeIncorrectEnumMessage(CTX_META_REPERAGE,contextRootNode.path(CTX_METADONNEES).path(CTX_META_REPERAGE).asText(),Arrays.toString(IdentificationConfiguration.labels()),getClass()));
+            results.add(DelegateContextVerifier.computeIncorrectEnumMessage(CTX_META_REPERAGE,contextRootNode.path(CTX_METADONNEES).path(CTX_META_REPERAGE).asText(),Arrays.toString(IdentificationConfiguration.labels()),getClass()));
         }
 
         return results;

@@ -1,4 +1,4 @@
-package fr.insee.protools.backend.service.platine.questionnaire.dto;
+package fr.insee.protools.backend.service.common.platine_sabiane.dto;
 
 /**
  * Class defining names of the meta data to pass to the questionnaire

@@ -17,7 +17,7 @@ public class SabianePilotageService {
         WebClientHelper.logDebugJson("postCampaign : ",campaignContextDto);
 
         var response = webClientHelper.getWebClient(KNOWN_API_SABIANE_PILOTAGE)
-                .put()
+                .post()
                 .uri("/api/campaign")
                 .bodyValue(campaignContextDto)
                 .retrieve()

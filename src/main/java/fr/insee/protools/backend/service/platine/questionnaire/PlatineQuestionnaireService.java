@@ -2,9 +2,10 @@ package fr.insee.protools.backend.service.platine.questionnaire;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.insee.protools.backend.service.platine.questionnaire.dto.NomenclatureDto;
-import fr.insee.protools.backend.service.platine.questionnaire.dto.QuestionnaireModelCreateDto;
-import fr.insee.protools.backend.service.platine.questionnaire.dto.campaign.CampaignDto;
+import fr.insee.protools.backend.service.common.platine_sabiane.QuestionnairePlatineSabianeService;
+import fr.insee.protools.backend.service.common.platine_sabiane.dto.NomenclatureDto;
+import fr.insee.protools.backend.service.common.platine_sabiane.dto.QuestionnaireModelCreateDto;
+import fr.insee.protools.backend.service.common.platine_sabiane.dto.campaign.CampaignDto;
 import fr.insee.protools.backend.webclient.WebClientHelper;
 import fr.insee.protools.backend.webclient.exception.runtime.WebClient4xxException;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +21,7 @@ import static fr.insee.protools.backend.webclient.configuration.ApiConfigPropert
 
 @Service
 @Slf4j
-public class PlatineQuestionnaireService {
+public class PlatineQuestionnaireService implements QuestionnairePlatineSabianeService {
 
     @Autowired WebClientHelper webClientHelper;
     @Autowired ObjectMapper objectMapper;

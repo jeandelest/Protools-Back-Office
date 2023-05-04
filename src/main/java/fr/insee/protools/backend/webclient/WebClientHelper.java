@@ -12,10 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
-import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Component;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
@@ -46,24 +44,16 @@ public class WebClientHelper {
                                                 //Keycloak error?
                                                 errorMsg = "HttpStatus.UNAUTHORIZED. WWW-Authenticate=[" + String.join("", clientResponse.headers().header("WWW-Authenticate") + "]");
                                         }
-                                        if (clientResponse.headers().contentType().isPresent()
-                                                && clientResponse.headers().contentType().get().equals(MediaType.APPLICATION_JSON)) {
-                                                String finalErrorHeaders = errorMsg;
-                                                result = clientResponse.bodyToMono(ErrorResponse.class)
-                                                        .flatMap(error -> {
-                                                                if (clientResponse.statusCode().is4xxClientError()) {
-                                                                        return Mono.error(new WebClient4xxException(finalErrorHeaders + " - " + error.getBody().getDetail(), error.getStatusCode()));
-                                                                } else {
-                                                                        return Mono.error(new WebClient5xxException(finalErrorHeaders + " - " + error.getBody().getDetail()));
-                                                                }
-                                                        });
-                                        } else {
-                                                if (clientResponse.statusCode().is4xxClientError()) {
-                                                        result = Mono.error(new WebClient4xxException(errorMsg, clientResponse.statusCode()));
-                                                } else {
-                                                        result = Mono.error(new WebClient5xxException(errorMsg));
-                                                }
-                                        }
+
+                                        String finalErrorHeaders = errorMsg;
+                                        result = clientResponse.bodyToMono(String.class)
+                                                .flatMap(error -> {
+                                                        if (clientResponse.statusCode().is4xxClientError()) {
+                                                                return Mono.error(new WebClient4xxException(finalErrorHeaders + " - " + error, clientResponse.statusCode()));
+                                                        } else {
+                                                                return Mono.error(new WebClient5xxException(finalErrorHeaders + " - " + error));
+                                                        }
+                                                });
                                         return result;
                                 }
                         )

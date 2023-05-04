@@ -1,4 +1,4 @@
-package fr.insee.protools.backend.service.platine.questionnaire.dto.campaign;
+package fr.insee.protools.backend.service.common.platine_sabiane.dto.campaign;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

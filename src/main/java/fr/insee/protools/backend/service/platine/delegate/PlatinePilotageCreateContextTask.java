@@ -66,26 +66,26 @@ public class PlatinePilotageCreateContextTask implements JavaDelegate, DelegateC
                 );
         Set<String> requiredPartition =
                 Set.of(CTX_PARTITION_LABEL, CTX_PARTITION_DATE_DEBUT_COLLECTE, CTX_PARTITION_DATE_FIN_COLLECTE, CTX_PARTITION_DATE_RETOUR);
-        results.addAll(computeMissingChildrenMessages(requiredNodes,contextRootNode,getClass()));
-        results.addAll(computeMissingChildrenMessages(requiredMetadonnees,contextRootNode.path(CTX_METADONNEES),getClass()));
+        results.addAll(DelegateContextVerifier.computeMissingChildrenMessages(requiredNodes,contextRootNode,getClass()));
+        results.addAll(DelegateContextVerifier.computeMissingChildrenMessages(requiredMetadonnees,contextRootNode.path(CTX_METADONNEES),getClass()));
 
         var partitionIterator =contextRootNode.path(CTX_PARTITIONS).elements();
         //Partitions
         while (partitionIterator.hasNext()) {
             var partitionNode = partitionIterator.next();
-            results.addAll(computeMissingChildrenMessages(requiredPartition,partitionNode,getClass()));
+            results.addAll(DelegateContextVerifier.computeMissingChildrenMessages(requiredPartition,partitionNode,getClass()));
         }
 
 
         //Check value of PERIODE Enum
         String periode = contextRootNode.path(CTX_METADONNEES).path(CTX_META_PERIODE).asText();
         if(! EnumUtils.isValidEnum(PeriodEnum.class, periode)){
-            results.add(computeIncorrectEnumMessage(CTX_META_PERIODE,periode,Arrays.toString(PeriodEnum.values()),getClass()));
+            results.add(DelegateContextVerifier.computeIncorrectEnumMessage(CTX_META_PERIODE,periode,Arrays.toString(PeriodEnum.values()),getClass()));
         }
         //Check value of PERIODICITE Enum
         String periodicite = contextRootNode.path(CTX_METADONNEES).path(CTX_META_PERIODICITE).asText();
         if(! EnumUtils.isValidEnum(PeriodicityEnum.class, periodicite)){
-            results.add(computeIncorrectEnumMessage(CTX_META_PERIODICITE,periodicite,Arrays.toString(PeriodicityEnum.values()),getClass()));
+            results.add(DelegateContextVerifier.computeIncorrectEnumMessage(CTX_META_PERIODICITE,periodicite,Arrays.toString(PeriodicityEnum.values()),getClass()));
         }
         return results;
     }
