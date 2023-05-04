@@ -1,0 +1,11 @@
+{
+  "value": {
+    "variables": [
+      {
+        "name": "Enq_LibelleEnquete",
+        "value": "Enquête de démo 2022"
+      }
+    ],
+    "inseeContext": "household"
+  }
+}
