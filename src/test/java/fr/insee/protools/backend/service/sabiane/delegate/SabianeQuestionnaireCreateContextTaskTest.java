@@ -1,4 +1,4 @@
-package fr.insee.protools.backend.service.platine.delegate;
+package fr.insee.protools.backend.service.sabiane.delegate;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,8 +9,10 @@ import fr.insee.protools.backend.service.context.ContextConstants;
 import fr.insee.protools.backend.service.context.ContextService;
 import fr.insee.protools.backend.service.context.exception.BadContextIncorrectException;
 import fr.insee.protools.backend.service.nomenclature.NomenclatureService;
-import fr.insee.protools.backend.service.platine.questionnaire.PlatineQuestionnaireService;
+import fr.insee.protools.backend.service.sabiane.questionnaire.SabianeQuestionnaireService;
 import fr.insee.protools.backend.service.questionnaire_model.QuestionnaireModelService;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.test.FlowableTest;
 import org.junit.jupiter.api.Test;
@@ -23,6 +25,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.util.ClassUtils;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -37,20 +40,21 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 @FlowableTest
 public
-class PlatineQuestionnaireCreateContextTaskTest {
+class SabianeQuestionnaireCreateContextTaskTest {
 
-    final static String ressourceFolder = ClassUtils.convertClassNameToResourcePath(PlatineQuestionnaireCreateContextTaskTest.class.getPackageName());
-    final static String platine_context_json = ressourceFolder+"/protools-contexte-platine.json";
-    final static String platine_context_incorrect_json = ressourceFolder+"/protools-contexte-platine-incorrect.json";
 
-    @Mock PlatineQuestionnaireService platineQuestionnaireService;
+    final static String ressourceFolder = ClassUtils.convertClassNameToResourcePath(SabianeQuestionnaireCreateContextTaskTest.class.getPackageName());
+    final static String sabiane_context_json = ressourceFolder+"/protools-contexte-sabiane.json";
+    final static String sabiane_context_incorrect_json = ressourceFolder+"/protools-contexte-sabiane-incorrect.json";
+
+    @Mock SabianeQuestionnaireService sabianeQuestionnaireService;
     @Mock QuestionnaireModelService questionnaireModelService;
     @Mock NomenclatureService nomenclatureService;
     @Mock ContextService protoolsContext;
     @Spy ObjectMapper objectMapper;
 
     @InjectMocks
-    PlatineQuestionnaireCreateContextTask platineQuestTask;
+    SabianeQuestionnaireCreateContextTask sabianeQuestTask;
 
     private final String questionnaireContent1 ="{\"id\": \"TOTO\" , \"toto\": 55 }";
 
@@ -61,15 +65,15 @@ class PlatineQuestionnaireCreateContextTaskTest {
         return contextRootNode;
     }
 
-     @Test
+    @Test
     void execute_should_throwBadContextIncorrect_when_contextIsKO() {
         // preconditions
         DelegateExecution execution = mock(DelegateExecution.class);
         when(execution.getProcessInstanceId()).thenReturn("1");
-        initContexteMock(platine_context_incorrect_json);
+        initContexteMock(sabiane_context_incorrect_json);
 
         //Execute the unit under test
-        assertThrows(BadContextIncorrectException.class, () -> platineQuestTask.execute(execution));
+        assertThrows(BadContextIncorrectException.class, () -> sabianeQuestTask.execute(execution));
 
         // postconditions
         //assertThat(execution.getVariable("myVariable")).isEqualTo("myValue");
@@ -78,49 +82,59 @@ class PlatineQuestionnaireCreateContextTaskTest {
 
     /*@Test
     void initQuestionnaireModels_should_produce_correct_json(){
-        platineQuestTask.²
+        sabianeQuestTask.²
     }*/
 
     @Test
     void execute_should_work_and_make_correct_calls() throws IOException {
         DelegateExecution execution = mock(DelegateExecution.class);
         when(execution.getProcessInstanceId()).thenReturn("1");
-        JsonNode contextRootNode = initContexteMock(platine_context_json);
-        assertEquals(1,contextRootNode.path(ContextConstants.CTX_QUESTIONNAIRE_MODELS).size(), "Context error : expected exactly one questionnaire model");
-        String idQuestionnaireModel = contextRootNode.path(ContextConstants.CTX_QUESTIONNAIRE_MODELS).get(0).path(CTX_QUESTIONNAIRE_MODEL_ID).asText();
-        String labelQuestionnaireModel = contextRootNode.path(ContextConstants.CTX_QUESTIONNAIRE_MODELS).get(0).path(CTX_QUESTIONNAIRE_MODEL_LABEL).asText();
-        String repertoireQuestionnaireModel = contextRootNode.path(ContextConstants.CTX_QUESTIONNAIRE_MODELS).get(0).path(CTX_QUESTIONNAIRE_MODEL_CHEMIN_REPERTOIRE).asText();
+        JsonNode contextRootNode = initContexteMock(sabiane_context_json);
+        assertEquals(2,contextRootNode.path(ContextConstants.CTX_QUESTIONNAIRE_MODELS).size(), "Context error : expected exactly 2 questionnaire model");
 
         //Prepare the list of existing nomenclatures ("L_NATIONETR-1-1-0" does not exists yet)
-        when(platineQuestionnaireService.getNomenclaturesId()).thenReturn(Set.of("L_DEPNAIS-1-1-0","L_PAYSNAIS-1-1-0"));
+        when(sabianeQuestionnaireService.getNomenclaturesId()).thenReturn(Set.of("L_DEPNAIS-1-1-0","L_PAYSNAIS-1-1-0","L_COMMUNEPASSEE-1-1-0"));
         //Mock the read nomenclature
         String nomenclatureContent="{\"id\": \"nomenclatureContent\"}";
+
         when(nomenclatureService.getNomenclatureContent("L_NATIONETR-1-1-0","NATIONETR")).thenReturn(nomenclatureContent);
         //Mock questionnaire
-        when(platineQuestionnaireService.questionnaireModelExists(anyString())).thenReturn(false);
+        when(sabianeQuestionnaireService.questionnaireModelExists(anyString())).thenReturn(false);
         when(questionnaireModelService.getQuestionnaireModel(anyString(), anyString())).thenReturn(questionnaireContent1);
 
 
         //Execute the unit under test
-        assertThatCode(() -> platineQuestTask.execute(execution)).doesNotThrowAnyException();
+        assertThatCode(() -> sabianeQuestTask.execute(execution)).doesNotThrowAnyException();
 
         //Verifications on nomenclatures
-        verify(platineQuestionnaireService,atLeastOnce()).getNomenclaturesId();
-        verify(platineQuestionnaireService).postNomenclature(
+        verify(sabianeQuestionnaireService,atLeastOnce()).getNomenclaturesId();
+        verify(sabianeQuestionnaireService).postNomenclature(
                 "L_NATIONETR-1-1-0",
                 "liste des nationalités",
                 objectMapper.readTree(nomenclatureContent));
 
-        //Verifications on questionnaires
-        verify(platineQuestionnaireService,times(1)).questionnaireModelExists(idQuestionnaireModel);
-        verify(questionnaireModelService,times(1)).getQuestionnaireModel(idQuestionnaireModel,repertoireQuestionnaireModel);
-        verify(platineQuestionnaireService).postQuestionnaireModel(idQuestionnaireModel,labelQuestionnaireModel,
-                objectMapper.readTree(questionnaireContent1),
-                Set.of("L_DEPNAIS-1-1-0","L_PAYSNAIS-1-1-0","L_NATIONETR-1-1-0"));
+        //Verifications on questionnaires (2 questionnaires models to create)
+        verify(sabianeQuestionnaireService,times(2)).postQuestionnaireModel(any(),any(),any(),any());
+        for(int i =0; i<2; i++){
+            String idQuestionnaireModel = contextRootNode.path(ContextConstants.CTX_QUESTIONNAIRE_MODELS).get(i).path(CTX_QUESTIONNAIRE_MODEL_ID).asText();
+            String labelQuestionnaireModel = contextRootNode.path(ContextConstants.CTX_QUESTIONNAIRE_MODELS).get(i).path(CTX_QUESTIONNAIRE_MODEL_LABEL).asText();
+            String repertoireQuestionnaireModel = contextRootNode.path(ContextConstants.CTX_QUESTIONNAIRE_MODELS).get(i).path(CTX_QUESTIONNAIRE_MODEL_CHEMIN_REPERTOIRE).asText();
+            Set<String> nomenclatures = new HashSet<>();
+            var iter=contextRootNode.path(ContextConstants.CTX_QUESTIONNAIRE_MODELS).get(i).path(CTX_QUESTIONNAIRE_MODEL_REQUIRED_NOMENCLATURES).elements();
+            while(iter.hasNext()){
+                var nomenclature=iter.next().asText();
+                nomenclatures.add(nomenclature);
+            }
+
+            verify(sabianeQuestionnaireService,times(1)).questionnaireModelExists(idQuestionnaireModel);
+            verify(questionnaireModelService,times(1)).getQuestionnaireModel(idQuestionnaireModel,repertoireQuestionnaireModel);
+            verify(sabianeQuestionnaireService).postQuestionnaireModel(idQuestionnaireModel,labelQuestionnaireModel,
+                    objectMapper.readTree(questionnaireContent1),nomenclatures);
+        }
 
         //Verify postCampaign
         ArgumentCaptor<CampaignDto> acCampaignDto = ArgumentCaptor.forClass(CampaignDto.class);
-        verify(platineQuestionnaireService,times(1)).postCampaign(acCampaignDto.capture());
+        verify(sabianeQuestionnaireService,times(1)).postCampaign(acCampaignDto.capture());
         List<CampaignDto> allValues = acCampaignDto.getAllValues();
         assertEquals(1, allValues.size(),"We should have exactly one campaign");
         MetadataValue expectedMetadataNode = ProtoolsTestUtils.asObject(ressourceFolder + "/expected_post_questionnaire_metadata.json", MetadataValue.class);
