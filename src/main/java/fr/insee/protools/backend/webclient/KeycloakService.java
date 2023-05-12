@@ -48,7 +48,7 @@ class KeycloakService {
 
     public String getToken(APIProperties.AuthProperties authProperties) throws KeycloakTokenConfigException {
         log.debug("getToken for authProperties={}",authProperties);
-        if(!isValidURL(authProperties.getUrl()) || authProperties.getClientId().isBlank() || authProperties.getRealm().isBlank())
+        if(!isValidURL(authProperties.getUrl()) || authProperties.getClientId()==null || authProperties.getClientId().isBlank() || authProperties.getRealm()==null || authProperties.getRealm().isBlank())
         {
             throw new KeycloakTokenConfigException(String.format("Auth is not correctly configured for [%s]",authProperties));
         }
@@ -108,7 +108,7 @@ class KeycloakService {
     }
 
     boolean isValidURL(String url) {
-        if(url.isBlank()){
+        if(url==null || url.isBlank()){
             return false;
         }
         try {
