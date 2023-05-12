@@ -8,7 +8,7 @@ import fr.insee.protools.backend.webclient.exception.ApiNotConfiguredException;
 import fr.insee.protools.backend.webclient.exception.KeycloakTokenConfigUncheckedException;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -57,6 +57,13 @@ class WebClientHelperTest {
     public void prepare() {
         MockitoAnnotations.openMocks(this);
         this.keycloakService.initialize();
+    }
+
+    @AfterEach
+    void mockServerCleanup() throws IOException {
+        if(this.mockWebServer!=null){
+            this.mockWebServer.close();
+        }
     }
 
     private void initMockWebServer() throws IOException {
