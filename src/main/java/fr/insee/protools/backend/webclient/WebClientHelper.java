@@ -29,6 +29,8 @@ import java.util.EnumMap;
 public class WebClientHelper {
 
         private final EnumMap<ApiConfigProperties.KNOWN_API, WebClient> initializedClients = new EnumMap<>(ApiConfigProperties.KNOWN_API.class);
+        private static final int DEFAULT_FILE_BUFFER_SIZE = 20 * 1024*1024;
+
         @Autowired private KeycloakService keycloakService;
         @Autowired private ApiConfigProperties apiConfigProperties;
 
@@ -90,13 +92,25 @@ public class WebClientHelper {
 
         /**
          * init a new WebClient proxy aware (default one ignore system proxy)
-         * with increased buffer size to 20Mb
+         * with increased buffer size to 20Mo
          *
-         * @return
+         * @return a Webclient
          */
         public WebClient getWebClientForFile() {
+                return getWebClientForFile(DEFAULT_FILE_BUFFER_SIZE);
+        }
+
+        public static int getDefaultFileBufferSize()  { return DEFAULT_FILE_BUFFER_SIZE; }
+
+        /**
+         * init a new WebClient proxy aware (default one ignore system proxy)
+         * with increased buffer size to <byteCount>
+         *
+         * @return a Webclient
+         */
+        public WebClient getWebClientForFile(int byteCount) {
                 return getBuilder()
-                        .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(20 * 1024 * 1024))
+                        .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(byteCount))
                         .build();
         }
 

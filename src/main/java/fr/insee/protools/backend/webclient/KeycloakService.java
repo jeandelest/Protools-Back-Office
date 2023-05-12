@@ -94,7 +94,7 @@ class KeycloakService {
     }
 
     @PostConstruct
-    private void initialize() {
+    void initialize() {
         webClient = WebClient.builder()
                 .clientConnector(
                         new ReactorClientHttpConnector(

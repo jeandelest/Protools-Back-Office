@@ -42,13 +42,15 @@
     "assistanceNiveau2Commune": "assistanceNiveau2Commune",
     "assistanceNiveau2CodePostal": "assistanceNiveau2CodePostal"
   },
-  "partitions": [{
-    "id": 123456,
-    "label": "lot hommes",
+  "partitions": [
+  {
+    "id": 123457,
+    "label": "lot femmes",
     "dateDebutCollecte": "2023-01-16T14:07:23.001Z",
     "dateFinCollecte": "2024-01-16T14:07:23.001Z",
     "dateRetour": "2024-01-16T14:07:23.001Z"
-  }],
+  }
+  ],
   "questionnaireModels": [{
     "id": "tic2023a00_webMBG",
     "cheminRepertoire": "coleman",
@@ -72,7 +74,7 @@
     },
     {
       "id": "L_NATIONETR-1-1-0",
-      "cheminRepertoire": " NATIONETR",
+      "cheminRepertoire": "NATIONETR",
       "label": "liste des nationalités"
     }
   ]

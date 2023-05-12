@@ -16,6 +16,7 @@ public class SabianePilotageService {
     public void postCampaign(CampaignContextDto campaignContextDto) {
         WebClientHelper.logDebugJson("postCampaign : ",campaignContextDto);
 
+        //TODO: This call returns that if campaign already exists :   statusCode=400 BAD_REQUEST - contentType=Optional[text/plain;charset=UTF-8] - Campaign with id 'MBG2022X01' already exists
         var response = webClientHelper.getWebClient(KNOWN_API_SABIANE_PILOTAGE)
                 .post()
                 .uri("/api/campaign")
@@ -23,6 +24,7 @@ public class SabianePilotageService {
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
+
 
         log.info(" response={} ",response);
     }

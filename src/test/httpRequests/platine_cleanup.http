@@ -12,7 +12,8 @@ grant_type=client_credentials&client_id={{client_id}}&client_secret={{client_sec
   client.log("TOKEN = "+client.global.get("auth_token"));
   client.log("RESPONSE = "+client.global);
   client.global.set("CAMPAGNE_ID", "MBG2022X00");
-  client.global.set("PARTITION_ID", "123456");
+  client.global.set("PARTITION_ID1", "123456");
+    client.global.set("PARTITION_ID2", "123457");
   client.global.set("SU_ID", "MBG0001");
   client.global.set("SOURCE_ID", "MBG");
 %}
@@ -22,8 +23,13 @@ DELETE https://api-questionnaire-enquetes.developpement2.insee.fr/api/campaign/{
 accept: */*
 Authorization: Bearer {{auth_token}}
 
-### suppression campagne dans platine pilotage (part1)
-DELETE https://api-pilotage-enquetes.developpement2.insee.fr/api/partitionings/{{PARTITION_ID}}
+### suppression campagne dans platine pilotage (part1) ID1
+DELETE https://api-pilotage-enquetes.developpement2.insee.fr/api/partitionings/{{PARTITION_ID1}}
+accept: */*
+Authorization: Bearer {{auth_token}}
+
+### suppression campagne dans platine pilotage (part1) ID2
+DELETE https://api-pilotage-enquetes.developpement2.insee.fr/api/partitionings/{{PARTITION_ID2}}
 accept: */*
 Authorization: Bearer {{auth_token}}
 

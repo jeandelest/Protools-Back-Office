@@ -1,0 +1,38 @@
+### GET TOKEN
+POST https://auth.insee.test/auth/realms/{{realm}}/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&client_id={{client_id}}&client_secret={{client_secret}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+  client.global.set("auth_token", response.body.access_token);
+  client.log("TOKEN = "+client.global.get("auth_token"));
+  client.log("RESPONSE = "+client.global);
+  client.global.set("CAMPAGNE_ID", "MBG2022X01");
+  client.global.set("PARTITION_ID1", "123456");
+    client.global.set("PARTITION_ID2", "123457");
+  client.global.set("SU_ID", "MBG0001");
+  client.global.set("SOURCE_ID", "MBG");
+%}
+
+### suppression campagne dans questionnaire
+DELETE https://api.questionnaire-enqueteurs.enquetes.recette2.insee.fr/api/campaign/{{CAMPAGNE_ID}}?force=true
+accept: */*
+Authorization: Bearer {{auth_token}}
+
+### suppression campagne dans pilotage
+DELETE https://api.collecte-enqueteurs.enquetes.recette2.insee.fr/api/campaign/{{CAMPAGNE_ID}}?force=true
+accept: */*
+Authorization: Bearer {{auth_token}}
+
+
+### Suppression SU dans questionnaire
+DELETE https://api.collecte-enqueteurs.enquetes.recette2.insee.fr/api/survey-units/{{SU_ID}}
+accept: */*
+Authorization: Bearer {{auth_token}}
+
+
+

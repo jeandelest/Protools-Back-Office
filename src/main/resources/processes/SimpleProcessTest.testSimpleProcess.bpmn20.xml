@@ -9,11 +9,15 @@
   
     <startEvent id="theStart" />
     <userTask id="task1" name="My Task" />
-    <serviceTask id="createPlatineQuestionnaireContexte" name="créer le contexte plateforme de collecte web (partie Questionnaire)" flowable:delegateExpression="${platineQuestionnaireCreateContextTask}"></serviceTask>
-    <serviceTask id="createPlatinePilotageContexte" name="créer le contexte plateforme de collecte web (partie Pilotage)" flowable:delegateExpression="${platinePilotageCreateContextTask}"></serviceTask>
+    <serviceTask id="createSabianeQuestionnaireContexte" name="créer le contexte plateforme de collecte enqueteur (partie Questionnaire)" flowable:delegateExpression="${sabianeQuestionnaireCreateContextTask}"></serviceTask>
     <serviceTask id="createSabianePilotageContexte" name="créer le contexte plateforme de collecte enqueteur (partie Pilotage)" flowable:delegateExpression="${sabianePilotageCreateContextTask}"></serviceTask>
 
     <sequenceFlow id="flow1" sourceRef="theStart" targetRef="task1" />
+    <!-- PLATINE TASKS
+      <serviceTask id="createPlatineQuestionnaireContexte" name="créer le contexte plateforme de collecte web (partie Questionnaire)" flowable:delegateExpression="${platineQuestionnaireCreateContextTask}"></serviceTask>
+      <serviceTask id="createPlatinePilotageContexte" name="créer le contexte plateforme de collecte web (partie Pilotage)" flowable:delegateExpression="${platinePilotageCreateContextTask}"></serviceTask>
+    -->
+
     <!-- Flow Pilotage => End
       <sequenceFlow id="flow2" sourceRef="task1" targetRef="createPlatinePilotageContexte" />
       <sequenceFlow id="flow4" sourceRef="createPlatinePilotageContexte" targetRef="theEnd" />
@@ -28,11 +32,12 @@
     <sequenceFlow id="flow4" sourceRef="createPlatineQuestionnaireContexte" targetRef="theEnd" />
  -->
 
-    <!-- Flow Sabiane(pilotage)  -> End -->
+    <!-- Flow Sabiane(pilotage)  ->  questionnaire(sabiane) -> End -->
     <sequenceFlow id="flow2" sourceRef="task1" targetRef="createSabianePilotageContexte" />
-    <sequenceFlow id="flow4" sourceRef="createSabianePilotageContexte" targetRef="theEnd" />
+    <sequenceFlow id="flow3" sourceRef="createSabianePilotageContexte" targetRef="createSabianeQuestionnaireContexte" />
+    <sequenceFlow id="flow4" sourceRef="createSabianeQuestionnaireContexte" targetRef="theEnd" />
 
-<endEvent id="theEnd" />
+    <endEvent id="theEnd" />
 
 </process>
 
