@@ -48,7 +48,7 @@ public class WebClientHelper {
                                         }
 
                                         String finalErrorHeaders = errorMsg;
-                                        result = clientResponse.bodyToMono(String.class)
+                                        result = clientResponse.bodyToMono(String.class).defaultIfEmpty("No error message provided by API")
                                                 .flatMap(error -> {
                                                         if (clientResponse.statusCode().is4xxClientError()) {
                                                                 return Mono.error(new WebClient4xxException(finalErrorHeaders + " - " + error, clientResponse.statusCode()));
