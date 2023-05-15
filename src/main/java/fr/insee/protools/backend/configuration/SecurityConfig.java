@@ -34,7 +34,7 @@ public class SecurityConfig {
         private String administrateurRole;
 
         //Par défaut, spring sécurity prefixe les rôles avec cette chaine
-        private final static String ROLE_PREFIX = "ROLE_";
+        private static final String ROLE_PREFIX = "ROLE_";
 
         @Autowired InseeSecurityTokenProperties inseeSecurityTokenProperties;
 

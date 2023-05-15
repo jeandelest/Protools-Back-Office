@@ -218,12 +218,13 @@ public class SabianePilotageCreateContextTask implements JavaDelegate, DelegateC
             var partitionNode = partitionIterator.next();
             results.addAll(DelegateContextVerifier.computeMissingChildrenMessages(requiredPartition,partitionNode,getClass()));
 
-            for(var dateNode : requiredPartitionDates)
-            //Check the date format
-            try {
-                ContextServiceImpl.getInstantFromPartition(partitionNode, dateNode);
-            }catch (BadContextDateTimeParseException e){
-               results.add(e.getMessage());
+            for(var dateNode : requiredPartitionDates) {
+                //Check the date format
+                try {
+                    ContextServiceImpl.getInstantFromPartition(partitionNode, dateNode);
+                } catch (BadContextDateTimeParseException e) {
+                    results.add(e.getMessage());
+                }
             }
         }
 

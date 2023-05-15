@@ -20,7 +20,7 @@ import static fr.insee.protools.backend.service.context.ContextConstants.*;
 @Slf4j
 public class QuestionnaireHelper {
 
-    private final static ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public static void createQuestionnaire(JsonNode contextRootNode,
                                            QuestionnairePlatineSabianeService questionnairePlatineSabianeService,

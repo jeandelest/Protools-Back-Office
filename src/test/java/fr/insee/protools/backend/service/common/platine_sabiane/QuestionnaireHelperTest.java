@@ -33,7 +33,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class QuestionnaireHelperTest {
+class QuestionnaireHelperTest {
 
     final static String platineRessourceFolder = ClassUtils.convertClassNameToResourcePath(PlatineQuestionnaireCreateContextTaskTest.class.getPackageName());
     final static String platine_context_json = platineRessourceFolder + "/protools-contexte-platine.json";

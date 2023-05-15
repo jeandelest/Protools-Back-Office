@@ -59,6 +59,7 @@ class WebClientHelperTest {
         this.keycloakService.initialize();
     }
 
+    //close the mocked web server if it has been initialized
     @AfterEach
     void mockServerCleanup() throws IOException {
         if(this.mockWebServer!=null){
@@ -102,7 +103,6 @@ class WebClientHelperTest {
         assertThat(webClient).isNotNull();
         //Should throw an exception as the realm is missing
         assertThrows(KeycloakTokenConfigUncheckedException.class , ()  -> webClient.get().uri(getDummyUriWithPort()).exchange().block());
-
     }
     @Test
     @DisplayName("Test getWebClient method without incomplete keycloak configuration")
