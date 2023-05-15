@@ -23,6 +23,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -34,30 +35,31 @@ class KeycloakService {
 
     @Autowired
     private Environment environment;
-
     private WebClient webClient;
 
-
+    public static final int TOKEN_REFRESH_LIMIT_MILLISECONDS = 10*1000;
     //We will keep one token by auth server / realm / clientId
     Map<APIProperties.AuthProperties, Token> tokenByAuthRealm=new HashMap<>();
 
-
-    public KeycloakService() {
-        //Default constructor
-    }
-
     public String getToken(APIProperties.AuthProperties authProperties) throws KeycloakTokenConfigException {
         log.debug("getToken for authProperties={}",authProperties);
-        if(!isValidURL(authProperties.getUrl()) || authProperties.getClientId()==null || authProperties.getClientId().isBlank() || authProperties.getRealm()==null || authProperties.getRealm().isBlank())
+        if(!isValidURL(authProperties.getUrl())
+                || authProperties.getClientId()==null || authProperties.getClientId().isBlank()
+                || authProperties.getRealm()==null || authProperties.getRealm().isBlank()
+                || authProperties.getClientSecret()==null || authProperties.getClientSecret().isBlank())
         {
             throw new KeycloakTokenConfigException(String.format("Auth is not correctly configured for [%s]",authProperties));
         }
 
-        var token = tokenByAuthRealm.get(authProperties);
-        //We refresh any token that is expire or will exipre within 10 second
-        if(token==null || System.currentTimeMillis() >= (token.endValidityTimeMillis-10*1000)){
+        Token token = tokenByAuthRealm.get(authProperties);
+        logToken(token);
+
+        //We refresh any expired token or that will expire within TOKEN_REFRESH_LIMIT_MILISECONDS
+        if(token==null || Instant.now().toEpochMilli() >= (token.endValidityTimeMillis- TOKEN_REFRESH_LIMIT_MILLISECONDS)){
+            log.trace("Refresh the token");
             refreshToken(authProperties);
         }
+        log.trace("new token endValidityTimeMillis={}",tokenByAuthRealm.get(authProperties).endValidityTimeMillis);
         return tokenByAuthRealm.get(authProperties).value;
     }
 
@@ -74,7 +76,7 @@ class KeycloakService {
         requestBody.add("grant_type", "client_credentials");
         requestBody.add("client_id", authProperties.getClientId());
         requestBody.add("client_secret", authProperties.getClientSecret());
-        long endValidityTimeMillis = System.currentTimeMillis();
+        long endValidityTimeMillis = Instant.now().toEpochMilli();
 
 
         KeycloakResponse response = webClient.post()
@@ -116,6 +118,18 @@ class KeycloakService {
             return true;
         } catch (MalformedURLException | URISyntaxException e) {
             return false;
+        }
+    }
+
+    private void logToken(Token token){
+        if(log.isTraceEnabled()){
+            var currentDt = Instant.now().toEpochMilli();
+            if(token!=null) {
+                log.trace("token.endValidityTimeMillis = {} - currentTimeMillis={} - diff={}",
+                        token.endValidityTimeMillis,currentDt, token.endValidityTimeMillis-currentDt);
+            }
+            else
+                log.trace("token=null - currentTimeMillis={}",currentDt);
         }
     }
 }
