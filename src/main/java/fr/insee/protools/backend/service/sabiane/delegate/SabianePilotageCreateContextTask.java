@@ -170,7 +170,7 @@ public class SabianePilotageCreateContextTask implements JavaDelegate, DelegateC
         Set<String> requiredNodes =
                 Set.of(
                         //Global & Campaign
-                        CTX_METADONNEES, CTX_CAMPAGNE_ID, CTX_CAMPAGNE_LABEL, CTX_CAMPAGNE_CONTEXTE
+                        CTX_METADONNEES, CTX_CAMPAGNE_ID, CTX_CAMPAGNE_LABEL, CTX_CAMPAGNE_CONTEXTE, CTX_PARTITIONS
                 );
         Set<String> requiredMetadonnees =
                 Set.of(
@@ -178,7 +178,7 @@ public class SabianePilotageCreateContextTask implements JavaDelegate, DelegateC
                         CTX_META_ASSISTANCE_NIVO2_MAIL,
                         CTX_META_REPERAGE,CTX_META_ESSAIS_CONTACT,CTX_META_BILAN_CONTACT,
                         CTX_META_REFERENTS_PRINCIPAUX, CTX_META_REFERENTS_SECONDAIRES,
-                        //arraya with at least one element
+                        //array with at least one element
                         CTX_META_SITES_GESTION
                 );
         Set<String> requiredReferent =

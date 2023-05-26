@@ -1,5 +1,6 @@
 package fr.insee.protools.backend.controller;
 
+import fr.insee.protools.backend.webclient.WebClientHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,9 @@ public class StarterController {
 
         @Autowired(required = false)
         private Optional<BuildProperties> buildProperties;
+
+        @Autowired
+        private WebClientHelper webClientHelper;
 
         @GetMapping("/healthcheck")
         public ResponseEntity<String> healthcheck(){
@@ -48,6 +52,15 @@ public class StarterController {
                         SecurityContextHolder.getContext().getAuthentication().getName()
                     )
                 );
+        }
+
+        @GetMapping("/token_details_by_api")
+        public ResponseEntity<String> tokensDetailsByAPI(){
+                StringBuilder result = new StringBuilder("List of tokens roles : ");
+                for(var x : webClientHelper.getTokenDetailsByAPI().entrySet()){
+                        result.append("\n").append(x.getKey()).append(" : ").append(x.getValue());
+                }
+                return ResponseEntity.ok(result.toString());
         }
 
 

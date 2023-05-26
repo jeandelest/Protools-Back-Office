@@ -6,6 +6,7 @@ import fr.insee.protools.backend.webclient.configuration.APIProperties;
 import fr.insee.protools.backend.webclient.configuration.ApiConfigProperties;
 import fr.insee.protools.backend.webclient.exception.ApiNotConfiguredException;
 import fr.insee.protools.backend.webclient.exception.KeycloakTokenConfigUncheckedException;
+import fr.insee.protools.backend.webclient.exception.runtime.WebClient4xxException;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.AfterEach;
@@ -258,5 +259,32 @@ class WebClientHelperTest {
         assertThatThrownBy(() -> webClientHelper.getWebClient(any()))
                 .isInstanceOf(ApiNotConfiguredException.class)
                 .hasMessageContaining("is disabled in properties");
+    }
+
+    @Test
+    @DisplayName("Test that the retrieval of spring private field still works")
+    void extractClientResponseRequestDescriptionPrivateFiledUsingReflexion_shouldWork() throws IOException {
+        WebClient webClient = webClientHelper.getWebClient();
+        assertThat(webClient).isNotNull();
+
+        //Mock an error response
+        MockResponse mockResponse = new MockResponse()
+                .setResponseCode(HttpStatus.BAD_REQUEST.value())
+                .setBody("XXX");
+
+        initMockWebServer();
+        mockWebServer.enqueue(mockResponse);
+
+        //Call method under test
+        WebClient4xxException exception = assertThrows(WebClient4xxException.class , ()  ->webClient.get().uri(getDummyUriWithPort()).retrieve()
+                .bodyToMono(String.class)
+                .block());
+
+        //Post call conditions (we get more or less the expected message with the original request)
+        //IF it is not the case, check that the spring private field has not changed or been renamed
+        String actualMessage = exception.getMessage();
+        assertThat(actualMessage.contains("GET")).isTrue();
+        assertThat(actualMessage.contains(getDummyUriWithPort())).isTrue();
+        assertThat(actualMessage.contains(String.valueOf(HttpStatus.BAD_REQUEST.value()))).isTrue();
     }
 }

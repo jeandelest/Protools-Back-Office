@@ -2,11 +2,10 @@ package fr.insee.protools.backend.service.context;
 
 public final class ContextConstants {
 
-
     // Campaign context constants - Metadata
     public static final String CTX_CAMPAGNE_ID = "id";
     public static final String CTX_CAMPAGNE_LABEL = "label";
-    public static final String CTX_CAMPAGNE_CONTEXTE = "contexte"; //ex: household...
+    public static final String CTX_CAMPAGNE_CONTEXTE = "contexte"; //Values: Enum CampaignContext...
 
 
     //Metadonnees Part
@@ -68,9 +67,15 @@ public final class ContextConstants {
     public static final String CTX_PARTITIONS = "partitions";
     public static final String CTX_PARTITION_ID = "id";
     public static final String CTX_PARTITION_LABEL = "label";
+    public static final String CTX_PARTITION_TYPE_ECHANTILLON = "typeEchantillon";
     public static final String CTX_PARTITION_DATE_DEBUT_COLLECTE = "dateDebutCollecte";
     public static final String CTX_PARTITION_DATE_FIN_COLLECTE = "dateFinCollecte";
     public static final String CTX_PARTITION_DATE_RETOUR = "dateRetour";
+    public static final String CTX_PARTITION_QUESTIONNAIRE_MODEL = "questionnaireModel";
+    public static final String CTX_PARTITION_QUIREPOND1 = "quiRepond1";
+    public static final String CTX_PARTITION_QUIREPOND2 = "quiRepond2";
+    public static final String CTX_PARTITION_QUIREPOND3 = "quiRepond3";
+
     //Partitions, specific sabiane
     public static final String CTX_PARTITION_SABIANE_DATE_DEBUT_VISIBILITE_GESTIONNAIRE = "dateDebutVisibiliteGestionnaire";
     public static final String CTX_PARTITION_SABIANE_DATE_DEBUT_VISIBILITE_ENQUETEUR = "dateDebutVisibiliteEnqueteur";

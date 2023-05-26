@@ -59,7 +59,6 @@ class KeycloakService {
             log.trace("Refresh the token");
             refreshToken(authProperties);
         }
-        log.trace("new token endValidityTimeMillis={}",tokenByAuthRealm.get(authProperties).endValidityTimeMillis);
         return tokenByAuthRealm.get(authProperties).value;
     }
 

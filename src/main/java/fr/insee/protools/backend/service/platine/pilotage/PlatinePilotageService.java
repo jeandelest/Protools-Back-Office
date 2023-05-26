@@ -1,6 +1,7 @@
 package fr.insee.protools.backend.service.platine.pilotage;
 
-import fr.insee.protools.backend.service.platine.pilotage.dto.MetadataDto;
+import fr.insee.protools.backend.service.platine.pilotage.dto.query.QuestioningWebclientDto;
+import fr.insee.protools.backend.service.platine.pilotage.metadata.MetadataDto;
 import fr.insee.protools.backend.webclient.WebClientHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,17 @@ public class PlatinePilotageService {
                 .bodyToMono(String.class)
                 .block();
         log.info("partitionId={} - response={} ",partitionId,response);
+    }
+    public void putQuestionings(QuestioningWebclientDto dto) {
+        WebClientHelper.logDebugJson("putQuestionings ",dto);
+        var response = webClientHelper.getWebClient(KNOWN_API_PLATINE_PILOTAGE)
+                .put()
+                .uri("/api/questionings")
+                .bodyValue(dto)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+        log.info("putQuestionings - response={} ",response);
     }
 
 }

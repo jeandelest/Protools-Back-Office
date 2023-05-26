@@ -1,0 +1,64 @@
+### GET TOKEN --- SET HOST
+< {%
+    client.global.set("host", "https://api-orchestration-protocole-enquete.developpement.insee.fr/");
+    client.global.set("host", "http://localhost:8080/");
+%}
+POST https://auth.insee.test/auth/realms/{{realm}}/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&client_id={{client_id}}&client_secret={{client_secret}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+    client.global.set("auth_token", response.body.access_token);
+    client.global.set("processDefinitionKey", "chargementContexteEnqueteur");
+    client.global.set("businessKey", "MyBuisnessKey");
+    //Set the context file in the last query
+%}
+
+###Create process
+POST {{host}}/runtime/process-instances
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "processDefinitionKey":"{{processDefinitionKey}}",
+  "businessKey":"{{businessKey}}",
+  "returnVariables":false,
+  "variables": [
+  ]
+}
+
+> {%
+    client.global.set("processInstanceId", response.body.id);
+%}
+
+
+### Récupération de la tache d'upload du contexte
+GET {{host}}/runtime/tasks?processInstanceId={{processInstanceId}}&taskDefinitionKey=uploadContext
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+
+> {%
+    client.test("Nb Tasks==1", function() {
+        client.assert(response.body["data"].length === 1, "Pas le bon nb de tasks attendu==1 - trouvees="+response.body["data"].length);
+    });
+    client.global.set("taskId", response.body["data"][0]["id"]);
+%}
+
+#######Envoi du contexte
+POST {{host}}/protools-process/upload-context?taskID={{taskId}}
+Authorization: Bearer {{auth_token}}
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="contexte.json"
+
+< bpmnAndContext/creation_context_platine/testCollexteWeb.json
+
+--WebAppBoundary--
+
+### Récupération de la liste des nomenclatures sur Platine Questionnaire

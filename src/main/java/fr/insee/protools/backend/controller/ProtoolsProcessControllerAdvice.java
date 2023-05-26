@@ -3,7 +3,12 @@ package fr.insee.protools.backend.controller;
 import fr.insee.protools.backend.service.context.exception.BadContextIOException;
 import fr.insee.protools.backend.service.context.exception.BadContextIncorrectException;
 import fr.insee.protools.backend.service.context.exception.BadContextNotJSONException;
+import fr.insee.protools.backend.service.exception.IncorrectSUException;
+import fr.insee.protools.backend.service.exception.ProcessDefinitionNotFoundException;
 import fr.insee.protools.backend.service.exception.TaskNotFoundException;
+import fr.insee.protools.backend.service.exception.VariableClassCastException;
+import fr.insee.protools.backend.webclient.exception.runtime.WebClient4xxException;
+import fr.insee.protools.backend.webclient.exception.runtime.WebClient5xxException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,4 +46,33 @@ public class ProtoolsProcessControllerAdvice {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler({ ProcessDefinitionNotFoundException.class })
+    public ResponseEntity<String> exeptionProcessDefinitionNotFoundHandler(/*final HttpServletRequest req, */final ProcessDefinitionNotFoundException exception) {
+        log.error("exeptionProcessDefinitionNotFoundHandler  : "+exception.getMessage());
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({ WebClient4xxException.class })
+    public ResponseEntity<String> exceptionWebClient4xxHandler(/*final HttpServletRequest req, */final WebClient4xxException exception) {
+        log.error("exceptionWebClient4xxHandler  : "+exception.getMessage());
+        return new ResponseEntity<>(exception.getMessage(), exception.getErrorCode());
+    }
+
+    @ExceptionHandler({ WebClient5xxException.class })
+    public ResponseEntity<String> exceptionWebClient5xxHandler(/*final HttpServletRequest req, */final WebClient5xxException exception) {
+        log.error("exceptionWebClient5xxHandler  : "+exception.getMessage());
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler({ IncorrectSUException.class })
+    public ResponseEntity<String> exceptionIncorrectSUHandler(/*final HttpServletRequest req, */final IncorrectSUException exception) {
+        log.error("exceptionIncorrectSUHandler  : "+String.format("%s - remSU=[%s]",exception.getMessage(),exception.getRemSU()));
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler({ VariableClassCastException.class })
+    public ResponseEntity<String> exceptionVariableClassCastHandler(/*final HttpServletRequest req, */final VariableClassCastException exception) {
+        log.error("exceptionVariableClassCastHandler  : "+exception.getMessage());
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

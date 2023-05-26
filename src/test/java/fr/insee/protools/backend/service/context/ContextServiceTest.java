@@ -110,11 +110,9 @@ class ContextServiceTest {
         MockMultipartFile multipartFile = new MockMultipartFile("file.json", "file.json", "text/json", resourceAsStream.readAllBytes());
         initTaskServiceMock();
         //Do not try to continue in a BPMN
-        doNothing().when(taskService).complete(anyString(),anyMap());
-
+        doNothing().when(taskService).complete(any(),any());
         //Call method under test
         assertThatCode(() -> contextService.processContextFileAndCompleteTask(multipartFile,dummyId)).doesNotThrowAnyException();
-
     }
 
     @Test
@@ -125,11 +123,40 @@ class ContextServiceTest {
         //Call method under test
         JsonNode contextRootNode = contextService.getContextByProcessInstance(dummyId);
 
-        //Post conditions : We got a valid context object
+        //Post conditions : We've got a valid context object
         assertNotNull(contextRootNode);
         assertNotNull(contextRootNode.get(ContextConstants.CTX_METADONNEES));
         assertNotNull(contextRootNode.get(ContextConstants.CTX_CAMPAGNE_ID));
         assertNotNull(contextRootNode.get(ContextConstants.CTX_CAMPAGNE_LABEL));
         assertEquals("DEM2022X00",contextRootNode.get(ContextConstants.CTX_CAMPAGNE_ID).asText());
     }
+
+    @Test
+    void processContextFileAndCreateProcessInstance_should_work_when_ContextOk() throws IOException {
+        //Preconditions
+        InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(ressourceFolder+"/protools-contexte-platine.json");
+        MockMultipartFile multipartFile = new MockMultipartFile("file.json", "file.json", "text/json", resourceAsStream.readAllBytes());
+
+        ProcessInstance pi = mock(ExecutionEntityImpl.class);
+        when(pi.getProcessInstanceId()).thenReturn(dummyId);
+        when(runtimeService.startProcessInstanceByKey(any(),any(),any())).thenReturn(pi);
+        initRuntimeSericeMock();
+        //Call method under test
+        String processId=contextService.processContextFileAndCreateProcessInstance(multipartFile,"simpleProcess",dummyId);
+
+        //Post conditions : We've got a valid Process Instance
+        assertEquals(dummyId,processId);
+        //Process instance creation has been called once
+        verify(runtimeService).startProcessInstanceByKey(any(),any(),any());
+        //                  We've got a valid context object
+        JsonNode contextRootNode = contextService.getContextByProcessInstance(dummyId);
+        //Post conditions : We've got a valid context object
+        assertNotNull(contextRootNode);
+        assertNotNull(contextRootNode.get(ContextConstants.CTX_METADONNEES));
+        assertNotNull(contextRootNode.get(ContextConstants.CTX_CAMPAGNE_ID));
+        assertNotNull(contextRootNode.get(ContextConstants.CTX_CAMPAGNE_LABEL));
+        assertEquals("DEM2022X00",contextRootNode.get(ContextConstants.CTX_CAMPAGNE_ID).asText());
+
+    }
+
 }

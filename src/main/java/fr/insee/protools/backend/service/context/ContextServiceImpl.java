@@ -8,8 +8,10 @@ import fr.insee.protools.backend.service.context.exception.BadContextDateTimePar
 import fr.insee.protools.backend.service.context.exception.BadContextIOException;
 import fr.insee.protools.backend.service.context.exception.BadContextIncorrectException;
 import fr.insee.protools.backend.service.context.exception.BadContextNotJSONException;
+import fr.insee.protools.backend.service.exception.ProcessDefinitionNotFoundException;
 import fr.insee.protools.backend.service.exception.TaskNotFoundException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.flowable.common.engine.api.FlowableObjectNotFoundException;
 import org.flowable.engine.RuntimeService;
@@ -26,12 +28,11 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VARNAME_CONTEXT;
+import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VARNAME_CONTEXT_PARTITION_ID_LIST;
 import static fr.insee.protools.backend.service.context.ContextConstants.*;
 
 @Service
@@ -49,11 +50,75 @@ public class ContextServiceImpl implements ContextService{
     @Override
     public void processContextFileAndCompleteTask(MultipartFile file, String taskId) {
         //Check if task exists
+        if(StringUtils.isBlank(taskId)){
+            log.error("taskId is null or blank");
+            throw new TaskNotFoundException(taskId);
+        }
         Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
-        if(task==null){
+        if(task==null || task.getProcessInstanceId()==null){
+            log.error("taskId={} does not exist",taskId);
             throw new TaskNotFoundException(taskId);
         }
 
+        //check context
+        Pair<Map<String, Object> ,JsonNode > contextPair = processContextFile(file);
+        //Store context in cache
+        contextCache.put(task.getProcessInstanceId(),contextPair.getValue());
+        // Complete task and store context within process variables
+        taskService.complete(taskId,contextPair.getKey());
+    }
+
+    @Override
+    public String processContextFileAndCreateProcessInstance(MultipartFile file, String processDefinitionId, String businessKey) {
+        if(StringUtils.isBlank(processDefinitionId)){
+            log.error("processDefinitionId is null or blank");
+            throw new ProcessDefinitionNotFoundException(processDefinitionId);
+        }
+
+        try {
+            //check context
+            Pair<Map<String, Object> ,JsonNode > contextPair = processContextFile(file);
+            //Create process instance
+            ProcessInstance processInstance;
+            if(StringUtils.isBlank(businessKey)) {
+                processInstance = runtimeService.startProcessInstanceByKey(processDefinitionId, contextPair.getKey());
+            }
+            else{
+                processInstance = runtimeService.startProcessInstanceByKey(processDefinitionId, businessKey,contextPair.getKey());
+            }
+            log.info("Created new process instance with processDefinitionId={} - ProcessInstanceId={}",processDefinitionId,processInstance.getProcessInstanceId());
+            //Store context in cache
+            contextCache.put(processInstance.getProcessInstanceId(),contextPair.getValue());
+            return processInstance.getProcessInstanceId();
+        }
+        catch (FlowableObjectNotFoundException e){
+            log.error("processDefinitionId={} is unknown",processDefinitionId);
+            throw new ProcessDefinitionNotFoundException(processDefinitionId);
+        }
+    }
+
+
+    @Override
+    public JsonNode getContextByProcessInstance(String processInstanceId) {
+        ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
+        if (processInstance == null) {
+            throw new FlowableObjectNotFoundException("Could not find a process instance with id '" + processInstanceId + "'.", ProcessInstance.class);
+        }
+        JsonNode result = contextCache.get(processInstanceId);
+        //If value does not exist in cache yet : Retrieve it and update cache
+        if(result==null){
+            String contextStr = runtimeService.getVariable(processInstanceId, VARNAME_CONTEXT,String.class);
+            try {
+                result=defaultReader.readTree(contextStr);
+            } catch (JsonProcessingException e) {
+                throw new BadContextIncorrectException(String.format("Context retrieved from engine could not be parsed for processInstanceId=[%s]",processInstanceId),e);
+            }
+            contextCache.put(processInstanceId,result);
+        }
+        return result;
+    }
+
+    private Pair<Map<String, Object> ,JsonNode > processContextFile(MultipartFile file) {
         //Validate file name (JSON)
         var fileExtension = getFileExtension(file.getOriginalFilename());
         if (fileExtension.isEmpty()) {
@@ -61,7 +126,6 @@ public class ContextServiceImpl implements ContextService{
         } else if (!fileExtension.get().equalsIgnoreCase("json")) {
             throw new BadContextNotJSONException(String.format("Uploaded file %s has incorrect extension. Expected json", file.getOriginalFilename()));
         }
-
 
         try {
             String content = new String(file.getBytes(), StandardCharsets.UTF_8);
@@ -82,50 +146,26 @@ public class ContextServiceImpl implements ContextService{
                 log.error(msg);
                 throw new BadContextIncorrectException(msg);
             }
+
+            List<String> partitionIds = new ArrayList<>();
             for (JsonNode partition : partitions) {
                 Pair<LocalDateTime, LocalDateTime> startEndDT = getCollectionStartAndEndFromPartition(partition);
+                String partitionId=partition.path(CTX_PARTITION_ID).asText();
+                partitionIds.add(partitionId);
+
                 //add these variables to the list
                 //TODO : distinguer les noms dans le json des noms de variables?
-                String varKeyStart = String.format("partition_%s_%s", partition.path(CTX_PARTITION_ID), CTX_PARTITION_DATE_DEBUT_COLLECTE);
-                String varKeyEnd = String.format("partition_%s_%s", partition.path(CTX_PARTITION_ID), CTX_PARTITION_DATE_FIN_COLLECTE);
+                String varKeyStart = String.format("partition_%s_%s", partitionId, CTX_PARTITION_DATE_DEBUT_COLLECTE);
+                String varKeyEnd = String.format("partition_%s_%s", partitionId, CTX_PARTITION_DATE_FIN_COLLECTE);
                 variables.put(varKeyStart, startEndDT.getKey());
                 variables.put(varKeyEnd, startEndDT.getValue());
             }
 
-            //Store in cache
-            String processInstanceId = task.getProcessInstanceId();
-            contextCache.put(processInstanceId,rootContext);
-
-            // Complete task & store the file content into the engine
-            taskService.complete(taskId, variables);
+            variables.put(VARNAME_CONTEXT_PARTITION_ID_LIST, partitionIds);
+            return Pair.of(variables,rootContext);
         } catch (IOException e) {
             throw new BadContextIOException("Error while reading context content", e);
         }
-        catch (FlowableObjectNotFoundException e){
-            throw new TaskNotFoundException(taskId);
-        }
-    }
-
-    @Override
-    public JsonNode getContextByProcessInstance(String processInstanceId) {
-        ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
-        if (processInstance == null) {
-            throw new FlowableObjectNotFoundException("Could not find a process instance with id '" + processInstanceId + "'.", ProcessInstance.class);
-        }
-
-        JsonNode result = contextCache.get(processInstanceId);
-
-        //If value does not exist in cache yet : Retrieve it and update cache
-        if(result==null){
-            String contextStr = runtimeService.getVariable(processInstanceId, VARNAME_CONTEXT,String.class);
-            try {
-                result=defaultReader.readTree(contextStr);
-            } catch (JsonProcessingException e) {
-                throw new BadContextIncorrectException(String.format("Context retrieved from engine could not be parsed for processInstanceId=[%s]",processInstanceId),e);
-            }
-            contextCache.put(processInstanceId,result);
-        }
-        return result;
     }
 
     private Optional<String> getFileExtension(String filename) {

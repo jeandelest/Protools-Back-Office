@@ -1,0 +1,177 @@
+### GET TOKEN
+POST https://auth.insee.test/auth/realms/{{realm}}/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&client_id={{client_id}}&client_secret={{client_secret}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+  client.global.set("auth_token", response.body.access_token);
+  client.log("TOKEN = "+client.global.get("auth_token"));
+    client.log("RESPONSE = "+client.global);
+
+
+      client.global.set("CAMPAGNE_ID", "DEM2022X00");
+%}
+
+
+### Create user in SUGOI LDAP
+
+POST https://api.gestion-comptes-utilisateurs.recette.insee.fr/v2/realms/questionnaire-particuliers/storages/default/users
+accept: application/json
+X-SUGOI-ASYNCHRONOUS-ALLOWED-REQUEST: false
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "lastName": "test-protools",
+  "firstName": "test-protools",
+  "mail": "marc.berger@insee.fr",
+  "username": "test-protools",
+  "certificate": [
+  ],
+  "groups": [
+    {
+      "name": "string",
+      "description": "string",
+      "users": [
+        "string"
+      ],
+      "appName": "string"
+    }
+  ],
+  "habilitations": [
+    {
+      "id": "repondant_platine",
+      "application": "platine",
+      "role": "repondant",
+      "property": ""
+    }
+  ],
+  "address": {
+    "line1": "Adress_Line1",
+    "line2": "Adress_Line2",
+    "line3": "Adress_Line3",
+    "line4": "string",
+    "line5": "string",
+    "line6": "string",
+    "line7": "string"
+  },
+  "metadatas": {
+    "additionalProp1": {},
+    "additionalProp2": {},
+    "additionalProp3": {}
+  },
+  "attributes": {
+    "additionalProp1": {},
+    "additionalProp2": {},
+    "additionalProp3": {}
+  }
+}
+
+### GET user créee
+
+GET https://api.gestion-comptes-utilisateurs.recette.insee.fr/v2/realms/questionnaire-particuliers/storages/default/users?firstName=test-protools&size=20&offset=0&typeRecherche=AND
+accept: application/json
+Authorization: Bearer {{auth_token}}
+
+
+###Create SU on platine questionnaire
+POST https://api-questionnaire-enquetes.developpement2.insee.fr/api/campaign/{{CAMPAGNE_ID}}/survey-unit
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "comment": {},
+  "data": {},
+  "id": "MBG0001",
+  "personalization": {},
+  "questionnaireId": "tic2023a00_web",
+  "stateData": {
+    "currentPage": "",
+    "date": 0,
+    "state": "INIT"
+  }
+}
+
+###Create SU on platine pilotage
+PUT https://api-pilotage-enquetes.developpement2.insee.fr/api/questionings
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "idPartitioning": "10",
+  "modelName": "tic2023a00_webMBG",
+  "surveyUnit": {
+    "idSu": "1",
+    "identificationCode": "xxx",
+    "identificationName": "xxx",
+    "address": {
+      "streetNumber": "string",
+      "repetitionIndex": "string",
+      "streetType": "string",
+      "streetName": "string",
+      "addressSupplement": "string",
+      "cityName": "string",
+      "zipCode": "string",
+      "cedexCode": "string",
+      "cedexName": "string",
+      "specialDistribution": "string",
+      "countryCode": "string",
+      "countryName": "string"
+    }
+  },
+  "contacts": [
+    {
+      "identifier": "B28CKCJ",
+      "externalId": "",
+      "civility": "Mr",
+      "lastName": "Nom_Famille",
+      "firstName": "Prénom_XXX",
+      "function": "string",
+      "email": "marc.berger@insee.fr",
+      "phone": "0123456789",
+      "address": {
+        "streetNumber": "streetNumber",
+        "repetitionIndex": "repetitionIndex",
+        "streetType": "streetType",
+        "streetName": "streetName",
+        "addressSupplement": "addressSupplement",
+        "cityName": "Lille",
+        "zipCode": "59000",
+        "cedexCode": "",
+        "cedexName": "",
+        "specialDistribution": "",
+        "countryCode": "",
+        "countryName": ""
+      },
+      "main": true
+    }
+  ]
+}
+###
+
+
+
+
+###Create SU on platine questionnaire
+POST https://api-questionnaire-enquetes.developpement2.insee.fr/api/campaign/{{CAMPAGNE_ID}}/survey-unit
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "comment": {},
+  "data": {},
+  "id": "MBG0001",
+  "personalization": {},
+  "questionnaireId": "tic2023a00_web",
+  "stateData": {
+    "currentPage": "",
+    "date": 0,
+    "state": "INIT"
+  }
+}
+
+

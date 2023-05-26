@@ -12,7 +12,8 @@ public class ApiConfigProperties {
                 KNOWN_API_PLATINE_QUESTIONNAIRE,
                 KNOWN_API_ERA,
                 KNOWN_API_SABIANE_PILOTAGE,
-                KNOWN_API_SABIANE_QUESTIONNAIRE
+                KNOWN_API_SABIANE_QUESTIONNAIRE,
+                KNOWN_API_REM
         }
 
         public APIProperties getAPIProperties(KNOWN_API api){
@@ -22,6 +23,7 @@ public class ApiConfigProperties {
                         case KNOWN_API_ERA -> eraApiProperties();
                         case KNOWN_API_SABIANE_PILOTAGE -> sabianePilotageApiProperties();
                         case KNOWN_API_SABIANE_QUESTIONNAIRE -> sabianeQuestionnaireApiProperties();
+                        case KNOWN_API_REM -> remApiProperties();
                 };
         }
 
@@ -52,6 +54,12 @@ public class ApiConfigProperties {
         @Bean("sabianeQuestionnaireApiProperties")
         @ConfigurationProperties("fr.insee.protools.api.sabiane-questionnaire")
         public APIProperties sabianeQuestionnaireApiProperties() {
+                return new APIProperties();
+        }
+
+        @Bean("remApiProperties")
+        @ConfigurationProperties("fr.insee.protools.api.rem")
+        public APIProperties remApiProperties() {
                 return new APIProperties();
         }
 

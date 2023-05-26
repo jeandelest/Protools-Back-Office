@@ -1,0 +1,85 @@
+{
+  "id": "AAB2023A00",
+  "label": "Test Protools 2023",
+  "contexte": "household",
+  "metadonnees": {
+	"annee": 2023,
+	"periodicite": "A",
+	"periode": "A00",
+	"operationId": "AAB2023",
+    "operationLabelCourt": "Opération test Protools 2023",
+    "operationLabelLong": "Super opération test Protools 2023",
+	"serieId": "AAB",
+    "serieLabelCourt": "Enquête test Protools",
+    "serieLabelLong": "Super enquête test Protools",
+    "portailMesEnquetesOperation": false,
+    "objectifsCourts": "Cette enquête permet de tester...",
+    "objectifsLongs": "Cette enquête permet de tester des choses...",
+    "caractereObligatoire": true,
+    "qualiteStatistique": true,
+    "testNonLabellise": true,
+    "anneeVisa": 2023,
+    "numeroVisa": "2023xxxxxx",
+    "ministereTutelle": "de l'Économie, des Finances et de la Souveraineté Industrielle et Numérique",
+    "parutionJo": true,
+    "dateParutionJo": "2021-12-23",
+    "responsableOperationnel": "L’Institut national de la statistique et des études économiques (Insee)",
+    "responsableTraitement": "l'Insee",
+    "cnisUrl": "http://cnis/DOG2021",
+    "diffusionUrl": "http://diffusion/DOG2021",
+    "noticeUrl": "http://notice/DOG2021",
+    "specimenUrl": "http://specimenUrl/DOG2021",
+    "proprietaireId": "proprietaireTest",
+    "proprietaireLabel": "faux proprietaire de test",
+    "proprietaireLogo": "1",
+    "assistanceNiveau2Id": "assistance2Test",
+    "assistanceNiveau2Label": "fausse assistance niveau 2 de test",
+    "assistanceNiveau2Tel": "0000000000",
+    "assitanceNiveau2Mail": "mail",
+    "asssistanceNiveau2Pays": "France",
+    "assistanceNiveau2NumeroVoie": "1",
+    "assistanceNiveau2NomVoie": "rue de la Libération",
+    "assistanceNiveau2Commune": "Besançon",
+    "assistanceNiveau2CodePostal": "25000"
+  },
+  "partitions": [{
+    "id": 53,
+    "typeEchantillon" : "individu",
+    "label": "premier lot Protools 2023",
+    "dateDebutCollecte": "2023-04-16T14:07:23.001Z",
+    "dateFinCollecte": "2024-05-16T14:07:23.001Z",
+    "dateRetour": "2025-05-15T14:07:23.001Z",
+	"questionnaireModel": "tic2023a00_webMBG",
+	"quiRepond1": "Qui doit répondre paragraphe 1",
+	"quiRepond2": "Qui doit répondre paragraphe 2",
+	"quiRepond3": "Qui doit répondre paragraphe 3"
+  }],
+  "questionnaireModels": [{
+    "id": "tic2023a00_webMBG",
+    "cheminRepertoire": "tests/coleman",
+    "label": "questionnaireModel de test",
+    "requiredNomenclatureIds": [
+      "testDepartements"
+    ]
+  },
+  {
+    "id": "testQR_web",
+    "cheminRepertoire": "tests/coleman",
+    "label": "questionnaireModel de test QR",
+    "requiredNomenclatureIds": [
+      "testDepartements",
+	  "testPays"
+    ]
+  }],
+  "nomenclatures": [
+  {
+    "id": "testDepartements",
+    "cheminRepertoire": "tests/Departements",
+    "label": "liste de test des départements"
+  },
+  {
+    "id": "testPays",
+    "cheminRepertoire": "tests/Pays",
+    "label": "liste de test des pays"
+  }]
+}

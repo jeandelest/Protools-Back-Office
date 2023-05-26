@@ -10,6 +10,7 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
@@ -46,8 +47,7 @@ public class SecurityConfig {
         @Bean
         @ConditionalOnProperty(name = STARTER_SECURITY_ENABLED,  havingValue = "true")
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
-                http.csrf().disable()
+                http.csrf(AbstractHttpConfigurer::disable)
                     .authorizeHttpRequests(authorize ->
                         authorize.requestMatchers(whiteList).permitAll()
                               //  .requestMatchers("/**").permitAll()
@@ -57,7 +57,7 @@ public class SecurityConfig {
                             .requestMatchers("/**").hasRole(administrateurRole)
                     )
                     .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
-                    .oauth2ResourceServer(oauth2 -> oauth2.jwt().jwtAuthenticationConverter(jwtAuthenticationConverter()));
+                    .oauth2ResourceServer(oauth2 ->oauth2.jwt(jwt ->jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())));
                 return http.build();
         }
         //Filter with disabled security
@@ -65,13 +65,10 @@ public class SecurityConfig {
         @ConditionalOnProperty(name = STARTER_SECURITY_ENABLED,  havingValue = "false", matchIfMissing = true)
         public SecurityFilterChain filterChain_noSecurity(HttpSecurity http) throws Exception {
 
-                http.csrf().disable()
-                        .authorizeHttpRequests(authorize ->
-                                authorize.requestMatchers(whiteList).permitAll()
-                                          .requestMatchers("/**").permitAll()
-                        )
+                http.csrf(AbstractHttpConfigurer::disable)
+                        .authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll())
                         .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
-                        .oauth2ResourceServer(oauth2 -> oauth2.jwt().jwtAuthenticationConverter(jwtAuthenticationConverter()));
+                        .oauth2ResourceServer(oauth2 ->oauth2.jwt(jwt ->jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())));
                 return http.build();
         }
 

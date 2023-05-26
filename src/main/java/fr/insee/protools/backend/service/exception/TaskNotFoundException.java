@@ -4,9 +4,7 @@ import org.flowable.common.engine.api.FlowableObjectNotFoundException;
 import org.flowable.task.api.Task;
 
 /**
- * This exception is thrown when you tries to access a task that does not exists
- * 
- * @author Prabhat Tripathi
+ * This exception is thrown when you try to access a task that does not exist
  */
 @java.lang.SuppressWarnings("squid:MaximumInheritanceDepth")
 public class TaskNotFoundException extends FlowableObjectNotFoundException {

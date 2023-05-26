@@ -1,12 +1,11 @@
 package fr.insee.protools.backend.service.platine.delegate;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.insee.protools.backend.ProtoolsTestUtils;
 import fr.insee.protools.backend.service.context.ContextService;
 import fr.insee.protools.backend.service.context.exception.BadContextIncorrectException;
 import fr.insee.protools.backend.service.platine.pilotage.PlatinePilotageService;
-import fr.insee.protools.backend.service.platine.pilotage.dto.MetadataDto;
+import fr.insee.protools.backend.service.platine.pilotage.metadata.MetadataDto;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.test.FlowableTest;
 import org.junit.jupiter.api.Test;
@@ -35,7 +34,6 @@ class PlatinePilotageCreateContextTaskTest {
 
     @Mock PlatinePilotageService platinePilotageService;
     @Spy ContextService protoolsContext;
-    @Spy ObjectMapper objectMapper;
 
     @InjectMocks
     PlatinePilotageCreateContextTask platinePilotageTask;
@@ -62,6 +60,7 @@ class PlatinePilotageCreateContextTaskTest {
         when(execution.getProcessInstanceId()).thenReturn(dumyId);
         initContexteMock(platine_context_json);
         String partitionId="1";
+        String campaignId="DEM2022X00";
 
         //Execute the unit under test
         platinePilotageTask.execute(execution);
@@ -73,7 +72,7 @@ class PlatinePilotageCreateContextTaskTest {
 
         //Verify postCampaign
         ArgumentCaptor<MetadataDto> acMetadataDto = ArgumentCaptor.forClass(MetadataDto.class);
-        verify(platinePilotageService,times(1)).putMetadata(eq(partitionId),acMetadataDto.capture());
+        verify(platinePilotageService,times(1)).putMetadata(eq(campaignId+partitionId),acMetadataDto.capture());
         List<MetadataDto> allValues = acMetadataDto.getAllValues();
         assertEquals(1, allValues.size(),"We should have exactly one partition");
 //TODO

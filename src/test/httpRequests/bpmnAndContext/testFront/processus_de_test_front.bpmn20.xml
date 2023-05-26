@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef" exporter="Flowable Open Source Modeler" exporterVersion="6.8.0">
+  <process id="testFront" name="processus de test front" isExecutable="true">
+    <documentation>Processus de test pour le front</documentation>
+    <startEvent id="startEvent1" flowable:formFieldValidation="true"></startEvent>
+    <intermediateCatchEvent id="timerTest">
+      <documentation>Délai de 1 minute avant de poursuivre le processus</documentation>
+      <timerEventDefinition>
+        <timeDuration>PT1M</timeDuration>
+      </timerEventDefinition>
+    </intermediateCatchEvent>
+    <userTask id="validateOpale" name="Valider l'échantillon intégré dans Opale" flowable:formFieldValidation="true">
+      <documentation>Valider que l'échantillon ait bien été intégré dans Opale afin de poursuivre le processus</documentation>
+    </userTask>
+    <sequenceFlow id="sid-03718735-EAC8-4562-A7F0-D971CB20706C" sourceRef="timerTest" targetRef="validateOpale"></sequenceFlow>
+    <endEvent id="sid-9F548A15-20C7-44D2-9DE2-CB185DED9D38"></endEvent>
+    <sequenceFlow id="sid-0E37BD7D-120E-4A99-B03F-CE0A93F0BFF7" sourceRef="validateOpale" targetRef="sid-9F548A15-20C7-44D2-9DE2-CB185DED9D38"></sequenceFlow>
+    <userTask id="uploadContext" name="Renseigner les métadonnées de processus" flowable:formFieldValidation="true">
+      <documentation>Tache de chargement du fichier de contexte pour initialiser les métadonnées de processus</documentation>
+    </userTask>
+    <sequenceFlow id="sid-24CD899C-3ACC-45CB-8AFC-28D25C91D13C" sourceRef="startEvent1" targetRef="uploadContext"></sequenceFlow>
+    <sequenceFlow id="sid-367DDD28-E410-401E-982D-30A71C55D707" sourceRef="uploadContext" targetRef="timerTest"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_testFront">
+    <bpmndi:BPMNPlane bpmnElement="testFront" id="BPMNPlane_testFront">
+      <bpmndi:BPMNShape bpmnElement="startEvent1" id="BPMNShape_startEvent1">
+        <omgdc:Bounds height="30.0" width="30.0" x="100.0" y="163.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="timerTest" id="BPMNShape_timerTest">
+        <omgdc:Bounds height="31.0" width="31.0" x="379.5" y="162.5"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="validateOpale" id="BPMNShape_validateOpale">
+        <omgdc:Bounds height="80.0" width="100.0" x="455.5" y="138.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-9F548A15-20C7-44D2-9DE2-CB185DED9D38" id="BPMNShape_sid-9F548A15-20C7-44D2-9DE2-CB185DED9D38">
+        <omgdc:Bounds height="28.0" width="28.0" x="600.5" y="164.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="uploadContext" id="BPMNShape_uploadContext">
+        <omgdc:Bounds height="80.0" width="100.0" x="175.0" y="138.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="sid-367DDD28-E410-401E-982D-30A71C55D707" id="BPMNEdge_sid-367DDD28-E410-401E-982D-30A71C55D707" flowable:sourceDockerX="50.0" flowable:sourceDockerY="40.0" flowable:targetDockerX="15.5" flowable:targetDockerY="15.5">
+        <omgdi:waypoint x="274.9499999999303" y="178.0"></omgdi:waypoint>
+        <omgdi:waypoint x="379.5" y="178.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-03718735-EAC8-4562-A7F0-D971CB20706C" id="BPMNEdge_sid-03718735-EAC8-4562-A7F0-D971CB20706C" flowable:sourceDockerX="15.5" flowable:sourceDockerY="15.5" flowable:targetDockerX="50.0" flowable:targetDockerY="40.0">
+        <omgdi:waypoint x="410.44999845340067" y="178.0"></omgdi:waypoint>
+        <omgdi:waypoint x="455.49999999999125" y="178.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-24CD899C-3ACC-45CB-8AFC-28D25C91D13C" id="BPMNEdge_sid-24CD899C-3ACC-45CB-8AFC-28D25C91D13C" flowable:sourceDockerX="15.0" flowable:sourceDockerY="15.0" flowable:targetDockerX="50.0" flowable:targetDockerY="40.0">
+        <omgdi:waypoint x="129.9499984899576" y="178.0"></omgdi:waypoint>
+        <omgdi:waypoint x="174.9999999999917" y="178.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-0E37BD7D-120E-4A99-B03F-CE0A93F0BFF7" id="BPMNEdge_sid-0E37BD7D-120E-4A99-B03F-CE0A93F0BFF7" flowable:sourceDockerX="50.0" flowable:sourceDockerY="40.0" flowable:targetDockerX="14.0" flowable:targetDockerY="14.0">
+        <omgdi:waypoint x="555.45" y="178.0"></omgdi:waypoint>
+        <omgdi:waypoint x="600.5" y="178.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
