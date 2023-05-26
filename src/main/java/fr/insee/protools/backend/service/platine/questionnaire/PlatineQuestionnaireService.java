@@ -23,6 +23,6 @@ public class PlatineQuestionnaireService implements QuestionnairePlatineSabianeS
 
     @Override
     public Logger getLogger() {
-        return this.getLogger();
+        return log;
     }
 }
