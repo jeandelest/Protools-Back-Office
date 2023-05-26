@@ -10,7 +10,7 @@
     </parent>
     <groupId>fr.insee.sndil.protools</groupId>
     <artifactId>protools-back-office</artifactId>
-    <version>0.0.3</version>
+    <version>0.0.4</version>
     <name>Protools Back Office</name>
     <description>Protools Back Office: Survey Orchestrator and Management Tool - Built with Flowable Engine</description>
     <properties>
