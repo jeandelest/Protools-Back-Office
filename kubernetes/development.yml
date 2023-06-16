@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: protools-back-office
-          image: inseefr/protools-back-office:develop
+          image: inseefr/protools-back-office:demo-support
           imagePullPolicy: Always
           env:
             - name: SPRING_DATASOURCE_PASSWORD
