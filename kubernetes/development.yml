@@ -20,9 +20,9 @@ spec:
             - name: SPRING_DATASOURCE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: protools-database-postgresql
+                  name: protools-postgresql
                   key: postgres-password
             - name: SPRING_DATASOURCE_USERNAME
               value: postgres
             - name: SPRING_DATASOURCE_URL
-              value: jdbc:postgresql://protools-database-postgresql/
+              value: jdbc:postgresql://protools-postgresql/
