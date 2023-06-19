@@ -25,4 +25,4 @@ spec:
             - name: SPRING_DATASOURCE_USERNAME
               value: postgres
             - name: SPRING_DATASOURCE_URL
-              value: jdbc:postgresql://protools-postgresql/
+              value: jdbc:postgresql://protools-postgresql/flowable
