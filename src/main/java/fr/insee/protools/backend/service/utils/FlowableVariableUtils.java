@@ -16,7 +16,7 @@ public class FlowableVariableUtils {
         try{
             res = execution.getVariable(variableName, variableClass);
             if(res==null){
-                throw new FlowableIllegalArgumentException("Variable '" + variableName + "' was not found");
+                throw new FlowableIllegalArgumentException(getMissingVariableMessage(variableName));
             }
         }
         catch (ClassCastException e) {
@@ -27,4 +27,8 @@ public class FlowableVariableUtils {
 
 
     private FlowableVariableUtils(){}
+
+    public static String getMissingVariableMessage(String variableName){
+        return "Variable '" + variableName + "' was not found";
+    }
 }
