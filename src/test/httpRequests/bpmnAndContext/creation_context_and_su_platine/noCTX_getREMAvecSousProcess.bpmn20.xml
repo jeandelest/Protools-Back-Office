@@ -11,7 +11,7 @@
 
     <scriptTask id="sugoiScriptTask" name="mock sugoi script" scriptFormat="groovy">
       <script>
-        execution.setVariable("sugoi-created-id-internaute", "B28CKCJ");
+        execution.setVariable("sugoi-id-contact", "B28CKCJ");
       </script>
     </scriptTask>
 
@@ -25,7 +25,7 @@
       <serviceTask id="getREMSUList" name="Récupération liste d'UE pour une partition dans REM" flowable:delegateExpression="${remGetPartitionListOfSuIdTask}"></serviceTask>
       <endEvent id="partition-subprocess-end"></endEvent>
 
-      <scriptTask id="reduceSample" name="reducteur de lite d'UE" scriptFormat="groovy">
+      <scriptTask id="reduceSample" name="reducteur de liste d'UE" scriptFormat="groovy">
         <script>
           listeReduite = execution.getVariable("rem-survey-unit-id-list", List.class);
           listeReduite=listeReduite.take(1);

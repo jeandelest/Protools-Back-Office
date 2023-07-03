@@ -54,7 +54,7 @@ public class PlatinePilotageCreateSurveyUnitTask implements JavaDelegate, Delega
 
         String currentPartitionId = FlowableVariableUtils.getVariableOrThrow(execution,VARNAME_CURRENT_PARTITION_ID, String.class);
         JsonNode remSUNode = FlowableVariableUtils.getVariableOrThrow(execution,VARNAME_REM_SURVEY_UNIT, JsonNode.class);
-        String idInternaute = FlowableVariableUtils.getVariableOrThrow(execution,VARNAME_SUGOI_CREATED_ID_INTERNAUTE, String.class);
+        String idInternaute = FlowableVariableUtils.getVariableOrThrow(execution, VARNAME_SUGOI_ID_CONTACT, String.class);
 
         JsonNode currentPartitionNode = getCurrentPartitionNode(contextRootNode, currentPartitionId);
 
