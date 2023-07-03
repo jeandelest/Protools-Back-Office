@@ -25,21 +25,4 @@ public class REMSurveyUnitDto {
 
     private List<AdditionalInformationDto> additionalInformations;
 
-
-    public String getValueByKey(String key) {
-        if (key == null) {
-            return null;
-        }
-        for (AdditionalInformationDto addInfo : additionalInformations) {
-            if (addInfo.getKey() == null) {
-                return null;
-            }
-            if (key.equalsIgnoreCase(addInfo.getKey())) {
-                return addInfo.getValue();
-            }
-        }
-        return null;
-    }
-
-
 }
