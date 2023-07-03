@@ -19,13 +19,13 @@ public class REMSurveyUnitDto {
 
     private String externalName;
 
-    private TypeUnit typeUnit;
+    //private TypeUnit typeUnit;
 
     private REMAddressDto address;
 
     private List<PersonDto> persons;
 
-    private OtherIdentifierDto otherIdentifier;
+    //private OtherIdentifierDto otherIdentifier;
 
     private List<AdditionalInformationDto> additionalInformations;
 
