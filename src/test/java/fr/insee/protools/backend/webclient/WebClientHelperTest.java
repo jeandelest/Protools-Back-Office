@@ -283,8 +283,9 @@ class WebClientHelperTest {
         //Post call conditions (we get more or less the expected message with the original request)
         //IF it is not the case, check that the spring private field has not changed or been renamed
         String actualMessage = exception.getMessage();
-        assertThat(actualMessage.contains("GET")).isTrue();
-        assertThat(actualMessage.contains(getDummyUriWithPort())).isTrue();
-        assertThat(actualMessage.contains(String.valueOf(HttpStatus.BAD_REQUEST.value()))).isTrue();
+        assertThat(actualMessage)
+                .contains("GET")
+                .contains(getDummyUriWithPort())
+                .contains(String.valueOf(HttpStatus.BAD_REQUEST.value()));
     }
 }
