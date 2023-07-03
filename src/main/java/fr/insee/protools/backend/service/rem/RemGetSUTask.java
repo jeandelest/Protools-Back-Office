@@ -30,18 +30,13 @@ public class RemGetSUTask implements JavaDelegate, DelegateContextVerifier {
         //No need context
 
         //Get the UE
-        try {
-            Long suId = FlowableVariableUtils.getVariableOrThrow(execution,VARNAME_REM_SURVEY_UNIT_IDENTIFIER, Long.class);
-            log.info("ProcessInstanceId={} - id={} begin",execution.getProcessInstanceId(), suId);
-            //TODO : ne pas créer le DTO ici : Ca ne sert à rien...
-            REMSurveyUnitDto remSurveyUnitDto = remService.getSurveyUnit(suId);
-            execution.setVariableLocal(VARNAME_REM_SURVEY_UNIT,objectMapper.valueToTree(remSurveyUnitDto));
-            log.info("Su id={} - content={}", suId, remSurveyUnitDto);
-            log.info("ProcessInstanceId={} - id={} end",execution.getProcessInstanceId(), suId);
-        }
-        catch (ClassCastException e){
-            throw new VariableClassCastException(String.format("Variable ID=[%s] val=[%s] cannot be casted to Long", VARNAME_REM_SURVEY_UNIT_IDENTIFIER,execution.getVariable(VARNAME_REM_SURVEY_UNIT_IDENTIFIER)));
-        }
+        Long suId = FlowableVariableUtils.getVariableOrThrow(execution,VARNAME_REM_SURVEY_UNIT_IDENTIFIER, Long.class);
+        log.info("ProcessInstanceId={} - id={} begin",execution.getProcessInstanceId(), suId);
+        //TODO : ne pas créer le DTO ici : Ca ne sert à rien...
+        REMSurveyUnitDto remSurveyUnitDto = remService.getSurveyUnit(suId);
+        execution.setVariableLocal(VARNAME_REM_SURVEY_UNIT,objectMapper.valueToTree(remSurveyUnitDto));
+        log.info("Su id={} - content={}", suId, remSurveyUnitDto);
+        log.info("ProcessInstanceId={} - id={} end",execution.getProcessInstanceId(), suId);
     }
 
     @Override

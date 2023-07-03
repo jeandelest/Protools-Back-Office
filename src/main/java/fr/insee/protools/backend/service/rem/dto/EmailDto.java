@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class EmailDto {
 
-    //private Source source;
     private Boolean favorite;
     private String mailAddress;
 }

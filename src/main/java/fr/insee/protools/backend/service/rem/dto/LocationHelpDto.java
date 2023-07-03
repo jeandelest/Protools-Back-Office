@@ -18,7 +18,6 @@ public class LocationHelpDto {
     private String door;
     private String iris;
     private String sector;
-    //private GPSLocation gpsCoordinates;
     private Boolean elevator;
     private Boolean cityPriorityDistrict;
 }

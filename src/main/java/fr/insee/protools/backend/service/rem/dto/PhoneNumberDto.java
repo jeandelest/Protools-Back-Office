@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PhoneNumberDto {
 
-    private Source source;
     private Boolean favorite;
     private String number;
 }
