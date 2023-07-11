@@ -3,7 +3,6 @@ package fr.insee.protools.backend.service.common.platine_sabiane.dto.surveyunit;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
-
 import lombok.Builder;
 import lombok.Data;
 

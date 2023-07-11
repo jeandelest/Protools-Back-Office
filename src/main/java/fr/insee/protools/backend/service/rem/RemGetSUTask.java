@@ -3,7 +3,6 @@ package fr.insee.protools.backend.service.rem;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.insee.protools.backend.service.DelegateContextVerifier;
-import fr.insee.protools.backend.service.exception.VariableClassCastException;
 import fr.insee.protools.backend.service.rem.dto.REMSurveyUnitDto;
 import fr.insee.protools.backend.service.utils.FlowableVariableUtils;
 import lombok.extern.slf4j.Slf4j;
