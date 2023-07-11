@@ -29,9 +29,12 @@
         <script>
           listeReduite = execution.getVariable("rem-survey-unit-id-list", List.class);
           listeReduite=listeReduite.take(1);
-          execution.setVariable("rem-survey-unit-id-list", listeReduite);
+          execution.getParent().setVariableLocal("rem-survey-unit-id-list", listeReduite);
         </script>
       </scriptTask>
+
+      <serviceTask id="log_variables" name="log variables" flowable:delegateExpression="${logVariablesTask}"/>
+
 
       <subProcess id="su-subprocess" name="sous process traitement UE">
         <multiInstanceLoopCharacteristics isSequential="false">
@@ -54,8 +57,9 @@
 
       <sequenceFlow id="partition-subprocess-flow1" sourceRef="partition-subprocess-start" targetRef="getREMSUList"></sequenceFlow>
       <sequenceFlow id="partition-subprocess-flow1b" sourceRef="getREMSUList" targetRef="reduceSample"></sequenceFlow>
+      <sequenceFlow id="partition-subprocess-flow1c" sourceRef="reduceSample" targetRef="log_variables"></sequenceFlow>
 
-      <sequenceFlow id="partition-subprocess-flow2" sourceRef="reduceSample" targetRef="su-subprocess"></sequenceFlow>
+      <sequenceFlow id="partition-subprocess-flow2" sourceRef="log_variables" targetRef="su-subprocess"></sequenceFlow>
       <sequenceFlow id="partition-subprocess-flow3" sourceRef="su-subprocess" targetRef="partition-subprocess-end"></sequenceFlow>
     </subProcess>
 
