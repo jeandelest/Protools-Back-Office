@@ -78,10 +78,14 @@ class RemGetPartitionListOfSuIdTaskTest {
     void execute_should_work_when_contextNpartition_and_variable_OK(String contexte, String currentPartitionId, Long[] remSuIdList) throws JsonProcessingException {
         //Préconditions
         DelegateExecution execution = mock(DelegateExecution.class);
+        DelegateExecution executionParent = mock(DelegateExecution.class);
+
         when(execution.getProcessInstanceId()).thenReturn(dumyId);
 
         initContexteMockFromString(contexte);
         when(execution.getVariable(VARNAME_CURRENT_PARTITION_ID, String.class)).thenReturn(currentPartitionId);
+        when(execution.getParent()).thenReturn(executionParent);
+
         List<Long> expectedResult = List.of(remSuIdList);
         when(remService.getSampleSuIds(currentPartitionId)).thenReturn(remSuIdList);
         //Execute the unit under test
@@ -92,7 +96,7 @@ class RemGetPartitionListOfSuIdTaskTest {
         //Service called once and for the right partition
         verify(remService).getSampleSuIds(currentPartitionId);
         //Process instance variable set with the list of retrieved Ids
-        verify(execution).setVariable(VARNAME_REM_SU_ID_LIST, expectedResult);
+        verify(executionParent).setVariableLocal(VARNAME_REM_SU_ID_LIST, expectedResult);
     }
 
     @Test

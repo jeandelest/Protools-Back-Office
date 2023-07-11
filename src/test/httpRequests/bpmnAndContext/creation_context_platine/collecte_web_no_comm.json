@@ -43,7 +43,7 @@
     "assistanceNiveau2CodePostal": "25000"
   },
   "partitions": [{
-    "id": 53,
+    "id": 60,
     "typeEchantillon" : "individu",
     "label": "premier lot Protools 2023",
     "dateDebutCollecte": "2023-04-16T14:07:23.001Z",
@@ -53,7 +53,20 @@
 	"quiRepond1": "Qui doit répondre paragraphe 1",
 	"quiRepond2": "Qui doit répondre paragraphe 2",
 	"quiRepond3": "Qui doit répondre paragraphe 3"
-  }],
+  },
+  {
+    "id": 59,
+    "typeEchantillon" : "individu",
+    "label": "2nd lot lot Protools 2023",
+    "dateDebutCollecte": "2023-04-16T14:07:23.001Z",
+    "dateFinCollecte": "2024-05-16T14:07:23.001Z",
+    "dateRetour": "2025-05-15T14:07:23.001Z",
+    "questionnaireModel": "tic2023a00_webMBG2",
+    "quiRepond1": "Qui doit répondre paragraphe 1",
+    "quiRepond2": "Qui doit répondre paragraphe 2",
+    "quiRepond3": "Qui doit répondre paragraphe 3"
+  }
+  ],
   "questionnaireModels": [{
     "id": "tic2023a00_webMBG",
     "cheminRepertoire": "tests/coleman",
@@ -63,7 +76,7 @@
     ]
   },
   {
-    "id": "testQR_web",
+    "id": "tic2023a00_webMBG2",
     "cheminRepertoire": "tests/coleman",
     "label": "questionnaireModel de test QR",
     "requiredNomenclatureIds": [
