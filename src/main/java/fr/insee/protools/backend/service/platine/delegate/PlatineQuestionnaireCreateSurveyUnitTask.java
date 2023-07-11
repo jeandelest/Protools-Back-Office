@@ -74,7 +74,7 @@ public class PlatineQuestionnaireCreateSurveyUnitTask implements JavaDelegate, D
         return SurveyUnitResponseDto.builder()
                 .id(remSurveyUnitDto.getRepositoryId().toString())
                 .questionnaireId(currentPartitionNode.path(CTX_PARTITION_QUESTIONNAIRE_MODEL).asText())
-                .data(objectMapper.createObjectNode())
+                .data(remSurveyUnitDto.getExternals())
                 .personalization(personalizationNode)
                 .comment(objectMapper.createObjectNode())
                 .stateData(objectMapper.createObjectNode())

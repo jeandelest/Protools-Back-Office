@@ -1,9 +1,8 @@
 package fr.insee.protools.backend.service.rem.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.*;
 
 import java.util.List;
 
@@ -25,4 +24,12 @@ public class REMSurveyUnitDto {
 
     private List<AdditionalInformationDto> additionalInformations;
 
+    @Getter(AccessLevel.NONE)
+    private JsonNode externals;
+
+    public JsonNode getExternals() {
+        if(externals==null || externals.isNull())
+            externals= new ObjectMapper().createObjectNode();
+        return this.externals;
+    }
 }

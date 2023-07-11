@@ -51,6 +51,7 @@ public class RemService {
                     .get()
                     .uri(uriBuilder -> uriBuilder
                             .path("/survey-units/{surveyUnitId}")
+                            .queryParam("withExternals", true)
                             .build(surveyUnitId))
                     .retrieve()
                     .bodyToMono(REMSurveyUnitDto.class)
