@@ -60,17 +60,19 @@ public class PlatineQuestionnaireCreateSurveyUnitTask implements JavaDelegate, D
 
     private SurveyUnitResponseDto computeDto(JsonNode remSUNode, JsonNode currentPartitionNode) {
         REMSurveyUnitDto remSurveyUnitDto= PlatineHelper.parseRemSUNode(objectMapper,VARNAME_REM_SURVEY_UNIT,remSUNode);
+        String nameKey="name";
+        String valueKey="value";
 
         ArrayNode personalizationNode = objectMapper.createArrayNode();
         personalizationNode.add(objectMapper.createObjectNode()
-                .put("name","whoAnswers1")
-                .put("value",currentPartitionNode.path(CTX_PARTITION_QUIREPOND1).asText()));
+                .put(nameKey,"whoAnswers1")
+                .put(valueKey,currentPartitionNode.path(CTX_PARTITION_QUIREPOND1).asText()));
         personalizationNode.add(objectMapper.createObjectNode()
-                .put("name","whoAnswers2")
-                .put("value",currentPartitionNode.path(CTX_PARTITION_QUIREPOND2).asText()));
+                .put(nameKey,"whoAnswers2")
+                .put(valueKey,currentPartitionNode.path(CTX_PARTITION_QUIREPOND2).asText()));
         personalizationNode.add(objectMapper.createObjectNode()
-                .put("name","whoAnswers3")
-                .put("value",currentPartitionNode.path(CTX_PARTITION_QUIREPOND3).asText()));
+                .put(nameKey,"whoAnswers3")
+                .put(valueKey,currentPartitionNode.path(CTX_PARTITION_QUIREPOND3).asText()));
 
         return SurveyUnitResponseDto.builder()
                 .id(remSurveyUnitDto.getRepositoryId().toString())
