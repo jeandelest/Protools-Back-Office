@@ -146,13 +146,13 @@ public class QuestionnaireHelper {
                 i++;
                 var nomenclatureNode = nomenclatureIterator.next();
                 if(nomenclatureNode.get(CTX_NOMENCLATURE_ID) == null || nomenclatureNode.get(CTX_NOMENCLATURE_ID).asText().isEmpty()){
-                    missingNodes.add(DelegateContextVerifier.computeMissingMessage(String.format("%s[%s].%s",CTX_NOMENCLATURES,i,CTX_NOMENCLATURE_ID),QuestionnaireHelper.class));
+                    missingNodes.add(missingCTXMessage(CTX_NOMENCLATURES,i,CTX_NOMENCLATURE_ID));
                 }
                 if(nomenclatureNode.get(CTX_NOMENCLATURE_LABEL) == null || nomenclatureNode.get(CTX_NOMENCLATURE_LABEL).asText().isEmpty()){
-                    missingNodes.add(DelegateContextVerifier.computeMissingMessage(String.format("%s[%s].%s",CTX_NOMENCLATURES,i,CTX_NOMENCLATURE_LABEL),QuestionnaireHelper.class));
+                    missingNodes.add(missingCTXMessage(CTX_NOMENCLATURES,i,CTX_NOMENCLATURE_LABEL));
                 }
                 if(nomenclatureNode.get(CTX_NOMENCLATURE_CHEMIN_REPERTOIRE) == null || nomenclatureNode.get(CTX_NOMENCLATURE_CHEMIN_REPERTOIRE).asText().isEmpty()){
-                    missingNodes.add(DelegateContextVerifier.computeMissingMessage(String.format("%s[%s].%s",CTX_NOMENCLATURES,i,CTX_NOMENCLATURE_CHEMIN_REPERTOIRE),QuestionnaireHelper.class));
+                    missingNodes.add(missingCTXMessage(CTX_NOMENCLATURES,i,CTX_NOMENCLATURE_CHEMIN_REPERTOIRE));
                 }
             }
 
@@ -166,17 +166,21 @@ public class QuestionnaireHelper {
                 i++;
                 var nomenclatureNode = questionnaireModelsIterator.next();
                 if (nomenclatureNode.get(CTX_QUESTIONNAIRE_MODEL_ID) == null || nomenclatureNode.get(CTX_QUESTIONNAIRE_MODEL_ID).asText().isEmpty()) {
-                    missingNodes.add(DelegateContextVerifier.computeMissingMessage(String.format("%s[%s].%s", CTX_QUESTIONNAIRE_MODELS, i, CTX_QUESTIONNAIRE_MODEL_ID), QuestionnaireHelper.class));
+                    missingNodes.add(missingCTXMessage( CTX_QUESTIONNAIRE_MODELS, i, CTX_QUESTIONNAIRE_MODEL_ID));
                 }
                 if (nomenclatureNode.get(CTX_QUESTIONNAIRE_MODEL_LABEL) == null || nomenclatureNode.get(CTX_QUESTIONNAIRE_MODEL_LABEL).asText().isEmpty()) {
-                    missingNodes.add(DelegateContextVerifier.computeMissingMessage(String.format("%s[%s].%s", CTX_QUESTIONNAIRE_MODELS, i, CTX_QUESTIONNAIRE_MODEL_LABEL), QuestionnaireHelper.class));
+                    missingNodes.add(missingCTXMessage( CTX_QUESTIONNAIRE_MODELS, i, CTX_QUESTIONNAIRE_MODEL_LABEL));
                 }
                 if (nomenclatureNode.get(CTX_QUESTIONNAIRE_MODEL_CHEMIN_REPERTOIRE) == null || nomenclatureNode.get(CTX_QUESTIONNAIRE_MODEL_CHEMIN_REPERTOIRE).asText().isEmpty()) {
-                    missingNodes.add(DelegateContextVerifier.computeMissingMessage(String.format("%s[%s].%s", CTX_QUESTIONNAIRE_MODELS, i, CTX_QUESTIONNAIRE_MODEL_CHEMIN_REPERTOIRE), QuestionnaireHelper.class));
+                    missingNodes.add(missingCTXMessage( CTX_QUESTIONNAIRE_MODELS, i, CTX_QUESTIONNAIRE_MODEL_CHEMIN_REPERTOIRE));
                 }
             }
         }
         return missingNodes;
+    }
+
+    private static String missingCTXMessage(String parent,int index,String child){
+        return DelegateContextVerifier.computeMissingMessage(String.format("%s[%s].%s", parent, index, child), QuestionnaireHelper.class);
     }
 
     private QuestionnaireHelper(){}
