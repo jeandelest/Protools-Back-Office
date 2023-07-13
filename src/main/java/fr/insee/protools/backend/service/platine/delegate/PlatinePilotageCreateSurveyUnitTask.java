@@ -43,8 +43,8 @@ public class PlatinePilotageCreateSurveyUnitTask implements JavaDelegate, Delega
 
     private static final ObjectMapper objectMapper = new ObjectMapper().configure(FAIL_ON_UNKNOWN_PROPERTIES,false);
 
-    private static final String CIVILITY_MONSIEUR = "Monsieur";
-    private static final String CIVILITY_MADAME = "Madame";
+    private static final String CIVILITY_MONSIEUR = "Mr";
+    private static final String CIVILITY_MADAME = "Mme";
 
     @Override
     public void execute(DelegateExecution execution) {
