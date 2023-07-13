@@ -151,7 +151,7 @@ public class PlatinePilotageCreateSurveyUnitTask implements JavaDelegate, Delega
 
             //Check value of Enum
             String enumVal = partitionNode.path(CTX_PARTITION_TYPE_ECHANTILLON).asText();
-            if(! EnumUtils.isValidEnum(PartitionTypeEchantillon.class, enumVal)){
+            if(! EnumUtils.isValidEnumIgnoreCase(PartitionTypeEchantillon.class, enumVal)){
                 results.add(DelegateContextVerifier.computeIncorrectEnumMessage(CTX_PARTITION_TYPE_ECHANTILLON,enumVal,Arrays.toString(PartitionTypeEchantillon.values()),getClass()));
             }
         }

@@ -80,12 +80,12 @@ public class PlatinePilotageCreateContextTask implements JavaDelegate, DelegateC
 
         //Check value of PERIODE Enum
         String periode = contextRootNode.path(CTX_METADONNEES).path(CTX_META_PERIODE).asText();
-        if(! EnumUtils.isValidEnum(PeriodEnum.class, periode)){
+        if(! EnumUtils.isValidEnumIgnoreCase(PeriodEnum.class, periode)){
             results.add(DelegateContextVerifier.computeIncorrectEnumMessage(CTX_META_PERIODE,periode,Arrays.toString(PeriodEnum.values()),getClass()));
         }
         //Check value of PERIODICITE Enum
         String periodicite = contextRootNode.path(CTX_METADONNEES).path(CTX_META_PERIODICITE).asText();
-        if(! EnumUtils.isValidEnum(PeriodicityEnum.class, periodicite)){
+        if(! EnumUtils.isValidEnumIgnoreCase(PeriodicityEnum.class, periodicite)){
             results.add(DelegateContextVerifier.computeIncorrectEnumMessage(CTX_META_PERIODICITE,periodicite,Arrays.toString(PeriodicityEnum.values()),getClass()));
         }
         return results;
