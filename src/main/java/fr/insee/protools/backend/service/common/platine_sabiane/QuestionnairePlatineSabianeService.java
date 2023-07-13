@@ -8,6 +8,7 @@ import fr.insee.protools.backend.service.common.platine_sabiane.dto.surveyunit.S
 import fr.insee.protools.backend.webclient.WebClientHelper;
 import fr.insee.protools.backend.webclient.exception.runtime.WebClient4xxException;
 import fr.insee.protools.backend.webclient.exception.runtime.WebClient5xxException;
+import fr.insee.protools.backend.webclient.exception.runtime.WebClientNullReturnException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -78,6 +79,10 @@ public interface QuestionnairePlatineSabianeService {
                             .path("/api/questionnaire/{id}")
                             .build(idQuestionnaireModel))
                     .retrieve().toBodilessEntity().block();
+            if(response==null) {
+                throw new WebClientNullReturnException("Error while checking if questionnaireModel exists - null result");
+            }
+
             if(response.getStatusCode().is2xxSuccessful()) {
                 modelExists = true;
             }
