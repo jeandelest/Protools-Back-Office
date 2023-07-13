@@ -45,9 +45,14 @@
   "partitions": [{
     "id": 1,
     "label": "lot hommes",
+    "typeEchantillon" : "LOGEMENT",
     "dateDebutCollecte": "2023-01-16T14:07:23.001Z",
     "dateFinCollecte": "2024-01-16T14:07:23.001Z",
-    "dateRetour": "2024-01-16T14:07:23.001Z"
+    "dateRetour": "2024-01-16T14:07:23.001Z",
+    "questionnaireModel": "tic2023a00_web",
+    "quiRepond1": "Qui doit répondre paragraphe 1",
+    "quiRepond2": "Qui doit répondre paragraphe 2",
+    "quiRepond3": "Qui doit répondre paragraphe 3"
   }],
   "questionnaireModels": [{
     "id": "tic2023a00_web",

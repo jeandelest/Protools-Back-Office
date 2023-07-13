@@ -1,6 +1,5 @@
 package fr.insee.protools.backend.service.platine.delegate;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.insee.protools.backend.service.DelegateContextVerifier;
@@ -29,6 +28,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
 import static fr.insee.protools.backend.service.FlowableVariableNameConstants.*;
 import static fr.insee.protools.backend.service.context.ContextConstants.*;
 import static fr.insee.protools.backend.service.utils.ContextUtils.getCurrentPartitionNode;
@@ -41,7 +41,7 @@ public class PlatinePilotageCreateSurveyUnitTask implements JavaDelegate, Delega
     @Autowired ContextService protoolsContext;
     @Autowired PlatinePilotageService platinePilotageService;
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper objectMapper = new ObjectMapper().configure(FAIL_ON_UNKNOWN_PROPERTIES,false);
 
     private static final String CIVILITY_MONSIEUR = "Monsieur";
     private static final String CIVILITY_MADAME = "Madame";
@@ -50,8 +50,9 @@ public class PlatinePilotageCreateSurveyUnitTask implements JavaDelegate, Delega
     public void execute(DelegateExecution execution) {
         log.info("ProcessInstanceId={}  begin", execution.getProcessInstanceId());
         JsonNode contextRootNode = protoolsContext.getContextByProcessInstance(execution.getProcessInstanceId());
-        String campainId = contextRootNode.path(CTX_CAMPAGNE_ID).asText();
+        checkContextOrThrow(log,execution.getProcessInstanceId(), contextRootNode);
 
+        String campainId = contextRootNode.path(CTX_CAMPAGNE_ID).asText();
         String currentPartitionId = FlowableVariableUtils.getVariableOrThrow(execution,VARNAME_CURRENT_PARTITION_ID, String.class);
         JsonNode remSUNode = FlowableVariableUtils.getVariableOrThrow(execution,VARNAME_REM_SURVEY_UNIT, JsonNode.class);
         String idInternaute = FlowableVariableUtils.getVariableOrThrow(execution, VARNAME_SUGOI_ID_CONTACT, String.class);
@@ -67,28 +68,9 @@ public class PlatinePilotageCreateSurveyUnitTask implements JavaDelegate, Delega
     }
 
     private static QuestioningWebclientDto computeQuestioningWebclientDto(JsonNode remSUNode, JsonNode currentPartitionNode,String idInternaute, String idCampagne) {
-        REMSurveyUnitDto remSurveyUnitDto;
-        try {
-            remSurveyUnitDto = objectMapper.treeToValue(remSUNode, REMSurveyUnitDto.class);
-        } catch (JsonProcessingException e) {
-            throw new IncorrectSUException("Error while parsing the json retrieved from REM : " + VARNAME_REM_SURVEY_UNIT,remSUNode, e);
-        }
-
-        //Search for right contact
-        PersonDto contact;
-        //SU Logement
-        if (currentPartitionNode.path(CTX_PARTITION_TYPE_ECHANTILLON).textValue().equalsIgnoreCase(PartitionTypeEchantillon.LOGEMENT.getAsString())) {
-            //We use the "main" person (actually it is the Declarant)
-            contact = remSurveyUnitDto.getPersons().stream()
-                    .filter(personDto -> (Boolean.TRUE.equals(personDto.getMain())))
-                    .findFirst().orElseThrow(() -> new IncorrectSUException("No main person found in SU [id="+remSurveyUnitDto.getRepositoryId()+"]", remSUNode));
-        }
-        //SU INDIVIDU
-        else {
-            contact = remSurveyUnitDto.getPersons().stream()
-                    .filter(personDto -> (Boolean.TRUE.equals(personDto.getSurveyed())))
-                    .findFirst().orElseThrow(() -> new IncorrectSUException("No surveyed person found in SU [id="+remSurveyUnitDto.getRepositoryId()+"]", remSUNode));
-        }
+        REMSurveyUnitDto remSurveyUnitDto=PlatineHelper.parseRemSUNode(objectMapper,VARNAME_REM_SURVEY_UNIT,remSUNode);
+        boolean isLogement = currentPartitionNode.path(CTX_PARTITION_TYPE_ECHANTILLON).textValue().equalsIgnoreCase(PartitionTypeEchantillon.LOGEMENT.getAsString());
+        PersonDto contact = findContact(remSUNode, remSurveyUnitDto, isLogement);
 
         PlatineAddressDto platineAdress = computePlatineAdress(remSurveyUnitDto.getAddress());
         ContactAccreditationDto platineContact = convertREMPersonToPlatineContact(idInternaute, platineAdress, contact);
@@ -100,6 +82,34 @@ public class PlatinePilotageCreateSurveyUnitTask implements JavaDelegate, Delega
                         .surveyUnit(computeSurveyUnitDto(remSurveyUnitDto))
                         .contacts(List.of(platineContact))
                         .build();
+    }
+
+    /**
+     * Search for the right contact according to the SU Type :
+     * For Logement : Find the first person flagged as Main
+     * For Individu : Find the first person flagged as Surveyed
+     * @param remSUNode : Used only to add it to exception in case of error
+     * @param remSurveyUnitDto
+     * @param isLogement true if logement (false if individu)
+     * @return the contact to be used
+     */
+    protected static PersonDto findContact(JsonNode remSUNode, REMSurveyUnitDto remSurveyUnitDto, boolean isLogement) {
+        //Search for right contact
+        PersonDto contact;
+        //SU Logement
+        if (isLogement) {
+            //We use the "main" person (actually it is the Declarant)
+            contact = remSurveyUnitDto.getPersons().stream()
+                    .filter(personDto -> (Boolean.TRUE.equals(personDto.getMain())))
+                    .findFirst().orElseThrow(() -> new IncorrectSUException("No main person found in SU [id="+ remSurveyUnitDto.getRepositoryId()+"]", remSUNode));
+        }
+        //SU INDIVIDU
+        else {
+            contact = remSurveyUnitDto.getPersons().stream()
+                    .filter(personDto -> (Boolean.TRUE.equals(personDto.getSurveyed())))
+                    .findFirst().orElseThrow(() -> new IncorrectSUException("No surveyed person found in SU [id="+ remSurveyUnitDto.getRepositoryId()+"]", remSUNode));
+        }
+        return contact;
     }
 
     private static PlatineQuestioningSurveyUnitDto computeSurveyUnitDto(REMSurveyUnitDto remSurveyUnitDto) {
@@ -148,12 +158,28 @@ public class PlatinePilotageCreateSurveyUnitTask implements JavaDelegate, Delega
         return results;
     }
 
+    /**
+     * Compute the lastname to send to platine.
+     * @param lastname from rem
+     * @param birthname from rem
+     * @return the computed platine last name
+     */
+    protected static String getPlatineLastname(String lastname, String birthname){
+        if(lastname!=null)
+            return lastname;
+        else if(birthname!=null)
+            return birthname;
+        return "";
+    }
+
     private static ContactAccreditationDto convertREMPersonToPlatineContact(String idInternaute, PlatineAddressDto platineAdress, PersonDto remPersonDto) {
+        //If lastname is null then we use birthname
+        String platineName = getPlatineLastname(remPersonDto.getLastName(),remPersonDto.getBirthName());
         return ContactAccreditationDto.builder()
                 .identifier(idInternaute)
                 .externalId(remPersonDto.getExternalId())
                 .function("")
-                .lastName(remPersonDto.getLastName())
+                .lastName(platineName)
                 .firstName(remPersonDto.getFirstName())
                 .isMain(true)
                 .civility(convertREMGenderToPlatineCivility(remPersonDto.getGender()))
@@ -174,7 +200,7 @@ public class PlatinePilotageCreateSurveyUnitTask implements JavaDelegate, Delega
                 .build();
     }
 
-    private static String convertREMGenderToPlatineCivility(String remGender) {
+    static String convertREMGenderToPlatineCivility(String remGender) {
         //"civility": "Madame" IF REM.person.gender=2, ELSE "Monsieur"
         return switch (remGender) {
             case "2":

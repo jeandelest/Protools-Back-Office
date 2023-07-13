@@ -36,7 +36,7 @@ import static org.mockito.Mockito.*;
 class QuestionnaireHelperTest {
 
     final static String platineRessourceFolder = ClassUtils.convertClassNameToResourcePath(PlatineQuestionnaireCreateContextTaskTest.class.getPackageName());
-    final static String platine_context_json = platineRessourceFolder + "/protools-contexte-platine.json";
+    final static String platine_context_json = platineRessourceFolder + "/protools-contexte-platine-individu.json";
 
     final static String sabianeRessourceFolder = ClassUtils.convertClassNameToResourcePath(SabianeQuestionnaireCreateContextTaskTest.class.getPackageName());
     final static String sabiane_context_json = sabianeRessourceFolder + "/protools-contexte-sabiane.json";

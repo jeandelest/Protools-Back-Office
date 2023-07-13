@@ -9,6 +9,7 @@ import fr.insee.protools.backend.service.common.platine_sabiane.dto.surveyunit.S
 import fr.insee.protools.backend.service.context.ContextService;
 import fr.insee.protools.backend.service.exception.IncorrectSUException;
 import fr.insee.protools.backend.service.platine.questionnaire.PlatineQuestionnaireService;
+import fr.insee.protools.backend.service.platine.utils.PlatineHelper;
 import fr.insee.protools.backend.service.rem.dto.REMSurveyUnitDto;
 import fr.insee.protools.backend.service.utils.FlowableVariableUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,8 @@ import org.springframework.stereotype.Component;
 import java.util.HashSet;
 import java.util.Set;
 
+import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES;
+import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
 import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VARNAME_CURRENT_PARTITION_ID;
 import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VARNAME_REM_SURVEY_UNIT;
 import static fr.insee.protools.backend.service.context.ContextConstants.*;
@@ -33,12 +36,16 @@ public class PlatineQuestionnaireCreateSurveyUnitTask implements JavaDelegate, D
     @Autowired ContextService protoolsContext;
     @Autowired PlatineQuestionnaireService platineQuestionnaireService;
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper objectMapper =
+            new ObjectMapper()
+                    .configure(FAIL_ON_UNKNOWN_PROPERTIES,false)
+                    .configure(FAIL_ON_MISSING_CREATOR_PROPERTIES,true);
 
     @Override
     public void execute(DelegateExecution execution) {
         log.info("ProcessInstanceId={}  begin", execution.getProcessInstanceId());
         JsonNode contextRootNode = protoolsContext.getContextByProcessInstance(execution.getProcessInstanceId());
+        checkContextOrThrow(log,execution.getProcessInstanceId(), contextRootNode);
 
         String currentPartitionId = FlowableVariableUtils.getVariableOrThrow(execution,VARNAME_CURRENT_PARTITION_ID, String.class);
         JsonNode remSUNode = FlowableVariableUtils.getVariableOrThrow(execution,VARNAME_REM_SURVEY_UNIT, JsonNode.class);
@@ -53,12 +60,7 @@ public class PlatineQuestionnaireCreateSurveyUnitTask implements JavaDelegate, D
     }
 
     private SurveyUnitResponseDto computeDto(JsonNode remSUNode, JsonNode currentPartitionNode) {
-        REMSurveyUnitDto remSurveyUnitDto;
-        try {
-            remSurveyUnitDto = objectMapper.treeToValue(remSUNode, REMSurveyUnitDto.class);
-        } catch (JsonProcessingException e) {
-            throw new IncorrectSUException("Error while parsing the json retrieved from REM : " + VARNAME_REM_SURVEY_UNIT,remSUNode, e);
-        }
+        REMSurveyUnitDto remSurveyUnitDto= PlatineHelper.parseRemSUNode(objectMapper,VARNAME_REM_SURVEY_UNIT,remSUNode);
 
         ArrayNode personalizationNode = objectMapper.createArrayNode();
         personalizationNode.add(objectMapper.createObjectNode()

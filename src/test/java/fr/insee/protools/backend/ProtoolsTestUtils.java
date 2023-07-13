@@ -1,5 +1,6 @@
 package fr.insee.protools.backend;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okio.Buffer;
@@ -36,7 +37,7 @@ public class ProtoolsTestUtils {
     public static <T> T asObject(String filePath, Class<T> targetClass) {
         try {
             String s = asString(filePath);
-            return  new ObjectMapper().readValue(s,targetClass);
+            return  new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).readValue(s,targetClass);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }

@@ -40,7 +40,7 @@ public
 class PlatineQuestionnaireCreateContextTaskTest {
 
     final static String ressourceFolder = ClassUtils.convertClassNameToResourcePath(PlatineQuestionnaireCreateContextTaskTest.class.getPackageName());
-    final static String platine_context_json = ressourceFolder+"/protools-contexte-platine.json";
+    final static String platine_context_json = ressourceFolder+"/protools-contexte-platine-individu.json";
     final static String platine_context_incorrect_json = ressourceFolder+"/protools-contexte-platine-incorrect.json";
 
     @Mock PlatineQuestionnaireService platineQuestionnaireService;
