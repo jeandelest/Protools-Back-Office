@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import fr.insee.protools.backend.service.DelegateContextVerifier;
 import fr.insee.protools.backend.service.common.platine_sabiane.dto.surveyunit.SurveyUnitResponseDto;
 import fr.insee.protools.backend.service.context.ContextService;
-import fr.insee.protools.backend.service.exception.IncorrectSUException;
 import fr.insee.protools.backend.service.platine.questionnaire.PlatineQuestionnaireService;
 import fr.insee.protools.backend.service.platine.utils.PlatineHelper;
 import fr.insee.protools.backend.service.rem.dto.REMSurveyUnitDto;
