@@ -129,18 +129,21 @@ class PlatinePilotageCreateSurveyUnitTaskTest extends TestWithContext {
     @Test
     @DisplayName("convertREMGenderToPlatineCivility should return Mme only id parameter is '2' ")
     void convertREMGenderToPlatineCivility_should_ReturnMadameOnlyWhenParamIs2() {
-        String monsieur="Mr";
-        String madame="Mme";
+        String monsieur="Male";
+        String madame="Female";
+        String undef="Undefined";
+
         assertThat(PlatinePilotageCreateSurveyUnitTask.convertREMGenderToPlatineCivility("2")).isEqualTo(madame);
-        assertThat(PlatinePilotageCreateSurveyUnitTask.convertREMGenderToPlatineCivility(" 2")).isEqualTo(monsieur);
-        assertThat(PlatinePilotageCreateSurveyUnitTask.convertREMGenderToPlatineCivility(" 2 ")).isEqualTo(monsieur);
-        assertThat(PlatinePilotageCreateSurveyUnitTask.convertREMGenderToPlatineCivility("3")).isEqualTo(monsieur);
-        assertThat(PlatinePilotageCreateSurveyUnitTask.convertREMGenderToPlatineCivility("23JZKEOSJF")).isEqualTo(monsieur);
-        assertThat(PlatinePilotageCreateSurveyUnitTask.convertREMGenderToPlatineCivility("0")).isEqualTo(monsieur);
         assertThat(PlatinePilotageCreateSurveyUnitTask.convertREMGenderToPlatineCivility("1")).isEqualTo(monsieur);
-        assertThat(PlatinePilotageCreateSurveyUnitTask.convertREMGenderToPlatineCivility("-1")).isEqualTo(monsieur);
-        assertThat(PlatinePilotageCreateSurveyUnitTask.convertREMGenderToPlatineCivility("-2")).isEqualTo(monsieur);
-        assertThat(PlatinePilotageCreateSurveyUnitTask.convertREMGenderToPlatineCivility("& ukdslw,kvlk,l")).isEqualTo(monsieur);
+        assertThat(PlatinePilotageCreateSurveyUnitTask.convertREMGenderToPlatineCivility("22")).isEqualTo(undef);
+        assertThat(PlatinePilotageCreateSurveyUnitTask.convertREMGenderToPlatineCivility(" 2")).isEqualTo(undef);
+        assertThat(PlatinePilotageCreateSurveyUnitTask.convertREMGenderToPlatineCivility(" 2 ")).isEqualTo(undef);
+        assertThat(PlatinePilotageCreateSurveyUnitTask.convertREMGenderToPlatineCivility("3")).isEqualTo(undef);
+        assertThat(PlatinePilotageCreateSurveyUnitTask.convertREMGenderToPlatineCivility("23JZKEOSJF")).isEqualTo(undef);
+        assertThat(PlatinePilotageCreateSurveyUnitTask.convertREMGenderToPlatineCivility("0")).isEqualTo(undef);
+        assertThat(PlatinePilotageCreateSurveyUnitTask.convertREMGenderToPlatineCivility("-1")).isEqualTo(undef);
+        assertThat(PlatinePilotageCreateSurveyUnitTask.convertREMGenderToPlatineCivility("-2")).isEqualTo(undef);
+        assertThat(PlatinePilotageCreateSurveyUnitTask.convertREMGenderToPlatineCivility("& ukdslw,kvlk,l")).isEqualTo(undef);
     }
 
     @Test

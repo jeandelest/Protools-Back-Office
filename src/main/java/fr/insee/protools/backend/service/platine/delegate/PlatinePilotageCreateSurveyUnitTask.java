@@ -43,8 +43,9 @@ public class PlatinePilotageCreateSurveyUnitTask implements JavaDelegate, Delega
 
     private static final ObjectMapper objectMapper = new ObjectMapper().configure(FAIL_ON_UNKNOWN_PROPERTIES,false);
 
-    private static final String CIVILITY_MONSIEUR = "Mr";
-    private static final String CIVILITY_MADAME = "Mme";
+    private static final String CIVILITY_MALE = "Male";
+    private static final String CIVILITY_FEMALE = "Female";
+    private static final String CIVILITY_UNDEFINED = "Female";
 
     @Override
     public void execute(DelegateExecution execution) {
@@ -201,12 +202,13 @@ public class PlatinePilotageCreateSurveyUnitTask implements JavaDelegate, Delega
     }
 
     static String convertREMGenderToPlatineCivility(String remGender) {
-        //"civility": "Madame" IF REM.person.gender=2, ELSE "Monsieur"
         return switch (remGender) {
             case "2":
-                yield CIVILITY_MADAME;
+                yield CIVILITY_FEMALE;
+            case "1" :
+                yield CIVILITY_MALE;
             default:
-                yield CIVILITY_MONSIEUR;
+                yield CIVILITY_UNDEFINED;
         };
     }
 
