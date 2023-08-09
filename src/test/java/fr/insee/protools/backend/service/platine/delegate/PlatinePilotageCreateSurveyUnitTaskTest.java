@@ -127,8 +127,8 @@ class PlatinePilotageCreateSurveyUnitTaskTest extends TestWithContext {
 
 
     @Test
-    @DisplayName("convertREMGenderToPlatineCivility should return Mme only id parameter is '2' ")
-    void convertREMGenderToPlatineCivility_should_ReturnMadameOnlyWhenParamIs2() {
+    @DisplayName("convertREMGenderToPlatineCivility should return Female when param '2' ; 'Male' when param is '1' and Undefined in other cases")
+    void convertREMGenderToPlatineCivility_should_ReturnCorrectValues() {
         String monsieur="Male";
         String madame="Female";
         String undef="Undefined";
