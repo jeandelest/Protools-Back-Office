@@ -1,17 +1,17 @@
 {
   "id": "AAB2023A00",
-  "label": "Test Protools 2023 - MARC",
+  "label": "Test FAMILLE 2023 - MARC",
   "contexte": "household",
   "metadonnees": {
 	"annee": 2023,
 	"periodicite": "A",
 	"periode": "A00",
 	"operationId": "AAB2023",
-    "operationLabelCourt": "MARC - Opération test Protools 2023",
-    "operationLabelLong": "MARC - Super opération test Protools 2023",
+    "operationLabelCourt": "MARC - Opération test FAMILLE 2023",
+    "operationLabelLong": "MARC - Super opération test FAMILLE 2023",
 	"serieId": "AAB",
-    "serieLabelCourt": "MARC - Enquête test Protools",
-    "serieLabelLong": "MARC - Super enquête test Protools",
+    "serieLabelCourt": "MARC - Enquête test FAMILLE",
+    "serieLabelLong": "MARC - Super enquête test FAMILLE",
     "portailMesEnquetesOperation": false,
     "objectifsCourts": "Cette enquête permet de tester...",
     "objectifsLongs": "Cette enquête permet de tester des choses...",
@@ -43,56 +43,43 @@
     "assistanceNiveau2CodePostal": "25000"
   },
   "partitions": [{
-    "id": 60,
-    "typeEchantillon" : "individu",
-    "label": "premier lot Protools 2023",
+    "id": 43,
+    "typeEchantillon" : "logement",
+    "label": "premier lot FAMILLE 2023",
     "dateDebutCollecte": "2023-04-16T14:07:23.001Z",
     "dateFinCollecte": "2024-05-16T14:07:23.001Z",
     "dateRetour": "2025-05-15T14:07:23.001Z",
-	"questionnaireModel": "testweb_mbg_avec_externals",
+	"questionnaireModel": "quest_model_famille",
 	"quiRepond1": "Qui doit répondre paragraphe 1",
 	"quiRepond2": "Qui doit répondre paragraphe 2",
-	"quiRepond3": "Qui doit répondre paragraphe 3"
+	"quiRepond3": "Qui doit répondre paragraphe 3",
+    "sexe": "femmes"
   },
   {
-    "id": 59,
-    "typeEchantillon" : "individu",
-    "label": "2nd lot lot Protools 2023",
+    "id": 42,
+    "typeEchantillon" : "logement",
+    "label": "2nd lot lot FAMILLE 2023",
     "dateDebutCollecte": "2023-04-16T14:07:23.001Z",
     "dateFinCollecte": "2024-05-16T14:07:23.001Z",
     "dateRetour": "2025-05-15T14:07:23.001Z",
-    "questionnaireModel": "testweb_mbg_avec_externals",
+    "questionnaireModel": "quest_model_famille",
     "quiRepond1": "Qui doit répondre paragraphe 1",
     "quiRepond2": "Qui doit répondre paragraphe 2",
-    "quiRepond3": "Qui doit répondre paragraphe 3"
+    "quiRepond3": "Qui doit répondre paragraphe 3",
+    "sexe": "hommes"
   }
   ],
   "questionnaireModels": [{
-    "id": "tic2023a00_webMBG",
+    "id": "quest_model_famille",
     "cheminRepertoire": "tests/coleman",
-    "label": "questionnaireModel de test",
-    "requiredNomenclatureIds": [
-      "testDepartements"
-    ]
+    "label": "questionnaireModel de famille",
+    "requiredNomenclatureIds": []
   },
   {
-    "id": "testweb_mbg_avec_externals",
+    "id": "quest_model_famille",
     "cheminRepertoire": "tests/coleman",
-    "label": "questionnaireModel de test QR",
-    "requiredNomenclatureIds": [
-      "testDepartements",
-	  "testPays"
-    ]
+    "label": "questionnaireModel de famille",
+    "requiredNomenclatureIds": []
   }],
-  "nomenclatures": [
-  {
-    "id": "testDepartements",
-    "cheminRepertoire": "tests/Departements",
-    "label": "liste de test des départements"
-  },
-  {
-    "id": "testPays",
-    "cheminRepertoire": "tests/Pays",
-    "label": "liste de test des pays"
-  }]
+  "nomenclatures": []
 }

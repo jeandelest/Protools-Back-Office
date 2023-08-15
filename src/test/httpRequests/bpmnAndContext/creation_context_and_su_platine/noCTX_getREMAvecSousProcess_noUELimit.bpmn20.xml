@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="Examples" exporter="Flowable Open Source Modeler" exporterVersion="6.8.0">
-  <process id="tst" name="Chargement de contexte collecte web AVEC REM" isExecutable="true">
+  <process id="chargementUeWeb" name="Chargement de contexte collecte web AVEC REM" isExecutable="true">
     <documentation>Processus de chargement du contexte de campagne pour une collecte Web dans platine Avec REM</documentation>
     <startEvent id="theStart" flowable:formFieldValidation="true"></startEvent>
     <endEvent id="theEnd" name="Fin normale du processus"></endEvent>
@@ -25,17 +25,6 @@
       <serviceTask id="getREMSUList" name="Récupération liste d'UE pour une partition dans REM" flowable:delegateExpression="${remGetPartitionListOfSuIdTask}"></serviceTask>
       <endEvent id="partition-subprocess-end"></endEvent>
 
-      <scriptTask id="reduceSample" name="reducteur de liste d'UE" scriptFormat="groovy">
-        <script>
-          listeReduite = execution.getVariable("rem-survey-unit-id-list", List.class);
-          listeReduite=listeReduite.take(1);
-          execution.getParent().setVariableLocal("rem-survey-unit-id-list", listeReduite);
-        </script>
-      </scriptTask>
-
-      <serviceTask id="log_variables" name="log variables" flowable:delegateExpression="${logVariablesTask}"/>
-
-
       <subProcess id="su-subprocess" name="sous process traitement UE">
         <multiInstanceLoopCharacteristics isSequential="false">
           <loopDataInputRef>rem-survey-unit-id-list</loopDataInputRef>
@@ -56,10 +45,7 @@
       </subProcess>
 
       <sequenceFlow id="partition-subprocess-flow1" sourceRef="partition-subprocess-start" targetRef="getREMSUList"></sequenceFlow>
-      <sequenceFlow id="partition-subprocess-flow1b" sourceRef="getREMSUList" targetRef="reduceSample"></sequenceFlow>
-      <sequenceFlow id="partition-subprocess-flow1c" sourceRef="reduceSample" targetRef="log_variables"></sequenceFlow>
-
-      <sequenceFlow id="partition-subprocess-flow2" sourceRef="log_variables" targetRef="su-subprocess"></sequenceFlow>
+      <sequenceFlow id="partition-subprocess-flow2" sourceRef="getREMSUList" targetRef="su-subprocess"></sequenceFlow>
       <sequenceFlow id="partition-subprocess-flow3" sourceRef="su-subprocess" targetRef="partition-subprocess-end"></sequenceFlow>
     </subProcess>
 

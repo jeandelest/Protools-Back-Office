@@ -9,7 +9,7 @@ import fr.insee.protools.backend.service.rem.dto.REMSurveyUnitDto;
 public class PlatineHelper {
 
     //In platine pilotage, partition ID must start by the campaignId. We decide to follow it with the configured REM partitionID
-    public static String computePilotagePartitionID(String campaignId, String partitionId){
+    public static String computePilotagePartitionID(String campaignId, Long partitionId){
         if(campaignId==null||partitionId==null){
             return null;
         }

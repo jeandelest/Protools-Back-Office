@@ -1,8 +1,8 @@
-package fr.insee.protools.backend.service.rem;
+package fr.insee.protools.backend.service.rem.delegate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.insee.protools.backend.service.rem.RemService;
 import fr.insee.protools.backend.service.rem.dto.REMSurveyUnitDto;
 import org.flowable.common.engine.api.FlowableIllegalArgumentException;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -14,14 +14,12 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Set;
-
-import static fr.insee.protools.backend.service.FlowableVariableNameConstants.*;
+import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VARNAME_REM_SURVEY_UNIT;
+import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VARNAME_REM_SURVEY_UNIT_IDENTIFIER;
 import static fr.insee.protools.backend.service.utils.FlowableVariableUtils.getMissingVariableMessage;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 @FlowableTest
@@ -63,19 +61,5 @@ class RemGetSUTaskTest {
         verify(remService).getSurveyUnit(variableSuId);
         //Process instance variable set with the retrieved SU content
         verify(execution).setVariableLocal(VARNAME_REM_SURVEY_UNIT, objectMapper.valueToTree(expectedREMSU));
-    }
-
-
-
-    @Test
-    void getContextErrors_ShouldReturnEmptySet() throws JsonProcessingException {
-        // Préconditions
-        JsonNode contextRootNode = new ObjectMapper().readTree("");
-
-        // Excécution
-        Set<String> errors = remGetSUTask.getContextErrors(contextRootNode);
-
-        // Post conditions
-        assertTrue(errors.isEmpty());
     }
 }

@@ -17,11 +17,11 @@ public class LogVariablesTask implements JavaDelegate {
     @Override
     public void execute(DelegateExecution delegateExecution) {
 
-        log.info("PATH_ID={} - Variables : {}", delegateExecution.getId(),filterVariables(delegateExecution.getVariables()));
-        log.info("PATH_ID={} - VariablesLocal : {}", delegateExecution.getId(),filterVariables(delegateExecution.getVariablesLocal()));
+        log.info("ID={} - PATH_ID={} - Variables : {}", delegateExecution.getCurrentFlowElement().getId(),delegateExecution.getId(),filterVariables(delegateExecution.getVariables()));
+        log.info("ID={} - PATH_ID={} - VariablesLocal : {}", delegateExecution.getCurrentFlowElement().getId(),delegateExecution.getId(),filterVariables(delegateExecution.getVariablesLocal()));
         if(delegateExecution.getParent()!=null){
-            log.info("PATH_ID} - PARENT - Variables : {}", delegateExecution.getId(),filterVariables(delegateExecution.getParent().getVariables()));
-            log.info("PATH_ID={} - PARENT - VariablesLocal : {}", delegateExecution.getId(),filterVariables(delegateExecution.getParent().getVariablesLocal()));
+            log.info("ID={} - PATH_ID={} - PARENT - Variables : {}", delegateExecution.getCurrentFlowElement().getId(),delegateExecution.getId(),filterVariables(delegateExecution.getParent().getVariables()));
+            log.info("ID={} - PATH_ID={} - PARENT - VariablesLocal : {}", delegateExecution.getCurrentFlowElement().getId(), delegateExecution.getId(),filterVariables(delegateExecution.getParent().getVariablesLocal()));
         }
     }
 

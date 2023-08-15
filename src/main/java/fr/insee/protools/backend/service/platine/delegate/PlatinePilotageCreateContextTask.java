@@ -196,7 +196,7 @@ public class PlatinePilotageCreateContextTask implements JavaDelegate, DelegateC
 
     private static PartitioningDto computePartitioningDto(JsonNode partitionNode, String campaignId) {
         return PartitioningDto.builder()
-                .id(computePilotagePartitionID(campaignId,partitionNode.path(CTX_PARTITION_ID).asText()))
+                .id(computePilotagePartitionID(campaignId,partitionNode.path(CTX_PARTITION_ID).asLong()))
                 .campaignId(campaignId)
                 .label(partitionNode.path(CTX_PARTITION_LABEL).asText())
                 .openingDate(partitionNode.path(CTX_PARTITION_DATE_DEBUT_COLLECTE).asText())

@@ -26,4 +26,9 @@ public class IncorrectSUException extends RuntimeException {
             this.remSU = remSUNode.toString();
         }
     }
+
+    public IncorrectSUException(String message) {
+        super(message);
+        remSU = "";
+    }
 }

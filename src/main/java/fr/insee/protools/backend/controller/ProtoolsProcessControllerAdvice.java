@@ -3,10 +3,7 @@ package fr.insee.protools.backend.controller;
 import fr.insee.protools.backend.service.context.exception.BadContextIOException;
 import fr.insee.protools.backend.service.context.exception.BadContextIncorrectException;
 import fr.insee.protools.backend.service.context.exception.BadContextNotJSONException;
-import fr.insee.protools.backend.service.exception.IncorrectSUException;
-import fr.insee.protools.backend.service.exception.ProcessDefinitionNotFoundException;
-import fr.insee.protools.backend.service.exception.TaskNotFoundException;
-import fr.insee.protools.backend.service.exception.VariableClassCastException;
+import fr.insee.protools.backend.service.exception.*;
 import fr.insee.protools.backend.webclient.exception.runtime.WebClient4xxException;
 import fr.insee.protools.backend.webclient.exception.runtime.WebClient5xxException;
 import lombok.extern.slf4j.Slf4j;
@@ -75,4 +72,11 @@ public class ProtoolsProcessControllerAdvice {
         log.error("exceptionVariableClassCastHandler  : "+exception.getMessage());
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @ExceptionHandler({ ProtoolsTaskException.class })
+    public ResponseEntity<String> exceptionProtoolsTaskHandler(/*final HttpServletRequest req, */final ProtoolsTaskException exception) {
+        log.error("exceptionProtoolsTaskHandler  : "+exception.getMessage());
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 }

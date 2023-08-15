@@ -1,0 +1,52 @@
+package fr.insee.protools.backend.service.rem.delegate;
+
+import fr.insee.protools.backend.service.DelegateContextVerifier;
+import fr.insee.protools.backend.service.era.dto.CensusJsonDto;
+import fr.insee.protools.backend.service.exception.ProtoolsTaskException;
+import fr.insee.protools.backend.service.rem.RemService;
+import fr.insee.protools.backend.service.rem.dto.SuIdMappingJson;
+import fr.insee.protools.backend.service.rem.dto.SuIdMappingRecord;
+import fr.insee.protools.backend.service.utils.FlowableVariableUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.flowable.engine.delegate.DelegateExecution;
+import org.flowable.engine.delegate.JavaDelegate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+
+import static fr.insee.protools.backend.service.FlowableVariableNameConstants.*;
+
+@Component
+@Slf4j
+public class RemWriteEraSUListTask implements JavaDelegate, DelegateContextVerifier {
+
+    @Autowired RemService remService;
+
+    @Override
+    public void execute(DelegateExecution execution) {
+
+        //Get the list of SU previouly retrieved from ERA
+        List<CensusJsonDto> eraSUList = FlowableVariableUtils.getVariableOrThrow(execution,VARNAME_ERA_RESPONSE, List.class);
+        //Get current REM partition
+        Long currentPartitionId = FlowableVariableUtils.getVariableOrThrow(execution,VARNAME_CURRENT_PARTITION_ID, Long.class);
+        if(eraSUList==null||eraSUList.isEmpty()){
+            log.info("ProcessInstanceId={} - currentPartitionId={} - variable {} is empty",execution.getProcessInstanceId(), currentPartitionId,VARNAME_ERA_RESPONSE);
+            execution.getParent().setVariableLocal(VARNAME_REM_SU_ID_LIST, List.of());
+            return;
+        }
+
+        log.info("ProcessInstanceId={} - currentPartitionId={} - eraSUList={} begin",execution.getProcessInstanceId(), currentPartitionId,eraSUList.size());
+        //Store SU in REM
+        SuIdMappingJson remMapping = remService.writeERASUList(currentPartitionId, eraSUList);
+        if(remMapping==null){
+            log.error("ProcessInstanceId={} - currentPartitionId={}  remMapping is empty end",execution.getProcessInstanceId(), currentPartitionId);
+            throw new ProtoolsTaskException("Error while writing list of Era SU to REM : REM returned a null result ");
+        }
+        //STORE the list of REM identifier created
+        List<Long> remSuIdList = remMapping.getData().stream().map(SuIdMappingRecord::repositoryId).toList();
+
+        execution.getParent().setVariableLocal(VARNAME_REM_SU_ID_LIST, remSuIdList);
+        log.info("ProcessInstanceId={} - currentPartitionId={}  remSuIdList={}  end",execution.getProcessInstanceId(), currentPartitionId,remSuIdList);
+    }
+}

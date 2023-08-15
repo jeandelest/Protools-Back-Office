@@ -15,7 +15,10 @@ public class FlowableVariableNameConstants {
     public static final String VARNAME_REM_SURVEY_UNIT_IDENTIFIER ="rem-survey-unit-id";
     //to pass a REM survey unit content (JsonNode)
     public static final String VARNAME_REM_SURVEY_UNIT ="rem-survey-unit";
-    public static final String VARNAME_SUGOI_ID_CONTACT ="sugoi-id-contact";
-
+    public static final String VARNAME_DIRECTORYACCESS_ID_CONTACT ="directory_access-id-contact";
+    //ERA response
+    public static final String VARNAME_ERA_RESPONSE="era-response-list";
+    public static final String VARNAME_ERA_QUERY_START_DATE="era-query-start-date";
+    public static final String VARNAME_ERA_QUERY_END_DATE="era-query-end-date";
     private FlowableVariableNameConstants(){}
 }

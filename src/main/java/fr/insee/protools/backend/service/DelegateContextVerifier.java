@@ -13,7 +13,7 @@ import java.util.Set;
  */
 public interface DelegateContextVerifier {
 
-    Set<String> getContextErrors(JsonNode contextRootNode);
+    default Set<String> getContextErrors(JsonNode contextRootNode) {return Set.of();}
 
     static String computeMissingMessage(String missingElement, Class<?> classUsingThisElement){
         return String.format("Class=%s : Missing Context element name=%s ", classUsingThisElement.getSimpleName(),missingElement);

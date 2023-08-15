@@ -8,10 +8,8 @@ import fr.insee.protools.backend.service.context.exception.BadContextIncorrectEx
 import fr.insee.protools.backend.service.exception.IncorrectSUException;
 import fr.insee.protools.backend.service.platine.pilotage.PlatinePilotageService;
 import fr.insee.protools.backend.service.platine.pilotage.dto.query.QuestioningWebclientDto;
-import fr.insee.protools.backend.service.platine.pilotage.metadata.MetadataDto;
 import fr.insee.protools.backend.service.rem.dto.PersonDto;
 import fr.insee.protools.backend.service.rem.dto.REMSurveyUnitDto;
-import fr.insee.protools.backend.service.utils.FlowableVariableUtils;
 import fr.insee.protools.backend.service.utils.TestWithContext;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.junit.jupiter.api.DisplayName;
@@ -19,20 +17,18 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.springframework.util.ClassUtils;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 import static fr.insee.protools.backend.service.FlowableVariableNameConstants.*;
 import static fr.insee.protools.backend.service.platine.utils.PlatineHelper.computePilotagePartitionID;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 class PlatinePilotageCreateSurveyUnitTaskTest extends TestWithContext {
@@ -74,12 +70,12 @@ class PlatinePilotageCreateSurveyUnitTaskTest extends TestWithContext {
     void execute_should_work_when_ContextOK(String context_json) {
         //Prepare
         DelegateExecution execution=createMockedExecution();
-        JsonNode contextRootNode = initContexteMock(context_json);
+        JsonNode contextRootNode = initContexteMockWithFile(context_json);
         JsonNode remSU = ProtoolsTestUtils.asJsonNode(rem_su_3personnes);
-        String idPArtition="1";
-        lenient().doReturn(idPArtition).when(execution).getVariable(VARNAME_CURRENT_PARTITION_ID,String.class);
+        Long idPArtition=1l;
+        lenient().doReturn(idPArtition).when(execution).getVariable(VARNAME_CURRENT_PARTITION_ID,Long.class);
         lenient().doReturn(remSU).when(execution).getVariable(VARNAME_REM_SURVEY_UNIT,JsonNode.class);
-        lenient().doReturn("TOTO").when(execution).getVariable(VARNAME_SUGOI_ID_CONTACT,String.class);
+        lenient().doReturn("TOTO").when(execution).getVariable(VARNAME_DIRECTORYACCESS_ID_CONTACT,String.class);
 
         //Execute the unit under test
         platinePilotageTask.execute(execution);
@@ -154,7 +150,7 @@ class PlatinePilotageCreateSurveyUnitTaskTest extends TestWithContext {
         assertThat(PlatinePilotageCreateSurveyUnitTask.getPlatineLastname(lastname,birthname)).isEqualTo(lastname);
         assertThat(PlatinePilotageCreateSurveyUnitTask.getPlatineLastname(null,birthname)).isEqualTo(birthname);
         assertThat(PlatinePilotageCreateSurveyUnitTask.getPlatineLastname(lastname,null)).isEqualTo(lastname);
-        assertThat(PlatinePilotageCreateSurveyUnitTask.getPlatineLastname(null,null)).isEqualTo("");
+        assertThat(PlatinePilotageCreateSurveyUnitTask.getPlatineLastname(null,null)).isEmpty();
 
     }
 
@@ -163,14 +159,14 @@ class PlatinePilotageCreateSurveyUnitTaskTest extends TestWithContext {
     @DisplayName("Should throw if REM SU Json is invalid")
     void execute_should_throw_IncorrectSUException_when_wrongSU() {
         DelegateExecution execution=createMockedExecution();
-        initContexteMock(platine_context_json);
+        initContexteMockWithFile(platine_context_json);
         JsonNode remSU = ProtoolsTestUtils.asJsonNode(rem_su_3personnes);
         //Break this node
         ((ObjectNode) remSU).remove("repositoryId");
-        String idPartition="1";
-        lenient().doReturn(idPartition).when(execution).getVariable(VARNAME_CURRENT_PARTITION_ID,String.class);
+        Long idPartition=1l;
+        lenient().doReturn(idPartition).when(execution).getVariable(VARNAME_CURRENT_PARTITION_ID,Long.class);
         lenient().doReturn(remSU).when(execution).getVariable(VARNAME_REM_SURVEY_UNIT,JsonNode.class);
-        lenient().doReturn("TOTO").when(execution).getVariable(VARNAME_SUGOI_ID_CONTACT,String.class);
+        lenient().doReturn("TOTO").when(execution).getVariable(VARNAME_DIRECTORYACCESS_ID_CONTACT,String.class);
 
 
         //Execute the unit under test

@@ -23,7 +23,7 @@ class ContextUtilsTest {
         // Arrange
         JsonNode contextRootNode = new ObjectMapper().readTree(json1Partition);
         // Act
-        JsonNode result = ContextUtils.getCurrentPartitionNode(contextRootNode, "1");
+        JsonNode result = ContextUtils.getCurrentPartitionNode(contextRootNode, 1l);
         // Assert
         assertEquals("val1",result.path("toto").asText());
     }
@@ -33,7 +33,7 @@ class ContextUtilsTest {
         // Arrange
         JsonNode contextRootNode = new ObjectMapper().readTree(json2Partition);
         // Act
-        JsonNode result = ContextUtils.getCurrentPartitionNode(contextRootNode, "2");
+        JsonNode result = ContextUtils.getCurrentPartitionNode(contextRootNode, 2l);
         // Assert
         assertEquals("val2",result.path("toto").asText());
     }
@@ -46,7 +46,7 @@ class ContextUtilsTest {
 
         // Act
         assertThrows(FlowableIllegalArgumentException.class,
-                () -> ContextUtils.getCurrentPartitionNode(contextRootNode, "55"));
+                () -> ContextUtils.getCurrentPartitionNode(contextRootNode, 55l));
     }
 
     @Test
@@ -56,6 +56,6 @@ class ContextUtilsTest {
 
         // Act
         assertThrows(FlowableIllegalArgumentException.class,
-                () -> ContextUtils.getCurrentPartitionNode(contextRootNode, "55"));
+                () -> ContextUtils.getCurrentPartitionNode(contextRootNode, 55l));
     }
 }

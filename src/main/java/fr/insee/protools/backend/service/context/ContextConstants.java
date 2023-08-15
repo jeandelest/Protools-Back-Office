@@ -82,6 +82,9 @@ public final class ContextConstants {
     public static final String CTX_PARTITION_SABIANE_DATE_DEBUT_REPERAGE = "dateDebutReperage";
     public static final String CTX_PARTITION_SABIANE_DATE_FIN_TRAITEMENT = "dateFinTraitement";
 
+    //Partitions, specific ERA
+    public static final String CTX_PARTITION_ERA_SEXE = "sexe";
+
     // QuestionnaireModels
     public static final String CTX_QUESTIONNAIRE_MODELS = "questionnaireModels";
     public static final String CTX_QUESTIONNAIRE_MODEL_ID = "id";

@@ -45,7 +45,7 @@ public class PlatinePilotageCreateSurveyUnitTask implements JavaDelegate, Delega
 
     private static final String CIVILITY_MALE = "Male";
     private static final String CIVILITY_FEMALE = "Female";
-    private static final String CIVILITY_UNDEFINED = "Female";
+    private static final String CIVILITY_UNDEFINED = "Undefined";
 
     @Override
     public void execute(DelegateExecution execution) {
@@ -54,9 +54,9 @@ public class PlatinePilotageCreateSurveyUnitTask implements JavaDelegate, Delega
         checkContextOrThrow(log,execution.getProcessInstanceId(), contextRootNode);
 
         String campainId = contextRootNode.path(CTX_CAMPAGNE_ID).asText();
-        String currentPartitionId = FlowableVariableUtils.getVariableOrThrow(execution,VARNAME_CURRENT_PARTITION_ID, String.class);
+        Long currentPartitionId = FlowableVariableUtils.getVariableOrThrow(execution,VARNAME_CURRENT_PARTITION_ID, Long.class);
         JsonNode remSUNode = FlowableVariableUtils.getVariableOrThrow(execution,VARNAME_REM_SURVEY_UNIT, JsonNode.class);
-        String idInternaute = FlowableVariableUtils.getVariableOrThrow(execution, VARNAME_SUGOI_ID_CONTACT, String.class);
+        String idInternaute = FlowableVariableUtils.getVariableOrThrow(execution, VARNAME_DIRECTORYACCESS_ID_CONTACT, String.class);
 
         JsonNode currentPartitionNode = getCurrentPartitionNode(contextRootNode, currentPartitionId);
 
@@ -78,7 +78,7 @@ public class PlatinePilotageCreateSurveyUnitTask implements JavaDelegate, Delega
 
         return
                 QuestioningWebclientDto.builder()
-                        .idPartitioning(PlatineHelper.computePilotagePartitionID(idCampagne,currentPartitionNode.path(CTX_PARTITION_ID).toString()))
+                        .idPartitioning(PlatineHelper.computePilotagePartitionID(idCampagne,currentPartitionNode.path(CTX_PARTITION_ID).asLong()))
                         .modelName(currentPartitionNode.path(CTX_PARTITION_QUESTIONNAIRE_MODEL).asText())
                         .surveyUnit(computeSurveyUnitDto(remSurveyUnitDto))
                         .contacts(List.of(platineContact))
@@ -202,6 +202,8 @@ public class PlatinePilotageCreateSurveyUnitTask implements JavaDelegate, Delega
     }
 
     static String convertREMGenderToPlatineCivility(String remGender) {
+        if(remGender==null)
+            return CIVILITY_UNDEFINED;
         return switch (remGender) {
             case "2":
                 yield CIVILITY_FEMALE;

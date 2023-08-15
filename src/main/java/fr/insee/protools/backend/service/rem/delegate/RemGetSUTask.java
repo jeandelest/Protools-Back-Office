@@ -1,8 +1,8 @@
-package fr.insee.protools.backend.service.rem;
+package fr.insee.protools.backend.service.rem.delegate;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.insee.protools.backend.service.DelegateContextVerifier;
+import fr.insee.protools.backend.service.rem.RemService;
 import fr.insee.protools.backend.service.rem.dto.REMSurveyUnitDto;
 import fr.insee.protools.backend.service.utils.FlowableVariableUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -10,9 +10,6 @@ import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.HashSet;
-import java.util.Set;
 
 import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VARNAME_REM_SURVEY_UNIT;
 import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VARNAME_REM_SURVEY_UNIT_IDENTIFIER;
@@ -36,11 +33,5 @@ public class RemGetSUTask implements JavaDelegate, DelegateContextVerifier {
         execution.setVariableLocal(VARNAME_REM_SURVEY_UNIT,objectMapper.valueToTree(remSurveyUnitDto));
         log.debug("Su id={} - content={}", suId, remSurveyUnitDto);
         log.info("ProcessInstanceId={} - id={} end",execution.getProcessInstanceId(), suId);
-    }
-
-    @Override
-    public Set<String> getContextErrors(JsonNode contextRootNode) {
-        //No need ctx
-        return new HashSet<>();
     }
 }

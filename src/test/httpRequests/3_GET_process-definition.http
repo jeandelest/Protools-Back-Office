@@ -1,7 +1,7 @@
 ### GET TOKEN --- SET HOST
 < {%
-    client.global.set("host", "http://localhost:8080/");
     client.global.set("host", "https://api-orchestration-protocole-enquete.developpement.insee.fr/");
+    client.global.set("host", "http://localhost:8080/");
 %}
 POST https://auth.insee.test/auth/realms/{{realm}}/protocol/openid-connect/token
 Content-Type: application/x-www-form-urlencoded
@@ -22,7 +22,7 @@ grant_type=client_credentials&client_id={{client_id}}&client_secret={{client_sec
 
 #######GET : List of bpmn definitions
 
-GET {{host}}/repository/process-definitions
+GET {{host}}/repository/process-definitions?latest=true
 Authorization: Bearer {{auth_token}}
 
 #########GET : List of active processes
@@ -93,11 +93,6 @@ GET {{host}}/repository/process-definitions?key=testFront&latest=true
 Authorization: Bearer {{auth_token}}
 Content-Type: application/json
 
-###TO BE REMOVED
-GET https://api-orchestration-protocole-enquete.developpement.insee.fr/repository/process-definitions?key=testFront&latest=true
-Authorization: Bearer {{auth_token}}
-Content-Type: application/json
-
 ### Liste des définitions de processus
 GET {{host}}/repository/process-definitions?key=oneDecisionTaskProcess&latest=true
 Authorization: Bearer {{auth_token}}
@@ -116,6 +111,10 @@ Authorization: Bearer {{auth_token}}
 GET {{host}}/repository/process-definitions/{{processDefinitionId}}/model
 Authorization: Bearer {{auth_token}}
 
+### TO BE REMOVED
+GET {{host}}/repository/process-definitions/chargementUeWeb:2:3835881d-401f-11ee-90df-70b5e8a2e307/resourcedata
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
 
 ### Test deploiement BPMN
 

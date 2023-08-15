@@ -1,10 +1,8 @@
-package fr.insee.protools.backend.service.rem;
+package fr.insee.protools.backend.service.rem.delegate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.insee.protools.backend.service.context.ContextService;
-import fr.insee.protools.backend.service.context.exception.BadContextIncorrectException;
+import fr.insee.protools.backend.service.rem.RemService;
 import org.flowable.common.engine.api.FlowableIllegalArgumentException;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.test.FlowableTest;
@@ -23,7 +21,6 @@ import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VA
 import static fr.insee.protools.backend.service.utils.FlowableVariableUtils.getMissingVariableMessage;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 
@@ -47,11 +44,7 @@ class RemGetPartitionListOfSuIdTaskTest {
                     "  }]" +
                     "}";
 
-    private void initContexteMockFromString(String contextAsString) throws JsonProcessingException {
-        JsonNode contextRootNode = new ObjectMapper().readTree(contextAsString);
-        when(protoolsContext.getContextByProcessInstance(anyString())).thenReturn(contextRootNode);
-    }
-
+    /*
     @Test
     void execute_should_throw_BadContextIncorrectException_when_noContext() {
         //Precondition
@@ -61,13 +54,16 @@ class RemGetPartitionListOfSuIdTaskTest {
         //Execute the unit under test
         assertThrows(BadContextIncorrectException.class, () -> remGetPartitionListOfSuIdTask.execute(execution));
     }
+    */
+
 
     @Test
     void execute_should_throw_FlowableIllegalArgumentException_when_variableCurrentPartition_notDefined() throws JsonProcessingException {
         //Precondition
         DelegateExecution execution = mock(DelegateExecution.class);
-        when(execution.getProcessInstanceId()).thenReturn(dumyId);
-        initContexteMockFromString(json1Partition);
+        lenient().when(execution.getProcessInstanceId()).thenReturn(dumyId);
+        //No context used for this taks
+        // initContexteMockFromString(json1Partition);
 
         //Execute the unit under test
         FlowableIllegalArgumentException exception = assertThrows(FlowableIllegalArgumentException.class, () -> remGetPartitionListOfSuIdTask.execute(execution));
@@ -75,15 +71,16 @@ class RemGetPartitionListOfSuIdTaskTest {
     }
 
 
-    void execute_should_work_when_contextNpartition_and_variable_OK(String contexte, String currentPartitionId, Long[] remSuIdList) throws JsonProcessingException {
+    void execute_should_work_when_contextNpartition_and_variable_OK(String contexte, Long currentPartitionId, Long[] remSuIdList) throws JsonProcessingException {
         //Préconditions
         DelegateExecution execution = mock(DelegateExecution.class);
         DelegateExecution executionParent = mock(DelegateExecution.class);
 
         when(execution.getProcessInstanceId()).thenReturn(dumyId);
 
-        initContexteMockFromString(contexte);
-        when(execution.getVariable(VARNAME_CURRENT_PARTITION_ID, String.class)).thenReturn(currentPartitionId);
+        //No context used by this task
+        // initContexteMockFromString(contexte);
+        when(execution.getVariable(VARNAME_CURRENT_PARTITION_ID, Long.class)).thenReturn(currentPartitionId);
         when(execution.getParent()).thenReturn(executionParent);
 
         List<Long> expectedResult = List.of(remSuIdList);
@@ -107,7 +104,7 @@ class RemGetPartitionListOfSuIdTaskTest {
                         "    \"id\": 1" +
                         "  }]" +
                         "}";
-        execute_should_work_when_contextNpartition_and_variable_OK(json1Partition, "1", remSuIdList);
+        execute_should_work_when_contextNpartition_and_variable_OK(json1Partition, 1l, remSuIdList);
     }
 
     @Test
@@ -115,6 +112,6 @@ class RemGetPartitionListOfSuIdTaskTest {
         Long[] remSuIdList = {1l, 2l, 3l};
         String json3Partition =
                 "{ \"partitions\": [{ \"id\": 1 },{ \"id\": 56 }, { \"id\": 99 }] }";
-        execute_should_work_when_contextNpartition_and_variable_OK(json3Partition, "1", remSuIdList);
+        execute_should_work_when_contextNpartition_and_variable_OK(json3Partition, 1l, remSuIdList);
     }
 }

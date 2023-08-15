@@ -13,7 +13,7 @@ grant_type=client_credentials&client_id={{client_id}}&client_secret={{client_sec
         client.assert(response.status === 200, "Response status is not 200");
     });
     client.global.set("auth_token", response.body.access_token);
-    client.global.set("processDefinitionKey", "tst");
+    client.global.set("processDefinitionKey", "famille");
     client.global.set("businessKey", "AAA");
     //Set the context file in the last query
 %}
@@ -27,4 +27,4 @@ Content-Type: multipart/form-data; boundary=WebAppBoundary
 --WebAppBoundary
 Content-Disposition: form-data; name="file"; filename="contexte.json"
 
-< bpmnAndContext/creation_context_platine/collecte_web_no_comm.json
+< ../resources/fr/insee/protools/backend/integration/collecte_web_no_com.json

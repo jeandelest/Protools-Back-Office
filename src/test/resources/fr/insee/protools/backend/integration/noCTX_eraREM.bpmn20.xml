@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="Examples" exporter="Flowable Open Source Modeler" exporterVersion="6.8.0">
+  <process id="eraREM" name="Chargement de contexte collecte web AVEC REM" isExecutable="true">
+    <documentation>Processus de chargement du contexte de campagne pour une collecte Web dans platine Avec REM</documentation>
+    <startEvent id="theStart" flowable:formFieldValidation="true"></startEvent>
+    <endEvent id="theEnd" name="Fin normale du processus"></endEvent>
+
+    <subProcess id="partition-subprocess" name="sous process traitement des partitions">
+      <multiInstanceLoopCharacteristics isSequential="false">
+        <loopDataInputRef>contexte-partition-id-list</loopDataInputRef>
+        <inputDataItem name="current-partition-id" />
+      </multiInstanceLoopCharacteristics>
+
+      <scriptTask id="initEraQueryParamScript" name="init era Query script" scriptFormat="groovy">
+        <script>
+          execution.setVariableLocal("era-query-start-date", java.time.LocalDate.now().minusDays(1));
+          execution.setVariableLocal("era-query-end-date", java.time.LocalDate.now());
+        </script>
+      </scriptTask>
+
+      <startEvent id="partition-subprocess-start" flowable:formFieldValidation="true"></startEvent>
+      <serviceTask id="getERA" name="Récupération liste d'UE dans ERA" flowable:delegateExpression="${eraGetSUForPeriodAndGenderTask}"></serviceTask>
+
+      <serviceTask id="writeToREM" name="Ecriture dans REM" flowable:delegateExpression="${remWriteEraSUListTask}"></serviceTask>
+      <serviceTask id="readFromREM" name="Recuperation dans REM Des UE de ERA" flowable:delegateExpression="${remWriteEraSUListTask}"></serviceTask>
+      <serviceTask id="log_ssp_part" name="log niveau sous-process partition " flowable:delegateExpression="${logVariablesTask}"/>
+
+      <endEvent id="partition-subprocess-end"></endEvent>
+
+      <subProcess id="su-subprocess" name="sous process traitement UE">
+        <multiInstanceLoopCharacteristics isSequential="false">
+          <loopDataInputRef>rem-survey-unit-id-list</loopDataInputRef>
+          <inputDataItem name="rem-survey-unit-id" />
+        </multiInstanceLoopCharacteristics>
+        <startEvent id="su-subprocess-start" flowable:formFieldValidation="true"/>
+        <serviceTask id="su-subprocess-get-su" name="getREMSurveyUnit" flowable:delegateExpression="${remGetSUTask}"/>
+        <serviceTask id="log_ssp_su" name="LOG_SU" flowable:delegateExpression="${logVariablesTask}"/>
+        <endEvent id="su-subprocess-end"/>
+
+        <sequenceFlow id="su-subprocess-flow1" sourceRef="su-subprocess-start" targetRef="su-subprocess-get-su"/>
+        <sequenceFlow id="su-subprocess-flow2" sourceRef="su-subprocess-get-su" targetRef="log_ssp_su"/>
+        <sequenceFlow id="su-subprocess-flow4" sourceRef="log_ssp_su" targetRef="su-subprocess-end"/>
+
+      </subProcess>
+
+      <sequenceFlow id="partition-subprocess-flow1" sourceRef="partition-subprocess-start" targetRef="initEraQueryParamScript"></sequenceFlow>
+      <sequenceFlow id="partition-subprocess-flow1a" sourceRef="initEraQueryParamScript" targetRef="getERA"></sequenceFlow>
+      <sequenceFlow id="partition-subprocess-flow2" sourceRef="getERA" targetRef="writeToREM"></sequenceFlow>
+      <sequenceFlow id="partition-subprocess-flow3" sourceRef="writeToREM" targetRef="readFromREM"></sequenceFlow>
+      <sequenceFlow id="partition-subprocess-flow4" sourceRef="readFromREM" targetRef="log_ssp_part"></sequenceFlow>
+      <sequenceFlow id="partition-subprocess-flow5" sourceRef="log_ssp_part" targetRef="su-subprocess"></sequenceFlow>
+      <sequenceFlow id="partition-subprocess-flow6" sourceRef="su-subprocess" targetRef="partition-subprocess-end"></sequenceFlow>
+
+    </subProcess>
+
+    <sequenceFlow id="flow1" sourceRef="theStart" targetRef="partition-subprocess"></sequenceFlow>
+    <sequenceFlow id="flow2" sourceRef="partition-subprocess" targetRef="theEnd"></sequenceFlow>
+  </process>
+</definitions>
+
+
