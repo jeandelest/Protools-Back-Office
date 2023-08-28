@@ -12,15 +12,23 @@ grant_type=client_credentials&client_id={{client_id}}&client_secret={{client_sec
   client.log("TOKEN = "+client.global.get("auth_token"));
   client.log("RESPONSE = "+client.global);
   client.global.set("CAMPAGNE_ID", "AAB2023A00");
-  client.global.set("PARTITION_ID1", "AAB2023A0053");
-    client.global.set("PARTITION_ID2", "AAB2023A0053");
-  client.global.set("SU_ID1", "3040302");
-    client.global.set("SU_ID2", "3040303");
+  client.global.set("PARTITION_ID1", "AAB2023A0042");
+    client.global.set("PARTITION_ID2", "AAB2023A0043");
+    client.global.set("SU_ID1", "3287903");
+    client.global.set("SU_ID2", "3287902");
+    client.global.set("SU_ID3", "3043280");
+    client.global.set("SU_ID4", "3043281");
     client.global.set("SOURCE_ID", "AAB");
 %}
 
 ### suppression campagne dans platine questionnaire (et des SU rattachées)
 DELETE https://api-questionnaire-enquetes.developpement2.insee.fr/api/campaign/{{CAMPAGNE_ID}}?force=true
+accept: */*
+Authorization: Bearer {{auth_token}}
+
+
+### suppression campagne dans platine pilotage (part0)
+DELETE https://api-pilotage-enquetes.developpement2.insee.fr//api/campaigns/{{CAMPAGNE_ID}}
 accept: */*
 Authorization: Bearer {{auth_token}}
 
@@ -50,3 +58,12 @@ DELETE https://api-pilotage-enquetes.developpement2.insee.fr/api/survey-units/{{
 accept: */*
 Authorization: Bearer {{auth_token}}
 
+### Suppression SU dans platine pilotage SU3
+DELETE https://api-pilotage-enquetes.developpement2.insee.fr/api/survey-units/{{SU_ID3}}
+accept: */*
+Authorization: Bearer {{auth_token}}
+
+### Suppression SU dans platine pilotage SU3
+DELETE https://api-pilotage-enquetes.developpement2.insee.fr/api/survey-units/{{SU_ID4}}
+accept: */*
+Authorization: Bearer {{auth_token}}

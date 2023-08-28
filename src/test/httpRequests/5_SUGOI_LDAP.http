@@ -15,7 +15,7 @@ grant_type=client_credentials&client_id={{client_id}}&client_secret={{client_sec
 
 ### MISE à jour mot de passe utilisateur B28CKCJ
 
-POST https://api.gestion-comptes-utilisateurs.recette.insee.fr/realms/questionnaire-particuliers/users/B28CKCJ/init-password?
+POST https://api.gestion-comptes-utilisateurs.recette.insee.fr/realms/questionnaire-particuliers/users/FXMPES55/init-password?
     change-password-reset-status=false
 accept: application/json
 X-SUGOI-ASYNCHRONOUS-ALLOWED-REQUEST: false
