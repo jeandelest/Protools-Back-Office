@@ -5,9 +5,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
  
 ## [Unreleased 0.0.5-SNAPSHOT] - yyyy-mm-dd
- 
-Work on the REM and ERA tasks 
- 
+
+Montée de version du moteur flowable de 7.0.0.M1 à 7.0.0.M2 .
+Travail sur les tâches BPMN pour ERA et REM.
+
 ### Added
 #### BPMN TASKS
 - [platinePilotageCreateSurveyUnitTask](http://preparation_collecte.gitlab-pages.insee.fr/prepadoc/Protools/taches/#cr%c3%a9er-une-ue-dans-la-plateforme-de-collecte-web-partie-pilotage)
@@ -25,11 +26,19 @@ Work on the REM and ERA tasks
 - [eraGetSUForPeriodAndGenderTask]( TODO)
   Tâche de lecture d'UE dans ERA pour un interval et un sexe donnée.
 
+
+#### Endpoints
+-  /api_configuration qui renverra la configuration de chaque API orchestrée par protools. Cela permet donc de savoir
+quelle plateforme est appelée.
+
+
 #### Autres
 - Vérification que le fichier de contexte satisfait bien toutes les tâches du BPMN associé au processus.
-
+- Possibilité d'utiliser la date de début et de fin de collecte d'une partition dans les expressions BPMN via PartitionCtxResolver
  
 ### Changed
+#### Variables du processus
+- "sugoi-id-contact" devient "directory_access-id-contact" (peut casser les BPMN la référençant en dur).
  
 ### Fixed
  

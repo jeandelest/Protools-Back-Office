@@ -1,9 +1,11 @@
 package fr.insee.protools.backend.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import fr.insee.protools.backend.webclient.WebClientHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -11,7 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.core.io.Resource;
 
 import java.util.Optional;
 
@@ -66,8 +67,14 @@ public class StarterController {
                 return ResponseEntity.ok(result.toString());
         }
 
+        @GetMapping("/api_configuration")
+        public ResponseEntity<JsonNode> api_configuration(){
+                return ResponseEntity.ok(webClientHelper.getAPIConfigDetails());
+        }
+
         @GetMapping(value="/changelog" , produces = MediaType.TEXT_PLAIN_VALUE)
         public Resource changelog() {
+
                 return new ClassPathResource("changelog.md");
         }
 

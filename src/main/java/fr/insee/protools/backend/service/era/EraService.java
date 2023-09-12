@@ -22,7 +22,7 @@ public class EraService {
     private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public List<CensusJsonDto> getSUForPeriodAndSex(LocalDate startDate , LocalDate endDate, GenderType gender){
-        log.info("gender={} from {} to {}", gender, startDate, endDate);
+        log.info("getSUForPeriodAndSex - gender={} from {} to {}", gender, startDate, endDate);
         ParameterizedTypeReference<List<CensusJsonDto>> typeReference = new ParameterizedTypeReference<List<CensusJsonDto>>(){};
 
         List<CensusJsonDto> response = webClientHelper.getWebClient(KNOWN_API_ERA)
@@ -36,7 +36,7 @@ public class EraService {
                 .retrieve()
                 .bodyToMono(typeReference)
                 .block();
-        log.trace("response={} ", response);
+        log.trace("getSUForPeriodAndSex - response={} ", response);
         return response;
     }
 }

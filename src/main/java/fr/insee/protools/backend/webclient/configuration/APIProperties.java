@@ -1,5 +1,6 @@
 package fr.insee.protools.backend.webclient.configuration;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,7 @@ public class APIProperties {
       private String url;
       private String realm;
       private String clientId;
+      @JsonIgnore
       private String clientSecret;
 
       public AuthProperties(String url, String realm, String clientId, String clientSecret) {

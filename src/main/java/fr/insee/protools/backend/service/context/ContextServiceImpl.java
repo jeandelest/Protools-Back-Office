@@ -32,16 +32,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VARNAME_CONTEXT;
-import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VARNAME_CONTEXT_PARTITION_ID_LIST;
+import static fr.insee.protools.backend.service.FlowableVariableNameConstants.*;
 import static fr.insee.protools.backend.service.context.ContextConstants.*;
 
 @Service
@@ -164,20 +165,23 @@ public class ContextServiceImpl implements ContextService {
             }
 
             List<Long> partitionIds = new ArrayList<>();
+            HashMap<Long,HashMap<String, Serializable>> variablesByPartition= new HashMap<>();
+
             for (JsonNode partition : partitions) {
-                Pair<LocalDateTime, LocalDateTime> startEndDT = getCollectionStartAndEndFromPartition(partition);
+                Pair<Instant, Instant> startEndDT = getCollectionStartAndEndFromPartition(partition);
                 Long partitionId = partition.path(CTX_PARTITION_ID).asLong();
                 partitionIds.add(partitionId);
 
-                //add these variables to the list
-                //TODO : distinguer les noms dans le json des noms de variables?
-                String varKeyStart = String.format("partition_%s_%s", partitionId, CTX_PARTITION_DATE_DEBUT_COLLECTE);
-                String varKeyEnd = String.format("partition_%s_%s", partitionId, CTX_PARTITION_DATE_FIN_COLLECTE);
-                variables.put(varKeyStart, startEndDT.getKey());
-                variables.put(varKeyEnd, startEndDT.getValue());
+                HashMap<String,Serializable> partitionVariables = new HashMap<>();
+                partitionVariables.put(CTX_PARTITION_DATE_DEBUT_COLLECTE,startEndDT.getKey() );
+                partitionVariables.put(CTX_PARTITION_DATE_FIN_COLLECTE,startEndDT.getValue() );
+
+                variablesByPartition.put(partitionId,partitionVariables);
             }
 
             variables.put(VARNAME_CONTEXT_PARTITION_ID_LIST, partitionIds);
+            variables.put(VARNAME_CONTEXT_PARTITION_VARIABLES_BY_ID, variablesByPartition);
+
             return Pair.of(variables, rootContext);
         } catch (IOException e) {
             throw new BadContextIOException("Error while reading context content", e);
@@ -191,7 +195,7 @@ public class ContextServiceImpl implements ContextService {
     }
 
     //TODO : soit les json schema permettent de valider les dates, soit il faudra valider toutes les dates comme ça
-    public static Pair<LocalDateTime, LocalDateTime> getCollectionStartAndEndFromPartition(JsonNode partitionNode) {
+    public static Pair<Instant, Instant> getCollectionStartAndEndFromPartition(JsonNode partitionNode) {
         String start = partitionNode.get(CTX_PARTITION_DATE_DEBUT_COLLECTE).asText();
         String end = partitionNode.get(CTX_PARTITION_DATE_DEBUT_COLLECTE).asText();
 
@@ -199,7 +203,9 @@ public class ContextServiceImpl implements ContextService {
             LocalDateTime collectionStart = LocalDateTime.parse(start, DateTimeFormatter.ISO_DATE_TIME);
             LocalDateTime collectionEnd = LocalDateTime.parse(end, DateTimeFormatter.ISO_DATE_TIME);
             log.info("partition_id={} - CollectionStartDate={} - CollectionEndDate={}", partitionNode.path(CTX_PARTITION_ID), collectionStart, collectionEnd);
-            return Pair.of(collectionStart, collectionEnd);
+            return Pair.of(collectionStart.atZone(ZoneId.systemDefault()).toInstant(),
+                    collectionEnd.atZone(ZoneId.systemDefault()).toInstant());
+
         } catch (DateTimeParseException e) {
             throw new BadContextIncorrectException(String.format("%s or %s cannot be casted to DateTime : %s", CTX_PARTITION_DATE_DEBUT_COLLECTE, CTX_PARTITION_DATE_FIN_COLLECTE, e.getMessage()));
         }
@@ -228,8 +234,19 @@ public class ContextServiceImpl implements ContextService {
         processDefinitionQuery.processDefinitionKey(processDefinitionKey);
         processDefinitionQuery.latestVersion();
         ProcessDefinition definition = processDefinitionQuery.singleResult();
+        if(definition==null){
+            throw new FlowableObjectNotFoundException("Cannot find process definition with key " + processDefinitionKey, ProcessDefinition.class);
+        }
         BpmnModel model = repositoryService.getBpmnModel(definition.getId());
+        if(model==null){
+            throw new FlowableObjectNotFoundException("Cannot find process BPMN model definition with key " + processDefinitionKey, ProcessDefinition.class);
+        }
+
         org.flowable.bpmn.model.Process processModel = model.getProcessById(processDefinitionKey);
+        if(processModel==null){
+            throw new FlowableObjectNotFoundException("Cannot find process Model with key " + processDefinitionKey, ProcessDefinition.class);
+        }
+
         Set<String> errors = new HashSet<>();
         processModel.getFlowElements().stream()
                 .filter(flowElement -> (flowElement instanceof ServiceTask || flowElement instanceof SubProcess))

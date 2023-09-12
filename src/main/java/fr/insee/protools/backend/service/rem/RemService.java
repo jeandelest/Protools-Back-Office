@@ -22,7 +22,7 @@ public class RemService {
 
 
     public Long[] getSampleSuIds(Long partitionId) {
-        log.debug("partitionId={} ",partitionId);
+        log.debug("getSampleSuIds - partitionId={} ",partitionId);
         try {
             var response = webClientHelper.getWebClient(KNOWN_API_REM)
                     .get()
@@ -49,7 +49,7 @@ public class RemService {
     }
 
     public REMSurveyUnitDto getSurveyUnit(Long surveyUnitId ) {
-        log.debug("surveyUnitId ={}",surveyUnitId );
+        log.debug("getSurveyUnit - surveyUnitId ={}",surveyUnitId );
         try {
             var response = webClientHelper.getWebClient(KNOWN_API_REM)
                     .get()
@@ -87,7 +87,7 @@ public class RemService {
                     .retrieve()
                     .bodyToMono(SuIdMappingJson.class)
                     .block();
-            log.debug("partitionId={} - response={} ", partitionId, response);
+            log.debug("writeERASUList - partitionId={} - response={} ", partitionId, response);
             return response;
         }
         catch (WebClient4xxException e){

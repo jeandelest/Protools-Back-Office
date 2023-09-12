@@ -7,8 +7,9 @@ public class FlowableVariableNameConstants {
     //Protools context
     public static final String VARNAME_CONTEXT="context";
     public static final String VARNAME_CONTEXT_PARTITION_ID_LIST="contexte-partition-id-list";
+    public static final String VARNAME_CONTEXT_PARTITION_VARIABLES_BY_ID="contexte-partition-variables-by-partitionid";
     //To treat partitions one by one (Long)
-    public static final String VARNAME_CURRENT_PARTITION_ID="current-partition-id";
+    public static final String VARNAME_CURRENT_PARTITION_ID="current_partition_id";
     //to pass a list of REM survey ids (List<Long>)
     public static final String VARNAME_REM_SU_ID_LIST="rem-survey-unit-id-list";
     //to pass a single REM survey unit's ID (Long)

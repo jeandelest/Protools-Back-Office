@@ -3,6 +3,8 @@ package fr.insee.protools.backend.webclient;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import fr.insee.protools.backend.webclient.configuration.APIProperties;
 import fr.insee.protools.backend.webclient.configuration.ApiConfigProperties;
 import fr.insee.protools.backend.webclient.exception.ApiNotConfiguredException;
@@ -164,9 +166,23 @@ public class WebClientHelper {
                         catch (Exception e){
                                 result.put(api.name(),"Internal error with token");
                         }
-
                 }
                 return result;
+        }
+
+        /**
+         * @return A json with the configuration of the APIs handled by protools
+         */
+        public JsonNode getAPIConfigDetails(){
+                ObjectMapper objectMapper = new ObjectMapper();
+                ArrayNode rootNode = objectMapper.createArrayNode();
+                for (var api :ApiConfigProperties.KNOWN_API.values() ) {
+                        APIProperties apiProperties = apiConfigProperties.getAPIProperties(api);
+                        ObjectNode apiNode = objectMapper.valueToTree(apiProperties);
+                        apiNode.put("name",api.name());
+                        rootNode.add(apiNode);
+                }
+                return rootNode;
         }
 
         //analyse a single token to retrieve roles
@@ -188,7 +204,6 @@ public class WebClientHelper {
                         else{
                                 result= roles;
                         }
-
                 } catch (JsonProcessingException e) {
                        result=payload;
                 }
