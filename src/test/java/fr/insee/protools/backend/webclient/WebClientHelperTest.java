@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.insee.protools.backend.ProtoolsTestUtils;
 import fr.insee.protools.backend.webclient.configuration.APIProperties;
 import fr.insee.protools.backend.webclient.configuration.ApiConfigProperties;
-import fr.insee.protools.backend.webclient.exception.ApiNotConfiguredException;
-import fr.insee.protools.backend.webclient.exception.KeycloakTokenConfigUncheckedException;
-import fr.insee.protools.backend.webclient.exception.runtime.WebClient4xxException;
+import fr.insee.protools.backend.webclient.exception.ApiNotConfiguredBPMNError;
+import fr.insee.protools.backend.webclient.exception.KeycloakTokenConfigUncheckedBPMNError;
+import fr.insee.protools.backend.webclient.exception.runtime.WebClient4xxBPMNError;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.AfterEach;
@@ -103,7 +103,7 @@ class WebClientHelperTest {
         var webClient = webClientHelper.getWebClient(ApiConfigProperties.KNOWN_API.KNOWN_API_ERA);
         assertThat(webClient).isNotNull();
         //Should throw an exception as the realm is missing
-        assertThrows(KeycloakTokenConfigUncheckedException.class , ()  -> webClient.get().uri(getDummyUriWithPort()).exchange().block());
+        assertThrows(KeycloakTokenConfigUncheckedBPMNError.class , ()  -> webClient.get().uri(getDummyUriWithPort()).exchange().block());
     }
     @Test
     @DisplayName("Test getWebClient method without incomplete keycloak configuration")
@@ -249,7 +249,7 @@ class WebClientHelperTest {
     void getWebClient_withInvalidApiConfig() {
         when(apiConfigProperties.getAPIProperties(any())).thenReturn(null);
         assertThatThrownBy(() -> webClientHelper.getWebClient(any()))
-                .isInstanceOf(ApiNotConfiguredException.class)
+                .isInstanceOf(ApiNotConfiguredBPMNError.class)
                 .hasMessageContaining("is not configured in properties");
     }
 
@@ -257,7 +257,7 @@ class WebClientHelperTest {
     void getWebClient_withDisabledApiConfig() {
         when(apiConfigProperties.getAPIProperties(any())).thenReturn(new APIProperties("http://localhost:8080", new APIProperties.AuthProperties(), false ));
         assertThatThrownBy(() -> webClientHelper.getWebClient(any()))
-                .isInstanceOf(ApiNotConfiguredException.class)
+                .isInstanceOf(ApiNotConfiguredBPMNError.class)
                 .hasMessageContaining("is disabled in properties");
     }
 
@@ -276,7 +276,7 @@ class WebClientHelperTest {
         mockWebServer.enqueue(mockResponse);
 
         //Call method under test
-        WebClient4xxException exception = assertThrows(WebClient4xxException.class , ()  ->webClient.get().uri(getDummyUriWithPort()).retrieve()
+        WebClient4xxBPMNError exception = assertThrows(WebClient4xxBPMNError.class , ()  ->webClient.get().uri(getDummyUriWithPort()).retrieve()
                 .bodyToMono(String.class)
                 .block());
 

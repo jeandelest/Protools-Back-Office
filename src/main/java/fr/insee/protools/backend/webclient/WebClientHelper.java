@@ -7,10 +7,11 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import fr.insee.protools.backend.webclient.configuration.APIProperties;
 import fr.insee.protools.backend.webclient.configuration.ApiConfigProperties;
-import fr.insee.protools.backend.webclient.exception.ApiNotConfiguredException;
-import fr.insee.protools.backend.webclient.exception.KeycloakTokenConfigException;
-import fr.insee.protools.backend.webclient.exception.runtime.WebClient4xxException;
-import fr.insee.protools.backend.webclient.exception.runtime.WebClient5xxException;
+import fr.insee.protools.backend.webclient.exception.ApiNotConfiguredBPMNError;
+import fr.insee.protools.backend.webclient.exception.KeycloakTokenConfigBPMNError;
+import fr.insee.protools.backend.webclient.exception.runtime.WebClient4xxBPMNError;
+import fr.insee.protools.backend.webclient.exception.runtime.WebClient5xxBPMNError;
+import fr.insee.protools.backend.webclient.exception.runtime.WebClientNetworkExceptionBPMNError;
 import io.netty.handler.logging.LogLevel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +21,14 @@ import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientRequestException;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
 import reactor.netty.transport.logging.AdvancedByteBufFormat;
 
 import java.lang.reflect.Field;
+import java.net.SocketException;
+import java.nio.channels.UnresolvedAddressException;
 import java.util.Base64;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -61,13 +65,26 @@ public class WebClientHelper {
                                         result = clientResponse.bodyToMono(String.class).defaultIfEmpty("No error message provided by API")
                                                 .flatMap(error -> {
                                                         if (clientResponse.statusCode().is4xxClientError()) {
-                                                                return Mono.error(new WebClient4xxException(finalErrorMsg + " - " + error, clientResponse.statusCode()));
+                                                                return Mono.error(new WebClient4xxBPMNError(finalErrorMsg + " - " + error, clientResponse.statusCode()));
                                                         } else {
-                                                                return Mono.error(new WebClient5xxException(finalErrorMsg + " - " + error));
+                                                                return Mono.error(new WebClient5xxBPMNError(finalErrorMsg + " - " + error));
                                                         }
                                                 });
                                         return result;
                                 }
+                        )
+                        .filter((request, next) ->
+                                next.exchange(request)
+                                .onErrorResume(WebClientRequestException.class, ex -> {
+                                        //TODO : here i can access the method and URI ; could be usefull to log ??
+                                        if(ex.contains(SocketException.class)){
+                                                return Mono.error(new WebClientNetworkExceptionBPMNError(ex));
+                                        }
+                                        else if(ex.contains(UnresolvedAddressException.class)){
+                                                return Mono.error(new WebClientNetworkExceptionBPMNError(ex));
+                                        }
+                                        return Mono.error(new WebClientNetworkExceptionBPMNError(ex));
+                                })
                         )
                         .clientConnector(
                                 new ReactorClientHttpConnector(
@@ -131,9 +148,9 @@ public class WebClientHelper {
         public WebClient getWebClient(ApiConfigProperties.KNOWN_API api) {
                 APIProperties apiProperties = apiConfigProperties.getAPIProperties(api);
                 if (apiProperties == null) {
-                        throw new ApiNotConfiguredException(String.format("API %s is not configured in properties", api));
+                        throw new ApiNotConfiguredBPMNError(String.format("API %s is not configured in properties", api));
                 } else if (Boolean.FALSE.equals(apiProperties.getEnabled())) {
-                        throw new ApiNotConfiguredException(String.format("API %s is disabled in properties", api));
+                        throw new ApiNotConfiguredBPMNError(String.format("API %s is disabled in properties", api));
                 }
                 return initializedClients.computeIfAbsent(api,
                         knownApi ->
@@ -150,9 +167,9 @@ public class WebClientHelper {
                         try {
                                 APIProperties apiProperties = apiConfigProperties.getAPIProperties(api);
                                 if (apiProperties == null) {
-                                        throw new ApiNotConfiguredException(String.format("API %s is not configured in properties", api));
+                                        throw new ApiNotConfiguredBPMNError(String.format("API %s is not configured in properties", api));
                                 } else if (Boolean.FALSE.equals(apiProperties.getEnabled())) {
-                                        throw new ApiNotConfiguredException(String.format("API %s is disabled in properties", api));
+                                        throw new ApiNotConfiguredBPMNError(String.format("API %s is disabled in properties", api));
                                 }
                                 var token = keycloakService.getToken(apiProperties.getAuth());
                                 if(token !=null && !token.isBlank()) {
@@ -160,7 +177,7 @@ public class WebClientHelper {
                                         result.put(api.name(),details);
 
                                 }
-                        } catch (KeycloakTokenConfigException | ApiNotConfiguredException e) {
+                        } catch (KeycloakTokenConfigBPMNError | ApiNotConfiguredBPMNError e) {
                                 result.put(api.name(),e.getMessage());
                         }
                         catch (Exception e){
