@@ -30,8 +30,8 @@ public enum GenderType {
         };
     }
 
-    public static String getAllValidLabels(){
-        return MALE.label+","+FEMALE.label;
+    public static String getAllValidLabels() {
+        return MALE.label + "," + FEMALE.label;
     }
 
 }

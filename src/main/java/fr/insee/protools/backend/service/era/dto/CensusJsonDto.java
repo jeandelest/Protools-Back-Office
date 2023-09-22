@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CensusJsonDto implements Serializable{
+public class CensusJsonDto implements Serializable {
     private Long id;
     private String numvoiloc;
     private String bisterloc;

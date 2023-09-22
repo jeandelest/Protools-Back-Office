@@ -76,8 +76,8 @@ public class EraGetSUForPeriodAndGenderTask implements JavaDelegate, DelegateCon
             String genderType = partitionNode.path(CTX_PARTITION_ERA_SEXE).asText();
             try {
                 GenderType.fromLabel(genderType);
-            }catch (IllegalStateException i){
-                results.add(DelegateContextVerifier.computeIncorrectEnumMessage(CTX_PARTITION_ERA_SEXE,genderType,GenderType.getAllValidLabels(),getClass()));
+            } catch (IllegalStateException i) {
+                results.add(DelegateContextVerifier.computeIncorrectEnumMessage(CTX_PARTITION_ERA_SEXE, genderType, GenderType.getAllValidLabels(), getClass()));
             }
         }
         return results;
