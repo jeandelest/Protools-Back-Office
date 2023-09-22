@@ -12,6 +12,7 @@ import fr.insee.protools.backend.webclient.exception.KeycloakTokenConfigBPMNErro
 import fr.insee.protools.backend.webclient.exception.runtime.WebClient4xxBPMNError;
 import fr.insee.protools.backend.webclient.exception.runtime.WebClient5xxBPMNError;
 import fr.insee.protools.backend.webclient.exception.runtime.WebClientNetworkExceptionBPMNError;
+import fr.insee.protools.backend.webclient.exception.runtime.WebClientRequestExceptionBPMNError;
 import io.netty.handler.logging.LogLevel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,7 +84,7 @@ public class WebClientHelper {
                                         else if(ex.contains(UnresolvedAddressException.class)){
                                                 return Mono.error(new WebClientNetworkExceptionBPMNError(ex));
                                         }
-                                        return Mono.error(new WebClientNetworkExceptionBPMNError(ex));
+                                        return Mono.error(new WebClientRequestExceptionBPMNError(ex));
                                 })
                         )
                         .clientConnector(
