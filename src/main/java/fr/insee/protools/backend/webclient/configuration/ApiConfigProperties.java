@@ -3,6 +3,7 @@ package fr.insee.protools.backend.webclient.configuration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.validation.annotation.Validated;
 
 @Configuration
 public class ApiConfigProperties {
@@ -29,6 +30,7 @@ public class ApiConfigProperties {
 
         @Bean("eraApiProperties")
         @ConfigurationProperties("fr.insee.protools.api.era")
+        @Validated
         public APIProperties eraApiProperties() {
                 return new APIProperties();
         }
