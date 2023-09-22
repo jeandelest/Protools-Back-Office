@@ -2,7 +2,7 @@ package fr.insee.protools.backend.service.context;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import fr.insee.protools.backend.service.context.exception.BadContextIOException;
-import fr.insee.protools.backend.service.context.exception.BadContextNotJSONException;
+import fr.insee.protools.backend.service.context.exception.BadContextNotJSONBPMNError;
 import fr.insee.protools.backend.service.exception.TaskNotFoundException;
 import org.flowable.engine.RepositoryService;
 import org.flowable.engine.RuntimeService;
@@ -77,7 +77,7 @@ class ContextServiceTest {
         initTaskServiceMock();
 
         //Call method under test
-        assertThrows(BadContextNotJSONException.class, () -> contextService.processContextFileAndCompleteTask(multipartFile,dummyId));
+        assertThrows(BadContextNotJSONBPMNError.class, () -> contextService.processContextFileAndCompleteTask(multipartFile,dummyId));
     }
 
 

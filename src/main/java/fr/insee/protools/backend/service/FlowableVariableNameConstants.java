@@ -4,9 +4,11 @@ package fr.insee.protools.backend.service;
  * Class to store flowable variable identifiers
  */
 public class FlowableVariableNameConstants {
+
+    //TODO : renommer toutes ces variables pour remplacer les - par des _ (comme ca ca sera utilisable dans les resolvers)
     //Protools context
     public static final String VARNAME_CONTEXT="context";
-    public static final String VARNAME_CONTEXT_PARTITION_ID_LIST="contexte-partition-id-list";
+    public static final String VARNAME_CONTEXT_PARTITION_ID_LIST="contexte_partition_id_list";
     public static final String VARNAME_CONTEXT_PARTITION_VARIABLES_BY_ID="contexte-partition-variables-by-partitionid";
     //To treat partitions one by one (Long)
     public static final String VARNAME_CURRENT_PARTITION_ID="current_partition_id";

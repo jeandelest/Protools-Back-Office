@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.insee.protools.backend.service.DelegateContextVerifier;
 import fr.insee.protools.backend.service.common.platine_sabiane.dto.campaign.CampaignDto;
 import fr.insee.protools.backend.service.common.platine_sabiane.dto.campaign.MetadataValue;
-import fr.insee.protools.backend.service.exception.JsonParsingException;
+import fr.insee.protools.backend.service.exception.JsonParsingBPMNError;
 import fr.insee.protools.backend.service.nomenclature.NomenclatureService;
 import fr.insee.protools.backend.service.questionnaire_model.QuestionnaireModelService;
 import lombok.extern.slf4j.Slf4j;
@@ -71,7 +71,7 @@ public class QuestionnaireHelper {
                 try {
                     nomenclatureValue = objectMapper.readTree(nomenclatureValueStr);
                 } catch (JsonProcessingException e) {
-                    throw new JsonParsingException("Error while parsing the json retrieved for nomenclatureId=" + nomenclatureId, e);
+                    throw new JsonParsingBPMNError("Error while parsing the json retrieved for nomenclatureId=" + nomenclatureId, e);
                 }
 
                 //Write this nomenclature to platine/sabiane
@@ -113,7 +113,7 @@ public class QuestionnaireHelper {
                 try {
                     questionnaireValue = objectMapper.readTree(questionnaireValueStr);
                 } catch (JsonProcessingException e) {
-                    throw new JsonParsingException("Error while parsing the json retrieved for Model questionnaireId=" + questionnaireId, e);
+                    throw new JsonParsingBPMNError("Error while parsing the json retrieved for Model questionnaireId=" + questionnaireId, e);
                 }
                 //get the list of nomenclatures needed by this Questionnaire Model
                 JsonNode nomenclaturesArrayNode = node.get(CTX_QUESTIONNAIRE_MODEL_REQUIRED_NOMENCLATURES);

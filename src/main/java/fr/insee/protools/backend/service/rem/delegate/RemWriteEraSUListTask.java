@@ -2,7 +2,7 @@ package fr.insee.protools.backend.service.rem.delegate;
 
 import fr.insee.protools.backend.service.DelegateContextVerifier;
 import fr.insee.protools.backend.service.era.dto.CensusJsonDto;
-import fr.insee.protools.backend.service.exception.ProtoolsTaskException;
+import fr.insee.protools.backend.service.exception.ProtoolsTaskBPMNError;
 import fr.insee.protools.backend.service.rem.RemService;
 import fr.insee.protools.backend.service.rem.dto.SuIdMappingJson;
 import fr.insee.protools.backend.service.rem.dto.SuIdMappingRecord;
@@ -36,12 +36,12 @@ public class RemWriteEraSUListTask implements JavaDelegate, DelegateContextVerif
             return;
         }
 
-        log.info("ProcessInstanceId={} - currentPartitionId={} - eraSUList={} begin",execution.getProcessInstanceId(), currentPartitionId,eraSUList.size());
+        log.info("ProcessInstanceId={} - currentPartitionId={} - eraSUList.size={} begin",execution.getProcessInstanceId(), currentPartitionId,eraSUList.size());
         //Store SU in REM
         SuIdMappingJson remMapping = remService.writeERASUList(currentPartitionId, eraSUList);
         if(remMapping==null){
             log.error("ProcessInstanceId={} - currentPartitionId={}  remMapping is empty end",execution.getProcessInstanceId(), currentPartitionId);
-            throw new ProtoolsTaskException("Error while writing list of Era SU to REM : REM returned a null result ");
+            throw new ProtoolsTaskBPMNError("Error while writing list of Era SU to REM : REM returned a null result ");
         }
         //STORE the list of REM identifier created
         List<Long> remSuIdList = remMapping.getData().stream().map(SuIdMappingRecord::repositoryId).toList();

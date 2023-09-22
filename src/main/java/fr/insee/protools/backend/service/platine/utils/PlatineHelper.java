@@ -3,7 +3,7 @@ package fr.insee.protools.backend.service.platine.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.insee.protools.backend.service.exception.IncorrectSUException;
+import fr.insee.protools.backend.service.exception.IncorrectSUBPMNError;
 import fr.insee.protools.backend.service.rem.dto.REMSurveyUnitDto;
 
 public class PlatineHelper {
@@ -21,11 +21,11 @@ public class PlatineHelper {
         try {
             remSurveyUnitDto = objectMapper.treeToValue(remSUNode, REMSurveyUnitDto.class);
         } catch (JsonProcessingException e) {
-            throw new IncorrectSUException("Error while parsing the json retrieved from REM : " + key,remSUNode, e);
+            throw new IncorrectSUBPMNError("Error while parsing the json retrieved from REM : " + key,remSUNode, e);
         }
 
         if(remSurveyUnitDto.getRepositoryId()==null){
-            throw new IncorrectSUException("Error json retrieved from REM has no repositoryId : " + key,remSUNode);
+            throw new IncorrectSUBPMNError("Error json retrieved from REM has no repositoryId : " + key,remSUNode);
         }
         return remSurveyUnitDto;
     }

@@ -5,10 +5,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import fr.insee.protools.backend.service.DelegateContextVerifier;
-import fr.insee.protools.backend.service.context.exception.BadContextDateTimeParseException;
+import fr.insee.protools.backend.service.context.exception.BadContextDateTimeParseBPMNError;
 import fr.insee.protools.backend.service.context.exception.BadContextIOException;
-import fr.insee.protools.backend.service.context.exception.BadContextIncorrectException;
-import fr.insee.protools.backend.service.context.exception.BadContextNotJSONException;
+import fr.insee.protools.backend.service.context.exception.BadContextIncorrectBPMNError;
+import fr.insee.protools.backend.service.context.exception.BadContextNotJSONBPMNError;
 import fr.insee.protools.backend.service.exception.ProcessDefinitionNotFoundException;
 import fr.insee.protools.backend.service.exception.TaskNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -125,7 +125,7 @@ public class ContextServiceImpl implements ContextService {
             try {
                 result = defaultReader.readTree(contextStr);
             } catch (JsonProcessingException e) {
-                throw new BadContextIncorrectException(String.format("Context retrieved from engine could not be parsed for processInstanceId=[%s]", processInstanceId), e);
+                throw new BadContextIncorrectBPMNError(String.format("Context retrieved from engine could not be parsed for processInstanceId=[%s] - Exception : ", processInstanceId, e.getMessage()));
             }
             contextCache.put(processInstanceId, result);
         }
@@ -136,9 +136,9 @@ public class ContextServiceImpl implements ContextService {
         //Validate file name (JSON)
         var fileExtension = getFileExtension(file.getOriginalFilename());
         if (fileExtension.isEmpty()) {
-            throw new BadContextNotJSONException(String.format("Uploaded file %s has incorrect filename without extension", file.getOriginalFilename()));
+            throw new BadContextNotJSONBPMNError(String.format("Uploaded file %s has incorrect filename without extension", file.getOriginalFilename()));
         } else if (!fileExtension.get().equalsIgnoreCase("json")) {
-            throw new BadContextNotJSONException(String.format("Uploaded file %s has incorrect extension. Expected json", file.getOriginalFilename()));
+            throw new BadContextNotJSONBPMNError(String.format("Uploaded file %s has incorrect extension. Expected json", file.getOriginalFilename()));
         }
 
         try {
@@ -148,7 +148,7 @@ public class ContextServiceImpl implements ContextService {
             JsonNode rootContext = defaultReader.readTree(content);
             Set<String> contextErrors = isContextOKForBPMN(processDefinitionKey, rootContext);
             if (!contextErrors.isEmpty()) {
-                throw new BadContextIncorrectException(contextErrors.toString());
+                throw new BadContextIncorrectBPMNError(contextErrors.toString());
             }
             //Variables to store for this process
             Map<String, Object> variables = new HashMap<>();
@@ -161,7 +161,7 @@ public class ContextServiceImpl implements ContextService {
             if (partitions.isMissingNode()) {
                 String msg = String.format("Missing %s in context", CTX_PARTITIONS);
                 log.error(msg);
-                throw new BadContextIncorrectException(msg);
+                throw new BadContextIncorrectBPMNError(msg);
             }
 
             List<Long> partitionIds = new ArrayList<>();
@@ -207,24 +207,24 @@ public class ContextServiceImpl implements ContextService {
                     collectionEnd.atZone(ZoneId.systemDefault()).toInstant());
 
         } catch (DateTimeParseException e) {
-            throw new BadContextIncorrectException(String.format("%s or %s cannot be casted to DateTime : %s", CTX_PARTITION_DATE_DEBUT_COLLECTE, CTX_PARTITION_DATE_FIN_COLLECTE, e.getMessage()));
+            throw new BadContextIncorrectBPMNError(String.format("%s or %s cannot be casted to DateTime : %s", CTX_PARTITION_DATE_DEBUT_COLLECTE, CTX_PARTITION_DATE_FIN_COLLECTE, e.getMessage()));
         }
     }
 
-    public static Instant getInstantFromPartition(JsonNode partitionNode, String subnode) throws BadContextDateTimeParseException {
+    public static Instant getInstantFromPartition(JsonNode partitionNode, String subnode) throws BadContextDateTimeParseBPMNError {
         JsonNode instantNode = partitionNode.get(subnode);
         if (instantNode == null) {
-            throw new BadContextDateTimeParseException(String.format("node %s of partition %s does not exists", subnode, partitionNode.path(CTX_PARTITION_ID).asText()));
+            throw new BadContextDateTimeParseBPMNError(String.format("node %s of partition %s does not exists", subnode, partitionNode.path(CTX_PARTITION_ID).asText()));
         }
         String valueTxt = partitionNode.path(subnode).asText();
         if (valueTxt.isBlank()) {
-            throw new BadContextDateTimeParseException(String.format("node %s of partition %s is blank", subnode, partitionNode.path(CTX_PARTITION_ID).asText()));
+            throw new BadContextDateTimeParseBPMNError(String.format("node %s of partition %s is blank", subnode, partitionNode.path(CTX_PARTITION_ID).asText()));
         }
 
         try {
             return Instant.parse(valueTxt);
         } catch (DateTimeParseException e) {
-            throw new BadContextDateTimeParseException(String.format("node %s of partition %s having value [%s] cannot be parsed : %s", subnode, partitionNode.path(CTX_PARTITION_ID).asText(), valueTxt, e.getMessage()));
+            throw new BadContextDateTimeParseBPMNError(String.format("node %s of partition %s having value [%s] cannot be parsed : %s", subnode, partitionNode.path(CTX_PARTITION_ID).asText(), valueTxt, e.getMessage()));
         }
     }
 

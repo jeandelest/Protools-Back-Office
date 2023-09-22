@@ -1,11 +1,11 @@
 package fr.insee.protools.backend.controller;
 
 import fr.insee.protools.backend.service.context.exception.BadContextIOException;
-import fr.insee.protools.backend.service.context.exception.BadContextIncorrectException;
-import fr.insee.protools.backend.service.context.exception.BadContextNotJSONException;
+import fr.insee.protools.backend.service.context.exception.BadContextIncorrectBPMNError;
+import fr.insee.protools.backend.service.context.exception.BadContextNotJSONBPMNError;
 import fr.insee.protools.backend.service.exception.*;
-import fr.insee.protools.backend.webclient.exception.runtime.WebClient4xxException;
-import fr.insee.protools.backend.webclient.exception.runtime.WebClient5xxException;
+import fr.insee.protools.backend.webclient.exception.runtime.WebClient4xxBPMNError;
+import fr.insee.protools.backend.webclient.exception.runtime.WebClient5xxBPMNError;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,14 +25,14 @@ public class ProtoolsProcessControllerAdvice {
         return new ResponseEntity<>(exception, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({ BadContextNotJSONException.class })
-    public ResponseEntity<String> exceptionContextNotXMLHandler(/*final HttpServletRequest req,*/ final BadContextNotJSONException exception) {
+    @ExceptionHandler({ BadContextNotJSONBPMNError.class })
+    public ResponseEntity<String> exceptionContextNotXMLHandler(/*final HttpServletRequest req,*/ final BadContextNotJSONBPMNError exception) {
         log.error("exceptionContextNotXMLHandler  : "+exception.getMessage());
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.UNSUPPORTED_MEDIA_TYPE);
     }
 
-    @ExceptionHandler({ BadContextIncorrectException.class })
-    public ResponseEntity<String> exceptionContextIncorrectHandler(/*final HttpServletRequest req,*/ final BadContextIncorrectException exception) {
+    @ExceptionHandler({ BadContextIncorrectBPMNError.class })
+    public ResponseEntity<String> exceptionContextIncorrectHandler(/*final HttpServletRequest req,*/ final BadContextIncorrectBPMNError exception) {
         log.error("exceptionContextIncorrectHandler  : "+exception.getMessage());
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
@@ -49,20 +49,20 @@ public class ProtoolsProcessControllerAdvice {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({ WebClient4xxException.class })
-    public ResponseEntity<String> exceptionWebClient4xxHandler(/*final HttpServletRequest req, */final WebClient4xxException exception) {
+    @ExceptionHandler({ WebClient4xxBPMNError.class })
+    public ResponseEntity<String> exceptionWebClient4xxHandler(/*final HttpServletRequest req, */final WebClient4xxBPMNError exception) {
         log.error("exceptionWebClient4xxHandler  : "+exception.getMessage());
-        return new ResponseEntity<>(exception.getMessage(), exception.getErrorCode());
+        return new ResponseEntity<>(exception.getMessage(), exception.getHttpStatusCodeError());
     }
 
-    @ExceptionHandler({ WebClient5xxException.class })
-    public ResponseEntity<String> exceptionWebClient5xxHandler(/*final HttpServletRequest req, */final WebClient5xxException exception) {
+    @ExceptionHandler({ WebClient5xxBPMNError.class })
+    public ResponseEntity<String> exceptionWebClient5xxHandler(/*final HttpServletRequest req, */final WebClient5xxBPMNError exception) {
         log.error("exceptionWebClient5xxHandler  : "+exception.getMessage());
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler({ IncorrectSUException.class })
-    public ResponseEntity<String> exceptionIncorrectSUHandler(/*final HttpServletRequest req, */final IncorrectSUException exception) {
+    @ExceptionHandler({ IncorrectSUBPMNError.class })
+    public ResponseEntity<String> exceptionIncorrectSUHandler(/*final HttpServletRequest req, */final IncorrectSUBPMNError exception) {
         log.error("exceptionIncorrectSUHandler  : "+String.format("%s - remSU=[%s]",exception.getMessage(),exception.getRemSU()));
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -73,8 +73,8 @@ public class ProtoolsProcessControllerAdvice {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler({ ProtoolsTaskException.class })
-    public ResponseEntity<String> exceptionProtoolsTaskHandler(/*final HttpServletRequest req, */final ProtoolsTaskException exception) {
+    @ExceptionHandler({ ProtoolsTaskBPMNError.class })
+    public ResponseEntity<String> exceptionProtoolsTaskHandler(/*final HttpServletRequest req, */final ProtoolsTaskBPMNError exception) {
         log.error("exceptionProtoolsTaskHandler  : "+exception.getMessage());
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }

@@ -3,11 +3,10 @@ package fr.insee.protools.backend.service.context.exception;
 import static fr.insee.protools.backend.service.BPMNErrorCode.BPMNERROR_CODE_DEFAULT;
 
 /**
- * Runtime exception indicating an IOException while reading context
+ * Runtime exception indicating the context is not correct
  */
-public class BadContextIOException extends BadContexteBPMNError {
-
-    public BadContextIOException(String message, Throwable cause) {
+public class BadContextIncorrectBPMNError extends BadContexteBPMNError {
+    public BadContextIncorrectBPMNError(String message) {
         super(BPMNERROR_CODE_DEFAULT, message);
     }
 }

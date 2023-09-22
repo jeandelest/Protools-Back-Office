@@ -2,7 +2,7 @@ package fr.insee.protools.backend.service.era;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import fr.insee.protools.backend.ProtoolsTestUtils;
-import fr.insee.protools.backend.service.context.exception.BadContextIncorrectException;
+import fr.insee.protools.backend.service.context.exception.BadContextIncorrectBPMNError;
 import fr.insee.protools.backend.service.era.dto.CensusJsonDto;
 import fr.insee.protools.backend.service.era.dto.GenderType;
 import fr.insee.protools.backend.service.utils.TestWithContext;
@@ -96,7 +96,7 @@ class EraGetSUForPeriodAndGenderTaskTest extends TestWithContext {
             //Precondition
             ProtoolsTestUtils.initContexteMockFromString(protoolsContext, context);
             //Run test
-            assertThrows(BadContextIncorrectException.class, () -> eraGetSUForPeriodAndGenderTask.execute(execution));
+            assertThrows(BadContextIncorrectBPMNError.class, () -> eraGetSUForPeriodAndGenderTask.execute(execution));
             Mockito.reset(protoolsContext);
         }
         //TEST OK

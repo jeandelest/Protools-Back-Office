@@ -17,13 +17,13 @@ import static fr.insee.protools.backend.webclient.configuration.ApiConfigPropert
 @Service
 @Slf4j
 public class EraService {
+    private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     @Autowired WebClientHelper webClientHelper;
 
-    private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-    public List<CensusJsonDto> getSUForPeriodAndSex(LocalDate startDate , LocalDate endDate, GenderType gender){
+    public List<CensusJsonDto> getSUForPeriodAndSex(LocalDate startDate, LocalDate endDate, GenderType gender) {
         log.info("getSUForPeriodAndSex - gender={} from {} to {}", gender, startDate, endDate);
-        ParameterizedTypeReference<List<CensusJsonDto>> typeReference = new ParameterizedTypeReference<List<CensusJsonDto>>(){};
+        ParameterizedTypeReference<List<CensusJsonDto>> typeReference = new ParameterizedTypeReference<List<CensusJsonDto>>() {
+        };
 
         List<CensusJsonDto> response = webClientHelper.getWebClient(KNOWN_API_ERA)
                 .get()

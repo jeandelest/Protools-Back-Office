@@ -1,7 +1,7 @@
 package fr.insee.protools.backend.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import fr.insee.protools.backend.service.context.exception.BadContextIncorrectException;
+import fr.insee.protools.backend.service.context.exception.BadContextIncorrectBPMNError;
 import org.slf4j.Logger;
 
 import java.util.HashSet;
@@ -41,14 +41,14 @@ public interface DelegateContextVerifier {
 
     default void checkContextOrThrow(Logger log,String processInstanceId, JsonNode contextRootNode) {
         if(contextRootNode==null)
-            throw new BadContextIncorrectException(String.format("ProcessInstanceId=%s - context is missing", processInstanceId));
+            throw new BadContextIncorrectBPMNError(String.format("ProcessInstanceId=%s - context is missing", processInstanceId));
 
         var errors = getContextErrors(contextRootNode);
         if(!errors.isEmpty()){
             for (var msg: errors) {
                 log.error(msg);
             }
-            throw new BadContextIncorrectException(String.format("ProcessInstanceId=%s - context is incorrect missingNodes=%s", processInstanceId,errors));
+            throw new BadContextIncorrectBPMNError(String.format("ProcessInstanceId=%s - context is incorrect missingNodes=%s", processInstanceId,errors));
         }
     }
 }

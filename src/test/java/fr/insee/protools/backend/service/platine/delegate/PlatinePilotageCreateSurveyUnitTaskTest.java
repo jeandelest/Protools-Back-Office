@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import fr.insee.protools.backend.ProtoolsTestUtils;
 import fr.insee.protools.backend.service.context.ContextConstants;
-import fr.insee.protools.backend.service.context.exception.BadContextIncorrectException;
-import fr.insee.protools.backend.service.exception.IncorrectSUException;
+import fr.insee.protools.backend.service.context.exception.BadContextIncorrectBPMNError;
+import fr.insee.protools.backend.service.exception.IncorrectSUBPMNError;
 import fr.insee.protools.backend.service.platine.pilotage.PlatinePilotageService;
 import fr.insee.protools.backend.service.platine.pilotage.dto.query.QuestioningWebclientDto;
 import fr.insee.protools.backend.service.rem.dto.PersonDto;
@@ -62,7 +62,7 @@ class PlatinePilotageCreateSurveyUnitTaskTest extends TestWithContext {
     void execute_should_throw_BadContextIncorrectException_when_noContext() {
         DelegateExecution execution=createMockedExecution();
         //Execute the unit under test
-        assertThrows(BadContextIncorrectException.class,() -> platinePilotageTask.execute(execution));
+        assertThrows(BadContextIncorrectBPMNError.class,() -> platinePilotageTask.execute(execution));
     }
 
     @ParameterizedTest
@@ -107,7 +107,7 @@ class PlatinePilotageCreateSurveyUnitTaskTest extends TestWithContext {
         }
         else{
             //Execute the unit under test
-            assertThrows(IncorrectSUException.class,() -> platinePilotageTask.findContact(remSU,dto,isLogement));
+            assertThrows(IncorrectSUBPMNError.class,() -> platinePilotageTask.findContact(remSU,dto,isLogement));
         }
     }
 
@@ -170,6 +170,6 @@ class PlatinePilotageCreateSurveyUnitTaskTest extends TestWithContext {
 
 
         //Execute the unit under test
-        assertThrows(IncorrectSUException.class,() -> platinePilotageTask.execute(execution));
+        assertThrows(IncorrectSUBPMNError.class,() -> platinePilotageTask.execute(execution));
     }
 }

@@ -3,7 +3,7 @@ package fr.insee.protools.backend.service.platine.delegate;
 import com.fasterxml.jackson.databind.JsonNode;
 import fr.insee.protools.backend.ProtoolsTestUtils;
 import fr.insee.protools.backend.service.context.ContextService;
-import fr.insee.protools.backend.service.context.exception.BadContextIncorrectException;
+import fr.insee.protools.backend.service.context.exception.BadContextIncorrectBPMNError;
 import fr.insee.protools.backend.service.platine.pilotage.PlatinePilotageService;
 import fr.insee.protools.backend.service.platine.pilotage.metadata.MetadataDto;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -51,7 +51,7 @@ class PlatinePilotageCreateContextTaskTest {
         when(execution.getProcessInstanceId()).thenReturn(dumyId);
 
         //Execute the unit under test
-        assertThrows(BadContextIncorrectException.class,() -> platinePilotageTask.execute(execution));
+        assertThrows(BadContextIncorrectBPMNError.class,() -> platinePilotageTask.execute(execution));
     }
 
     @Test

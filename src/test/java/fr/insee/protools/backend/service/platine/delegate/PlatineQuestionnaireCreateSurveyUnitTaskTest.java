@@ -6,8 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import fr.insee.protools.backend.ProtoolsTestUtils;
 import fr.insee.protools.backend.service.common.platine_sabiane.dto.surveyunit.SurveyUnitResponseDto;
-import fr.insee.protools.backend.service.context.exception.BadContextIncorrectException;
-import fr.insee.protools.backend.service.exception.IncorrectSUException;
+import fr.insee.protools.backend.service.context.exception.BadContextIncorrectBPMNError;
+import fr.insee.protools.backend.service.exception.IncorrectSUBPMNError;
 import fr.insee.protools.backend.service.platine.questionnaire.PlatineQuestionnaireService;
 import fr.insee.protools.backend.service.utils.TestWithContext;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -54,7 +54,7 @@ class PlatineQuestionnaireCreateSurveyUnitTaskTest extends TestWithContext {
     void execute_should_throw_BadContextIncorrectException_when_noContext() {
         DelegateExecution execution=createMockedExecution();
         //Execute the unit under test
-        assertThrows(BadContextIncorrectException.class,() -> platineQuestionnaireCreateSurveyUnitTask.execute(execution));
+        assertThrows(BadContextIncorrectBPMNError.class,() -> platineQuestionnaireCreateSurveyUnitTask.execute(execution));
     }
     @ParameterizedTest
     @MethodSource("protoolsContextArguments")
@@ -102,7 +102,7 @@ class PlatineQuestionnaireCreateSurveyUnitTaskTest extends TestWithContext {
 
 
         //Execute the unit under test
-        assertThrows(IncorrectSUException.class,() -> platineQuestionnaireCreateSurveyUnitTask.execute(execution));
+        assertThrows(IncorrectSUBPMNError.class,() -> platineQuestionnaireCreateSurveyUnitTask.execute(execution));
     }
 
 

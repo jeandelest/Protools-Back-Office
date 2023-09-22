@@ -6,9 +6,9 @@ import fr.insee.protools.backend.service.common.platine_sabiane.dto.Questionnair
 import fr.insee.protools.backend.service.common.platine_sabiane.dto.campaign.CampaignDto;
 import fr.insee.protools.backend.service.common.platine_sabiane.dto.surveyunit.SurveyUnitResponseDto;
 import fr.insee.protools.backend.webclient.WebClientHelper;
-import fr.insee.protools.backend.webclient.exception.runtime.WebClient4xxException;
-import fr.insee.protools.backend.webclient.exception.runtime.WebClient5xxException;
-import fr.insee.protools.backend.webclient.exception.runtime.WebClientNullReturnException;
+import fr.insee.protools.backend.webclient.exception.runtime.WebClient4xxBPMNError;
+import fr.insee.protools.backend.webclient.exception.runtime.WebClient5xxBPMNError;
+import fr.insee.protools.backend.webclient.exception.runtime.WebClientNullReturnBPMNError;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -80,7 +80,7 @@ public interface QuestionnairePlatineSabianeService {
                             .build(idQuestionnaireModel))
                     .retrieve().toBodilessEntity().block();
             if(response==null) {
-                throw new WebClientNullReturnException("Error while checking if questionnaireModel exists - null result");
+                throw new WebClientNullReturnBPMNError("Error while checking if questionnaireModel exists - null result");
             }
 
             if(response.getStatusCode().is2xxSuccessful()) {
@@ -91,16 +91,16 @@ public interface QuestionnairePlatineSabianeService {
                     modelExists=false;
                 }
                 else{
-                    throw new WebClient4xxException("Error while checking if questionnaireModel exists ", response.getStatusCode());
+                    throw new WebClient4xxBPMNError("Error while checking if questionnaireModel exists ", response.getStatusCode());
                 }
             }
             else{
-                throw new WebClient5xxException("Error while checking if questionnaireModel exists ");
+                throw new WebClient5xxBPMNError("Error while checking if questionnaireModel exists ");
             }
             getLogger().debug("response code={}",response.getStatusCode());
         }
-        catch (WebClient4xxException e){
-            if(e.getErrorCode().equals(HttpStatus.NOT_FOUND)){
+        catch (WebClient4xxBPMNError e){
+            if(e.getHttpStatusCodeError().equals(HttpStatus.NOT_FOUND)){
                 modelExists=false;
             }
             else {
@@ -128,21 +128,21 @@ public interface QuestionnairePlatineSabianeService {
                     .block();
             getLogger().info("postCampaign: idCampaign={} -  response={} ", campaignDto.getId(), response);
         }
-        catch (WebClient4xxException e){
-            if(e.getErrorCode().equals(HttpStatus.FORBIDDEN)){
+        catch (WebClient4xxBPMNError e){
+            if(e.getHttpStatusCodeError().equals(HttpStatus.FORBIDDEN)){
                 String msg=
                         "Error 403/FORBIDEN during Questionnaire postCampaign."
                                 + " It can be caused by a missing permission or if the questionnaire model is already assigned to another campaign."
                                 + " msg="+e.getMessage();
                 getLogger().error(msg);
-                throw new WebClient4xxException(msg,e.getErrorCode());
+                throw new WebClient4xxBPMNError(msg,e.getHttpStatusCodeError());
             }
-            else if(e.getErrorCode().equals(HttpStatus.BAD_REQUEST)){
+            else if(e.getHttpStatusCodeError().equals(HttpStatus.BAD_REQUEST)){
                 String msg="Error 400/BAD_REQUEST during Questionnaire postCampaign."
                                 + " One possible cause is that the campaign already exists "
                                 + " msg="+e.getMessage();
                 getLogger().error(msg);
-                throw new WebClient4xxException(msg,e.getErrorCode());
+                throw new WebClient4xxBPMNError(msg,e.getHttpStatusCodeError());
             }
             //Currently no remediation so just rethrow
             throw e;
@@ -164,12 +164,12 @@ public interface QuestionnairePlatineSabianeService {
                     .block();
             getLogger().info("postSurveyUnit: idCampaign={} - idSu={} - response={} ", idCampaign,suDto.getId(), response);
         }
-        catch (WebClient4xxException e){
-            if(e.getErrorCode().equals(HttpStatus.BAD_REQUEST)){
+        catch (WebClient4xxBPMNError e){
+            if(e.getHttpStatusCodeError().equals(HttpStatus.BAD_REQUEST)){
                 String msg="Error 400/BAD_REQUEST during Questionnaire postSurveyUnit."
                         + " msg="+e.getMessage();
                 getLogger().error(msg);
-                throw new WebClient4xxException(msg,e.getErrorCode());
+                throw new WebClient4xxBPMNError(msg,e.getHttpStatusCodeError());
             }
             //Currently no remediation so just rethrow
             throw e;

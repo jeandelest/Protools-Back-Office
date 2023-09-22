@@ -6,7 +6,7 @@ import fr.insee.protools.backend.service.DelegateContextVerifier;
 import fr.insee.protools.backend.service.context.ContextService;
 import fr.insee.protools.backend.service.context.enums.CampaignContextEnum;
 import fr.insee.protools.backend.service.context.enums.PartitionTypeEchantillon;
-import fr.insee.protools.backend.service.exception.IncorrectSUException;
+import fr.insee.protools.backend.service.exception.IncorrectSUBPMNError;
 import fr.insee.protools.backend.service.platine.pilotage.PlatinePilotageService;
 import fr.insee.protools.backend.service.platine.pilotage.dto.PlatineAddressDto;
 import fr.insee.protools.backend.service.platine.pilotage.dto.query.ContactAccreditationDto;
@@ -102,13 +102,13 @@ public class PlatinePilotageCreateSurveyUnitTask implements JavaDelegate, Delega
             //We use the "main" person (actually it is the Declarant)
             contact = remSurveyUnitDto.getPersons().stream()
                     .filter(personDto -> (Boolean.TRUE.equals(personDto.getMain())))
-                    .findFirst().orElseThrow(() -> new IncorrectSUException("No main person found in SU [id="+ remSurveyUnitDto.getRepositoryId()+"]", remSUNode));
+                    .findFirst().orElseThrow(() -> new IncorrectSUBPMNError("No main person found in SU [id="+ remSurveyUnitDto.getRepositoryId()+"]", remSUNode));
         }
         //SU INDIVIDU
         else {
             contact = remSurveyUnitDto.getPersons().stream()
                     .filter(personDto -> (Boolean.TRUE.equals(personDto.getSurveyed())))
-                    .findFirst().orElseThrow(() -> new IncorrectSUException("No surveyed person found in SU [id="+ remSurveyUnitDto.getRepositoryId()+"]", remSUNode));
+                    .findFirst().orElseThrow(() -> new IncorrectSUBPMNError("No surveyed person found in SU [id="+ remSurveyUnitDto.getRepositoryId()+"]", remSUNode));
         }
         return contact;
     }

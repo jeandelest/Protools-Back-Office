@@ -1,7 +1,7 @@
 package fr.insee.protools.backend.service.rem.delegate;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import fr.insee.protools.backend.service.exception.IncorrectSUException;
+import fr.insee.protools.backend.service.exception.IncorrectSUBPMNError;
 import fr.insee.protools.backend.service.utils.FlowableVariableUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -51,7 +51,7 @@ public class ExtractContactIdentifierFromREMSUTask implements JavaDelegate {
             String externalId = remSUNode.path(REM_EXTERNAL_ID).asText();
             String msg = String.format("No identifiantCompte found for REM repositoryId=%s - externalId=%s",repositoryId,externalId);
             log.error(msg);
-            throw new IncorrectSUException(msg);
+            throw new IncorrectSUBPMNError(msg);
         }
         log.debug("ProcessInstanceId={} -  end", execution.getProcessInstanceId());
     }
