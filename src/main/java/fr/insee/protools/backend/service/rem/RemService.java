@@ -4,7 +4,7 @@ import fr.insee.protools.backend.service.era.dto.CensusJsonDto;
 import fr.insee.protools.backend.service.rem.dto.REMSurveyUnitDto;
 import fr.insee.protools.backend.service.rem.dto.SuIdMappingJson;
 import fr.insee.protools.backend.webclient.WebClientHelper;
-import fr.insee.protools.backend.webclient.exception.runtime.WebClient4xxException;
+import fr.insee.protools.backend.webclient.exception.runtime.WebClient4xxBPMNError;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,13 +35,13 @@ public class RemService {
             log.trace("partitionIds={} - response={} ", partitionId, response);
             return response;
         }
-        catch (WebClient4xxException e){
-            if(e.getErrorCode().equals(HttpStatus.NOT_FOUND)){
+        catch (WebClient4xxBPMNError e){
+            if(e.getHttpStatusCodeError().equals(HttpStatus.NOT_FOUND)){
                 String msg=
                         "Error 404/NOT_FOUND during get sample on REM with partitionId="+partitionId
                                 + " - msg="+e.getMessage();
                 log.error(msg);
-                throw new WebClient4xxException(msg,e.getErrorCode());
+                throw new WebClient4xxBPMNError(msg,e.getHttpStatusCodeError());
             }
             //Currently no remediation so just rethrow
             throw e;
@@ -63,13 +63,13 @@ public class RemService {
             log.debug("surveyUnitId={} - response={} ", surveyUnitId, response);
             return response;
         }
-        catch (WebClient4xxException e){
-            if(e.getErrorCode().equals(HttpStatus.NOT_FOUND)){
+        catch (WebClient4xxBPMNError e){
+            if(e.getHttpStatusCodeError().equals(HttpStatus.NOT_FOUND)){
                 String msg=
                         "Error 404/NOT_FOUND during get SU on REM with surveyUnitId="+surveyUnitId
                                 + " - msg="+e.getMessage();
                 log.error(msg);
-                throw new WebClient4xxException(msg,e.getErrorCode());
+                throw new WebClient4xxBPMNError(msg,e.getHttpStatusCodeError());
             }
             //Currently no remediation so just rethrow
             throw e;
@@ -90,13 +90,13 @@ public class RemService {
             log.debug("writeERASUList - partitionId={} - response={} ", partitionId, response);
             return response;
         }
-        catch (WebClient4xxException e){
-            if(e.getErrorCode().equals(HttpStatus.NOT_FOUND)){
+        catch (WebClient4xxBPMNError e){
+            if(e.getHttpStatusCodeError().equals(HttpStatus.NOT_FOUND)){
                 String msg=
                         "Error 404/NOT_FOUND during REM post census-upload partitionId="+partitionId
                                 + " - msg="+e.getMessage();
                 log.error(msg);
-                throw new WebClient4xxException(msg,e.getErrorCode());
+                throw new WebClient4xxBPMNError(msg,e.getHttpStatusCodeError());
             }
             //Currently no remediation so just rethrow
             throw e;
