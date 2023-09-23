@@ -13,7 +13,7 @@ public class FlowableVariableNameConstants {
     //To treat partitions one by one (Long)
     public static final String VARNAME_CURRENT_PARTITION_ID="current_partition_id";
     //to pass a list of REM survey ids (List<Long>)
-    public static final String VARNAME_REM_SU_ID_LIST="rem-survey-unit-id-list";
+    public static final String VARNAME_REM_SU_ID_LIST="rem_survey_unit_id_list";
     //to pass a single REM survey unit's ID (Long)
     public static final String VARNAME_REM_SURVEY_UNIT_IDENTIFIER ="rem-survey-unit-id";
     //to pass a REM survey unit content (JsonNode)
