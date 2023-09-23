@@ -37,6 +37,7 @@ public class EraService {
                 .bodyToMono(typeReference)
                 .block();
         log.trace("getSUForPeriodAndSex - response={} ", response);
+        log.info("getSUForPeriodAndSex: end");
         return response;
     }
 }
