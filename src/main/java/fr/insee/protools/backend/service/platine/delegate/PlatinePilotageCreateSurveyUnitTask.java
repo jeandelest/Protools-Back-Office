@@ -49,23 +49,21 @@ public class PlatinePilotageCreateSurveyUnitTask implements JavaDelegate, Delega
 
     @Override
     public void execute(DelegateExecution execution) {
-        log.info("ProcessInstanceId={}  begin", execution.getProcessInstanceId());
         JsonNode contextRootNode = protoolsContext.getContextByProcessInstance(execution.getProcessInstanceId());
         checkContextOrThrow(log,execution.getProcessInstanceId(), contextRootNode);
-
         String campainId = contextRootNode.path(CTX_CAMPAGNE_ID).asText();
         Long currentPartitionId = FlowableVariableUtils.getVariableOrThrow(execution,VARNAME_CURRENT_PARTITION_ID, Long.class);
         JsonNode remSUNode = FlowableVariableUtils.getVariableOrThrow(execution,VARNAME_REM_SURVEY_UNIT, JsonNode.class);
         String idInternaute = FlowableVariableUtils.getVariableOrThrow(execution, VARNAME_DIRECTORYACCESS_ID_CONTACT, String.class);
-
         JsonNode currentPartitionNode = getCurrentPartitionNode(contextRootNode, currentPartitionId);
 
         //Create the platine DTO object
         QuestioningWebclientDto dto = computeQuestioningWebclientDto(remSUNode,currentPartitionNode,idInternaute,campainId);
+
+        log.info("ProcessInstanceId={}  campainId={} - currentPartitionId={} - remSUNode.id={} ",
+                execution.getProcessInstanceId(), campainId,currentPartitionId,dto.getSurveyUnit().getIdSu());
         //Call service
         platinePilotageService.putQuestionings(dto);
-
-        log.info("ProcessInstanceId={}  end",execution.getProcessInstanceId());
     }
 
     private static QuestioningWebclientDto computeQuestioningWebclientDto(JsonNode remSUNode, JsonNode currentPartitionNode,String idInternaute, String idCampagne) {

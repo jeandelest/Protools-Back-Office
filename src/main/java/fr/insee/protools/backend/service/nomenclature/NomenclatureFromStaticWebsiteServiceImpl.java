@@ -25,7 +25,7 @@ public class NomenclatureFromStaticWebsiteServiceImpl implements NomenclatureSer
 
     @Override
     public String getNomenclatureContent(String nomenclatureId, String folderPath) {
-        log.info("Get Naming Model Value for nomenclatureId={}", nomenclatureId);
+        log.debug("Get Naming Model Value for nomenclatureId={}", nomenclatureId);
         String uri;
         String fullPath=nomenclatureUri+ "/" +folderPath+ "/"+nomenclatureId + ".json";
         try {

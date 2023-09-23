@@ -15,6 +15,7 @@ public class PlatinePilotageService {
 
     @Autowired WebClientHelper webClientHelper;
     public void putMetadata(String partitionId , MetadataDto dto) {
+        log.debug("putMetadata : partitionId={} - dto.su.id={} ",partitionId,dto.getSurveyDto().getId());
         WebClientHelper.logDebugJson(String.format("putMetadata - partitionId=%s : ",partitionId),dto);
         var response = webClientHelper.getWebClient(KNOWN_API_PLATINE_PILOTAGE)
                 .put()
@@ -25,9 +26,10 @@ public class PlatinePilotageService {
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
-        log.info("partitionId={} - response={} ",partitionId,response);
+        log.trace("putMetadata : partitionId={} - response={} ",partitionId,response);
     }
     public void putQuestionings(QuestioningWebclientDto dto) {
+        log.debug("putQuestionings: idPartitioning={} - idSu={}",dto.getIdPartitioning(),dto.getSurveyUnit().getIdSu());
         WebClientHelper.logDebugJson("putQuestionings ",dto);
         var response = webClientHelper.getWebClient(KNOWN_API_PLATINE_PILOTAGE)
                 .put()
@@ -36,7 +38,7 @@ public class PlatinePilotageService {
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
-        log.info("putQuestionings - response={} ",response);
+        log.trace("putQuestionings - response={} ",response);
     }
 
 }

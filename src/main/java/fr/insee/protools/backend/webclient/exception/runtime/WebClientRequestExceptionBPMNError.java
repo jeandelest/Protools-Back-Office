@@ -17,12 +17,8 @@ public class WebClientRequestExceptionBPMNError extends BpmnError {
         log.error(this.getMessage());
     }
 
-    public WebClientRequestException getSourceException() {
-        return ex;
-    }
-
     private static String computeMessage(WebClientRequestException ex){
-        return String.format("WebClientException : class=[%s] - method=[%s] - uri=[%s] message=[%s] - root_cause=[%s] - root_message",
+        return String.format("WebClientException : class=[%s] - method=[%s] - uri=[%s] message=[%s] - root_cause=[%s] - root_message=[%s]",
                 ex.getClass(),
                 ex.getMethod(),
                 ex.getUri(),

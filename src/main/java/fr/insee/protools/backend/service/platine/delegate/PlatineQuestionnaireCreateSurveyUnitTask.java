@@ -41,7 +41,6 @@ public class PlatineQuestionnaireCreateSurveyUnitTask implements JavaDelegate, D
 
     @Override
     public void execute(DelegateExecution execution) {
-        log.info("ProcessInstanceId={}  begin", execution.getProcessInstanceId());
         JsonNode contextRootNode = protoolsContext.getContextByProcessInstance(execution.getProcessInstanceId());
         checkContextOrThrow(log,execution.getProcessInstanceId(), contextRootNode);
 
@@ -51,10 +50,13 @@ public class PlatineQuestionnaireCreateSurveyUnitTask implements JavaDelegate, D
 
         //Create the platine DTO object
         SurveyUnitResponseDto dto = computeDto(remSUNode,currentPartitionNode);
+        log.info("ProcessInstanceId={} - currentPartitionId={} - remSU.id={}",
+                execution.getProcessInstanceId(),currentPartitionId,dto.getId());
+
         //Call service
         platineQuestionnaireService.postSurveyUnit(dto, contextRootNode.path(CTX_CAMPAGNE_ID).asText());
 
-        log.info("ProcessInstanceId={}  end",execution.getProcessInstanceId());
+        log.debug("ProcessInstanceId={}  end",execution.getProcessInstanceId());
     }
 
     private SurveyUnitResponseDto computeDto(JsonNode remSUNode, JsonNode currentPartitionNode) {

@@ -42,9 +42,14 @@ public class EraGetSUForPeriodAndGenderTask implements JavaDelegate, DelegateCon
 
         JsonNode currentPartitionNode = getCurrentPartitionNode(contextRootNode, currentPartitionId);
         GenderType sexe = GenderType.fromLabel(currentPartitionNode.path(CTX_PARTITION_ERA_SEXE).asText());
+        log.info("ProcessInstanceId={} - currentPartitionId={} - startDate={} - endDate={} - sexe={} begin"
+                ,execution.getProcessInstanceId(), currentPartitionId,startDate,endDate,sexe);
 
         List<CensusJsonDto> response = eraService.getSUForPeriodAndSex(startDate, endDate, sexe);
         execution.setVariableLocal(VARNAME_ERA_RESPONSE, response);
+
+        log.info("ProcessInstanceId={} response.size={} end"
+                ,execution.getProcessInstanceId(), response.size());
     }
 
     @Override

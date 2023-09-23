@@ -31,7 +31,7 @@ public class RemGetSUTask implements JavaDelegate, DelegateContextVerifier {
         //TODO : ne pas créer le DTO ici : Ca ne sert à rien...
         REMSurveyUnitDto remSurveyUnitDto = remService.getSurveyUnit(suId);
         execution.setVariableLocal(VARNAME_REM_SURVEY_UNIT,objectMapper.valueToTree(remSurveyUnitDto));
-        log.debug("Su id={} - content={}", suId, remSurveyUnitDto);
-        log.info("ProcessInstanceId={} - id={} end",execution.getProcessInstanceId(), suId);
+        log.trace("Su id={} - content={}", suId, remSurveyUnitDto);
+        log.debug("ProcessInstanceId={} - id={} end",execution.getProcessInstanceId(), suId);
     }
 }

@@ -20,7 +20,6 @@ public class RemService {
 
     @Autowired WebClientHelper webClientHelper;
 
-
     public Long[] getSampleSuIds(Long partitionId) {
         log.debug("getSampleSuIds - partitionId={} ",partitionId);
         try {
@@ -60,7 +59,7 @@ public class RemService {
                     .retrieve()
                     .bodyToMono(REMSurveyUnitDto.class)
                     .block();
-            log.debug("surveyUnitId={} - response={} ", surveyUnitId, response);
+            log.trace("surveyUnitId={} - response={} ", surveyUnitId, response);
             return response;
         }
         catch (WebClient4xxBPMNError e){
@@ -77,6 +76,7 @@ public class RemService {
     }
 
     public SuIdMappingJson writeERASUList(long partitionId, List<CensusJsonDto> values) {
+        log.debug("writeERASUList - partitionId={}  - values.size={}", partitionId,values==null?0:values.size() );
         try {
             var response =  webClientHelper.getWebClient(KNOWN_API_REM)
                     .post()
@@ -87,7 +87,7 @@ public class RemService {
                     .retrieve()
                     .bodyToMono(SuIdMappingJson.class)
                     .block();
-            log.debug("writeERASUList - partitionId={} - response={} ", partitionId, response);
+            log.trace("writeERASUList - partitionId={} - response={} ", partitionId, response);
             return response;
         }
         catch (WebClient4xxBPMNError e){

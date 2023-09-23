@@ -29,14 +29,15 @@ public class SabianePilotageCreateContextTask implements JavaDelegate, DelegateC
 
     @Override
     public void execute(DelegateExecution execution) {
-        log.info("ProcessInstanceId={}  begin",execution.getProcessInstanceId());
         JsonNode contextRootNode = protoolsContext.getContextByProcessInstance(execution.getProcessInstanceId());
         checkContextOrThrow(log,execution.getProcessInstanceId(), contextRootNode);
 
+        log.info("ProcessInstanceId={} - campagne={}"
+                ,execution.getProcessInstanceId(),contextRootNode.path(CTX_CAMPAGNE_CONTEXTE).asText());
+
         CampaignContextDto dto = computeCampaignContextDto(contextRootNode);
         sabianePilotageService.postCampaign(dto);
-
-        log.info("ProcessInstanceId={}  end",execution.getProcessInstanceId());
+        log.debug("ProcessInstanceId={}  end",execution.getProcessInstanceId());
     }
 
     private CampaignContextDto computeCampaignContextDto(JsonNode contextRootNode) {

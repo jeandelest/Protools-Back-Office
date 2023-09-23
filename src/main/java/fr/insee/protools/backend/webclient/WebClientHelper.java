@@ -78,10 +78,7 @@ public class WebClientHelper {
                                 next.exchange(request)
                                 .onErrorResume(WebClientRequestException.class, ex -> {
                                         //TODO : here i can access the method and URI ; could be usefull to log ??
-                                        if(ex.contains(SocketException.class)){
-                                                return Mono.error(new WebClientNetworkExceptionBPMNError(ex));
-                                        }
-                                        else if(ex.contains(UnresolvedAddressException.class)){
+                                        if(ex.contains(SocketException.class)  || ex.contains(UnresolvedAddressException.class)){
                                                 return Mono.error(new WebClientNetworkExceptionBPMNError(ex));
                                         }
                                         return Mono.error(new WebClientRequestExceptionBPMNError(ex));

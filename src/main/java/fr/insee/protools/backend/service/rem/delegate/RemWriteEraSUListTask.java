@@ -40,12 +40,13 @@ public class RemWriteEraSUListTask implements JavaDelegate, DelegateContextVerif
         //Store SU in REM
         SuIdMappingJson remMapping = remService.writeERASUList(currentPartitionId, eraSUList);
         if(remMapping==null){
-            log.error("ProcessInstanceId={} - currentPartitionId={}  remMapping is empty end",execution.getProcessInstanceId(), currentPartitionId);
+            log.error("ProcessInstanceId={} - currentPartitionId={}  remMapping is empty/null end",execution.getProcessInstanceId(), currentPartitionId);
+            execution.getParent().setVariableLocal(VARNAME_REM_SU_ID_LIST, List.of());
             throw new ProtoolsTaskBPMNError("Error while writing list of Era SU to REM : REM returned a null result ");
         }
+
         //STORE the list of REM identifier created
         List<Long> remSuIdList = remMapping.getData().stream().map(SuIdMappingRecord::repositoryId).toList();
-
         execution.getParent().setVariableLocal(VARNAME_REM_SU_ID_LIST, remSuIdList);
         log.info("ProcessInstanceId={} - currentPartitionId={}  remSuIdList={}  end",execution.getProcessInstanceId(), currentPartitionId,remSuIdList);
     }

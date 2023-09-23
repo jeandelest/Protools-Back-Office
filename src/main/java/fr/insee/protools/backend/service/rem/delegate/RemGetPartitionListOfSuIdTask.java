@@ -29,8 +29,6 @@ public class RemGetPartitionListOfSuIdTask implements JavaDelegate, DelegateCont
         Long[] partitionSUIds = remService.getSampleSuIds(currentPartitionId);
         List<Long> remSuIdList = List.of(partitionSUIds);
         execution.getParent().setVariableLocal(VARNAME_REM_SU_ID_LIST, remSuIdList);
-        log.debug("ProcessInstanceId={} -  partition={} - remSuIdList={}",execution.getProcessInstanceId(),currentPartitionId,remSuIdList);
-
-        log.info("ProcessgInstanceId={} - partition={} end",execution.getProcessInstanceId(),currentPartitionId);
+        log.debug("ProcessInstanceId={} -  partition={} - remSuIdList={} end",execution.getProcessInstanceId(),currentPartitionId,remSuIdList);
     }
 }
