@@ -1,11 +1,11 @@
 package fr.insee.protools.backend.service.exception;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.flowable.engine.delegate.BpmnError;
+import fr.insee.protools.backend.exception.ProtoolsBpmnError;
 
 import static fr.insee.protools.backend.service.BPMNErrorCode.BPMNERROR_CODE_DEFAULT;
 
-public class IncorrectSUBPMNError extends BpmnError {
+public class IncorrectSUBPMNError extends ProtoolsBpmnError {
     public String getRemSU() {
         return remSU;
     }

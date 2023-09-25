@@ -1,15 +1,13 @@
 package fr.insee.protools.backend.webclient.exception.runtime;
 
+import fr.insee.protools.backend.exception.ProtoolsBpmnError;
 import lombok.extern.slf4j.Slf4j;
-import org.flowable.engine.delegate.BpmnError;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.web.reactive.function.client.WebClientException;
 import org.springframework.web.reactive.function.client.WebClientRequestException;
 
 import static fr.insee.protools.backend.service.BPMNErrorCode.BPMNERROR_CODE_DEFAULT;
 
 @Slf4j
-public class WebClientNetworkExceptionBPMNError extends BpmnError {
+public class WebClientNetworkExceptionBPMNError extends ProtoolsBpmnError {
 
     private final WebClientRequestException ex;
 
@@ -24,7 +22,7 @@ public class WebClientNetworkExceptionBPMNError extends BpmnError {
     }
 
     private static String computeMessage(WebClientRequestException ex){
-        return String.format("WebClientNetworkExceptionBPMNError : class=[%s] - method=[%s] - uri=[%s] message=[%s] - root_cause=[%s] - root_message",
+        return String.format("WebClientNetworkExceptionBPMNError : class=[%s] - method=[%s] - uri=[%s] - message=[%s] - root_cause=[%s] - root_message=[%s]",
                 ex.getClass(),
                 ex.getMethod(),
                 ex.getUri(),

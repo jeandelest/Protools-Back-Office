@@ -1,11 +1,11 @@
 package fr.insee.protools.backend.webclient.exception.runtime;
 
-import org.flowable.engine.delegate.BpmnError;
+import fr.insee.protools.backend.exception.ProtoolsBpmnError;
 import org.springframework.http.HttpStatusCode;
 
 import static fr.insee.protools.backend.service.BPMNErrorCode.BPMNERROR_CODE_DEFAULT;
 
-public class WebClient4xxBPMNError extends BpmnError {
+public class WebClient4xxBPMNError extends ProtoolsBpmnError {
 
     private final HttpStatusCode httpStatusCodeError;
 
