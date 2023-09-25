@@ -15,13 +15,13 @@
     <sequenceFlow id="sid-6A1BF1BC-3670-4DD0-AED4-08CA28BBF6CC" sourceRef="TheStart" targetRef="createPlatineQuestionnaireContexte"></sequenceFlow>
     <sequenceFlow id="sid-66CFB8F7-50D8-4F67-8EEB-FF37F84BA969" sourceRef="createPlatineQuestionnaireContexte" targetRef="createPlatinePilotageContexte"></sequenceFlow>
     <subProcess id="sous-process-traitement-partitions" name="Pour chaque partition" flowable:async="true" flowable:exclusive="false">
-      <multiInstanceLoopCharacteristics isSequential="false" flowable:collection="contexte-partition-id-list" flowable:elementVariable="current-partition-id">
+      <multiInstanceLoopCharacteristics isSequential="false" flowable:collection="contexte_partition_id_list" flowable:elementVariable="current_partition_id">
         <extensionElements></extensionElements>
       </multiInstanceLoopCharacteristics>
       <serviceTask id="getERA" name="getERA" flowable:delegateExpression="${eraGetSUForPeriodAndGenderTask}"></serviceTask>
       <serviceTask id="writeToREM" name="writeToREM" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${remWriteEraSUListTask}"></serviceTask>
       <subProcess id="sous-process-traitement-ue" name="Pour chaque UE" flowable:async="true" flowable:exclusive="false">
-        <multiInstanceLoopCharacteristics isSequential="false" flowable:collection="rem-survey-unit-id-list" flowable:elementVariable="rem-survey-unit-id">
+        <multiInstanceLoopCharacteristics isSequential="false" flowable:collection="rem_survey_unit_id_list" flowable:elementVariable="rem_survey_unit_id">
           <extensionElements></extensionElements>
         </multiInstanceLoopCharacteristics>
         <startEvent id="debut-traitement-ue" flowable:formFieldValidation="true"></startEvent>
@@ -75,9 +75,12 @@
     <sequenceFlow id="sid-E8AE987B-79D8-4BB0-A0D7-84C95B7648FE" sourceRef="gateway-fin-ou-journalier" targetRef="timer_fin"></sequenceFlow>
     <sequenceFlow id="sid-BB7196E0-B0B8-48EF-B85A-8F73A0C42124" sourceRef="sous-process-traitement-partitions" targetRef="gateway-fin-ou-journalier"></sequenceFlow>
     <scriptTask id="initEraQueryParamScript" name="configurer interval lecture era" scriptFormat="groovy" flowable:autoStoreVariables="false">
-      <script><![CDATA[execution.setVariableLocal("era-query-start-date", java.time.LocalDate.now().minusDays(1));
-
-          execution.setVariableLocal("era-query-end-date", java.time.LocalDate.now());]]></script>
+      <script><![CDATA[
+          import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VARNAME_ERA_QUERY_START_DATE;
+          import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VARNAME_ERA_QUERY_END_DATE;
+          execution.setVariableLocal(VARNAME_ERA_QUERY_START_DATE,  java.time.LocalDate.now().minusDays(1));
+          execution.setVariableLocal(VARNAME_ERA_QUERY_END_DATE,    java.time.LocalDate.now());
+     ]]></script>
     </scriptTask>
     <sequenceFlow id="sid-6D28335F-2E2B-4D7D-AD18-24D95B0E7091" sourceRef="timer_daily_11h" targetRef="initEraQueryParamScript"></sequenceFlow>
     <sequenceFlow id="sid-6910F378-0C41-428F-8865-F77D7DB8F5E8" sourceRef="initEraQueryParamScript" targetRef="sous-process-traitement-partitions"></sequenceFlow>

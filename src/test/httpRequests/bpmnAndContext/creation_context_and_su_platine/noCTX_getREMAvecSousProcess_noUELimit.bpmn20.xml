@@ -11,14 +11,15 @@
 
     <scriptTask id="sugoiScriptTask" name="mock sugoi script" scriptFormat="groovy">
       <script>
-        execution.setVariable("directory_access-id-contact", "B28CKCJ");
+        import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VARNAME_DIRECTORYACCESS_ID_CONTACT;
+        execution.setVariable(VARNAME_DIRECTORYACCESS_ID_CONTACT, "B28CKCJ");
       </script>
     </scriptTask>
 
     <subProcess id="partition-subprocess" name="sous process traitement des partitions">
       <multiInstanceLoopCharacteristics isSequential="false">
-        <loopDataInputRef>contexte-partition-id-list</loopDataInputRef>
-        <inputDataItem name="current-partition-id" />
+        <loopDataInputRef>contexte_partition_id_list</loopDataInputRef>
+        <inputDataItem name="current_partition_id" />
       </multiInstanceLoopCharacteristics>
 
       <startEvent id="partition-subprocess-start" flowable:formFieldValidation="true"></startEvent>
@@ -27,8 +28,8 @@
 
       <subProcess id="su-subprocess" name="sous process traitement UE">
         <multiInstanceLoopCharacteristics isSequential="false">
-          <loopDataInputRef>rem-survey-unit-id-list</loopDataInputRef>
-          <inputDataItem name="rem-survey-unit-id" />
+          <loopDataInputRef>rem_survey_unit_id_list</loopDataInputRef>
+          <inputDataItem name="rem_survey_unit_id" />
         </multiInstanceLoopCharacteristics>
         <startEvent id="su-subprocess-start" flowable:formFieldValidation="true"/>
         <serviceTask id="su-subprocess-get-su" name="getREMSurveyUnit" flowable:delegateExpression="${remGetSUTask}"/>
