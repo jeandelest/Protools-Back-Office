@@ -13,27 +13,28 @@ import fr.insee.protools.backend.webclient.exception.runtime.WebClient4xxBPMNErr
 import fr.insee.protools.backend.webclient.exception.runtime.WebClient5xxBPMNError;
 import fr.insee.protools.backend.webclient.exception.runtime.WebClientNetworkExceptionBPMNError;
 import fr.insee.protools.backend.webclient.exception.runtime.WebClientRequestExceptionBPMNError;
+import io.netty.channel.ConnectTimeoutException;
 import io.netty.handler.logging.LogLevel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientRequestException;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
+import reactor.netty.http.client.PrematureCloseException;
 import reactor.netty.transport.logging.AdvancedByteBufFormat;
 
 import java.lang.reflect.Field;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.nio.channels.UnresolvedAddressException;
-import java.util.Base64;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Helper class for WebClient
@@ -76,13 +77,15 @@ public class WebClientHelper {
                         )
                         .filter((request, next) ->
                                 next.exchange(request)
-                                .onErrorResume(WebClientRequestException.class, ex -> {
-                                        //TODO : here i can access the method and URI ; could be usefull to log ??
-                                        if(ex.contains(SocketException.class)  || ex.contains(UnresolvedAddressException.class)){
-                                                return Mono.error(new WebClientNetworkExceptionBPMNError(ex));
-                                        }
-                                        return Mono.error(new WebClientRequestExceptionBPMNError(ex));
-                                })
+                                        .onErrorResume(WebClientRequestException.class, ex -> {
+                                                //TODO : here i can access the method and URI ; could be usefull to log ??
+                                                if(containsCauseOfType(ex,
+                                                        List.of(SocketException.class,UnresolvedAddressException.class,PrematureCloseException.class,
+                                                                ConnectTimeoutException.class, UnknownHostException.class))){
+                                                        return Mono.error(new WebClientNetworkExceptionBPMNError(ex));
+                                                }
+                                                return Mono.error(new WebClientRequestExceptionBPMNError(ex));
+                                        })
                         )
                         .clientConnector(
                                 new ReactorClientHttpConnector(
@@ -220,7 +223,7 @@ public class WebClientHelper {
                                 result= roles;
                         }
                 } catch (JsonProcessingException e) {
-                       result=payload;
+                        result=payload;
                 }
                 return result;
         }
@@ -242,6 +245,46 @@ public class WebClientHelper {
                 } catch (Exception e) {
                         log.error("Internal error while trying to extract the requestDescription from ClientResponse");
                         return "Initial request cannot be retrived";
+                }
+        }
+
+        /**
+         * special version of NestedRuntimeException.contains accepting a list of types :
+         *
+         * Check whether the Ex exception contains an exception of the given list of types:
+         * either it is of the given class itself or it contains a nested cause of one of these types.
+         * @param ex
+         * @param exTypes
+         * @return
+         */
+        protected static boolean containsCauseOfType(Exception ex, @Nullable List<Class<?>> exTypes) {
+                if (exTypes == null || exTypes.isEmpty()) {
+                        return false;
+                } else {
+                        if (exTypes.stream().anyMatch(exType -> exType.isInstance(ex))) {
+                                return true;
+                        }
+
+                        //Current exception is not of the configured types ; check parents
+                        Throwable cause = ex.getCause();
+                        if (cause == ex) {
+                                return false;
+                        }  else {
+                                while (cause != null) {
+                                        Throwable finalCause = cause; //to be used in lambda
+                                        if (exTypes.stream().anyMatch(exType -> exType.isInstance(finalCause))) {
+                                                return true;
+                                        }
+
+                                        if (cause.getCause() == cause) {
+                                                break;
+                                        }
+
+                                        cause = cause.getCause();
+                                }
+
+                                return false;
+                        }
                 }
         }
 }

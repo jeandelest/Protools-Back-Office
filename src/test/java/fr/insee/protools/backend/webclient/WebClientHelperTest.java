@@ -19,6 +19,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.NestedRuntimeException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,11 +29,11 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -288,4 +289,45 @@ class WebClientHelperTest {
                 .contains(getDummyUriWithPort())
                 .contains(String.valueOf(HttpStatus.BAD_REQUEST.value()));
     }
+
+    @Test
+    @DisplayName("Test that containsCauseOfType find an existing cause")
+    void containsCauseOfType_shouldFindCauseIfExists() {
+        //Prepare
+        String rootMessage="TEST";
+        ArithmeticException exRoot=new ArithmeticException(rootMessage);
+        Exception exLvl1=new Exception("dummy",exRoot );
+        Exception ex = new Exception("dummy",exLvl1 );
+
+        //Call
+        boolean found = WebClientHelper.containsCauseOfType(ex, List.of(ArithmeticException.class));
+        //Check
+        assertTrue(found,"ArithmeticException should be found");
+
+        //Call
+        found = WebClientHelper.containsCauseOfType(exLvl1, List.of(ArithmeticException.class));
+        //Check
+        assertTrue(found,"ArithmeticException should be found");
+
+        //Call
+        found = WebClientHelper.containsCauseOfType(exRoot, List.of(ArithmeticException.class));
+        //Check
+        assertTrue(found,"ArithmeticException should be found");
+
+        //Call
+        found = WebClientHelper.containsCauseOfType(exRoot, List.of(RuntimeException.class));
+        //Check
+        assertTrue(found,"RuntimeException should be found");
+
+        //Call
+        found = WebClientHelper.containsCauseOfType(exRoot, List.of(IOException.class,RuntimeException.class));
+        //Check
+        assertTrue(found,"RuntimeException should be found");
+
+        //Call
+        found = WebClientHelper.containsCauseOfType(exRoot, List.of(IOException.class));
+        //Check (should not be found)
+        assertFalse(found,"IOException should not be found");
+    }
+
 }
