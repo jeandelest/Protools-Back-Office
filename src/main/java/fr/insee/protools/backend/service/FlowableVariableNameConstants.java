@@ -23,5 +23,8 @@ public class FlowableVariableNameConstants {
     public static final String VARNAME_ERA_RESPONSE="era_response_list";
     public static final String VARNAME_ERA_QUERY_START_DATE="era_query_start_date";
     public static final String VARNAME_ERA_QUERY_END_DATE="era_query_end_date";
+    //Platine Contact details
+    public static final String VARNAME_PLATINE_CONTACT="platine_contact";
+
     private FlowableVariableNameConstants(){}
 }
