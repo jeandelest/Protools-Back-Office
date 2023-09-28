@@ -9,6 +9,7 @@ import fr.insee.protools.backend.service.context.enums.PartitionTypeEchantillon;
 import fr.insee.protools.backend.service.exception.IncorrectSUBPMNError;
 import fr.insee.protools.backend.service.platine.pilotage.PlatinePilotageService;
 import fr.insee.protools.backend.service.platine.pilotage.dto.PlatineAddressDto;
+import fr.insee.protools.backend.service.platine.pilotage.dto.PlatinePilotageGenderType;
 import fr.insee.protools.backend.service.platine.pilotage.dto.query.ContactAccreditationDto;
 import fr.insee.protools.backend.service.platine.pilotage.dto.query.QuestioningWebclientDto;
 import fr.insee.protools.backend.service.platine.pilotage.dto.questioning.PlatineQuestioningSurveyUnitDto;
@@ -42,10 +43,6 @@ public class PlatinePilotageCreateSurveyUnitTask implements JavaDelegate, Delega
     @Autowired PlatinePilotageService platinePilotageService;
 
     private static final ObjectMapper objectMapper = new ObjectMapper().configure(FAIL_ON_UNKNOWN_PROPERTIES,false);
-
-    private static final String CIVILITY_MALE = "Male";
-    private static final String CIVILITY_FEMALE = "Female";
-    private static final String CIVILITY_UNDEFINED = "Undefined";
 
     @Override
     public void execute(DelegateExecution execution) {
@@ -181,7 +178,7 @@ public class PlatinePilotageCreateSurveyUnitTask implements JavaDelegate, Delega
                 .lastName(platineName)
                 .firstName(remPersonDto.getFirstName())
                 .isMain(true)
-                .civility(convertREMGenderToPlatineCivility(remPersonDto.getGender()))
+                .civility(convertREMGenderToPlatineCivility(remPersonDto.getGender()).getLabel())
                 //Get favorite phone/mail ; if no favorite get the first of the list ; else empty
                 .email(remPersonDto.getEmails().stream()
                         .filter(EmailDto::getFavorite)
@@ -199,16 +196,16 @@ public class PlatinePilotageCreateSurveyUnitTask implements JavaDelegate, Delega
                 .build();
     }
 
-    static String convertREMGenderToPlatineCivility(String remGender) {
+    static PlatinePilotageGenderType convertREMGenderToPlatineCivility(String remGender) {
         if(remGender==null)
-            return CIVILITY_UNDEFINED;
+            return PlatinePilotageGenderType.Undefined;
         return switch (remGender) {
             case "2":
-                yield CIVILITY_FEMALE;
+                yield PlatinePilotageGenderType.Female;
             case "1" :
-                yield CIVILITY_MALE;
+                yield PlatinePilotageGenderType.Male;
             default:
-                yield CIVILITY_UNDEFINED;
+                yield PlatinePilotageGenderType.Undefined;
         };
     }
 
