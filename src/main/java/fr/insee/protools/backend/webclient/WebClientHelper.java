@@ -16,6 +16,8 @@ import fr.insee.protools.backend.webclient.exception.runtime.WebClientRequestExc
 import io.netty.channel.ConnectTimeoutException;
 import io.netty.handler.logging.LogLevel;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.event.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -97,11 +99,30 @@ public class WebClientHelper {
                                                 .wiretap(this.getClass().getCanonicalName(), LogLevel.DEBUG, AdvancedByteBufFormat.TEXTUAL)));
         }
 
-        public static void logDebugJson(String msg, Object dto) {
-                if (log.isDebugEnabled()) {
+        public static void logJson(String msg, Object dto, Logger logger, Level level) {
+                if (logger.isEnabledForLevel(level)) {
                         try {
                                 String json = new ObjectMapper().writeValueAsString(dto);
-                                log.debug(msg +" - " + json);
+                                String logLine = msg +" - " + json;
+                                switch (level) {
+                                        case TRACE:
+                                                logger.trace(logLine);
+                                                break;
+                                        case DEBUG:
+                                                logger.debug(logLine);
+                                                break;
+                                        case INFO:
+                                                logger.info(logLine);
+                                                break;
+                                        case WARN:
+                                                logger.warn(logLine);
+                                                break;
+                                        case ERROR:
+                                                logger.error(logLine);
+                                                break;
+                                        default:
+                                                logger.trace(logLine);
+                                }
                         } catch (JsonProcessingException e) {
                                 log.error("Could not parse json");
                         }

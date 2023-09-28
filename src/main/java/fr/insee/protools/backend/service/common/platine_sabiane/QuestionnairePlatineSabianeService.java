@@ -9,6 +9,7 @@ import fr.insee.protools.backend.webclient.WebClientHelper;
 import fr.insee.protools.backend.webclient.exception.runtime.WebClient4xxBPMNError;
 import fr.insee.protools.backend.webclient.exception.runtime.WebClient5xxBPMNError;
 import fr.insee.protools.backend.webclient.exception.runtime.WebClientNullReturnBPMNError;
+import org.slf4j.event.Level;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -113,7 +114,7 @@ public interface QuestionnairePlatineSabianeService {
 
     /** Create the campaign **/
     default void postCampaign(CampaignDto campaignDto) {
-        WebClientHelper.logDebugJson("postCampaign: ", campaignDto);
+        WebClientHelper.logJson("postCampaign: ", campaignDto,getLogger(), Level.DEBUG);
         //Http Status Codes : https://github.com/InseeFr/Queen-Back-Office/blob/3.5.36-rc/src/main/java/fr/insee/queen/api/controller/CampaignController.java
         // HttpStatus.BAD_REQUEST(400) if campaign already exists
         // HttpStatus.FORBIDDEN (403) if the questionnaire does not exist or is already associated (Request to change it to 409)
@@ -151,7 +152,7 @@ public interface QuestionnairePlatineSabianeService {
 
     /** Create the campaign **/
     default void postSurveyUnit(SurveyUnitResponseDto suDto, String idCampaign) {
-        WebClientHelper.logDebugJson("postSurveyUnit: idCampaign="+idCampaign, suDto);
+        WebClientHelper.logJson("postSurveyUnit: idCampaign="+idCampaign, suDto,getLogger(),Level.DEBUG);
         try {
             var response = webClient()
                     .post()
