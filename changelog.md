@@ -25,6 +25,10 @@ Travail sur les tâches BPMN pour ERA et REM.
   Tâche d'écriture dans REM d'une liste d'UE récupérée dans ERA
 - [eraGetSUForPeriodAndGenderTask]( TODO)
   Tâche de lecture d'UE dans ERA pour un interval et un sexe donnée.
+- [platinePilotageGetSUContactTask]( TODO)
+  Tâche de lecture dans Platine Pilotage des informations de contact d'une UE (d'une partition).
+- [platinePilotageGetSUIsToFollowUpTask]( TODO)
+  Tâche de lecture dans Platine Pilotage de l'état a-relancer/eligible/isToFollowUp d'une UE (d'une partition).
 
 
 #### Endpoints

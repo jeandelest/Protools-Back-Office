@@ -25,6 +25,8 @@ public class FlowableVariableNameConstants {
     public static final String VARNAME_ERA_QUERY_END_DATE="era_query_end_date";
     //Platine Contact details
     public static final String VARNAME_PLATINE_CONTACT="platine_contact";
+    //Indicates whether a questioning should be follow up or not
+    public static final String VARNAME_SU_IS_TO_FOLLOWUP="survey_unit_is_to_follow_up";
 
     private FlowableVariableNameConstants(){}
 }

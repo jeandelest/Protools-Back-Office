@@ -1,5 +1,6 @@
 package fr.insee.protools.backend.service.platine.pilotage;
 
+import fr.insee.protools.backend.service.platine.pilotage.dto.PlatinePilotageEligibleDto;
 import fr.insee.protools.backend.service.platine.pilotage.dto.contact.PlatineContactDto;
 import fr.insee.protools.backend.service.platine.pilotage.dto.query.QuestioningWebclientDto;
 import fr.insee.protools.backend.service.platine.pilotage.metadata.MetadataDto;
@@ -58,5 +59,21 @@ public class PlatinePilotageService {
                 .block();
         logJson("getSUMainContact response : ",response,log,Level.TRACE);
         return response;
+    }
+
+    public Boolean isToFollowUp(Long idSU, String platinePartitionId){
+        log.debug("isToFollowUp: platinePartitionId={} - idSu={}",platinePartitionId,idSU);
+        PlatinePilotageEligibleDto response = webClientHelper.getWebClient(KNOWN_API_PLATINE_PILOTAGE)
+                .get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/api/partitionings/{idPartitioning}/survey-units/{idSu}/follow-up")
+                        .queryParam("idSu", idSU)
+                        .build(platinePartitionId,idSU))
+                .retrieve()
+                .bodyToMono(PlatinePilotageEligibleDto.class)
+                .block();
+        Boolean result =  Boolean.valueOf(response.getEligible());
+        logJson("isToFollowUp: result="+result+" -  response : ",response,log,Level.TRACE);
+        return  result;
     }
 }
