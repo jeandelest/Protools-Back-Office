@@ -67,7 +67,6 @@ public class PlatinePilotageService {
                 .get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/api/partitionings/{idPartitioning}/survey-units/{idSu}/follow-up")
-                        .queryParam("idSu", idSU)
                         .build(platinePartitionId,idSU))
                 .retrieve()
                 .bodyToMono(PlatinePilotageEligibleDto.class)
@@ -75,5 +74,18 @@ public class PlatinePilotageService {
         Boolean result =  Boolean.valueOf(response.getEligible());
         logJson("isToFollowUp: result="+result+" -  response : ",response,log,Level.TRACE);
         return  result;
+    }
+
+    public void addFollowUpState(Long idSU, String platinePartitionId){
+        log.debug("isToFollowUp: platinePartitionId={} - idSu={}",platinePartitionId,idSU);
+        String response = webClientHelper.getWebClient(KNOWN_API_PLATINE_PILOTAGE)
+                .post()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/api/partitionings/{idPartitioning}/survey-units/{idSu}/follow-up")
+                        .build(platinePartitionId,idSU))
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+        log.debug("isToFollowUp: platinePartitionId={} - idSu={} - response={}",platinePartitionId,idSU,response);
     }
 }

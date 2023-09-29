@@ -29,6 +29,8 @@ Travail sur les tâches BPMN pour ERA et REM.
   Tâche de lecture dans Platine Pilotage des informations de contact d'une UE (d'une partition).
 - [platinePilotageGetSUIsToFollowUpTask]( TODO)
   Tâche de lecture dans Platine Pilotage de l'état a-relancer/eligible/isToFollowUp d'une UE (d'une partition).
+- [platinePilotageAddSUFollowUpTask]( TODO)
+  Tâche de d'ajout d'un évènement FOLLOW à une UE dans Platine Pilotage.
 
 
 #### Endpoints
