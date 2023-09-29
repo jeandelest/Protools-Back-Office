@@ -48,6 +48,6 @@ public class RemWriteEraSUListTask implements JavaDelegate, DelegateContextVerif
         //STORE the list of REM identifier created
         List<Long> remSuIdList = remMapping.getData().stream().map(SuIdMappingRecord::repositoryId).toList();
         execution.getParent().setVariableLocal(VARNAME_REM_SU_ID_LIST, remSuIdList);
-        log.info("ProcessInstanceId={} - currentPartitionId={}  remSuIdList={}  end",execution.getProcessInstanceId(), currentPartitionId,remSuIdList);
+        log.info("ProcessInstanceId={} - currentPartitionId={} - remSuIdList={}  end",execution.getProcessInstanceId(), currentPartitionId,remSuIdList);
     }
 }
