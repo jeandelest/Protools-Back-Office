@@ -79,6 +79,7 @@ public class SecurityConfig {
                                 //  .requestMatchers(AntPathRequestMatcher.antMatcher(h2ConsolePath + "/**")).permitAll()
                                 //  .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET,"/cars")).permitAll() //REST
                                 .requestMatchers(AntPathRequestMatcher.antMatcher("/starter/healthcheck")).permitAll() //REST
+                                .requestMatchers(AntPathRequestMatcher.antMatcher("/starter/changelog")).permitAll() //REST
                                 .requestMatchers(AntPathRequestMatcher.antMatcher("/starter/healthcheckadmin")).hasRole(administrateurRole)
                                 //We allow admin to access everything
                                 .requestMatchers(AntPathRequestMatcher.antMatcher("/**")).hasRole(administrateurRole)

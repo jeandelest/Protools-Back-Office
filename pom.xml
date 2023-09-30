@@ -121,6 +121,16 @@
     </dependencies>
 
     <build>
+        <!-- Add the changelog.md file from the project root to the built jar ressources -->
+        <resources>
+            <resource>
+                <directory>${basedir}</directory>
+                <includes>
+                    <include>changelog.md</include>
+                </includes>
+            </resource>
+        </resources>
+
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
