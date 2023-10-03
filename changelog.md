@@ -31,7 +31,8 @@ Travail sur les tâches BPMN pour ERA et REM.
   Tâche de lecture dans Platine Pilotage de l'état a-relancer/eligible/isToFollowUp d'une UE (d'une partition).
 - [platinePilotageAddSUFollowUpTask]( TODO)
   Tâche de d'ajout d'un évènement FOLLOW à une UE dans Platine Pilotage.
-
+- [flowcontrolIsSUToFollowUp]( TODO)
+  Prépare aux relances
 
 #### Endpoints
 -  /api_configuration qui renverra la configuration de chaque API orchestrée par protools. Cela permet donc de savoir
