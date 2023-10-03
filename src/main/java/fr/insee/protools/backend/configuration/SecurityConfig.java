@@ -93,6 +93,11 @@ public class SecurityConfig {
     @Bean
     @ConditionalOnProperty(name = STARTER_SECURITY_ENABLED, havingValue = "false", matchIfMissing = true)
     public SecurityFilterChain filterChain_noSecurity(HttpSecurity http) throws Exception {
+        //Allow frames to be able tu use the H2 web console
+        http.headers(headers -> headers
+                .frameOptions(frameOptions -> frameOptions.sameOrigin()
+                )
+        );
 
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll())
