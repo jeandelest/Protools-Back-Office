@@ -199,6 +199,10 @@ public class ContextServiceImpl implements ContextService {
         String start = partitionNode.get(CTX_PARTITION_DATE_DEBUT_COLLECTE).asText();
         String end = partitionNode.get(CTX_PARTITION_DATE_DEBUT_COLLECTE).asText();
 
+        if(start==null || end==null){
+            throw new BadContextIncorrectBPMNError(String.format("%s and %s must be defined on every partition", CTX_PARTITION_DATE_DEBUT_COLLECTE, CTX_PARTITION_DATE_FIN_COLLECTE));
+        }
+
         try {
             LocalDateTime collectionStart = LocalDateTime.parse(start, DateTimeFormatter.ISO_DATE_TIME);
             LocalDateTime collectionEnd = LocalDateTime.parse(end, DateTimeFormatter.ISO_DATE_TIME);
@@ -230,6 +234,9 @@ public class ContextServiceImpl implements ContextService {
 
 
     public Set<String> isContextOKForBPMN(String processDefinitionKey, JsonNode protoolsContextRootNode) {
+        //At least, the campaign ID should be defined so we can write it on process variables to be used un groovy scripts
+        Set<String> errors=DelegateContextVerifier.computeMissingChildrenMessages(Set.of(CTX_CAMPAGNE_ID),protoolsContextRootNode,getClass());
+
         ProcessDefinitionQuery processDefinitionQuery = repositoryService.createProcessDefinitionQuery();
         processDefinitionQuery.processDefinitionKey(processDefinitionKey);
         processDefinitionQuery.latestVersion();
@@ -247,7 +254,6 @@ public class ContextServiceImpl implements ContextService {
             throw new FlowableObjectNotFoundException("Cannot find process Model with key " + processDefinitionKey, ProcessDefinition.class);
         }
 
-        Set<String> errors = new HashSet<>();
         processModel.getFlowElements().stream()
                 .filter(flowElement -> (flowElement instanceof ServiceTask || flowElement instanceof SubProcess))
                 .forEach(flowElement -> errors.addAll(analyseProcess(flowElement,protoolsContextRootNode)));
