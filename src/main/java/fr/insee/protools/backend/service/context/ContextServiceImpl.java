@@ -122,6 +122,10 @@ public class ContextServiceImpl implements ContextService {
         //If value does not exist in cache yet : Retrieve it and update cache
         if (result == null) {
             String contextStr = runtimeService.getVariable(processInstanceId, VARNAME_CONTEXT, String.class);
+            if(contextStr == null || contextStr.isBlank()){
+                throw new BadContextIncorrectBPMNError(String.format("Context retrieved from engine is null or empty processInstanceId=[%s] ", processInstanceId));
+            }
+
             try {
                 result = defaultReader.readTree(contextStr);
             } catch (JsonProcessingException e) {
