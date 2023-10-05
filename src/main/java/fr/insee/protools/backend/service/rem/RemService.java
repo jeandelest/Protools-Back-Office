@@ -75,10 +75,20 @@ public class RemService {
         }
     }
 
+    /**
+     * @param partitionId
+     * @param values
+     * @return return null if values is null ; else return the result of the api call
+     */
     public SuIdMappingJson writeERASUList(long partitionId, List<CensusJsonDto> values) {
-        log.debug("writeERASUList - partitionId={}  - values.size={}", partitionId,values==null?0:values.size() );
+        log.debug("writeERASUList - partitionId={}  - values.size={}", partitionId, values == null ? 0 : values.size());
+        if (values == null) {
+            log.debug("writeERASUList - partitionId={}  - values==null ==> Nothing to do");
+            return null;
+        }
+        log.debug("writeERASUList - partitionId={}  - values.size={}", partitionId, values.size());
         try {
-            var response =  webClientHelper.getWebClient(KNOWN_API_REM)
+            var response = webClientHelper.getWebClient(KNOWN_API_REM)
                     .post()
                     .uri(uriBuilder -> uriBuilder
                             .path("/survey-units/households/partitions/{partitionId}/census-upload")
@@ -89,14 +99,13 @@ public class RemService {
                     .block();
             log.trace("writeERASUList - partitionId={} - response={} ", partitionId, response);
             return response;
-        }
-        catch (WebClient4xxBPMNError e){
-            if(e.getHttpStatusCodeError().equals(HttpStatus.NOT_FOUND)){
-                String msg=
-                        "Error 404/NOT_FOUND during REM post census-upload partitionId="+partitionId
-                                + " - msg="+e.getMessage();
+        } catch (WebClient4xxBPMNError e) {
+            if (e.getHttpStatusCodeError().equals(HttpStatus.NOT_FOUND)) {
+                String msg =
+                        "Error 404/NOT_FOUND during REM post census-upload partitionId=" + partitionId
+                                + " (check that the partition exists in REM) - msg=" + e.getMessage();
                 log.error(msg);
-                throw new WebClient4xxBPMNError(msg,e.getHttpStatusCodeError());
+                throw new WebClient4xxBPMNError(msg, e.getHttpStatusCodeError());
             }
             //Currently no remediation so just rethrow
             throw e;
