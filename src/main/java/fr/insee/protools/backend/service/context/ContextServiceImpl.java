@@ -129,7 +129,7 @@ public class ContextServiceImpl implements ContextService {
             try {
                 result = defaultReader.readTree(contextStr);
             } catch (JsonProcessingException e) {
-                throw new BadContextIncorrectBPMNError(String.format("Context retrieved from engine could not be parsed for processInstanceId=[%s] - Exception : ", processInstanceId, e.getMessage()));
+                throw new BadContextIncorrectBPMNError(String.format("Context retrieved from engine could not be parsed for processInstanceId=[%s] - Exception : %s", processInstanceId, e.getMessage()));
             }
             contextCache.put(processInstanceId, result);
         }
@@ -154,6 +154,8 @@ public class ContextServiceImpl implements ContextService {
             if (!contextErrors.isEmpty()) {
                 throw new BadContextIncorrectBPMNError(contextErrors.toString());
             }
+            log.info("idCampaign="+rootContext.path(CTX_CAMPAGNE_ID).textValue());
+
             //Variables to store for this process
             Map<String, Object> variables = new HashMap<>();
             //Store the raw json as string
