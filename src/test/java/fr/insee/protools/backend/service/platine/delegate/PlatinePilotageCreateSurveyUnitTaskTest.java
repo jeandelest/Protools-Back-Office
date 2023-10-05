@@ -7,6 +7,7 @@ import fr.insee.protools.backend.service.context.ContextConstants;
 import fr.insee.protools.backend.service.context.exception.BadContextIncorrectBPMNError;
 import fr.insee.protools.backend.service.exception.IncorrectSUBPMNError;
 import fr.insee.protools.backend.service.platine.pilotage.PlatinePilotageService;
+import fr.insee.protools.backend.service.platine.pilotage.dto.PlatinePilotageGenderType;
 import fr.insee.protools.backend.service.platine.pilotage.dto.query.QuestioningWebclientDto;
 import fr.insee.protools.backend.service.rem.dto.PersonDto;
 import fr.insee.protools.backend.service.rem.dto.REMSurveyUnitDto;
@@ -125,21 +126,17 @@ class PlatinePilotageCreateSurveyUnitTaskTest extends TestWithContext {
     @Test
     @DisplayName("convertREMGenderToPlatineCivility should return Female when param '2' ; 'Male' when param is '1' and Undefined in other cases")
     void convertREMGenderToPlatineCivility_should_ReturnCorrectValues() {
-        String monsieur="Male";
-        String madame="Female";
-        String undef="Undefined";
-
-        assertThat(PlatinePilotageCreateSurveyUnitTask.convertREMGenderToPlatineCivility("2")).isEqualTo(madame);
-        assertThat(PlatinePilotageCreateSurveyUnitTask.convertREMGenderToPlatineCivility("1")).isEqualTo(monsieur);
-        assertThat(PlatinePilotageCreateSurveyUnitTask.convertREMGenderToPlatineCivility("22")).isEqualTo(undef);
-        assertThat(PlatinePilotageCreateSurveyUnitTask.convertREMGenderToPlatineCivility(" 2")).isEqualTo(undef);
-        assertThat(PlatinePilotageCreateSurveyUnitTask.convertREMGenderToPlatineCivility(" 2 ")).isEqualTo(undef);
-        assertThat(PlatinePilotageCreateSurveyUnitTask.convertREMGenderToPlatineCivility("3")).isEqualTo(undef);
-        assertThat(PlatinePilotageCreateSurveyUnitTask.convertREMGenderToPlatineCivility("23JZKEOSJF")).isEqualTo(undef);
-        assertThat(PlatinePilotageCreateSurveyUnitTask.convertREMGenderToPlatineCivility("0")).isEqualTo(undef);
-        assertThat(PlatinePilotageCreateSurveyUnitTask.convertREMGenderToPlatineCivility("-1")).isEqualTo(undef);
-        assertThat(PlatinePilotageCreateSurveyUnitTask.convertREMGenderToPlatineCivility("-2")).isEqualTo(undef);
-        assertThat(PlatinePilotageCreateSurveyUnitTask.convertREMGenderToPlatineCivility("& ukdslw,kvlk,l")).isEqualTo(undef);
+        assertThat(PlatinePilotageCreateSurveyUnitTask.convertREMGenderToPlatineCivility("2")).isEqualTo(PlatinePilotageGenderType.Female);
+        assertThat(PlatinePilotageCreateSurveyUnitTask.convertREMGenderToPlatineCivility("1")).isEqualTo(PlatinePilotageGenderType.Male);
+        assertThat(PlatinePilotageCreateSurveyUnitTask.convertREMGenderToPlatineCivility("22")).isEqualTo(PlatinePilotageGenderType.Undefined);
+        assertThat(PlatinePilotageCreateSurveyUnitTask.convertREMGenderToPlatineCivility(" 2")).isEqualTo(PlatinePilotageGenderType.Undefined);
+        assertThat(PlatinePilotageCreateSurveyUnitTask.convertREMGenderToPlatineCivility(" 2 ")).isEqualTo(PlatinePilotageGenderType.Undefined);
+        assertThat(PlatinePilotageCreateSurveyUnitTask.convertREMGenderToPlatineCivility("3")).isEqualTo(PlatinePilotageGenderType.Undefined);
+        assertThat(PlatinePilotageCreateSurveyUnitTask.convertREMGenderToPlatineCivility("23JZKEOSJF")).isEqualTo(PlatinePilotageGenderType.Undefined);
+        assertThat(PlatinePilotageCreateSurveyUnitTask.convertREMGenderToPlatineCivility("0")).isEqualTo(PlatinePilotageGenderType.Undefined);
+        assertThat(PlatinePilotageCreateSurveyUnitTask.convertREMGenderToPlatineCivility("-1")).isEqualTo(PlatinePilotageGenderType.Undefined);
+        assertThat(PlatinePilotageCreateSurveyUnitTask.convertREMGenderToPlatineCivility("-2")).isEqualTo(PlatinePilotageGenderType.Undefined);
+        assertThat(PlatinePilotageCreateSurveyUnitTask.convertREMGenderToPlatineCivility("& ukdslw,kvlk,l")).isEqualTo(PlatinePilotageGenderType.Undefined);
     }
 
     @Test
