@@ -42,7 +42,9 @@ quelle plateforme est appelée.
 #### Autres
 - Vérification que le fichier de contexte satisfait bien toutes les tâches du BPMN associé au processus.
 - Possibilité d'utiliser la date de début et de fin de collecte d'une partition dans les expressions BPMN via PartitionCtxResolver
- 
+- Ajout des périodes X01 à X99 à l'énumération pour pilotage 
+
+- 
 ### Changed
 #### Variables du processus
 - "sugoi-id-contact" devient "directory_access-id-contact" (peut casser les BPMN la référençant en dur).
