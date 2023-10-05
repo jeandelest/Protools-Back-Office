@@ -27,11 +27,11 @@ public class RemGetSUTask implements JavaDelegate, DelegateContextVerifier {
 
         //Get the UE
         Long suId = FlowableVariableUtils.getVariableOrThrow(execution,VARNAME_REM_SURVEY_UNIT_IDENTIFIER, Long.class);
-        log.info("ProcessInstanceId={} - id={} begin",execution.getProcessInstanceId(), suId);
+        log.info("ProcessInstanceId={} - suId={}",execution.getProcessInstanceId(), suId);
         //TODO : ne pas créer le DTO ici : Ca ne sert à rien...
         REMSurveyUnitDto remSurveyUnitDto = remService.getSurveyUnit(suId);
         execution.setVariableLocal(VARNAME_REM_SURVEY_UNIT,objectMapper.valueToTree(remSurveyUnitDto));
-        log.trace("Su id={} - content={}", suId, remSurveyUnitDto);
-        log.debug("ProcessInstanceId={} - id={} end",execution.getProcessInstanceId(), suId);
+        log.trace("suId={} - content={}", suId, remSurveyUnitDto);
+        log.debug("ProcessInstanceId={} - suId={} end",execution.getProcessInstanceId(), suId);
     }
 }
