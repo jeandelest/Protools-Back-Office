@@ -47,6 +47,7 @@ public class WebClientHelper {
 
         private final EnumMap<ApiConfigProperties.KNOWN_API, WebClient> initializedClients = new EnumMap<>(ApiConfigProperties.KNOWN_API.class);
         private static final int DEFAULT_FILE_BUFFER_SIZE = 20 * 1024*1024;
+        private static final int DEFAULT_API_BUFFER_SIZE =  20 * 1024*1024;
 
         @Autowired private KeycloakService keycloakService;
         @Autowired private ApiConfigProperties apiConfigProperties;
@@ -89,6 +90,8 @@ public class WebClientHelper {
                                                 return Mono.error(new WebClientRequestExceptionBPMNError(ex));
                                         })
                         )
+                        //To allow up to 20Mb
+                        .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(DEFAULT_API_BUFFER_SIZE))
                         .clientConnector(
                                 new ReactorClientHttpConnector(
                                         HttpClient.create()
