@@ -6,6 +6,7 @@ import fr.insee.protools.backend.service.context.ContextService;
 import fr.insee.protools.backend.service.context.exception.BadContextIncorrectBPMNError;
 import fr.insee.protools.backend.service.platine.pilotage.PlatinePilotageService;
 import fr.insee.protools.backend.service.platine.pilotage.metadata.MetadataDto;
+import fr.insee.protools.backend.service.utils.TestWithContext;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.test.FlowableTest;
 import org.junit.jupiter.api.Test;
@@ -26,29 +27,18 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @FlowableTest
-class PlatinePilotageCreateContextTaskTest {
+class PlatinePilotageCreateContextTaskTest extends TestWithContext {
     final static String ressourceFolder = ClassUtils.convertClassNameToResourcePath(PlatineQuestionnaireCreateContextTaskTest.class.getPackageName());
     final static String platine_context_json = ressourceFolder+"/protools-contexte-platine-individu.json";
     final static String platine_context_incorrect_json = ressourceFolder+"/protools-contexte-platine-incorrect.json";
 
 
     @Mock PlatinePilotageService platinePilotageService;
-    @Spy ContextService protoolsContext;
-
-    @InjectMocks
-    PlatinePilotageCreateContextTask platinePilotageTask;
-
-    String dumyId="ID1";
-
-    private void initContexteMock(String contexteToLoad){
-        JsonNode contextRootNode = ProtoolsTestUtils.asJsonNode(contexteToLoad);
-        when(protoolsContext.getContextByProcessInstance(anyString())).thenReturn(contextRootNode);
-    }
+    @InjectMocks PlatinePilotageCreateContextTask platinePilotageTask;
 
     @Test
     void execute_should_throw_BadContextIncorrectException_when_noContext() {
-        DelegateExecution execution = mock(DelegateExecution.class);
-        when(execution.getProcessInstanceId()).thenReturn(dumyId);
+        DelegateExecution execution = createMockedExecution();
 
         //Execute the unit under test
         assertThrows(BadContextIncorrectBPMNError.class,() -> platinePilotageTask.execute(execution));
@@ -56,9 +46,8 @@ class PlatinePilotageCreateContextTaskTest {
 
     @Test
     void execute_should_work_when_contextOK() {
-        DelegateExecution execution = mock(DelegateExecution.class);
-        when(execution.getProcessInstanceId()).thenReturn(dumyId);
-        initContexteMock(platine_context_json);
+        DelegateExecution execution = createMockedExecution();
+        initContexteMockWithFile(platine_context_json);
         String partitionId="1";
         String campaignId="DEM2022X00";
 

@@ -2,6 +2,8 @@ package fr.insee.protools.backend.exception;
 
 import org.flowable.engine.delegate.BpmnError;
 
+
+@SuppressWarnings("squid:S110")
 public class ProtoolsBpmnError extends BpmnError {
     public ProtoolsBpmnError(String errorCode) {
         super(errorCode);

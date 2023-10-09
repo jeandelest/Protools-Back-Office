@@ -63,7 +63,6 @@ class RemGetPartitionListOfSuIdTaskTest {
         DelegateExecution execution = mock(DelegateExecution.class);
         lenient().when(execution.getProcessInstanceId()).thenReturn(dumyId);
         //No context used for this taks
-        // initContexteMockFromString(json1Partition);
 
         //Execute the unit under test
         FlowableIllegalArgumentException exception = assertThrows(FlowableIllegalArgumentException.class, () -> remGetPartitionListOfSuIdTask.execute(execution));
@@ -79,7 +78,6 @@ class RemGetPartitionListOfSuIdTaskTest {
         when(execution.getProcessInstanceId()).thenReturn(dumyId);
 
         //No context used by this task
-        // initContexteMockFromString(contexte);
         when(execution.getVariable(VARNAME_CURRENT_PARTITION_ID, Long.class)).thenReturn(currentPartitionId);
         when(execution.getParent()).thenReturn(executionParent);
 

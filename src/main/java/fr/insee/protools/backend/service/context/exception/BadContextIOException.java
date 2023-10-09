@@ -4,7 +4,9 @@ import static fr.insee.protools.backend.service.BPMNErrorCode.BPMNERROR_CODE_DEF
 
 /**
  * Runtime exception indicating an IOException while reading context
+ * disable warning on inheritance too depp
  */
+@SuppressWarnings("squid:S110")
 public class BadContextIOException extends BadContexteBPMNError {
 
     public BadContextIOException(String message, Throwable cause) {

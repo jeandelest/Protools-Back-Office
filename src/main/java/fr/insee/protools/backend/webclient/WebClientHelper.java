@@ -281,6 +281,7 @@ public class WebClientHelper {
          * @param exTypes
          * @return
          */
+        @SuppressWarnings("java:S3776")
         protected static boolean containsCauseOfType(Exception ex, @Nullable List<Class<?>> exTypes) {
                 if (exTypes == null || exTypes.isEmpty()) {
                         return false;

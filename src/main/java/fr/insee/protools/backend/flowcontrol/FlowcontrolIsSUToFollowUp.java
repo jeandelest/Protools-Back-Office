@@ -29,7 +29,6 @@ public class FlowcontrolIsSUToFollowUp implements JavaDelegate, DelegateContextV
         checkContextOrThrow(log, execution.getProcessInstanceId(), contextRootNode);
 
         Long currentPartitionId = FlowableVariableUtils.getVariableOrThrow(execution, VARNAME_CURRENT_PARTITION_ID, Long.class);
-
         //        checkContextOrThrow(log,execution.getProcessInstanceId(), contextRootNode);
 
         Triple<Instant, Long, Long> suItem = FlowableVariableUtils.getVariableOrThrow(execution, VARNAME_SU_CREATION_ITEM, Triple.class);
@@ -37,7 +36,7 @@ public class FlowcontrolIsSUToFollowUp implements JavaDelegate, DelegateContextV
 
         Instant openingInstant = suItem.getLeft();
         //TODO : à enlever ; mettre de la conf (période ou date fixe) sur la partition et récupérer la conf de la partition
-        Instant dateRelance = openingInstant.plusSeconds(3 * 60);
+        Instant dateRelance = openingInstant.plusSeconds(3 * 60l);
 
         if (openingInstant != null && dateRelance.isBefore(Instant.now())) {
             isToFollowUp = true;
@@ -49,10 +48,4 @@ public class FlowcontrolIsSUToFollowUp implements JavaDelegate, DelegateContextV
         execution.getParent().setVariableLocal(VARNAME_CURRENT_PARTITION_ID, suItem.getMiddle());
         log.info("ProcessInstanceId={} - suItem={}  - isToFollowUp={} end", execution.getProcessInstanceId(), suItem, isToFollowUp);
     }
-//
-//    List<Integer> getRelancePeriodForPartitions(JsonNode contextRootNode){
-//        //need to compute mins/maxs of partitions
-//        var partitionIterator =contextRootNode.path(CTX_PARTITIONS).elements();
-//        List<Integer> result = new ArrayList<>()
-//    }
 }
