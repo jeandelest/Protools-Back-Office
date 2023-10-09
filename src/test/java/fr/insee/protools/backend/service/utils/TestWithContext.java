@@ -13,8 +13,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public abstract class TestWithContext {
@@ -25,22 +24,20 @@ public abstract class TestWithContext {
 
     protected JsonNode initContexteMockWithFile(String contexteToLoad){
         JsonNode contextRootNode = ProtoolsTestUtils.asJsonNode(contexteToLoad);
-        when(protoolsContext.getContextByProcessInstance(anyString())).thenReturn(contextRootNode);
+        doReturn(contextRootNode).when(protoolsContext).getContextByProcessInstance(anyString());
         return contextRootNode;
     }
 
     protected JsonNode initContexteMockWithString(String contexteAsString){
         try{
-            JsonNode contextRootNode = new ObjectMapper().readTree(contexteAsString);
-            when(protoolsContext.getContextByProcessInstance(anyString())).thenReturn(contextRootNode);
-            return  contextRootNode;
+            return ProtoolsTestUtils.initContexteMockFromString(protoolsContext,contexteAsString);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
     }
     public DelegateExecution createMockedExecution(){
         DelegateExecution execution = mock(DelegateExecution.class);
-        when(execution.getProcessInstanceId()).thenReturn(dumyId);
+        doReturn(dumyId).when(execution).getProcessInstanceId();
         return execution;
     }
 }
