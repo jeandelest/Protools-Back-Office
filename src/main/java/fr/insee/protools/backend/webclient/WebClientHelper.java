@@ -46,8 +46,8 @@ import java.util.*;
 public class WebClientHelper {
 
         private final EnumMap<ApiConfigProperties.KNOWN_API, WebClient> initializedClients = new EnumMap<>(ApiConfigProperties.KNOWN_API.class);
-        private static final int DEFAULT_FILE_BUFFER_SIZE = 20 * 1024*1024;
-        private static final int DEFAULT_API_BUFFER_SIZE =  20 * 1024*1024;
+        private static final int DEFAULT_FILE_BUFFER_SIZE = 100 * 1024*1024;
+        private static final int DEFAULT_API_BUFFER_SIZE =  100 * 1024*1024;
 
         @Autowired private KeycloakService keycloakService;
         @Autowired private ApiConfigProperties apiConfigProperties;
