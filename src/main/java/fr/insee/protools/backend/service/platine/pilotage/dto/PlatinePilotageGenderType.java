@@ -14,25 +14,4 @@ public enum PlatinePilotageGenderType {
         this.value = value;
         this.label = label;
     }
-
-    public static PlatinePilotageGenderType fromValue(int value) {
-        return switch (value) {
-            case 1 -> Female;
-            case 2 -> Male;
-            default -> Undefined;
-        };
-    }
-
-    public static PlatinePilotageGenderType fromLabel(String label) {
-        return switch (label) {
-            case "Male" -> Male;
-            case "Female" -> Female;
-            default -> Undefined;
-        };
-    }
-
-    public static String getAllValidLabels() {
-        return Male.label + "," + Female.label + "," + Undefined.label  ;
-    }
-
 }

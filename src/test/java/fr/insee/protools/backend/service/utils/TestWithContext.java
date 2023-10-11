@@ -1,7 +1,6 @@
 package fr.insee.protools.backend.service.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.insee.protools.backend.ProtoolsTestUtils;
 import fr.insee.protools.backend.service.context.ContextService;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -13,7 +12,8 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
 public abstract class TestWithContext {

@@ -129,6 +129,7 @@ public class QuestionnaireHelper {
         return questionnaireModelIds;
     }
 
+    @SuppressWarnings("java:S3776") //disable the warning about cognitive complexity as it is long but simple
     public static Set<String> getContextErrors(JsonNode contextRootNode){
         if(contextRootNode==null){
             return Set.of(String.format("Class=%s : Context is missing ", QuestionnaireHelper.class.getSimpleName()));

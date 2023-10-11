@@ -163,6 +163,7 @@ public class SabianePilotageCreateContextTask implements JavaDelegate, DelegateC
     }
 
     @Override
+    @SuppressWarnings("java:S3776") //disable the warning about cognitive complexity as it is long but simple
     public Set<String> getContextErrors(JsonNode contextRootNode) {
         if(contextRootNode==null){
             return Set.of("Context is missing");

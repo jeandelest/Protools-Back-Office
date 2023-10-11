@@ -13,12 +13,10 @@ import org.mockito.Mock;
 import org.springframework.util.ClassUtils;
 
 import static fr.insee.protools.backend.service.FlowableVariableNameConstants.*;
-import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VARNAME_SU_IS_TO_FOLLOWUP;
 import static fr.insee.protools.backend.service.context.ContextConstants.CTX_CAMPAGNE_ID;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.times;
 
 class PlatinePilotageGetSUIsToFollowUpTaskTest extends TestWithContext {
     final static String ressourceFolder = ClassUtils.convertClassNameToResourcePath(PlatinePilotageAddSUFollowUpTaskTest.class.getPackageName());

@@ -19,7 +19,6 @@ import static fr.insee.protools.backend.service.FlowableVariableNameConstants.*;
 import static fr.insee.protools.backend.service.context.ContextConstants.CTX_CAMPAGNE_ID;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
