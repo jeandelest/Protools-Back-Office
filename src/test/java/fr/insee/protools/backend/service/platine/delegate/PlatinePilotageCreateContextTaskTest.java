@@ -25,7 +25,6 @@ import static org.mockito.Mockito.*;
 class PlatinePilotageCreateContextTaskTest extends TestWithContext {
     final static String ressourceFolder = ClassUtils.convertClassNameToResourcePath(PlatineQuestionnaireCreateContextTaskTest.class.getPackageName());
     final static String platine_context_json = ressourceFolder+"/protools-contexte-platine-individu.json";
-    final static String platine_context_incorrect_json = ressourceFolder+"/protools-contexte-platine-incorrect.json";
 
 
     @Mock PlatinePilotageService platinePilotageService;

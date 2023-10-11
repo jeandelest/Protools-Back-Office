@@ -108,23 +108,12 @@ public class WebClientHelper {
                                 String json = new ObjectMapper().writeValueAsString(dto);
                                 String logLine = msg +" - " + json;
                                 switch (level) {
-                                        case TRACE:
-                                                logger.trace(logLine);
-                                                break;
-                                        case DEBUG:
-                                                logger.debug(logLine);
-                                                break;
-                                        case INFO:
-                                                logger.info(logLine);
-                                                break;
-                                        case WARN:
-                                                logger.warn(logLine);
-                                                break;
-                                        case ERROR:
-                                                logger.error(logLine);
-                                                break;
-                                        default:
-                                                logger.trace(logLine);
+                                        case TRACE -> logger.trace(logLine);
+                                        case DEBUG -> logger.debug(logLine);
+                                        case INFO -> logger.info(logLine);
+                                        case WARN -> logger.warn(logLine);
+                                        case ERROR -> logger.error(logLine);
+                                        default -> logger.trace(logLine);
                                 }
                         } catch (JsonProcessingException e) {
                                 log.error("Could not parse json");
@@ -274,12 +263,11 @@ public class WebClientHelper {
 
         /**
          * special version of NestedRuntimeException.contains accepting a list of types :
-         *
          * Check whether the Ex exception contains an exception of the given list of types:
          * either it is of the given class itself or it contains a nested cause of one of these types.
-         * @param ex
-         * @param exTypes
-         * @return
+         * @param ex : The exception
+         * @param exTypes : The searched types
+         * @return true if a matching exception type has been found
          */
         @SuppressWarnings("java:S3776")
         protected static boolean containsCauseOfType(Exception ex, @Nullable List<Class<?>> exTypes) {

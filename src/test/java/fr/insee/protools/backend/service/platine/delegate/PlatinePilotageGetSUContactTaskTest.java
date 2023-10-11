@@ -56,7 +56,7 @@ class PlatinePilotageGetSUContactTaskTest extends TestWithContext {
         DelegateExecution execution = createMockedExecution();
         ExtractContactIdentifierFromREMSUTask extractTask = new ExtractContactIdentifierFromREMSUTask();
         //set the 2nd variable correctly
-        lenient().doReturn(999l).when(execution).getVariable(VARNAME_CURRENT_PARTITION_ID, Long.class);
+        lenient().doReturn(999L).when(execution).getVariable(VARNAME_CURRENT_PARTITION_ID, Long.class);
 
 
         //No variable set ==> Error
@@ -74,7 +74,7 @@ class PlatinePilotageGetSUContactTaskTest extends TestWithContext {
         DelegateExecution execution = createMockedExecution();
         ExtractContactIdentifierFromREMSUTask extractTask = new ExtractContactIdentifierFromREMSUTask();
         //set the 2nd variable correctly
-        lenient().doReturn(12l).when(execution).getVariable(VARNAME_REM_SURVEY_UNIT_IDENTIFIER, Long.class);
+        lenient().doReturn(12L).when(execution).getVariable(VARNAME_REM_SURVEY_UNIT_IDENTIFIER, Long.class);
 
 
         //No variable set ==> Error
@@ -112,8 +112,8 @@ class PlatinePilotageGetSUContactTaskTest extends TestWithContext {
         DelegateExecution executionParent = mock(DelegateExecution.class);
         doReturn(executionParent).when(execution).getParent();
         //Process variables
-        Long suId = 20231110l;
-        Long currentPartitionID = 120883l;
+        Long suId = 20231110L;
+        Long currentPartitionID = 120883L;
         lenient().doReturn(currentPartitionID).when(execution).getVariable(VARNAME_CURRENT_PARTITION_ID, Long.class);
         lenient().doReturn(suId).when(execution).getVariable(VARNAME_REM_SURVEY_UNIT_IDENTIFIER, Long.class);
 

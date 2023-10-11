@@ -46,7 +46,7 @@ public class StarterController {
         public ResponseEntity<String> healthcheckadmin(){
                 return ResponseEntity.ok(
                     """
-                         OK 
+                         OK
                          
                          Version %s
                          Administrateur %s
