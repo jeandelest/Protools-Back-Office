@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * All the delegate referenced in BPMN should implement this interface so we can make BPMN introspection to validate
+ * All the delegate referenced in BPMN should implement this interface, so we can make BPMN introspection to validate
  * that the provided context contains all the required information for every task of the BPMN
  */
 public interface DelegateContextVerifier {
@@ -30,6 +30,9 @@ public interface DelegateContextVerifier {
                 ,enumValues);
     }
     static Set<String> computeMissingChildrenMessages(Set<String> requiredChildren, JsonNode parentNode, Class<?> classUsingThisElement){
+        if(parentNode == null){
+            return new HashSet<>();
+        }
         Set<String> missingNodes = new HashSet<>();
         for (String child: requiredChildren  ) {
             if(parentNode.get(child) == null){
