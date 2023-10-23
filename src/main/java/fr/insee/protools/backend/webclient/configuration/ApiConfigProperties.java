@@ -14,7 +14,8 @@ public class ApiConfigProperties {
                 KNOWN_API_ERA,
                 KNOWN_API_SABIANE_PILOTAGE,
                 KNOWN_API_SABIANE_QUESTIONNAIRE,
-                KNOWN_API_REM
+                KNOWN_API_REM,
+                KNOWN_API_MESHUGGAH
         }
 
         public APIProperties getAPIProperties(KNOWN_API api){
@@ -25,6 +26,8 @@ public class ApiConfigProperties {
                         case KNOWN_API_SABIANE_PILOTAGE -> sabianePilotageApiProperties();
                         case KNOWN_API_SABIANE_QUESTIONNAIRE -> sabianeQuestionnaireApiProperties();
                         case KNOWN_API_REM -> remApiProperties();
+                        case KNOWN_API_MESHUGGAH -> meshuggahApiProperties();
+
                 };
         }
 
@@ -62,6 +65,12 @@ public class ApiConfigProperties {
         @Bean("remApiProperties")
         @ConfigurationProperties("fr.insee.protools.api.rem")
         public APIProperties remApiProperties() {
+                return new APIProperties();
+        }
+
+        @Bean("meshuggahApiProperties")
+        @ConfigurationProperties("fr.insee.protools.api.meshuggah")
+        public APIProperties meshuggahApiProperties() {
                 return new APIProperties();
         }
 

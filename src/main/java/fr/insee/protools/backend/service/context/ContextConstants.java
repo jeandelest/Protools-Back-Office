@@ -51,6 +51,16 @@ public final class ContextConstants {
     public static final String CTX_META_ASSISTANCE_NIVO2_NOM_VOIE = "assistanceNiveau2NomVoie";
     public static final String CTX_META_ASSISTANCE_NIVO2_COMMUNE = "assistanceNiveau2Commune";
     public static final String CTX_META_ASSISTANCE_NIVO2_CODE_POSTAL = "assistanceNiveau2CodePostal";
+    public static final String CTX_META_MAIL_BOITE_RETOUR = "mailBoiteRetour";
+    public static final String CTX_META_URL_ENQUETE = "urlEnquete";
+    public static final String CTX_META_THEME_MIEUX_CONNAITRE_MAIL = "themeMieuxConnaitreMail";
+    public static final String CTX_META_SRVC_COL_SIGN_FONCTION = "serviceCollecteurSignataireFonction";
+    public static final String CTX_META_SRVC_COL_SIGN_NOM = "serviceCollecteurSignataireNom";
+    public static final String CTX_META_PRESTATAIRE = "prestataire";
+    public static final String CTX_META_MAIL_RESP_OPERATIONNEL = "mailResponsableOperationnel";
+    public static final String CTX_META_LOGO_PRESTATAIRE = "logoPrestataire";
+
+
     //Pour sabiane
     public static final String CTX_META_REPERAGE = "reperage";
     public static final String CTX_META_ESSAIS_CONTACT = "essaisContact";
@@ -75,6 +85,23 @@ public final class ContextConstants {
     public static final String CTX_PARTITION_QUIREPOND1 = "quiRepond1";
     public static final String CTX_PARTITION_QUIREPOND2 = "quiRepond2";
     public static final String CTX_PARTITION_QUIREPOND3 = "quiRepond3";
+    // Partitions Communications
+    public static final String CTX_PARTITION_COMMUNICATIONS = "communications";
+    public static final String CTX_PARTITION_COMMUNICATION_MOYEN = "moyenCommunication";
+    public static final String CTX_PARTITION_COMMUNICATION_PHASE = "phaseCommunication";
+    public static final String CTX_PARTITION_COMMUNICATION_AVEC_QUESTIONNAIRE_PAPIER = "avecQuestionnairePapier";
+    public static final String CTX_PARTITION_COMMUNICATION_PROTOCOLE = "protocole";
+    public static final String CTX_PARTITION_COMMUNICATION_MODE = "mode";
+    public static final String CTX_PARTITION_COMMUNICATION_TYPE_MODELE = "typeModele";
+    public static final String CTX_PARTITION_COMMUNICATION_OBJET_MAIL = "objetMail";
+    public static final String CTX_PARTITION_COMMUNICATION_RELANCE_LIBRE_PARAGRAPHE1 = "relanceLibreMailParagraphe1";
+    public static final String CTX_PARTITION_COMMUNICATION_RELANCE_LIBRE_PARAGRAPHE2 = "relanceLibreMailParagraphe2";
+    public static final String CTX_PARTITION_COMMUNICATION_RELANCE_LIBRE_PARAGRAPHE3 = "relanceLibreMailParagraphe3";
+    public static final String CTX_PARTITION_COMMUNICATION_RELANCE_LIBRE_PARAGRAPHE4 = "relanceLibreMailParagraphe4";
+    public static final String CTX_PARTITION_COMMUNICATION_COMPLEMENT_CONNEXION = "complementConnexion";
+    public static final String CTX_PARTITION_COMMUNICATION_ECHEANCES = "echeances";
+
+
 
     //Partitions, specific sabiane
     public static final String CTX_PARTITION_SABIANE_DATE_DEBUT_VISIBILITE_GESTIONNAIRE = "dateDebutVisibiliteGestionnaire";
