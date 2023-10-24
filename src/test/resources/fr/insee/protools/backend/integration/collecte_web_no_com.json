@@ -40,7 +40,15 @@
     "assistanceNiveau2NumeroVoie": "1",
     "assistanceNiveau2NomVoie": "rue de la Libération",
     "assistanceNiveau2Commune": "Besançon",
-    "assistanceNiveau2CodePostal": "25000"
+    "assistanceNiveau2CodePostal": "25000",
+    "mailBoiteRetour": "audrey.dorolle@insee.fr",
+    "urlEnquete": "https://enquetes.stat-publique.fr/fam",
+    "themeMieuxConnaitreMail": "les familles",
+    "serviceCollecteurSignataireFonction": "La directrice des statistiques démographiques et sociales de l’Insee",
+    "serviceCollecteurSignataireNom": "Christel Colin",
+    "prestataire": false,
+    "mailResponsableOperationnel": "contact-rgpd@insee.fr",
+    "logoPrestataire": ""
   },
   "partitions": [{
     "id": 43,
@@ -53,7 +61,39 @@
 	"quiRepond1": "Qui doit répondre paragraphe 1",
 	"quiRepond2": "Qui doit répondre paragraphe 2",
 	"quiRepond3": "Qui doit répondre paragraphe 3",
-    "sexe": "femmes"
+    "sexe": "femmes",
+    "communications" :[
+      {
+        "moyenCommunication" : "mail",
+        "phaseCommunication" : "ouverture",
+        "avecQuestionnairePapier" : false,
+        "protocole" : null,
+        "mode" : "web",
+        "typeModele" : "relance_libre",
+        "objetMail" : "Insee - enquêtes Familles 2024",
+        "relanceLibreMailParagraphe1" : "Vous avez récemment répondu à l’enquête de recensement de la population de l’Institut national de la statistique et des études économiques (Insee) et je vous en remercie.",
+        "relanceLibreMailParagraphe2" : "Votre foyer est retenu pour répondre à des questions supplémentaires sur le thème de la famille. Votre participation est essentielle pour connaître les situations et modes de vie des familles aujourd’hui.",
+        "relanceLibreMailParagraphe3" : "Dans votre foyer, chaque femme âgée de 18 ans ou plus est sollicitée pour répondre à un questionnaire court en ligne.",
+        "relanceLibreMailParagraphe4" : "Répondre prendra 15 minutes environ. Vous pouvez dès maintenant vous connecter.",
+        "complementConnexion" : "Il s’agit du mot de passe que vous avez utilisé pour répondre à l’enquête de recensement de la population.",
+        "echeances" : ["J+0"]
+      },
+      {
+        "moyenCommunication" : "mail",
+        "phaseCommunication" : "relance",
+        "avecQuestionnairePapier" : false,
+        "protocole" : null,
+        "mode" : "web",
+        "typeModele" : "relance_libre",
+        "objetMail" : "Rappel Insee - enquêtes Familles 2024",
+        "relanceLibreMailParagraphe1" : "Vous avez été sollicité pour répondre à l'enquête Familles de l'institut national de la statistique et des études économiques (Insee).",
+        "relanceLibreMailParagraphe2" : "A ce jour nous n'avons pas reçu de réponse de votre part. Votre participation est essentielle pour connaître les situations et modes de vie des familles aujourd’hui.",
+        "relanceLibreMailParagraphe3" : "Dans votre foyer, chaque femme âgée de 18 ans ou plus est sollicitée pour répondre à un questionnaire court en ligne.",
+        "relanceLibreMailParagraphe4" : "Répondre prendra 15 minutes environ. Vous pouvez dès maintenant vous connecter.",
+        "complementConnexion" : "Il s’agit du mot de passe que vous avez utilisé pour répondre à l’enquête de recensement de la population.",
+        "echeances" : ["J+3","J+7","J+20"]
+      }
+    ]
   },
   {
     "id": 42,
@@ -66,7 +106,39 @@
     "quiRepond1": "Qui doit répondre paragraphe 1",
     "quiRepond2": "Qui doit répondre paragraphe 2",
     "quiRepond3": "Qui doit répondre paragraphe 3",
-    "sexe": "hommes"
+    "sexe": "hommes",
+    "communications": [
+      {
+        "moyenCommunication" : "mail",
+        "phaseCommunication" : "ouverture",
+        "avecQuestionnairePapier" : false,
+        "protocole" : null,
+        "mode" : "web",
+        "typeModele" : "relance_libre",
+        "objetMail" : "Insee - enquêtes Familles 2024",
+        "relanceLibreMailParagraphe1" : "Vous avez récemment répondu à l’enquête de recensement de la population de l’Institut national de la statistique et des études économiques (Insee) et je vous en remercie.",
+        "relanceLibreMailParagraphe2" : "Votre foyer est retenu pour répondre à des questions supplémentaires sur le thème de la famille. Votre participation est essentielle pour connaître les situations et modes de vie des familles aujourd’hui.",
+        "relanceLibreMailParagraphe3" : "Dans votre foyer, chaque homme âgé de 18 ans ou plus est sollicité pour répondre à un questionnaire court en ligne.",
+        "relanceLibreMailParagraphe4" : "Répondre prendra 15 minutes environ. Vous pouvez dès maintenant vous connecter.",
+        "complementConnexion" : "Il s’agit du mot de passe que vous avez utilisé pour répondre à l’enquête de recensement de la population.",
+        "echeances" : ["J+0"]
+      },
+      {
+        "moyenCommunication" : "mail",
+        "phaseCommunication" : "relance",
+        "avecQuestionnairePapier" : false,
+        "protocole" : null,
+        "mode" : "web",
+        "typeModele" : "relance_libre",
+        "objetMail" : "Rappel Insee - enquêtes Familles 2024",
+        "relanceLibreMailParagraphe1" : "Vous avez été sollicité pour répondre à l'enquête Familles de l'institut national de la statistique et des études économiques (Insee).",
+        "relanceLibreMailParagraphe2" : "A ce jour nous n'avons pas reçu de réponse de votre part. Votre participation est essentielle pour connaître les situations et modes de vie des familles aujourd’hui.",
+        "relanceLibreMailParagraphe3" : "Dans votre foyer, chaque homme âgé de 18 ans ou plus est sollicité pour répondre à un questionnaire court en ligne.",
+        "relanceLibreMailParagraphe4" : "Répondre prendra 15 minutes environ. Vous pouvez dès maintenant vous connecter.",
+        "complementConnexion" : "Il s’agit du mot de passe que vous avez utilisé pour répondre à l’enquête de recensement de la population.",
+        "echeances" : ["J+3","J+7","J+20"]
+      }
+    ]
   }
   ],
   "questionnaireModels": [{
