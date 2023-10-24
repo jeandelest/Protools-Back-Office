@@ -25,7 +25,14 @@ Travail sur les tâches BPMN pour ERA et REM.
   Tâche d'écriture dans REM d'une liste d'UE récupérée dans ERA
 - [eraGetSUForPeriodAndGenderTask]( TODO)
   Tâche de lecture d'UE dans ERA pour un interval et un sexe donnée.
-
+- [platinePilotageGetSUContactTask]( TODO)
+  Tâche de lecture dans Platine Pilotage des informations de contact d'une UE (d'une partition).
+- [platinePilotageGetSUIsToFollowUpTask]( TODO)
+  Tâche de lecture dans Platine Pilotage de l'état a-relancer/eligible/isToFollowUp d'une UE (d'une partition).
+- [platinePilotageAddSUFollowUpTask]( TODO)
+  Tâche de d'ajout d'un évènement FOLLOW à une UE dans Platine Pilotage.
+- [flowcontrolIsSUToFollowUp]( TODO)
+  Prépare aux relances
 
 #### Endpoints
 -  /api_configuration qui renverra la configuration de chaque API orchestrée par protools. Cela permet donc de savoir
@@ -35,7 +42,9 @@ quelle plateforme est appelée.
 #### Autres
 - Vérification que le fichier de contexte satisfait bien toutes les tâches du BPMN associé au processus.
 - Possibilité d'utiliser la date de début et de fin de collecte d'une partition dans les expressions BPMN via PartitionCtxResolver
- 
+- Ajout des périodes X01 à X99 à l'énumération pour pilotage 
+
+- 
 ### Changed
 #### Variables du processus
 - "sugoi-id-contact" devient "directory_access-id-contact" (peut casser les BPMN la référençant en dur).

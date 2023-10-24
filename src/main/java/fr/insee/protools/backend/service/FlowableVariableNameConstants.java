@@ -23,5 +23,18 @@ public class FlowableVariableNameConstants {
     public static final String VARNAME_ERA_RESPONSE="era_response_list";
     public static final String VARNAME_ERA_QUERY_START_DATE="era_query_start_date";
     public static final String VARNAME_ERA_QUERY_END_DATE="era_query_end_date";
+    //Platine Contact details
+    public static final String VARNAME_PLATINE_CONTACT="platine_contact";
+    //Indicates whether a questioning should be follow up or not
+    public static final String VARNAME_SU_IS_TO_FOLLOWUP="survey_unit_is_to_follow_up";
+    //List with for each SU the Instant when the opening communication has been sent
+    //each row is Tuple<Instant: creation instant,String : partitionId , String : remSUId>
+    public static final String VARNAME_SU_CREATION_LIST="su_creation_date_list";
+    public static final String VARNAME_SU_CREATION_ITEM="su_creation_date_item";
+
+    //For communication
+    public static final String VARNAME_COMMUNICATION_MEDIUM="communication_medium";
+    public static final String VARNAME_COMMUNICATION_PHASE="communication_phase";
+
     private FlowableVariableNameConstants(){}
 }

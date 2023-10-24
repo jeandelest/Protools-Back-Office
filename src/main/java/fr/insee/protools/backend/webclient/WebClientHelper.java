@@ -16,6 +16,8 @@ import fr.insee.protools.backend.webclient.exception.runtime.WebClientRequestExc
 import io.netty.channel.ConnectTimeoutException;
 import io.netty.handler.logging.LogLevel;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.event.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -44,7 +46,8 @@ import java.util.*;
 public class WebClientHelper {
 
         private final EnumMap<ApiConfigProperties.KNOWN_API, WebClient> initializedClients = new EnumMap<>(ApiConfigProperties.KNOWN_API.class);
-        private static final int DEFAULT_FILE_BUFFER_SIZE = 20 * 1024*1024;
+        private static final int DEFAULT_FILE_BUFFER_SIZE = 100 * 1024*1024;
+        private static final int DEFAULT_API_BUFFER_SIZE =  100 * 1024*1024;
 
         @Autowired private KeycloakService keycloakService;
         @Autowired private ApiConfigProperties apiConfigProperties;
@@ -87,6 +90,8 @@ public class WebClientHelper {
                                                 return Mono.error(new WebClientRequestExceptionBPMNError(ex));
                                         })
                         )
+                        //To allow up to 20Mb
+                        .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(DEFAULT_API_BUFFER_SIZE))
                         .clientConnector(
                                 new ReactorClientHttpConnector(
                                         HttpClient.create()
@@ -97,11 +102,19 @@ public class WebClientHelper {
                                                 .wiretap(this.getClass().getCanonicalName(), LogLevel.DEBUG, AdvancedByteBufFormat.TEXTUAL)));
         }
 
-        public static void logDebugJson(String msg, Object dto) {
-                if (log.isDebugEnabled()) {
+        public static void logJson(String msg, Object dto, Logger logger, Level level) {
+                if (logger.isEnabledForLevel(level)) {
                         try {
                                 String json = new ObjectMapper().writeValueAsString(dto);
-                                log.debug(msg +" - " + json);
+                                String logLine = msg +" - " + json;
+                                switch (level) {
+                                        case TRACE -> logger.trace(logLine);
+                                        case DEBUG -> logger.debug(logLine);
+                                        case INFO -> logger.info(logLine);
+                                        case WARN -> logger.warn(logLine);
+                                        case ERROR -> logger.error(logLine);
+                                        default -> logger.trace(logLine);
+                                }
                         } catch (JsonProcessingException e) {
                                 log.error("Could not parse json");
                         }
@@ -250,13 +263,13 @@ public class WebClientHelper {
 
         /**
          * special version of NestedRuntimeException.contains accepting a list of types :
-         *
          * Check whether the Ex exception contains an exception of the given list of types:
          * either it is of the given class itself or it contains a nested cause of one of these types.
-         * @param ex
-         * @param exTypes
-         * @return
+         * @param ex : The exception
+         * @param exTypes : The searched types
+         * @return true if a matching exception type has been found
          */
+        @SuppressWarnings("java:S3776")
         protected static boolean containsCauseOfType(Exception ex, @Nullable List<Class<?>> exTypes) {
                 if (exTypes == null || exTypes.isEmpty()) {
                         return false;

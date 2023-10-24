@@ -46,7 +46,7 @@ public class StarterController {
         public ResponseEntity<String> healthcheckadmin(){
                 return ResponseEntity.ok(
                     """
-                         OK 
+                         OK
                          
                          Version %s
                          Administrateur %s
@@ -68,7 +68,7 @@ public class StarterController {
         }
 
         @GetMapping("/api_configuration")
-        public ResponseEntity<JsonNode> api_configuration(){
+        public ResponseEntity<JsonNode> apiConfiguration(){
                 return ResponseEntity.ok(webClientHelper.getAPIConfigDetails());
         }
 

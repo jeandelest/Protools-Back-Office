@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
@@ -16,6 +17,9 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,12 +48,23 @@ public class SecurityConfig {
     @Value("#{'${fr.insee.sndil.starter.security.whitelist-matchers}'.split(',')}")
     private String[] whiteList;
 
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.applyPermitDefaultValues();
+        //configuration.setAllowedOrigins(Collections.singletonList("*"));
+        configuration.setAllowedMethods(List.of(org.springframework.web.cors.CorsConfiguration.ALL));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
     //Filter with activated security
     @Bean
     @ConditionalOnProperty(name = STARTER_SECURITY_ENABLED, havingValue = "true")
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable);
-
+        http.cors(Customizer.withDefaults());
         for (var pattern : whiteList) {
             http.authorizeHttpRequests(authorize ->
                     authorize
@@ -64,6 +79,7 @@ public class SecurityConfig {
                                 //  .requestMatchers(AntPathRequestMatcher.antMatcher(h2ConsolePath + "/**")).permitAll()
                                 //  .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET,"/cars")).permitAll() //REST
                                 .requestMatchers(AntPathRequestMatcher.antMatcher("/starter/healthcheck")).permitAll() //REST
+                                .requestMatchers(AntPathRequestMatcher.antMatcher("/starter/changelog")).permitAll() //REST
                                 .requestMatchers(AntPathRequestMatcher.antMatcher("/starter/healthcheckadmin")).hasRole(administrateurRole)
                                 //We allow admin to access everything
                                 .requestMatchers(AntPathRequestMatcher.antMatcher("/**")).hasRole(administrateurRole)
@@ -77,6 +93,11 @@ public class SecurityConfig {
     @Bean
     @ConditionalOnProperty(name = STARTER_SECURITY_ENABLED, havingValue = "false", matchIfMissing = true)
     public SecurityFilterChain filterChain_noSecurity(HttpSecurity http) throws Exception {
+        //Allow frames to be able tu use the H2 web console
+        http.headers(headers -> headers
+                .frameOptions(frameOptions -> frameOptions.sameOrigin()
+                )
+        );
 
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll())

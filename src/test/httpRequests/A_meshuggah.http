@@ -1,0 +1,44 @@
+### GET TOKEN --- SET HOST
+< {%
+
+    client.global.set("host_meshuggah", "api-services-communications-enquetes.developpement.insee.fr/");
+
+%}
+POST https://auth.insee.test/auth/realms/{{realm}}/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&client_id={{client_id}}&client_secret={{client_secret}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+    client.global.set("auth_token", response.body.access_token);
+    client.log("TOKEN = "+client.global.get("auth_token"));
+    client.log("RESPONSE = "+client.global);
+
+    client.global.set("processDefinitionId", "chargementUeWeb");
+
+%}
+
+#######GET
+GET {{host_meshuggah}}/api/communication/medium/EMAIL/campagne/AAB2023A00/partition/42/phase/OUVERTURE/operation/RELANCE_LIBRE/mode/WEB/protocol/DEFAULT
+Authorization: Bearer {{auth_token}}
+
+
+#######DELETE part 45 - com 1
+DELETE {{host_meshuggah}}/api/communication/medium/EMAIL/campagne/AAB2023A00/partition/42/phase/RELANCE/operation/RELANCE_LIBRE/mode/WEB/protocol/DEFAULT
+Authorization: Bearer {{auth_token}}
+
+#######DELETE part 45 - com 2
+DELETE {{host_meshuggah}}/api/communication/medium/EMAIL/campagne/AAB2023A00/partition/42/phase/OUVERTURE/operation/RELANCE_LIBRE/mode/WEB/protocol/DEFAULT
+Authorization: Bearer {{auth_token}}
+
+
+#######DELETE part 46 - com 1
+DELETE {{host_meshuggah}}/api/communication/medium/EMAIL/campagne/AAB2023A00/partition/43/phase/RELANCE/operation/RELANCE_LIBRE/mode/WEB/protocol/DEFAULT
+Authorization: Bearer {{auth_token}}
+
+#######DELETE part 46 - com 2
+DELETE {{host_meshuggah}}/api/communication/medium/EMAIL/campagne/AAB2023A00/partition/43/phase/OUVERTURE/operation/RELANCE_LIBRE/mode/WEB/protocol/DEFAULT
+Authorization: Bearer {{auth_token}}

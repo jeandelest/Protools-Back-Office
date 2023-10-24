@@ -122,10 +122,14 @@ public class ContextServiceImpl implements ContextService {
         //If value does not exist in cache yet : Retrieve it and update cache
         if (result == null) {
             String contextStr = runtimeService.getVariable(processInstanceId, VARNAME_CONTEXT, String.class);
+            if(contextStr == null || contextStr.isBlank()){
+                throw new BadContextIncorrectBPMNError(String.format("Context retrieved from engine is null or empty processInstanceId=[%s] ", processInstanceId));
+            }
+
             try {
                 result = defaultReader.readTree(contextStr);
             } catch (JsonProcessingException e) {
-                throw new BadContextIncorrectBPMNError(String.format("Context retrieved from engine could not be parsed for processInstanceId=[%s] - Exception : ", processInstanceId, e.getMessage()));
+                throw new BadContextIncorrectBPMNError(String.format("Context retrieved from engine could not be parsed for processInstanceId=[%s] - Exception : %s", processInstanceId, e.getMessage()));
             }
             contextCache.put(processInstanceId, result);
         }
@@ -150,6 +154,8 @@ public class ContextServiceImpl implements ContextService {
             if (!contextErrors.isEmpty()) {
                 throw new BadContextIncorrectBPMNError(contextErrors.toString());
             }
+            log.info("idCampaign="+rootContext.path(CTX_CAMPAGNE_ID).textValue());
+
             //Variables to store for this process
             Map<String, Object> variables = new HashMap<>();
             //Store the raw json as string
@@ -199,6 +205,10 @@ public class ContextServiceImpl implements ContextService {
         String start = partitionNode.get(CTX_PARTITION_DATE_DEBUT_COLLECTE).asText();
         String end = partitionNode.get(CTX_PARTITION_DATE_DEBUT_COLLECTE).asText();
 
+        if(start==null || end==null){
+            throw new BadContextIncorrectBPMNError(String.format("%s and %s must be defined on every partition", CTX_PARTITION_DATE_DEBUT_COLLECTE, CTX_PARTITION_DATE_FIN_COLLECTE));
+        }
+
         try {
             LocalDateTime collectionStart = LocalDateTime.parse(start, DateTimeFormatter.ISO_DATE_TIME);
             LocalDateTime collectionEnd = LocalDateTime.parse(end, DateTimeFormatter.ISO_DATE_TIME);
@@ -228,8 +238,17 @@ public class ContextServiceImpl implements ContextService {
         }
     }
 
-
+    /**
+     * Check if protoolsContextRootNode allows every Task implementing {@link  fr.insee.protools.backend.service.DelegateContextVerifier#getContextErrors  DelegateContextVerifier}  interface to run correctly
+     * @param processDefinitionKey The process (BPMN) identifier
+     * @param protoolsContextRootNode The context to check
+     * @return A list of the problems found
+     * @throws FlowableObjectNotFoundException if no process definition (BPMN) matches processDefinitionKey
+     */
     public Set<String> isContextOKForBPMN(String processDefinitionKey, JsonNode protoolsContextRootNode) {
+        //At least, the campaign ID should be defined so we can write it on process variables to be used un groovy scripts
+        Set<String> errors=DelegateContextVerifier.computeMissingChildrenMessages(Set.of(CTX_CAMPAGNE_ID),protoolsContextRootNode,getClass());
+
         ProcessDefinitionQuery processDefinitionQuery = repositoryService.createProcessDefinitionQuery();
         processDefinitionQuery.processDefinitionKey(processDefinitionKey);
         processDefinitionQuery.latestVersion();
@@ -247,7 +266,6 @@ public class ContextServiceImpl implements ContextService {
             throw new FlowableObjectNotFoundException("Cannot find process Model with key " + processDefinitionKey, ProcessDefinition.class);
         }
 
-        Set<String> errors = new HashSet<>();
         processModel.getFlowElements().stream()
                 .filter(flowElement -> (flowElement instanceof ServiceTask || flowElement instanceof SubProcess))
                 .forEach(flowElement -> errors.addAll(analyseProcess(flowElement,protoolsContextRootNode)));
