@@ -32,7 +32,9 @@ public class FlowableVariableNameConstants {
     public static final String VARNAME_SU_CREATION_LIST="su_creation_date_list";
     public static final String VARNAME_SU_CREATION_ITEM="su_creation_date_item";
 
-
+    //For communication
+    public static final String VARNAME_COMMUNICATION_MEDIUM="communication_medium";
+    public static final String VARNAME_COMMUNICATION_PHASE="communication_phase";
 
     private FlowableVariableNameConstants(){}
 }

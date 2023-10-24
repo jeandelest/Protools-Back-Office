@@ -1,46 +1,56 @@
 package fr.insee.protools.backend.service.meshuggah;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import fr.insee.protools.backend.service.context.ContextConstants;
 import fr.insee.protools.backend.service.meshuggah.dto.MeshuggahComDetails;
+import org.flowable.common.engine.api.FlowableIllegalArgumentException;
+
+import java.util.Set;
 
 import static fr.insee.protools.backend.service.context.ContextConstants.*;
-import static fr.insee.protools.backend.service.context.ContextConstants.CTX_PARTITION_COMMUNICATION_AVEC_QUESTIONNAIRE_PAPIER;
 
 public class MeshuggahUtils {
 
-    static MeshuggahComDetails computeMeshuggahComDetails(Long partitionId, JsonNode contextRootNode, JsonNode communicationNode){
+    static MeshuggahComDetails computeMeshuggahComDetails(String campagneId, Long partitionId, JsonNode communicationNode) {
         String ctxMoyenCommunication = communicationNode.path(CTX_PARTITION_COMMUNICATION_MOYEN).asText();
         String ctxPhase = communicationNode.path(CTX_PARTITION_COMMUNICATION_PHASE).asText();
         String ctxTypeModele = communicationNode.path(CTX_PARTITION_COMMUNICATION_TYPE_MODELE).asText();
         String ctxMode = communicationNode.path(CTX_PARTITION_COMMUNICATION_MODE).asText();
         String ctxProtocol = communicationNode.path(CTX_PARTITION_COMMUNICATION_PROTOCOLE).asText();
         boolean meshAvecQuestionnaire = communicationNode.path(CTX_PARTITION_COMMUNICATION_AVEC_QUESTIONNAIRE_PAPIER).asBoolean();
-        String campagneId=contextRootNode.path(ContextConstants.CTX_CAMPAGNE_ID).asText();
+        return MeshuggahComDetails.builder().campaignId(campagneId).partitioningId(String.valueOf(partitionId)).medium(MeshuggahUtils.MediumEnum.fromCtxValue(ctxMoyenCommunication).meshuggahValue).phase(MeshuggahUtils.PhaseEnum.fromCtxValue(ctxPhase).meshuggahValue).operation(MeshuggahUtils.TypeModeleEnum.fromCtxValue(ctxTypeModele).meshuggahValue).mode(MeshuggahUtils.ModeEnum.fromCtxValue(ctxMode).meshuggahValue).protocol(MeshuggahUtils.ProtocolEnum.fromCtxValue(ctxProtocol).meshuggahValue).avecQuestionnaire(meshAvecQuestionnaire).build();
+    }
 
-        return MeshuggahComDetails.builder()
-                .campaignId(campagneId)
-                .partitioningId(String.valueOf(partitionId))
-                .medium(MeshuggahUtils.MediumEnum.fromCtxValue(ctxMoyenCommunication).meshuggahValue)
-                .phase(MeshuggahUtils.PhaseEnum.fromCtxValue(ctxPhase).meshuggahValue)
-                .operation(MeshuggahUtils.TypeModeleEnum.fromCtxValue(ctxTypeModele).meshuggahValue)
-                .mode(MeshuggahUtils.ModeEnum.fromCtxValue(ctxMode).meshuggahValue)
-                .protocol(MeshuggahUtils.ProtocolEnum.fromCtxValue(ctxProtocol).meshuggahValue)
-                .avecQuestionnaire(meshAvecQuestionnaire)
-                .build();
+
+    public static Set<String> getCommunicationRequiredFields() {
+        return Set.of(CTX_PARTITION_COMMUNICATION_MOYEN, CTX_PARTITION_COMMUNICATION_PHASE, CTX_PARTITION_COMMUNICATION_TYPE_MODELE, CTX_PARTITION_COMMUNICATION_MODE, CTX_PARTITION_COMMUNICATION_PROTOCOLE, CTX_PARTITION_COMMUNICATION_AVEC_QUESTIONNAIRE_PAPIER);
+    }
+
+    //Search for a communication in the contexte.
+    public static JsonNode getCommunication(JsonNode partitionNode, MeshuggahUtils.MediumEnum medium, MeshuggahUtils.PhaseEnum phase) {
+        JsonNode communicationNode = null;
+        for (JsonNode subNode : partitionNode.path(CTX_PARTITION_COMMUNICATIONS)) {
+            if (subNode.has(CTX_PARTITION_COMMUNICATION_MOYEN) && subNode.has(CTX_PARTITION_COMMUNICATION_PHASE) && subNode.get(CTX_PARTITION_COMMUNICATION_MOYEN).asText().equalsIgnoreCase(medium.ctxValue) && subNode.get(CTX_PARTITION_COMMUNICATION_PHASE).asText().equalsIgnoreCase(phase.ctxValue)) {
+                communicationNode = subNode;
+                break;
+            }
+        }
+        if (communicationNode == null) {
+            throw new FlowableIllegalArgumentException(String.format("Communication medium=[%s] - phase=[%s] not found ", medium, phase));
+        }
+        return communicationNode;
     }
 
     enum MediumEnum {
 
-        COURRIER("courrier","COURRIER"), MAIL("mail","EMAIL");
+        COURRIER("courrier", "COURRIER"), MAIL("mail", "EMAIL");
+
+        final String meshuggahValue;
+        final String ctxValue;
 
         MediumEnum(String ctxValue, String meshuggahValue) {
             this.meshuggahValue = meshuggahValue;
             this.ctxValue = ctxValue;
         }
-
-        final String meshuggahValue;
-        final String ctxValue;
 
         public static MediumEnum fromCtxValue(String ctxValue) {
             for (var c : values()) {
@@ -54,17 +64,15 @@ public class MeshuggahUtils {
 
     enum PhaseEnum {
 
-        OUVERTURE("ouverture","OUVERTURE"),
-        RELANCE("relance","RELANCE"),
-        PONCTUEL("ponctuel","PONCTUEL");
+        OUVERTURE("ouverture", "OUVERTURE"), RELANCE("relance", "RELANCE"), PONCTUEL("ponctuel", "PONCTUEL");
+
+        final String meshuggahValue;
+        final String ctxValue;
 
         PhaseEnum(String ctxValue, String meshuggahValue) {
             this.meshuggahValue = meshuggahValue;
             this.ctxValue = ctxValue;
         }
-
-        final String meshuggahValue;
-        final String ctxValue;
 
         public static PhaseEnum fromCtxValue(String ctxValue) {
             for (var c : values()) {
@@ -78,15 +86,15 @@ public class MeshuggahUtils {
 
     enum TypeModeleEnum {
 
-        OUVERTURE("ouverture","OUVERTURE"), RELANCE("relance","RELANCE"), RELANCE_LIBRE("relance_libre", "RELANCE_LIBRE");
+        OUVERTURE("ouverture", "OUVERTURE"), RELANCE("relance", "RELANCE"), RELANCE_LIBRE("relance_libre", "RELANCE_LIBRE");
+
+        final String meshuggahValue;
+        final String ctxValue;
 
         TypeModeleEnum(String ctxValue, String meshuggahValue) {
             this.meshuggahValue = meshuggahValue;
             this.ctxValue = ctxValue;
         }
-
-        final String meshuggahValue;
-        final String ctxValue;
 
         public static TypeModeleEnum fromCtxValue(String ctxValue) {
             for (var c : values()) {
@@ -100,15 +108,15 @@ public class MeshuggahUtils {
 
     enum ModeEnum {
 
-        FAF("faf","FAF"), TEL("tel","TEL"), WEB("web", "WEB");
+        FAF("faf", "FAF"), TEL("tel", "TEL"), WEB("web", "WEB");
+
+        final String meshuggahValue;
+        final String ctxValue;
 
         ModeEnum(String ctxValue, String meshuggahValue) {
             this.meshuggahValue = meshuggahValue;
             this.ctxValue = ctxValue;
         }
-
-        final String meshuggahValue;
-        final String ctxValue;
 
         public static ModeEnum fromCtxValue(String ctxValue) {
             for (var c : values()) {
@@ -122,16 +130,15 @@ public class MeshuggahUtils {
 
     enum ProtocolEnum {
 
-        SEQ_WT("sequentiel web tel faf","SEQ_WT"), SEQ_TW("sequentiel tel web","SEQ_TW"), PANEL("panel", "PANEL")
-        , DEFAULT("null","DEFAULT");
+        SEQ_WT("sequentiel web tel faf", "SEQ_WT"), SEQ_TW("sequentiel tel web", "SEQ_TW"), PANEL("panel", "PANEL"), DEFAULT("null", "DEFAULT");
+
+        final String meshuggahValue;
+        final String ctxValue;
 
         ProtocolEnum(String ctxValue, String meshuggahValue) {
             this.meshuggahValue = meshuggahValue;
             this.ctxValue = ctxValue;
         }
-
-        final String meshuggahValue;
-        final String ctxValue;
 
         public static ProtocolEnum fromCtxValue(String ctxValue) {
             for (var c : values()) {

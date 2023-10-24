@@ -13,7 +13,10 @@ import org.flowable.engine.delegate.JavaDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static fr.insee.protools.backend.service.context.ContextConstants.*;
 
@@ -34,33 +37,29 @@ public class MeshuggahCreateCommunicationsContextTask implements JavaDelegate, D
         String campainId = contextRootNode.path(CTX_CAMPAGNE_ID).asText();
 
         log.info("ProcessInstanceId={} - campainId={}  begin",execution.getProcessInstanceId(), campainId);
-        treatPartitions(contextRootNode);
+        treatPartitions(campainId,contextRootNode);
         log.info("ProcessInstanceId={} - campainId={}  end",execution.getProcessInstanceId(), campainId);
     }
 
-    @Override
-    public Set<String> getContextErrors(JsonNode contextRootNode) {
-        return DelegateContextVerifier.super.getContextErrors(contextRootNode);
-    }
 
-    private void treatPartitions(JsonNode contextRootNode){
+    private void treatPartitions(String campainId, JsonNode contextRootNode){
         //Partitions
         var partitionIterator =contextRootNode.path(CTX_PARTITIONS).elements();
         while (partitionIterator.hasNext()) {
             var partitionNode = partitionIterator.next();
             Long partitionId = partitionNode.path(CTX_PARTITION_ID).asLong();
-            treatPartition(partitionId,contextRootNode,partitionNode);
+            treatPartition(campainId,partitionId,contextRootNode,partitionNode);
         }
     }
 
-    private void treatPartition(Long partitionId,JsonNode contextRootNode,JsonNode partitionNode){
+    private void treatPartition(String campainId, Long partitionId,JsonNode contextRootNode,JsonNode partitionNode){
         log.trace("treatPartition partitionId={}",partitionId);
         //Treat every communication of this partition
         var communicationsIterator =partitionNode.path(CTX_PARTITION_COMMUNICATIONS).elements();
         while (communicationsIterator.hasNext()) {
             var communicationNode = communicationsIterator.next();
             JsonNode body = initBody(contextRootNode,communicationNode);
-            MeshuggahComDetails meshuggahComDetails = MeshuggahUtils.computeMeshuggahComDetails(partitionId,contextRootNode,communicationNode);
+            MeshuggahComDetails meshuggahComDetails = MeshuggahUtils.computeMeshuggahComDetails(campainId,partitionId,communicationNode);
             meshuggahService.postCreateCommunication(meshuggahComDetails, body);
         }
     }
@@ -102,5 +101,60 @@ public class MeshuggahCreateCommunicationsContextTask implements JavaDelegate, D
         return body;
     }
 
-}
 
+
+    @Override
+    public Set<String> getContextErrors(JsonNode contextRootNode) {
+        if (contextRootNode == null) {
+            return Set.of("Context is missing");
+        }
+        Set<String> results = new HashSet<>();
+        Set<String> requiredNodes =
+                Set.of(
+                        //Global & Campaign
+                        CTX_CAMPAGNE_ID,CTX_METADONNEES,CTX_PARTITIONS
+                );
+        Set<String> requiredPartition =
+                Set.of(CTX_PARTITION_ID,CTX_PARTITION_COMMUNICATIONS);
+
+        Set<String> requiredMetadonnees =
+                Set.of(CTX_META_LOGO_PRESTATAIRE,CTX_META_MAIL_RESP_OPERATIONNEL,CTX_META_PRESTATAIRE,CTX_META_RESPONSABLE_OPERATIONNEL,CTX_META_RESPONSABLE_TRAITEMENT,
+                        CTX_META_SRVC_COL_SIGN_FONCTION,CTX_META_SRVC_COL_SIGN_NOM,CTX_META_THEME_MIEUX_CONNAITRE_MAIL,CTX_META_URL_ENQUETE,CTX_META_MAIL_BOITE_RETOUR
+                );
+        Set<String> requiredCommunication =
+                Stream.of(CTX_PARTITION_COMMUNICATION_COMPLEMENT_CONNEXION,
+                        CTX_PARTITION_COMMUNICATION_RELANCE_LIBRE_PARAGRAPHE1,
+                        CTX_PARTITION_COMMUNICATION_RELANCE_LIBRE_PARAGRAPHE2,
+                        CTX_PARTITION_COMMUNICATION_RELANCE_LIBRE_PARAGRAPHE3,
+                        CTX_PARTITION_COMMUNICATION_RELANCE_LIBRE_PARAGRAPHE4,
+                        CTX_PARTITION_COMMUNICATION_OBJET_MAIL
+                        ).collect(Collectors.toSet());
+        requiredCommunication.addAll(MeshuggahUtils.getCommunicationRequiredFields());
+
+        results.addAll(DelegateContextVerifier.computeMissingChildrenMessages(requiredNodes, contextRootNode, getClass()));
+        results.addAll(DelegateContextVerifier.computeMissingChildrenMessages(requiredMetadonnees,contextRootNode.path(CTX_METADONNEES),getClass()));
+
+        //Partitions
+        var partitionIterator = contextRootNode.path(CTX_PARTITIONS).elements();
+        while (partitionIterator.hasNext()) {
+            var partitionNode = partitionIterator.next();
+            var missingChildren = DelegateContextVerifier.computeMissingChildrenMessages(requiredPartition, partitionNode, getClass());
+            if (!missingChildren.isEmpty()) {
+                results.addAll(missingChildren);
+                continue;
+            }
+
+            //Communications of the partition
+            var communicationIterator = partitionNode.path(CTX_PARTITION_COMMUNICATIONS).elements();
+            while (communicationIterator.hasNext()) {
+                var communicationNode = communicationIterator.next();
+                var missingChildrenCom = DelegateContextVerifier.computeMissingChildrenMessages(requiredCommunication, communicationNode, getClass());
+                if (!missingChildrenCom.isEmpty()) {
+                    results.addAll(missingChildrenCom);
+                }
+            }
+        }
+        return results;
+    }
+
+}

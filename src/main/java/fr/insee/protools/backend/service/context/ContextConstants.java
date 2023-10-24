@@ -85,6 +85,7 @@ public final class ContextConstants {
     public static final String CTX_PARTITION_QUIREPOND1 = "quiRepond1";
     public static final String CTX_PARTITION_QUIREPOND2 = "quiRepond2";
     public static final String CTX_PARTITION_QUIREPOND3 = "quiRepond3";
+
     // Partitions Communications
     public static final String CTX_PARTITION_COMMUNICATIONS = "communications";
     public static final String CTX_PARTITION_COMMUNICATION_MOYEN = "moyenCommunication";
@@ -99,7 +100,6 @@ public final class ContextConstants {
     public static final String CTX_PARTITION_COMMUNICATION_RELANCE_LIBRE_PARAGRAPHE3 = "relanceLibreMailParagraphe3";
     public static final String CTX_PARTITION_COMMUNICATION_RELANCE_LIBRE_PARAGRAPHE4 = "relanceLibreMailParagraphe4";
     public static final String CTX_PARTITION_COMMUNICATION_COMPLEMENT_CONNEXION = "complementConnexion";
-    public static final String CTX_PARTITION_COMMUNICATION_ECHEANCES = "echeances";
 
 
 

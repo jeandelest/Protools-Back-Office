@@ -52,5 +52,6 @@ public class PlatinePilotageAddSUFollowUpTask implements JavaDelegate, DelegateC
             return Set.of("Context is missing");
         }
         return DelegateContextVerifier.computeMissingChildrenMessages(Set.of(CTX_CAMPAGNE_ID),contextRootNode,getClass());
+
     }
 }

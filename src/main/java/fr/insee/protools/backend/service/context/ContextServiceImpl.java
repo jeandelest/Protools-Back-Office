@@ -238,7 +238,13 @@ public class ContextServiceImpl implements ContextService {
         }
     }
 
-
+    /**
+     * Check if protoolsContextRootNode allows every Task implementing {@link  fr.insee.protools.backend.service.DelegateContextVerifier#getContextErrors  DelegateContextVerifier}  interface to run correctly
+     * @param processDefinitionKey The process (BPMN) identifier
+     * @param protoolsContextRootNode The context to check
+     * @return A list of the problems found
+     * @throws FlowableObjectNotFoundException if no process definition (BPMN) matches processDefinitionKey
+     */
     public Set<String> isContextOKForBPMN(String processDefinitionKey, JsonNode protoolsContextRootNode) {
         //At least, the campaign ID should be defined so we can write it on process variables to be used un groovy scripts
         Set<String> errors=DelegateContextVerifier.computeMissingChildrenMessages(Set.of(CTX_CAMPAGNE_ID),protoolsContextRootNode,getClass());
