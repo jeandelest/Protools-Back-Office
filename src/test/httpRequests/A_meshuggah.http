@@ -22,23 +22,23 @@ grant_type=client_credentials&client_id={{client_id}}&client_secret={{client_sec
 %}
 
 #######GET
-GET {{host_meshuggah}}/api/communication/medium/EMAIL/campagne/ADF2023S01/partition/43/phase/OUVERTURE/operation/RELANCE_LIBRE/mode/WEB/protocol/DEFAULT
+GET {{host_meshuggah}}/api/communication/medium/EMAIL/campagne/AAB2023A00/partition/42/phase/OUVERTURE/operation/RELANCE_LIBRE/mode/WEB/protocol/DEFAULT
 Authorization: Bearer {{auth_token}}
 
 
 #######DELETE part 45 - com 1
-DELETE {{host_meshuggah}}/api/communication/medium/EMAIL/campagne/ADF2023S01/partition/45/phase/RELANCE/operation/RELANCE_LIBRE/mode/WEB/protocol/DEFAULT
+DELETE {{host_meshuggah}}/api/communication/medium/EMAIL/campagne/AAB2023A00/partition/42/phase/RELANCE/operation/RELANCE_LIBRE/mode/WEB/protocol/DEFAULT
 Authorization: Bearer {{auth_token}}
 
 #######DELETE part 45 - com 2
-DELETE {{host_meshuggah}}/api/communication/medium/EMAIL/campagne/ADF2023S01/partition/45/phase/OUVERTURE/operation/RELANCE_LIBRE/mode/WEB/protocol/DEFAULT
+DELETE {{host_meshuggah}}/api/communication/medium/EMAIL/campagne/AAB2023A00/partition/42/phase/OUVERTURE/operation/RELANCE_LIBRE/mode/WEB/protocol/DEFAULT
 Authorization: Bearer {{auth_token}}
 
 
 #######DELETE part 46 - com 1
-DELETE {{host_meshuggah}}/api/communication/medium/EMAIL/campagne/ADF2023S01/partition/46/phase/RELANCE/operation/RELANCE_LIBRE/mode/WEB/protocol/DEFAULT
+DELETE {{host_meshuggah}}/api/communication/medium/EMAIL/campagne/AAB2023A00/partition/43/phase/RELANCE/operation/RELANCE_LIBRE/mode/WEB/protocol/DEFAULT
 Authorization: Bearer {{auth_token}}
 
 #######DELETE part 46 - com 2
-DELETE {{host_meshuggah}}/api/communication/medium/EMAIL/campagne/ADF2023S01/partition/46/phase/OUVERTURE/operation/RELANCE_LIBRE/mode/WEB/protocol/DEFAULT
+DELETE {{host_meshuggah}}/api/communication/medium/EMAIL/campagne/AAB2023A00/partition/43/phase/OUVERTURE/operation/RELANCE_LIBRE/mode/WEB/protocol/DEFAULT
 Authorization: Bearer {{auth_token}}
