@@ -25,7 +25,7 @@ import static fr.insee.protools.backend.service.utils.ContextUtils.getCurrentPar
 
 @Component
 @Slf4j
-public class MeshuggahSendCommunicationForSUTask implements JavaDelegate, DelegateContextVerifier {
+public class MeshuggahSendOpeningMailCommunicationForSUTask implements JavaDelegate, DelegateContextVerifier {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
     @Autowired ContextService protoolsContext;
@@ -49,10 +49,8 @@ public class MeshuggahSendCommunicationForSUTask implements JavaDelegate, Delega
         Long currentPartitionId = FlowableVariableUtils.getVariableOrThrow(execution, VARNAME_CURRENT_PARTITION_ID, Long.class);
         JsonNode contactNode = FlowableVariableUtils.getVariableOrThrow(execution, VARNAME_PLATINE_CONTACT, JsonNode.class);
 
-        String mediumStr = FlowableVariableUtils.getVariableOrThrow(execution, VARNAME_COMMUNICATION_MEDIUM, String.class);
-        String phaseStr = FlowableVariableUtils.getVariableOrThrow(execution, VARNAME_COMMUNICATION_PHASE, String.class);
-        MeshuggahUtils.MediumEnum medium = MeshuggahUtils.MediumEnum.fromCtxValue(mediumStr);
-        MeshuggahUtils.PhaseEnum phase = MeshuggahUtils.PhaseEnum.fromCtxValue(phaseStr);
+        MeshuggahUtils.MediumEnum medium = MeshuggahUtils.MediumEnum.MAIL;
+        MeshuggahUtils.PhaseEnum phase = MeshuggahUtils.PhaseEnum.OUVERTURE;
 
         PlatineContactDto platineContactDto;
         try {
@@ -60,9 +58,6 @@ public class MeshuggahSendCommunicationForSUTask implements JavaDelegate, Delega
         } catch (JsonProcessingException e) {
             throw new IncorrectPlatineContactError("Error while parsing the json retrieved for platine contact : " + contactNode, contactNode, e);
         }
-        //TODO :  hack avec le mail de marc
-        platineContactDto.setEmail("marc.berger@insee.fr");
-
 
         //Get current partition from contexte
         JsonNode currentPartitionNode = getCurrentPartitionNode(contextRootNode, currentPartitionId);
