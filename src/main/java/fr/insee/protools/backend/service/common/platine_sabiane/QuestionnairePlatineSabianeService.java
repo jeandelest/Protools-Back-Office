@@ -134,7 +134,7 @@ public interface QuestionnairePlatineSabianeService {
                 String msg=
                         "Error 403/FORBIDEN during Questionnaire postCampaign."
                                 + " It can be caused by a missing permission or if a questionnaire model"
-                                + " "+campaignDto.getQuestionnaireIds()+""
+                                + " "+campaignDto.getQuestionnaireIds()
                                 +" is already assigned to another campaign."
                                 + " msg="+e.getMessage();
                 getLogger().error(msg);
