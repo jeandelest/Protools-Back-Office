@@ -4,15 +4,16 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import fr.insee.protools.backend.service.DelegateContextVerifier;
-import fr.insee.protools.backend.service.context.ContextConstants;
 import fr.insee.protools.backend.service.context.ContextService;
 import fr.insee.protools.backend.service.meshuggah.dto.MeshuggahComDetails;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.EnumUtils;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -151,6 +152,17 @@ public class MeshuggahCreateCommunicationsContextTask implements JavaDelegate, D
                 var missingChildrenCom = DelegateContextVerifier.computeMissingChildrenMessages(requiredCommunication, communicationNode, getClass());
                 if (!missingChildrenCom.isEmpty()) {
                     results.addAll(missingChildrenCom);
+                }
+                //Verify medium enum
+                String medium = communicationNode.path(CTX_PARTITION_COMMUNICATION_MOYEN).asText();
+                if(! EnumUtils.isValidEnumIgnoreCase(MeshuggahUtils.MediumEnum.class, medium)){
+                    results.add(DelegateContextVerifier.computeIncorrectEnumMessage(CTX_PARTITION_COMMUNICATION_MOYEN,medium, Arrays.toString(MeshuggahUtils.MediumEnum.values()),getClass()));
+                }
+
+                //Verify medium enum
+                String phase = communicationNode.path(CTX_PARTITION_COMMUNICATION_PHASE).asText();
+                if(! EnumUtils.isValidEnumIgnoreCase(MeshuggahUtils.PhaseEnum.class, phase)){
+                    results.add(DelegateContextVerifier.computeIncorrectEnumMessage(CTX_PARTITION_COMMUNICATION_PHASE,medium, Arrays.toString(MeshuggahUtils.PhaseEnum.values()),getClass()));
                 }
             }
         }
