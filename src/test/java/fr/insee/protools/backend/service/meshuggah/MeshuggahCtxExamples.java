@@ -34,7 +34,7 @@ public class MeshuggahCtxExamples {
               "metadonnees": {
                 "ministereTutelle": "MIN_TUT",
                 "responsableOperationnel": "Mr X",
-                "responsableTraitement": "l'Insee",            
+                "responsableTraitement": "l'Insee",
                 "mailBoiteRetour": "toto.toto@insee.fr",
                 "urlEnquete": "https://toto.insee.fr/",
                 "themeMieuxConnaitreMail": "les familles",
