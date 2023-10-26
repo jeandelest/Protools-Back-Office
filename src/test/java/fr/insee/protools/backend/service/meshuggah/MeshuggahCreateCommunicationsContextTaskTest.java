@@ -27,7 +27,6 @@ import static org.mockito.Mockito.times;
 
 
 class MeshuggahCreateCommunicationsContextTaskTest extends TestWithContext {
-    static ObjectMapper objectMapper = new ObjectMapper();
 
     @Mock MeshuggahService meshuggahService;
     @InjectMocks MeshuggahCreateCommunicationsContextTask meshuggahTask;
@@ -180,7 +179,7 @@ class MeshuggahCreateCommunicationsContextTaskTest extends TestWithContext {
                 }
             }
             else {
-                assertEquals(true, false, "Incorect test definition (nb partition)");
+                fail("Incorect test definition (nb partition)");
             }
 
 
@@ -199,7 +198,7 @@ class MeshuggahCreateCommunicationsContextTaskTest extends TestWithContext {
                     assertEquals(MeshuggahCtxExamples.ctx_relanceLibreMailParagraphe1_partition2_com2, actualBody.path("Enq_RelanceLibreMailParagraphe1").asText());
                 }
                 else{
-                    assertEquals(true, false,"Incorect test definition");
+                   fail("Incorect test definition");
                 }
             }
             else {

@@ -5,7 +5,7 @@ public class MeshuggahCtxExamples {
     static final Long ctx_partition1 = 99L;
     static final Long ctx_partition2 = 100L;
     //Values
-    static final String ctx_minTutelle = "MIN_TUT";
+    //static final String ctx_minTutelle = "MIN_TUT";
     static final String ctx_complementConnexion = "COMP_CONNEXION";
     static final String ctx_logoPrestataire = "LOGO_PRESTA";
     static final String ctx_mailResponsableOperationnel = "contact@insee.fr";
@@ -34,7 +34,7 @@ public class MeshuggahCtxExamples {
               "metadonnees": {
                 "ministereTutelle": "MIN_TUT",
                 "responsableOperationnel": "Mr X",
-                "responsableTraitement": "l'Insee",             
+                "responsableTraitement": "l'Insee",            
                 "mailBoiteRetour": "toto.toto@insee.fr",
                 "urlEnquete": "https://toto.insee.fr/",
                 "themeMieuxConnaitreMail": "les familles",
@@ -75,7 +75,7 @@ public class MeshuggahCtxExamples {
                   "metadonnees": {
                     "ministereTutelle": "MIN_TUT",
                     "responsableOperationnel": "Mr X",
-                    "responsableTraitement": "l'Insee",             
+                    "responsableTraitement": "l'Insee",
                     "mailBoiteRetour": "toto.toto@insee.fr",
                     "urlEnquete": "https://toto.insee.fr/",
                     "themeMieuxConnaitreMail": "les familles",
