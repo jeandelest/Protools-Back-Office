@@ -61,7 +61,8 @@ public class MeshuggahSendOpeningMailCommunicationForSUTask implements JavaDeleg
 
         //Get current partition from contexte
         JsonNode currentPartitionNode = getCurrentPartitionNode(contextRootNode, currentPartitionId);
-        log.info("ProcessInstanceId={} - campainId={}  begin", execution.getProcessInstanceId(), campainId);
+        log.info("ProcessInstanceId={} - campainId={}  - currentPartitionId={} - platineContactDto={} begin",
+                execution.getProcessInstanceId(), campainId, currentPartitionId,platineContactDto);
 
         JsonNode communicationNode = MeshuggahUtils.getCommunication(currentPartitionNode, medium, phase);
         JsonNode body = initBody(platineContactDto);
@@ -69,7 +70,8 @@ public class MeshuggahSendOpeningMailCommunicationForSUTask implements JavaDeleg
         MeshuggahComDetails meshuggahComDetails = MeshuggahUtils.computeMeshuggahComDetails(campainId, currentPartitionId, communicationNode);
         meshuggahService.postSendCommunication(meshuggahComDetails, body);
 
-        log.info("ProcessInstanceId={} - campainId={}  end", execution.getProcessInstanceId(), campainId);
+        log.debug("ProcessInstanceId={} - campainId={}  - currentPartitionId={} - platineContactDto={} end",
+                execution.getProcessInstanceId(), campainId, currentPartitionId,platineContactDto);
     }
 
     @Override
