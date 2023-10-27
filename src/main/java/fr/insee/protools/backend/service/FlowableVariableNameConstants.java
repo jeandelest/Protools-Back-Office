@@ -29,7 +29,6 @@ public class FlowableVariableNameConstants {
     public static final String VARNAME_SU_IS_TO_FOLLOWUP="survey_unit_is_to_follow_up";
     //List with for each SU the Instant when the opening communication has been sent
     //each row is Tuple<Instant: creation instant,String : partitionId , String : remSUId>
-    public static final String VARNAME_SU_CREATION_LIST="su_creation_date_list";
     public static final String VARNAME_SU_CREATION_ITEM="su_creation_date_item";
 
     private FlowableVariableNameConstants(){}
