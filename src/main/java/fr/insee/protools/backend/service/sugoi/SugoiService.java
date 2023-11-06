@@ -1,11 +1,14 @@
 package fr.insee.protools.backend.service.sugoi;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import fr.insee.protools.backend.service.exception.UsernameAlreadyExistsSugoiBPMNError;
 import fr.insee.protools.backend.service.sugoi.dto.User;
 import fr.insee.protools.backend.webclient.WebClientHelper;
 import fr.insee.protools.backend.webclient.exception.runtime.WebClient4xxBPMNError;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +18,13 @@ import static fr.insee.protools.backend.webclient.configuration.ApiConfigPropert
 @Slf4j
 public class SugoiService {
     //TODO:  a quel niveau configure on ça?
-    final static String REALM = "questionnaire-particuliers";
-    final static String STORAGE = "default";
+
+
+    static final String STORAGE = "default";
     @Autowired WebClientHelper webClientHelper;
+    @Autowired ObjectMapper objectMapper;
+    @Value("${fr.insee.protools.api.sugoi.dmz-account-creation-realm:questionnaire-particuliers}")
+    private String realm;
 
     public User postCreateUsers(User userBody) {
         log.info("postCreateUsers");
@@ -26,7 +33,7 @@ public class SugoiService {
                     .post()
                     .uri(uriBuilder -> uriBuilder
                             .path("/realms/{realm}/storages/{storage}/users")
-                            .build(REALM, STORAGE))
+                            .build(realm, STORAGE))
                     .bodyValue(userBody)
                     .retrieve()
                     .bodyToMono(User.class)
@@ -45,5 +52,23 @@ public class SugoiService {
             //Currently no remediation so just rethrow
             throw e;
         }
+    }
+
+
+    public void postInitPassword(String userId, String password) {
+        log.info("postInitPassword - userId={} begin", userId);
+        ObjectNode body = objectMapper.createObjectNode();
+        body.put("password", password);
+        webClientHelper.getWebClient(KNOWN_API_SUGOI)
+                .post()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/realms/{realm}/users/{id}/init-password")
+                        .queryParam("change-password-reset-status", true)
+                        .build(realm, userId))
+                .bodyValue(body)
+                .retrieve()
+                .toBodilessEntity()
+                .block();
+        log.info("postInitPassword - userId={} end", userId);
     }
 }
