@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.insee.protools.backend.service.sugoi.dto.User;
+import fr.insee.protools.backend.service.utils.password.PasswordService;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.test.FlowableTest;
 import org.junit.jupiter.api.Test;
@@ -22,8 +23,8 @@ import static org.mockito.Mockito.*;
 @FlowableTest
 class SugoiCreateUserTaskTest {
 
-
     @Mock SugoiService sugoiService;
+    @Mock PasswordService passwordService;
     @InjectMocks SugoiCreateUserTask task;
 
     protected final String dumyId="ID1";
@@ -33,7 +34,9 @@ class SugoiCreateUserTaskTest {
         //Prepare
         DelegateExecution execution = mock(DelegateExecution.class);
         doReturn(dumyId).when(execution).getProcessInstanceId();
-
+        String expectedPwd="veryComplicatedPassword";
+        doReturn(expectedPwd).when(passwordService).generatePassword();
+        final String userId="D96QSST";
         final String sugoiResponse =
         """
                 {
@@ -66,8 +69,8 @@ class SugoiCreateUserTaskTest {
         assertDoesNotThrow(() -> task.execute(execution));
 
         //post conditions
-        verify(execution).setVariableLocal(VARNAME_DIRECTORYACCESS_ID_CONTACT, "D96QSST");
-
+        verify(execution).setVariableLocal(VARNAME_DIRECTORYACCESS_ID_CONTACT, userId);
+        //verif on user creation
         ArgumentCaptor<User> acUserDto = ArgumentCaptor.forClass(User.class);
         verify(sugoiService).postCreateUsers(acUserDto.capture());
         assertEquals(1, acUserDto.getAllValues().size(),"We should have exactly one call to postCreateUsers");
@@ -75,5 +78,7 @@ class SugoiCreateUserTaskTest {
         assertEquals(1, userParam.getHabilitations().size(),"We should have exactly one habilitation");
         assertTrue(userParam.getHabilitations().contains(PLATINE_HABILITATION),"Platine habilitiation not found");
 
+        //verif on password
+        verify(sugoiService).postInitPassword(userId,expectedPwd);
     }
 }
