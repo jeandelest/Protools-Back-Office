@@ -21,6 +21,7 @@ public class REMSurveyUnitDto {
     private REMAddressDto address;
 
     private List<PersonDto> persons;
+    private OtherIdentifierDto otherIdentifier;
 
     private List<AdditionalInformationDto> additionalInformations;
 

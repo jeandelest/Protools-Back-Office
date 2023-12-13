@@ -23,4 +23,6 @@ public class REMAddressDto {
     private String specialDistribution;
     private String countryCode;
     private String countryName;
+
+    private LocationHelpDto locationHelp;
 }

@@ -1,10 +1,11 @@
-package fr.insee.protools.backend.service.platine.delegate;
+package fr.insee.protools.backend.service.sabiane.delegate;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import fr.insee.protools.backend.service.DelegateContextVerifier;
 import fr.insee.protools.backend.service.common.platine_sabiane.QuestionnaireHelper;
 import fr.insee.protools.backend.service.context.ContextService;
-import fr.insee.protools.backend.service.platine.questionnaire.PlatineQuestionnaireService;
+import fr.insee.protools.backend.service.sabiane.pilotage.dto.CampaignContextDto;
+import fr.insee.protools.backend.service.sabiane.questionnaire.SabianeQuestionnaireService;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
@@ -13,24 +14,25 @@ import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
+import static fr.insee.protools.backend.service.context.ContextConstants.CTX_CAMPAGNE_CONTEXTE;
+
 @Slf4j
 @Component
-public class PlatineQuestionnaireCreateSurveyUnitTask implements JavaDelegate, DelegateContextVerifier {
-
+public class SabianeQuestionnaireCreateSUTask implements JavaDelegate, DelegateContextVerifier {
 
     @Autowired ContextService protoolsContext;
-    @Autowired PlatineQuestionnaireService platineQuestionnaireService;
+    @Autowired SabianeQuestionnaireService sabianeQuestionnaireService;
 
     @Override
     public void execute(DelegateExecution execution) {
         JsonNode contextRootNode = protoolsContext.getContextByProcessInstance(execution.getProcessInstanceId());
         checkContextOrThrow(log,execution.getProcessInstanceId(), contextRootNode);
-        QuestionnaireHelper.createSUTaskPlatine(execution,protoolsContext,platineQuestionnaireService);
+        QuestionnaireHelper.createSUTaskSabiane(execution,protoolsContext,sabianeQuestionnaireService);
     }
 
     @Override
     public Set<String> getContextErrors(JsonNode contextRootNode) {
-        return QuestionnaireHelper.getCreateSUContextErrorsPlatine(contextRootNode);
+        return QuestionnaireHelper.getCreateSUContextErrorsSabiane(contextRootNode);
     }
 
 }

@@ -26,6 +26,7 @@ import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.engine.repository.ProcessDefinitionQuery;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.task.api.Task;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
@@ -276,10 +277,13 @@ public class ContextServiceImpl implements ContextService {
         if (flowElement instanceof ServiceTask serviceTask) {
             if (serviceTask.getImplementationType().equals("delegateExpression")) {
                 String delegateExpression = serviceTask.getImplementation().replace("${", "").replace("}", "");
-                Object bean = springApplicationContext.getBean(delegateExpression);
-                if (bean instanceof DelegateContextVerifier beanDelegateCtxVerifier) {
-                    return beanDelegateCtxVerifier.getContextErrors(protoolsContextRootNode);
+                try {
+                    Object bean = springApplicationContext.getBean(delegateExpression);
+                    if (bean instanceof DelegateContextVerifier beanDelegateCtxVerifier) {
+                        return beanDelegateCtxVerifier.getContextErrors(protoolsContextRootNode);
+                    }
                 }
+                catch (NoSuchBeanDefinitionException e){}
             }
         } else if (flowElement instanceof SubProcess subProcessFlowElement) {
             Set<String> errors = new HashSet<>();

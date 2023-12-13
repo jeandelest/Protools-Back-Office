@@ -9,6 +9,7 @@ import fr.insee.protools.backend.service.exception.IncorrectSUBPMNError;
 import fr.insee.protools.backend.service.platine.pilotage.PlatinePilotageService;
 import fr.insee.protools.backend.service.platine.pilotage.dto.PlatinePilotageGenderType;
 import fr.insee.protools.backend.service.platine.pilotage.dto.query.QuestioningWebclientDto;
+import fr.insee.protools.backend.service.rem.RemDtoUtils;
 import fr.insee.protools.backend.service.rem.dto.PersonDto;
 import fr.insee.protools.backend.service.rem.dto.REMSurveyUnitDto;
 import fr.insee.protools.backend.service.utils.TestWithContext;
@@ -99,16 +100,15 @@ class PlatinePilotageCreateSurveyUnitTaskTest extends TestWithContext {
         JsonNode remSU = ProtoolsTestUtils.asJsonNode(suTestFilePath);
         REMSurveyUnitDto dto = ProtoolsTestUtils.asObject(suTestFilePath,REMSurveyUnitDto.class);
 
-
         if(!shouldThrow) {
             //Execute
-            PersonDto contact = platinePilotageTask.findContact(remSU,dto,isLogement);
+            PersonDto contact = RemDtoUtils.findContact(remSU,dto,isLogement);
             //Found the right contact
             assertEquals("TOBEFOUND", contact.getFirstName());
         }
         else{
             //Execute the unit under test
-            assertThrows(IncorrectSUBPMNError.class,() -> platinePilotageTask.findContact(remSU,dto,isLogement));
+            assertThrows(IncorrectSUBPMNError.class,() -> RemDtoUtils.findContact(remSU,dto,isLogement));
         }
     }
 

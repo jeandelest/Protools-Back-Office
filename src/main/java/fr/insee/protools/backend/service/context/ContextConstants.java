@@ -85,6 +85,7 @@ public final class ContextConstants {
     public static final String CTX_PARTITION_QUIREPOND1 = "quiRepond1";
     public static final String CTX_PARTITION_QUIREPOND2 = "quiRepond2";
     public static final String CTX_PARTITION_QUIREPOND3 = "quiRepond3";
+    public static final String CTX_PARTITION_PRIORITAIRE = "prioritaire";
 
     // Partitions Communications
     public static final String CTX_PARTITION_COMMUNICATIONS = "communications";

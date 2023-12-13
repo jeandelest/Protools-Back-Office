@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PhoneNumberDto {
-
+    private REMPhoneSource source;
     private Boolean favorite;
     private String number;
 }

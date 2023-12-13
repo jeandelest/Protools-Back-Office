@@ -58,7 +58,7 @@ public class PlatineQuestionnaireCreateContextTask implements JavaDelegate, Dele
 
         //Standard verifications (common between platine and sabiane)
         Set<String> missingNodes =
-                QuestionnaireHelper.getContextErrors(contextRootNode);
+                QuestionnaireHelper.getCreateCtxContextErrors(contextRootNode);
 
         //Metadata used by platine
         Set<String> requiredMetadonnes =

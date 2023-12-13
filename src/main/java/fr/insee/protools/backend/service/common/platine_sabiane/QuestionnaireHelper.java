@@ -3,24 +3,43 @@ package fr.insee.protools.backend.service.common.platine_sabiane;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import fr.insee.protools.backend.service.DelegateContextVerifier;
 import fr.insee.protools.backend.service.common.platine_sabiane.dto.campaign.CampaignDto;
 import fr.insee.protools.backend.service.common.platine_sabiane.dto.campaign.MetadataValue;
+import fr.insee.protools.backend.service.common.platine_sabiane.dto.surveyunit.SurveyUnitResponseDto;
+import fr.insee.protools.backend.service.context.ContextService;
 import fr.insee.protools.backend.service.exception.JsonParsingBPMNError;
 import fr.insee.protools.backend.service.nomenclature.NomenclatureService;
+import fr.insee.protools.backend.service.platine.utils.PlatineHelper;
 import fr.insee.protools.backend.service.questionnaire_model.QuestionnaireModelService;
+import fr.insee.protools.backend.service.rem.dto.REMSurveyUnitDto;
+import fr.insee.protools.backend.service.sabiane.SabianeIdHelper;
+import fr.insee.protools.backend.service.utils.FlowableVariableUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.flowable.engine.delegate.DelegateExecution;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES;
+import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
+import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VARNAME_CURRENT_PARTITION_ID;
+import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VARNAME_REM_SURVEY_UNIT;
 import static fr.insee.protools.backend.service.context.ContextConstants.*;
+import static fr.insee.protools.backend.service.utils.ContextUtils.getCurrentPartitionNode;
 
 @Slf4j
 public class QuestionnaireHelper {
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper objectMapper =
+            new ObjectMapper()
+                    .configure(FAIL_ON_UNKNOWN_PROPERTIES, false)
+                    .configure(FAIL_ON_MISSING_CREATOR_PROPERTIES, true);
+
+    private QuestionnaireHelper() {
+    }
 
     public static void createQuestionnaire(JsonNode contextRootNode,
                                            QuestionnairePlatineSabianeService questionnairePlatineSabianeService,
@@ -28,20 +47,19 @@ public class QuestionnaireHelper {
                                            QuestionnaireModelService questionnaireModelService,
                                            String processInstanceId,
                                            MetadataValue metadataDto
-                                           ){
+    ) {
         //Get the list of nomenclatures defined in Protools Context
         //Create them if needed
-        var nomenclatureIterator =contextRootNode.path(CTX_NOMENCLATURES).elements();
-        if(!nomenclatureIterator.hasNext()){
-            log.info("ProcessInstanceId={} - does not declare any nomenclature",processInstanceId);
-        }
-        else  {
-            initRequiredNomenclatures(questionnairePlatineSabianeService, nomenclatureService,processInstanceId, nomenclatureIterator);
+        var nomenclatureIterator = contextRootNode.path(CTX_NOMENCLATURES).elements();
+        if (!nomenclatureIterator.hasNext()) {
+            log.info("ProcessInstanceId={} - does not declare any nomenclature", processInstanceId);
+        } else {
+            initRequiredNomenclatures(questionnairePlatineSabianeService, nomenclatureService, processInstanceId, nomenclatureIterator);
         }
 
         //Get the list of Questionnaire Models defined in Protools Context
-        Set<String> questionnaireModelIds = initQuestionnaireModels(questionnairePlatineSabianeService,questionnaireModelService,processInstanceId, contextRootNode);
-        CampaignDto campaignDto= CampaignDto.builder()
+        Set<String> questionnaireModelIds = initQuestionnaireModels(questionnairePlatineSabianeService, questionnaireModelService, processInstanceId, contextRootNode);
+        CampaignDto campaignDto = CampaignDto.builder()
                 .id(contextRootNode.path(CTX_CAMPAGNE_ID).textValue())
                 .label(contextRootNode.path(CTX_CAMPAGNE_LABEL).textValue())
                 .metadata(metadataDto)
@@ -57,16 +75,15 @@ public class QuestionnaireHelper {
         //Create the nomenclatures not existing yet on platine
         while (nomenclatureIterator.hasNext()) {
             var node = nomenclatureIterator.next();
-            String nomenclatureId  = node.get(CTX_NOMENCLATURE_ID).asText();
-            String nomenclatureCheminRepertoire  = node.path(CTX_NOMENCLATURE_CHEMIN_REPERTOIRE).asText();
-            String nomenclatureLabel= node.get(CTX_NOMENCLATURE_LABEL).asText();
+            String nomenclatureId = node.get(CTX_NOMENCLATURE_ID).asText();
+            String nomenclatureCheminRepertoire = node.path(CTX_NOMENCLATURE_CHEMIN_REPERTOIRE).asText();
+            String nomenclatureLabel = node.get(CTX_NOMENCLATURE_LABEL).asText();
             //check if platine know this nomenclature
-            if(existingNomenclatures.contains(nomenclatureId)){
-                log.info("ProcessInstanceId={} - nomenclature ID={} already exists in collect platform ", processInstanceId,nomenclatureId);
-            }
-            else {
+            if (existingNomenclatures.contains(nomenclatureId)) {
+                log.info("ProcessInstanceId={} - nomenclature ID={} already exists in collect platform ", processInstanceId, nomenclatureId);
+            } else {
                 //Retrieve the nomenclature from remote source
-                String nomenclatureValueStr = nomenclatureService.getNomenclatureContent(nomenclatureId,nomenclatureCheminRepertoire);
+                String nomenclatureValueStr = nomenclatureService.getNomenclatureContent(nomenclatureId, nomenclatureCheminRepertoire);
                 JsonNode nomenclatureValue;
                 try {
                     nomenclatureValue = objectMapper.readTree(nomenclatureValueStr);
@@ -75,9 +92,9 @@ public class QuestionnaireHelper {
                 }
 
                 //Write this nomenclature to platine/sabiane
-                questionnairePlatineSabianeService.postNomenclature(nomenclatureId,nomenclatureLabel,nomenclatureValue);
+                questionnairePlatineSabianeService.postNomenclature(nomenclatureId, nomenclatureLabel, nomenclatureValue);
                 //TODO : handles the exceptions here?
-                log.info("ProcessInstanceId={} - nomenclature ID={} created in remote collect platform", processInstanceId,nomenclatureId);
+                log.info("ProcessInstanceId={} - nomenclature ID={} created in remote collect platform", processInstanceId, nomenclatureId);
             }
         }
     }
@@ -87,9 +104,9 @@ public class QuestionnaireHelper {
      * If it does not exists : retrieve it from questionnaireModelService and create it in platine/sabiane
      *
      * @param questionnairePlatineSabianeService : the service object used to access Sabiane Or Platine
-     * @param questionnaireModelService : The service object used to retrieve questionnaire models (ex: from gitlab)
-     * @param processInstanceId : used in logs
-     * @param contextRootNode : the protools context
+     * @param questionnaireModelService          : The service object used to retrieve questionnaire models (ex: from gitlab)
+     * @param processInstanceId                  : used in logs
+     * @param contextRootNode                    : the protools context
      * @return the set of questionnaireModel ids
      */
     public static Set<String> initQuestionnaireModels(QuestionnairePlatineSabianeService questionnairePlatineSabianeService, QuestionnaireModelService questionnaireModelService, String processInstanceId, JsonNode contextRootNode) {
@@ -130,8 +147,8 @@ public class QuestionnaireHelper {
     }
 
     @SuppressWarnings("java:S3776") //disable the warning about cognitive complexity as it is long but simple
-    public static Set<String> getContextErrors(JsonNode contextRootNode){
-        if(contextRootNode==null){
+    public static Set<String> getCreateCtxContextErrors(JsonNode contextRootNode) {
+        if (contextRootNode == null) {
             return Set.of(String.format("Class=%s : Context is missing ", QuestionnaireHelper.class.getSimpleName()));
         }
 
@@ -141,19 +158,19 @@ public class QuestionnaireHelper {
 
         if (contextRootNode.get(CTX_NOMENCLATURES) != null) {
             //Check on nomenclatures
-            var nomenclatureIterator =contextRootNode.path(CTX_NOMENCLATURES).elements();
-            int i=0;
+            var nomenclatureIterator = contextRootNode.path(CTX_NOMENCLATURES).elements();
+            int i = 0;
             while (nomenclatureIterator.hasNext()) {
                 i++;
                 var nomenclatureNode = nomenclatureIterator.next();
-                if(nomenclatureNode.get(CTX_NOMENCLATURE_ID) == null || nomenclatureNode.get(CTX_NOMENCLATURE_ID).asText().isEmpty()){
-                    missingNodes.add(missingCTXMessage(CTX_NOMENCLATURES,i,CTX_NOMENCLATURE_ID));
+                if (nomenclatureNode.get(CTX_NOMENCLATURE_ID) == null || nomenclatureNode.get(CTX_NOMENCLATURE_ID).asText().isEmpty()) {
+                    missingNodes.add(missingCTXMessage(CTX_NOMENCLATURES, i, CTX_NOMENCLATURE_ID));
                 }
-                if(nomenclatureNode.get(CTX_NOMENCLATURE_LABEL) == null || nomenclatureNode.get(CTX_NOMENCLATURE_LABEL).asText().isEmpty()){
-                    missingNodes.add(missingCTXMessage(CTX_NOMENCLATURES,i,CTX_NOMENCLATURE_LABEL));
+                if (nomenclatureNode.get(CTX_NOMENCLATURE_LABEL) == null || nomenclatureNode.get(CTX_NOMENCLATURE_LABEL).asText().isEmpty()) {
+                    missingNodes.add(missingCTXMessage(CTX_NOMENCLATURES, i, CTX_NOMENCLATURE_LABEL));
                 }
-                if(nomenclatureNode.get(CTX_NOMENCLATURE_CHEMIN_REPERTOIRE) == null || nomenclatureNode.get(CTX_NOMENCLATURE_CHEMIN_REPERTOIRE).asText().isEmpty()){
-                    missingNodes.add(missingCTXMessage(CTX_NOMENCLATURES,i,CTX_NOMENCLATURE_CHEMIN_REPERTOIRE));
+                if (nomenclatureNode.get(CTX_NOMENCLATURE_CHEMIN_REPERTOIRE) == null || nomenclatureNode.get(CTX_NOMENCLATURE_CHEMIN_REPERTOIRE).asText().isEmpty()) {
+                    missingNodes.add(missingCTXMessage(CTX_NOMENCLATURES, i, CTX_NOMENCLATURE_CHEMIN_REPERTOIRE));
                 }
             }
 
@@ -167,22 +184,149 @@ public class QuestionnaireHelper {
                 i++;
                 var nomenclatureNode = questionnaireModelsIterator.next();
                 if (nomenclatureNode.get(CTX_QUESTIONNAIRE_MODEL_ID) == null || nomenclatureNode.get(CTX_QUESTIONNAIRE_MODEL_ID).asText().isEmpty()) {
-                    missingNodes.add(missingCTXMessage( CTX_QUESTIONNAIRE_MODELS, i, CTX_QUESTIONNAIRE_MODEL_ID));
+                    missingNodes.add(missingCTXMessage(CTX_QUESTIONNAIRE_MODELS, i, CTX_QUESTIONNAIRE_MODEL_ID));
                 }
                 if (nomenclatureNode.get(CTX_QUESTIONNAIRE_MODEL_LABEL) == null || nomenclatureNode.get(CTX_QUESTIONNAIRE_MODEL_LABEL).asText().isEmpty()) {
-                    missingNodes.add(missingCTXMessage( CTX_QUESTIONNAIRE_MODELS, i, CTX_QUESTIONNAIRE_MODEL_LABEL));
+                    missingNodes.add(missingCTXMessage(CTX_QUESTIONNAIRE_MODELS, i, CTX_QUESTIONNAIRE_MODEL_LABEL));
                 }
                 if (nomenclatureNode.get(CTX_QUESTIONNAIRE_MODEL_CHEMIN_REPERTOIRE) == null || nomenclatureNode.get(CTX_QUESTIONNAIRE_MODEL_CHEMIN_REPERTOIRE).asText().isEmpty()) {
-                    missingNodes.add(missingCTXMessage( CTX_QUESTIONNAIRE_MODELS, i, CTX_QUESTIONNAIRE_MODEL_CHEMIN_REPERTOIRE));
+                    missingNodes.add(missingCTXMessage(CTX_QUESTIONNAIRE_MODELS, i, CTX_QUESTIONNAIRE_MODEL_CHEMIN_REPERTOIRE));
                 }
             }
         }
         return missingNodes;
     }
 
-    private static String missingCTXMessage(String parent,int index,String child){
+    private static String missingCTXMessage(String parent, int index, String child) {
         return DelegateContextVerifier.computeMissingMessage(String.format("%s[%s].%s", parent, index, child), QuestionnaireHelper.class);
     }
 
-    private QuestionnaireHelper(){}
+    private static SurveyUnitResponseDto computeDtoPlatine(JsonNode remSUNode, JsonNode currentPartitionNode) {
+        REMSurveyUnitDto remSurveyUnitDto = PlatineHelper.parseRemSUNode(objectMapper, VARNAME_REM_SURVEY_UNIT, remSUNode);
+        String id = remSurveyUnitDto.getRepositoryId().toString();
+        String nameKey = "name";
+        String valueKey = "value";
+
+        ArrayNode personalizationNode = objectMapper.createArrayNode();
+        personalizationNode.add(objectMapper.createObjectNode()
+                .put(nameKey, "whoAnswers1")
+                .put(valueKey, currentPartitionNode.path(CTX_PARTITION_QUIREPOND1).asText()));
+        personalizationNode.add(objectMapper.createObjectNode()
+                .put(nameKey, "whoAnswers2")
+                .put(valueKey, currentPartitionNode.path(CTX_PARTITION_QUIREPOND2).asText()));
+        personalizationNode.add(objectMapper.createObjectNode()
+                .put(nameKey, "whoAnswers3")
+                .put(valueKey, currentPartitionNode.path(CTX_PARTITION_QUIREPOND3).asText()));
+
+        return SurveyUnitResponseDto.builder()
+                .id(id) //Platine
+                .questionnaireId(currentPartitionNode.path(CTX_PARTITION_QUESTIONNAIRE_MODEL).asText())
+                .data(remSurveyUnitDto.getExternals())
+                .personalization(personalizationNode)
+                .comment(objectMapper.createObjectNode())
+                .stateData(objectMapper.createObjectNode())
+                .build();
+    }
+
+    private static SurveyUnitResponseDto computeDtoSabiane(JsonNode remSUNode, JsonNode currentPartitionNode) {
+        REMSurveyUnitDto remSurveyUnitDto = PlatineHelper.parseRemSUNode(objectMapper, VARNAME_REM_SURVEY_UNIT, remSUNode);
+        String id = SabianeIdHelper.computeSabianeID(currentPartitionNode.path(CTX_PARTITION_ID).asText(),remSurveyUnitDto.getRepositoryId().toString());
+
+        return SurveyUnitResponseDto.builder()
+                .id(id)//Sabiane uses identified of the form IdPartition P idREM
+                .questionnaireId(currentPartitionNode.path(CTX_PARTITION_QUESTIONNAIRE_MODEL).asText())
+                .data(remSurveyUnitDto.getExternals())
+                .personalization(objectMapper.createObjectNode())//No personalization for sabiane
+                .comment(objectMapper.createObjectNode())
+                .stateData(objectMapper.createObjectNode())
+                .build();
+    }
+
+    /**
+     * Create a SU in Platine Questionnaire
+     * @param execution
+     * @param protoolsContext
+     * @param service
+     */
+    public static void createSUTaskPlatine(DelegateExecution execution, ContextService protoolsContext, QuestionnairePlatineSabianeService service) {
+        createSUTaskPlatineSabiane(execution, protoolsContext, service, false);
+    }
+
+    /**
+     * Create a SU in Sabiane Questionnaire
+     * @param execution
+     * @param protoolsContext
+     * @param service
+     */
+    public static void createSUTaskSabiane(DelegateExecution execution, ContextService protoolsContext, QuestionnairePlatineSabianeService service) {
+        createSUTaskPlatineSabiane(execution, protoolsContext, service, true);
+    }
+
+    private static void createSUTaskPlatineSabiane(DelegateExecution execution, ContextService protoolsContext, QuestionnairePlatineSabianeService service, boolean modeSabiane) {
+        JsonNode contextRootNode = protoolsContext.getContextByProcessInstance(execution.getProcessInstanceId());
+
+        Long currentPartitionId = FlowableVariableUtils.getVariableOrThrow(execution, VARNAME_CURRENT_PARTITION_ID, Long.class);
+        JsonNode remSUNode = FlowableVariableUtils.getVariableOrThrow(execution, VARNAME_REM_SURVEY_UNIT, JsonNode.class);
+        JsonNode currentPartitionNode = getCurrentPartitionNode(contextRootNode, currentPartitionId);
+
+        //Create the DTO object
+        SurveyUnitResponseDto dto =
+                (modeSabiane)
+                        ?
+                        QuestionnaireHelper.computeDtoSabiane(remSUNode, currentPartitionNode)
+                        :
+                        QuestionnaireHelper.computeDtoPlatine(remSUNode, currentPartitionNode);
+
+        log.info("ProcessInstanceId={} - mode={} - currentPartitionId={} - remSU.id={}",
+                execution.getProcessInstanceId(), modeSabiane ? "sabiane" : "platine", currentPartitionId, dto.getId());
+
+        //Call service
+        service.postSurveyUnit(dto, contextRootNode.path(CTX_CAMPAGNE_ID).asText());
+
+        log.debug("ProcessInstanceId={}  end", execution.getProcessInstanceId());
+    }
+
+    /**
+     * Get the context errors for an SU creation in Platine
+     * @param contextRootNode : the context to verify
+     * @return a Set with the errors
+     */
+    public static Set<String> getCreateSUContextErrorsPlatine(JsonNode contextRootNode){
+        Set<String> requiredPartition =
+                Set.of(CTX_PARTITION_ID,CTX_PARTITION_QUESTIONNAIRE_MODEL,CTX_PARTITION_QUIREPOND1,CTX_PARTITION_QUIREPOND2,CTX_PARTITION_QUIREPOND3);
+        return getCreateSUContextErrorsCommonPlatineSabiane(contextRootNode,requiredPartition);
+    }
+
+    /**
+     * Get the context errors for an SU creation in Sabiane
+     * @param contextRootNode : the context to verify
+     * @return a Set with the errors
+     */
+    public static Set<String> getCreateSUContextErrorsSabiane(JsonNode contextRootNode){
+        Set<String> requiredPartition =
+                Set.of(CTX_PARTITION_ID,CTX_PARTITION_QUESTIONNAIRE_MODEL);
+        return getCreateSUContextErrorsCommonPlatineSabiane(contextRootNode,requiredPartition);
+    }
+
+    private static Set<String> getCreateSUContextErrorsCommonPlatineSabiane(JsonNode contextRootNode, Set<String> requiredPartition){
+        if(contextRootNode==null){
+            return Set.of("Context is missing");
+        }
+        Set<String> results=new HashSet<>();
+        Set<String> requiredNodes =
+                Set.of(
+                        //Global & Campaign
+                        CTX_PARTITIONS
+                );
+
+        results.addAll(DelegateContextVerifier.computeMissingChildrenMessages(requiredNodes,contextRootNode,QuestionnaireHelper.class));
+        //Maybe one day we will have partitions for platine and partitions for sabiane and we will only validate the platine ones
+        //Partitions
+        var partitionIterator =contextRootNode.path(CTX_PARTITIONS).elements();
+        while (partitionIterator.hasNext()) {
+            var partitionNode = partitionIterator.next();
+            results.addAll(DelegateContextVerifier.computeMissingChildrenMessages(requiredPartition,partitionNode,QuestionnaireHelper.class));
+        }
+        return results;
+    }
 }
