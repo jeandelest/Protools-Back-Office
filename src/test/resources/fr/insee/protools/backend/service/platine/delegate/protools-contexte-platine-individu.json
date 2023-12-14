@@ -40,7 +40,11 @@
     "assistanceNiveau2NumeroVoie": "assistanceNiveau2NumeroVoie",
     "assistanceNiveau2NomVoie": "rue Kennedy",
     "assistanceNiveau2Commune": "assistanceNiveau2Commune",
-    "assistanceNiveau2CodePostal": "assistanceNiveau2CodePostal"
+    "assistanceNiveau2CodePostal": "assistanceNiveau2CodePostal",
+    "urlLoiStatistique": "urlLoiStatistique_val",
+    "urlLoiRGPD": "urlLoiRGPD_val",
+    "urlLoiInformatique": "urlLoiInformatique_val"
+
   },
   "partitions": [{
     "id": 1,

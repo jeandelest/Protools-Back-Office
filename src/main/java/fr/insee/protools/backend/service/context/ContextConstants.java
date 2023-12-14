@@ -59,6 +59,10 @@ public final class ContextConstants {
     public static final String CTX_META_PRESTATAIRE = "prestataire";
     public static final String CTX_META_MAIL_RESP_OPERATIONNEL = "mailResponsableOperationnel";
     public static final String CTX_META_LOGO_PRESTATAIRE = "logoPrestataire";
+    //Metadonnes platine
+    public static final String CTX_META_URL_LOI_RGPD = "urlLoiRGPD";
+    public static final String CTX_META_URL_LOI_STATISTIQUE = "urlLoiStatistique";
+    public static final String CTX_META_URL_LOI_INFORMATIQUE = "urlLoiInformatique";
 
 
     //Pour sabiane

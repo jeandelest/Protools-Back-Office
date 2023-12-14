@@ -48,7 +48,10 @@
     "serviceCollecteurSignataireNom": "Christel Colin",
     "prestataire": false,
     "mailResponsableOperationnel": "contact-rgpd@insee.fr",
-    "logoPrestataire": ""
+    "logoPrestataire": "",
+    "urlLoiStatistique": "urlLoiStatistique_val",
+    "urlLoiRGPD": "urlLoiRGPD_val",
+    "urlLoiInformatique": "urlLoiInformatique_val"
   },
   "partitions": [{
     "id": 43,
