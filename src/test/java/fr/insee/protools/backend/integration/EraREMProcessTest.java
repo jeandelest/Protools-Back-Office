@@ -91,7 +91,7 @@ class EraREMProcessTest {
 
     try (InputStream is = EraREMProcessTest.class.getClassLoader().getResourceAsStream(ctx_json)){
       MockMultipartFile multipartFile = new MockMultipartFile("file.json", "file.json", "text/json", is.readAllBytes());
-      String processID = contextService.processContextFileAndCreateProcessInstance(multipartFile,"eraREM","toto");
+      String processID = contextService.processContextFileAndCreateProcessInstance(multipartFile,"eraREM","toto",  null);
       assertThat(processID).isNotBlank();
 
     } catch (IOException e) {

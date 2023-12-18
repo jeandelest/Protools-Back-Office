@@ -151,7 +151,7 @@ class ContextServiceTest {
         doReturn(Set.of()).when(contextService).isContextOKForBPMN(any(),any());
 
         //Call method under test
-        String processId=contextService.processContextFileAndCreateProcessInstance(multipartFile,"simpleProcess",dummyId);
+        String processId=contextService.processContextFileAndCreateProcessInstance(multipartFile,"simpleProcess",dummyId, null);
 
         //Post conditions : We've got a valid Process Instance
         assertEquals(dummyId,processId);
@@ -167,5 +167,5 @@ class ContextServiceTest {
         assertEquals("DEM2022X00",contextRootNode.get(ContextConstants.CTX_CAMPAGNE_ID).asText());
 
     }
-
+    //TODO: tests on the set variables
 }

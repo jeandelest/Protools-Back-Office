@@ -3,6 +3,9 @@ package fr.insee.protools.backend.service.context;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Map;
+import java.util.Optional;
+
 public interface ContextService {
     /**
      * Process the uploaded file and store it's content in VARIABLE_NAME_SERIALIZED_CONTEXT_FILE engine variable.
@@ -19,9 +22,10 @@ public interface ContextService {
      * @param file
      * @param processDefinitionId
      * @param businessKey
+     * @param startVariables
      * @return the new processInstanceId
      */
-    String processContextFileAndCreateProcessInstance(MultipartFile file, String processDefinitionId, String businessKey);
+    String processContextFileAndCreateProcessInstance(MultipartFile file, String processDefinitionId, String businessKey, Optional<Map<String, Object>> startVariables);
 
     /**
      * Retrieve Protools Context from of a given processInstance ID

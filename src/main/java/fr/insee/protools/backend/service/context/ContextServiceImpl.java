@@ -86,7 +86,7 @@ public class ContextServiceImpl implements ContextService {
     }
 
     @Override
-    public String processContextFileAndCreateProcessInstance(MultipartFile file, String processDefinitionId, String businessKey) {
+    public String processContextFileAndCreateProcessInstance(MultipartFile file, String processDefinitionId, String businessKey, Optional<Map<String, Object>> startVariables) {
         if (StringUtils.isBlank(processDefinitionId)) {
             log.error("processDefinitionId is null or blank");
             throw new ProcessDefinitionNotFoundException(processDefinitionId);
@@ -95,6 +95,11 @@ public class ContextServiceImpl implements ContextService {
         try {
             //check context
             Pair<Map<String, Object>, JsonNode> contextPair = processContextFile(file, processDefinitionId);
+            //Add all the initial variables (if any)
+            startVariables.ifPresent(
+                    initVars -> contextPair.getKey().putAll(initVars)
+            );
+
             //Create process instance
             ProcessInstance processInstance;
             if (StringUtils.isBlank(businessKey)) {
