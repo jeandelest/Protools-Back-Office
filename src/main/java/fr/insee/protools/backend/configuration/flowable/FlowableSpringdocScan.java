@@ -1,6 +1,7 @@
 package fr.insee.protools.backend.configuration.flowable;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.insee.protools.backend.flowable.converter.ListLongRestVariableConverter;
 import org.flowable.rest.service.api.RestResponseFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -20,7 +21,9 @@ public class FlowableSpringdocScan {
     @Bean()
     @ConditionalOnMissingBean
     public RestResponseFactory restResponseFactory(ObjectMapper objectMapper) {
-        return  new RestResponseFactory(objectMapper);
+        RestResponseFactory restResponseFactory = new RestResponseFactory(objectMapper);
+        restResponseFactory.getVariableConverters().add(new ListLongRestVariableConverter());
+        return  restResponseFactory;
     }
 
 }
