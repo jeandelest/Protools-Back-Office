@@ -2,8 +2,8 @@ package fr.insee.protools.backend.webclient;
 
 
 import fr.insee.protools.backend.webclient.configuration.APIProperties;
-import fr.insee.protools.backend.webclient.exception.KeycloakTokenConfigException;
-import fr.insee.protools.backend.webclient.exception.KeycloakTokenConfigUncheckedException;
+import fr.insee.protools.backend.webclient.exception.KeycloakTokenConfigBPMNError;
+import fr.insee.protools.backend.webclient.exception.KeycloakTokenConfigUncheckedBPMNError;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.ClientRequest;
 import org.springframework.web.reactive.function.client.ClientResponse;
@@ -32,8 +32,8 @@ class KeycloakHeadersFilter implements ExchangeFilterFunction {
                 .headers(headers -> {
                     try {
                         headers.setBearerAuth(keycloakService.getToken(authProperties));
-                    } catch (KeycloakTokenConfigException e) {
-                        throw new KeycloakTokenConfigUncheckedException(e);
+                    } catch (KeycloakTokenConfigBPMNError e) {
+                        throw new KeycloakTokenConfigUncheckedBPMNError(e);
                     }
                     headers.setContentType(MediaType.APPLICATION_JSON);
                 })

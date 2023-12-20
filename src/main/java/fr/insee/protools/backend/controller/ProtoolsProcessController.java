@@ -26,13 +26,13 @@ public class ProtoolsProcessController {
             description = "Upload the context of the process containing all the metadata used during the process")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "400", description = "The received file is not a valid XML"),
+            @ApiResponse(responseCode = "400", description = "The received file is not a valid JSON"),
             @ApiResponse(responseCode = "404", description = "The taskId does not exist"),
-            @ApiResponse(responseCode = "415", description = "The received file is not an XML file"),
-            @ApiResponse(responseCode = "422", description = "The received file is a valid XML bad has incorrect content")
+            @ApiResponse(responseCode = "415", description = "The received file is not an JSON file"),
+            @ApiResponse(responseCode = "422", description = "The received file is a valid JSON bad has incorrect content")
     })
     public ResponseEntity<Void> uploadFile(
-            @Parameter(name = "file", description = "XML file with the context", required = true)
+            @Parameter(name = "file", description = "JSON file with the context", required = true)
             @RequestPart (name = "file") MultipartFile file,
             @RequestParam("taskID") String taskID
     ) {
@@ -41,4 +41,23 @@ public class ProtoolsProcessController {
 
     }
 
+    @PostMapping(value = "/create_process_instance_with_context", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "Start a process instance providing and provide de protools context",
+            description = "Start a process instance with provided *processDefinitionId* and *businessKey* "
+            + "and the protools JSON context similary with what is done by /runtime/process-instances" )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "400", description = "The received file is not a valid JSON"),
+            @ApiResponse(responseCode = "404", description = "The processDefinitionId does not exist"),
+            @ApiResponse(responseCode = "415", description = "The received file is not an JSON file"),
+            @ApiResponse(responseCode = "422", description = "The received file is a valid JSON bad has incorrect content")
+    })
+    public ResponseEntity<Void> createProcessInstanceWithContext(
+            @Parameter(name = "file", description = "JSON file with the context", required = true)
+            @RequestPart (name = "file") MultipartFile file,
+            @RequestParam("processDefinitionId") String processDefinitionId,
+            @RequestParam(name="businessKey") String businessKey) {
+            contextService.processContextFileAndCreateProcessInstance(file,processDefinitionId,businessKey);
+            return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

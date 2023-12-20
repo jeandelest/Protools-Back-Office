@@ -3,6 +3,7 @@ package fr.insee.protools.backend.webclient.configuration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.validation.annotation.Validated;
 
 @Configuration
 public class ApiConfigProperties {
@@ -12,7 +13,9 @@ public class ApiConfigProperties {
                 KNOWN_API_PLATINE_QUESTIONNAIRE,
                 KNOWN_API_ERA,
                 KNOWN_API_SABIANE_PILOTAGE,
-                KNOWN_API_SABIANE_QUESTIONNAIRE
+                KNOWN_API_SABIANE_QUESTIONNAIRE,
+                KNOWN_API_REM,
+                KNOWN_API_MESHUGGAH
         }
 
         public APIProperties getAPIProperties(KNOWN_API api){
@@ -22,11 +25,15 @@ public class ApiConfigProperties {
                         case KNOWN_API_ERA -> eraApiProperties();
                         case KNOWN_API_SABIANE_PILOTAGE -> sabianePilotageApiProperties();
                         case KNOWN_API_SABIANE_QUESTIONNAIRE -> sabianeQuestionnaireApiProperties();
+                        case KNOWN_API_REM -> remApiProperties();
+                        case KNOWN_API_MESHUGGAH -> meshuggahApiProperties();
+
                 };
         }
 
         @Bean("eraApiProperties")
         @ConfigurationProperties("fr.insee.protools.api.era")
+        @Validated
         public APIProperties eraApiProperties() {
                 return new APIProperties();
         }
@@ -52,6 +59,18 @@ public class ApiConfigProperties {
         @Bean("sabianeQuestionnaireApiProperties")
         @ConfigurationProperties("fr.insee.protools.api.sabiane-questionnaire")
         public APIProperties sabianeQuestionnaireApiProperties() {
+                return new APIProperties();
+        }
+
+        @Bean("remApiProperties")
+        @ConfigurationProperties("fr.insee.protools.api.rem")
+        public APIProperties remApiProperties() {
+                return new APIProperties();
+        }
+
+        @Bean("meshuggahApiProperties")
+        @ConfigurationProperties("fr.insee.protools.api.meshuggah")
+        public APIProperties meshuggahApiProperties() {
                 return new APIProperties();
         }
 

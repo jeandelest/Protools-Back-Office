@@ -2,7 +2,7 @@ package fr.insee.protools.backend.webclient;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.insee.protools.backend.webclient.configuration.APIProperties;
-import fr.insee.protools.backend.webclient.exception.KeycloakTokenConfigException;
+import fr.insee.protools.backend.webclient.exception.KeycloakTokenConfigBPMNError;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.AfterEach;
@@ -64,46 +64,46 @@ class KeycloakServiceTest {
         //Missing realm
         APIProperties.AuthProperties kcAuthNullRealm = new APIProperties.AuthProperties(getDummyUriWithPort(),null, "toto","toto");
         //Should throw an exception as the realm is missing
-        assertThrows(KeycloakTokenConfigException.class , ()  -> keycloakService.getToken(kcAuthNullRealm));
+        assertThrows(KeycloakTokenConfigBPMNError.class , ()  -> keycloakService.getToken(kcAuthNullRealm));
 
         //Blank realm
         APIProperties.AuthProperties kcAuthBlankRealm = new APIProperties.AuthProperties(getDummyUriWithPort(),"  ", "toto","toto");
-        assertThrows(KeycloakTokenConfigException.class , ()  -> keycloakService.getToken(kcAuthBlankRealm));
+        assertThrows(KeycloakTokenConfigBPMNError.class , ()  -> keycloakService.getToken(kcAuthBlankRealm));
 
         //Missing url
         APIProperties.AuthProperties kcAuthNullUrl = new APIProperties.AuthProperties(null,"realm", "toto","toto");
-        assertThrows(KeycloakTokenConfigException.class , ()  -> keycloakService.getToken(kcAuthNullUrl));
+        assertThrows(KeycloakTokenConfigBPMNError.class , ()  -> keycloakService.getToken(kcAuthNullUrl));
 
         //Blank url
         APIProperties.AuthProperties kcAuthBlankUrl = new APIProperties.AuthProperties("","realm", "toto","toto");
-        assertThrows(KeycloakTokenConfigException.class , ()  -> keycloakService.getToken(kcAuthBlankUrl));
+        assertThrows(KeycloakTokenConfigBPMNError.class , ()  -> keycloakService.getToken(kcAuthBlankUrl));
 
         //Incorrect Url
         APIProperties.AuthProperties kcAuthWrongUrl = new APIProperties.AuthProperties("UrlError:::-*","realm", "toto","toto");
-        assertThrows(KeycloakTokenConfigException.class , ()  -> keycloakService.getToken(kcAuthWrongUrl));
+        assertThrows(KeycloakTokenConfigBPMNError.class , ()  -> keycloakService.getToken(kcAuthWrongUrl));
 
         //Missing clientId
         APIProperties.AuthProperties kcAuthNullClientId = new APIProperties.AuthProperties(getDummyUriWithPort(),"realm", null,"toto");
-        assertThrows(KeycloakTokenConfigException.class , ()  -> keycloakService.getToken(kcAuthNullClientId));
+        assertThrows(KeycloakTokenConfigBPMNError.class , ()  -> keycloakService.getToken(kcAuthNullClientId));
 
         //Blank ClientId
         APIProperties.AuthProperties kcAuthBlanklClientId = new APIProperties.AuthProperties(getDummyUriWithPort(),"realm", "                     ","toto");
-        assertThrows(KeycloakTokenConfigException.class , ()  -> keycloakService.getToken(kcAuthBlanklClientId));
+        assertThrows(KeycloakTokenConfigBPMNError.class , ()  -> keycloakService.getToken(kcAuthBlanklClientId));
 
 
         //Missing secret
         APIProperties.AuthProperties kcAuthNullSecret = new APIProperties.AuthProperties(getDummyUriWithPort(),"realm", "toto",null);
-        assertThrows(KeycloakTokenConfigException.class , ()  -> keycloakService.getToken(kcAuthNullSecret));
+        assertThrows(KeycloakTokenConfigBPMNError.class , ()  -> keycloakService.getToken(kcAuthNullSecret));
 
         //Blank secret
         APIProperties.AuthProperties kcAuthBlankSecret = new APIProperties.AuthProperties(getDummyUriWithPort(),"realm", "toto","");
-        assertThrows(KeycloakTokenConfigException.class , ()  -> keycloakService.getToken(kcAuthBlankSecret));
+        assertThrows(KeycloakTokenConfigBPMNError.class , ()  -> keycloakService.getToken(kcAuthBlankSecret));
     }
 
 
     @Test
     @DisplayName("getToken should check if a token already exists for this AuthProperties and reuse the known token if it is not exipred")
-    void getToken_should_refreshTokenWhenNeeded() throws IOException, KeycloakTokenConfigException, InterruptedException {
+    void getToken_should_refreshTokenWhenNeeded() throws IOException, KeycloakTokenConfigBPMNError, InterruptedException {
         APIProperties.AuthProperties kcAuth = new APIProperties.AuthProperties(getDummyUriWithPort(),"realm", "toto","toto");
 
         //Prepare 2 KC responses

@@ -1,7 +1,7 @@
 package fr.insee.protools.backend.webclient;
 
 import fr.insee.protools.backend.webclient.configuration.APIProperties;
-import fr.insee.protools.backend.webclient.exception.KeycloakTokenConfigException;
+import fr.insee.protools.backend.webclient.exception.KeycloakTokenConfigBPMNError;
 import io.netty.handler.logging.LogLevel;
 import jakarta.annotation.PostConstruct;
 import lombok.Data;
@@ -31,6 +31,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 @Data
 @Slf4j
+public
 class KeycloakService {
 
     @Autowired
@@ -41,14 +42,14 @@ class KeycloakService {
     //We will keep one token by auth server / realm / clientId
     Map<APIProperties.AuthProperties, Token> tokenByAuthRealm=new HashMap<>();
 
-    public String getToken(APIProperties.AuthProperties authProperties) throws KeycloakTokenConfigException {
+    public String getToken(APIProperties.AuthProperties authProperties) throws KeycloakTokenConfigBPMNError {
         log.debug("getToken for authProperties={}",authProperties);
         if(!isValidURL(authProperties.getUrl())
                 || authProperties.getClientId()==null || authProperties.getClientId().isBlank()
                 || authProperties.getRealm()==null || authProperties.getRealm().isBlank()
                 || authProperties.getClientSecret()==null || authProperties.getClientSecret().isBlank())
         {
-            throw new KeycloakTokenConfigException(String.format("Auth is not correctly configured for [%s]",authProperties));
+            throw new KeycloakTokenConfigBPMNError(String.format("Auth is not correctly configured for [%s]",authProperties));
         }
 
         Token token = tokenByAuthRealm.get(authProperties);
@@ -59,18 +60,17 @@ class KeycloakService {
             log.trace("Refresh the token");
             refreshToken(authProperties);
         }
-        log.trace("new token endValidityTimeMillis={}",tokenByAuthRealm.get(authProperties).endValidityTimeMillis);
         return tokenByAuthRealm.get(authProperties).value;
     }
 
-    private void refreshToken(APIProperties.AuthProperties authProperties) throws KeycloakTokenConfigException {
+    private void refreshToken(APIProperties.AuthProperties authProperties) throws KeycloakTokenConfigBPMNError {
         log.debug("refreshToken for authProperties={}",authProperties);
 
         String uri = String.format("%s/realms/%s/protocol/openid-connect/token",authProperties.getUrl(),authProperties.getRealm());
         try {
             uri = new URI(uri).normalize().toString();
         } catch (URISyntaxException e) {
-            throw new KeycloakTokenConfigException(String.format("Auth is not correctly configured for [%s]",authProperties));
+            throw new KeycloakTokenConfigBPMNError(String.format("Auth is not correctly configured for [%s]",authProperties));
         }
         MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
         requestBody.add("grant_type", "client_credentials");

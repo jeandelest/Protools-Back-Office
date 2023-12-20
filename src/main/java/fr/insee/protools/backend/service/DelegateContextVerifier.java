@@ -1,19 +1,19 @@
 package fr.insee.protools.backend.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import fr.insee.protools.backend.service.context.exception.BadContextIncorrectException;
+import fr.insee.protools.backend.service.context.exception.BadContextIncorrectBPMNError;
 import org.slf4j.Logger;
 
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- * All the delegate referenced in BPMN should implement this interface so we can make BPMN introspection to validate
+ * All the delegate referenced in BPMN should implement this interface, so we can make BPMN introspection to validate
  * that the provided context contains all the required information for every task of the BPMN
  */
 public interface DelegateContextVerifier {
 
-    Set<String> getContextErrors(JsonNode contextRootNode);
+    default Set<String> getContextErrors(JsonNode contextRootNode) {return Set.of();}
 
     static String computeMissingMessage(String missingElement, Class<?> classUsingThisElement){
         return String.format("Class=%s : Missing Context element name=%s ", classUsingThisElement.getSimpleName(),missingElement);
@@ -30,6 +30,9 @@ public interface DelegateContextVerifier {
                 ,enumValues);
     }
     static Set<String> computeMissingChildrenMessages(Set<String> requiredChildren, JsonNode parentNode, Class<?> classUsingThisElement){
+        if(parentNode == null){
+            return new HashSet<>();
+        }
         Set<String> missingNodes = new HashSet<>();
         for (String child: requiredChildren  ) {
             if(parentNode.get(child) == null){
@@ -41,14 +44,14 @@ public interface DelegateContextVerifier {
 
     default void checkContextOrThrow(Logger log,String processInstanceId, JsonNode contextRootNode) {
         if(contextRootNode==null)
-            throw new BadContextIncorrectException(String.format("ProcessInstanceId=%s - context is missing", processInstanceId));
+            throw new BadContextIncorrectBPMNError(String.format("ProcessInstanceId=%s - context is missing", processInstanceId));
 
         var errors = getContextErrors(contextRootNode);
         if(!errors.isEmpty()){
             for (var msg: errors) {
                 log.error(msg);
             }
-            throw new BadContextIncorrectException(String.format("ProcessInstanceId=%s - context is incorrect missingNodes=%s", processInstanceId,errors));
+            throw new BadContextIncorrectBPMNError(String.format("ProcessInstanceId=%s - context is incorrect missingNodes=%s", processInstanceId,errors));
         }
     }
 }

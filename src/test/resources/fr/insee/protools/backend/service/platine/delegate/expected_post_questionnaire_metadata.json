@@ -51,15 +51,15 @@
       },
       {
         "name": "Loi_statistique",
-        "value": ""
+        "value": "urlLoiStatistique_val"
       },
       {
         "name": "Loi_rgpd",
-        "value": ""
+        "value": "urlLoiRGPD_val"
       },
       {
         "name": "Loi_informatique",
-        "value": ""
+        "value": "urlLoiInformatique_val"
       }
     ],
     "inseeContext": "household"

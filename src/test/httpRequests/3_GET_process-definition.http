@@ -1,0 +1,134 @@
+### GET TOKEN --- SET HOST
+< {%
+    client.global.set("host", "https://api-orchestration-protocole-enquete.developpement.insee.fr/");
+    client.global.set("host", "http://localhost:8080/");
+%}
+POST https://auth.insee.test/auth/realms/{{realm}}/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&client_id={{client_id}}&client_secret={{client_secret}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+    client.global.set("auth_token", response.body.access_token);
+    client.log("TOKEN = "+client.global.get("auth_token"));
+    client.log("RESPONSE = "+client.global);
+
+
+%}
+
+
+#######GET : List of bpmn definitions
+
+GET {{host}}/repository/process-definitions?latest=true
+Authorization: Bearer {{auth_token}}
+
+#########GET : List of active processes
+GET {{host}}/runtime/process-instances
+Authorization: Bearer {{auth_token}}
+
+#########GET : List of active processes : SEARCH by businessKey & processDefinitionKey
+GET {{host}}/runtime/process-instances
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "businessKey":"AAA"
+}
+> {%
+    client.global.set("processInstanceId", response.body["data"][0]["id"]);
+    client.global.set("processDefinitionId", response.body["data"][0]["processDefinitionId"]);
+
+    client.log("processInstanceId="+client.global.get("processInstanceId"));
+    client.log("processDefinitionId="+client.global.get("processDefinitionId"));
+
+%}
+
+
+######### Infos of a specific process instants
+GET {{host}}/runtime/process-instances/{{processInstanceId}}
+Authorization: Bearer {{auth_token}}
+
+
+#######GET BPMN image for a specific process instance
+GET {{host}}/runtime/process-instances/{{processInstanceId}}/diagram
+Authorization: Bearer {{auth_token}}
+
+
+#######GET BPMN XML file for a specific process instance
+GET {{host}}/repository/process-definitions/{{processDefinitionId}}/resourcedata
+Authorization: Bearer {{auth_token}}
+
+#######GET BPMN as JSON file for a process DEFINITION
+GET {{host}}/repository/process-definitions/{{processDefinitionId}}/model
+Authorization: Bearer {{auth_token}}
+
+
+### GET EXECUTIONS : each active process appears at least twice : Once for the process instance and once for the active activity
+###                  active activity references the id of the process instance in its parentId field
+GET {{host}}/runtime/executions
+Authorization: Bearer {{auth_token}}
+
+
+###
+POST {{host}}/query/tasks
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+      "processInstanceId": "{{processInstanceId}}"
+}
+
+
+### Récupération des tâches actives
+GET  {{host}}/runtime/tasks
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+
+### Liste des définitions de processus
+GET {{host}}/repository/process-definitions?key=testFront&latest=true
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+### Liste des définitions de processus
+GET {{host}}/repository/process-definitions?key=oneDecisionTaskProcess&latest=true
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+> {%
+    client.global.set("processDefinitionId", response.body["data"][0]["id"]);
+    client.log("processDefinitionId="+client.global.get("processDefinitionId"));
+%}
+
+### Récupération du BPMN du processus récupéré juste avant
+GET {{host}}/repository/process-definitions/{{processDefinitionId}}/resourcedata
+Authorization: Bearer {{auth_token}}
+
+### Récupération du BPMN du processus récupéré juste avant (FORMAT JSON)
+GET {{host}}/repository/process-definitions/{{processDefinitionId}}/model
+Authorization: Bearer {{auth_token}}
+
+### TO BE REMOVED
+GET {{host}}/repository/process-definitions/chargementUeWeb:2:3835881d-401f-11ee-90df-70b5e8a2e307/resourcedata
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+### Test deploiement BPMN
+
+POST {{host}}/repository/process-definitions/{{processDefinitionId}}/model
+Authorization: Bearer {{auth_token}}
+
+
+###
+POST {{host}}/repository/deployments?deploymentName=testFront
+Authorization: Bearer {{auth_token}}
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="processus_de_test_front.bpmn20.xml"
+
+< bpmn/processus_de_test_front.bpmn20.xml
+

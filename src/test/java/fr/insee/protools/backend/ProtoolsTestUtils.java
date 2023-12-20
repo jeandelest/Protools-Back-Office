@@ -1,7 +1,10 @@
 package fr.insee.protools.backend;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.insee.protools.backend.service.context.ContextService;
 import okio.Buffer;
 import okio.Okio;
 import org.apache.commons.io.IOUtils;
@@ -13,6 +16,8 @@ import java.io.InputStream;
 import java.io.UncheckedIOException;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 /**
  * Utilitary class to load ressource files in String, POJO (using jackson) or JsonNode
@@ -36,7 +41,7 @@ public class ProtoolsTestUtils {
     public static <T> T asObject(String filePath, Class<T> targetClass) {
         try {
             String s = asString(filePath);
-            return  new ObjectMapper().readValue(s,targetClass);
+            return  new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).readValue(s,targetClass);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
@@ -71,4 +76,10 @@ public class ProtoolsTestUtils {
         return result;
     }
 
+
+    public static JsonNode initContexteMockFromString(ContextService protoolsContext, String contextAsString) throws JsonProcessingException {
+        JsonNode contextRootNode = new ObjectMapper().readTree(contextAsString);
+        when(protoolsContext.getContextByProcessInstance(anyString())).thenReturn(contextRootNode);
+        return contextRootNode;
+    }
 }

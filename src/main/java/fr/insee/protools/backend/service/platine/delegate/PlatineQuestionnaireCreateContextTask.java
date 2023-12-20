@@ -36,16 +36,18 @@ public class PlatineQuestionnaireCreateContextTask implements JavaDelegate, Dele
 
     @Override
     public void execute(DelegateExecution execution) {
-        log.info("ProcessInstanceId={}  begin",execution.getProcessInstanceId());
         JsonNode contextRootNode = protoolsContext.getContextByProcessInstance(execution.getProcessInstanceId());
         //check context
         checkContextOrThrow(log,execution.getProcessInstanceId(), contextRootNode);
 
         MetadataValue metadataDto = createMetadataDto(contextRootNode);
+        log.info("ProcessInstanceId={}  - campagne={}"
+                ,execution.getProcessInstanceId(),contextRootNode.path(CTX_CAMPAGNE_CONTEXTE).asText());
+
         QuestionnaireHelper.createQuestionnaire(contextRootNode,platineQuestionnaireService,nomenclatureService,
                 questionnaireModelService,execution.getProcessInstanceId(),metadataDto);
 
-        log.info("ProcessInstanceId={}  end",execution.getProcessInstanceId());
+        log.debug("ProcessInstanceId={}  end",execution.getProcessInstanceId());
     }
 
     @Override
@@ -63,7 +65,10 @@ public class PlatineQuestionnaireCreateContextTask implements JavaDelegate, Dele
                 Set.of(CTX_META_LABEL_LONG_OPERATION, CTX_META_OBJECTIFS_COURTS, CTX_META_CARACTERE_OBLIGATOIRE,
                         CTX_META_NUMERO_VISA, CTX_META_MINISTERE_TUTELLE, CTX_META_PARUTION_JO, CTX_META_DATE_PARUTION_JO,
                         CTX_META_RESPONSABLE_OPERATIONNEL, CTX_META_RESPONSABLE_TRAITEMENT, CTX_META_ANNEE_VISA,
-                        CTX_META_QUALITE_STATISTIQUE, CTX_META_TEST_NON_LABELLISE);
+                        CTX_META_QUALITE_STATISTIQUE, CTX_META_TEST_NON_LABELLISE,
+                        //Legal
+                        CTX_META_URL_LOI_RGPD,CTX_META_URL_LOI_INFORMATIQUE,CTX_META_URL_LOI_STATISTIQUE
+                );
 
         if (contextRootNode.get(CTX_METADONNEES) != null) {
             missingNodes.addAll(DelegateContextVerifier.computeMissingChildrenMessages(requiredMetadonnes,contextRootNode.path(CTX_METADONNEES),getClass()));
@@ -92,9 +97,9 @@ public class PlatineQuestionnaireCreateContextTask implements JavaDelegate, Dele
                                         new MetadataValueItem(MetadataConstants.Enq_AnneeVisa,metadataNode.path(CTX_META_ANNEE_VISA).asInt()),
                                         new MetadataValueItem(MetadataConstants.Enq_QualiteStatistique,metadataNode.path(CTX_META_QUALITE_STATISTIQUE).asBoolean()),
                                         new MetadataValueItem(MetadataConstants.Enq_TestNonLabellise,metadataNode.path(CTX_META_TEST_NON_LABELLISE).asBoolean()),
-                                        new MetadataValueItem(MetadataConstants.Loi_statistique,""),
-                                        new MetadataValueItem(MetadataConstants.Loi_rgpd,""),
-                                        new MetadataValueItem(MetadataConstants.Loi_informatique,"")
+                                        new MetadataValueItem(MetadataConstants.Loi_statistique,metadataNode.path(CTX_META_URL_LOI_STATISTIQUE).asText()),
+                                        new MetadataValueItem(MetadataConstants.Loi_rgpd,metadataNode.path(CTX_META_URL_LOI_RGPD).asText()),
+                                        new MetadataValueItem(MetadataConstants.Loi_informatique,metadataNode.path(CTX_META_URL_LOI_INFORMATIQUE).asText())
                                         )
                         )
                         .inseeContext(contextRootNode.path(CTX_CAMPAGNE_CONTEXTE).asText())

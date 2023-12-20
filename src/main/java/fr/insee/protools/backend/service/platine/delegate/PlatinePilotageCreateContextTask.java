@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import fr.insee.protools.backend.service.DelegateContextVerifier;
 import fr.insee.protools.backend.service.context.ContextService;
 import fr.insee.protools.backend.service.platine.pilotage.PlatinePilotageService;
-import fr.insee.protools.backend.service.platine.pilotage.dto.*;
+import fr.insee.protools.backend.service.platine.pilotage.metadata.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.EnumUtils;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static fr.insee.protools.backend.service.context.ContextConstants.*;
+import static fr.insee.protools.backend.service.platine.utils.PlatineHelper.computePilotagePartitionID;
 
 @Slf4j
 @Component
@@ -65,7 +66,7 @@ public class PlatinePilotageCreateContextTask implements JavaDelegate, DelegateC
                         CTX_META_NUMERO_VISA, CTX_META_CNIS_URL, CTX_META_DIFFUSION_URL, CTX_META_NOTICE_URL, CTX_META_SPECIMENT_URL
                 );
         Set<String> requiredPartition =
-                Set.of(CTX_PARTITION_LABEL, CTX_PARTITION_DATE_DEBUT_COLLECTE, CTX_PARTITION_DATE_FIN_COLLECTE, CTX_PARTITION_DATE_RETOUR);
+                Set.of(CTX_PARTITION_ID,CTX_PARTITION_LABEL, CTX_PARTITION_DATE_DEBUT_COLLECTE, CTX_PARTITION_DATE_FIN_COLLECTE, CTX_PARTITION_DATE_RETOUR);
         results.addAll(DelegateContextVerifier.computeMissingChildrenMessages(requiredNodes,contextRootNode,getClass()));
         results.addAll(DelegateContextVerifier.computeMissingChildrenMessages(requiredMetadonnees,contextRootNode.path(CTX_METADONNEES),getClass()));
 
@@ -79,12 +80,12 @@ public class PlatinePilotageCreateContextTask implements JavaDelegate, DelegateC
 
         //Check value of PERIODE Enum
         String periode = contextRootNode.path(CTX_METADONNEES).path(CTX_META_PERIODE).asText();
-        if(! EnumUtils.isValidEnum(PeriodEnum.class, periode)){
+        if(! EnumUtils.isValidEnumIgnoreCase(PeriodEnum.class, periode)){
             results.add(DelegateContextVerifier.computeIncorrectEnumMessage(CTX_META_PERIODE,periode,Arrays.toString(PeriodEnum.values()),getClass()));
         }
         //Check value of PERIODICITE Enum
         String periodicite = contextRootNode.path(CTX_METADONNEES).path(CTX_META_PERIODICITE).asText();
-        if(! EnumUtils.isValidEnum(PeriodicityEnum.class, periodicite)){
+        if(! EnumUtils.isValidEnumIgnoreCase(PeriodicityEnum.class, periodicite)){
             results.add(DelegateContextVerifier.computeIncorrectEnumMessage(CTX_META_PERIODICITE,periodicite,Arrays.toString(PeriodicityEnum.values()),getClass()));
         }
         return results;
@@ -195,7 +196,7 @@ public class PlatinePilotageCreateContextTask implements JavaDelegate, DelegateC
 
     private static PartitioningDto computePartitioningDto(JsonNode partitionNode, String campaignId) {
         return PartitioningDto.builder()
-                .id(partitionNode.path(CTX_PARTITION_ID).asText())
+                .id(computePilotagePartitionID(campaignId,partitionNode.path(CTX_PARTITION_ID).asLong()))
                 .campaignId(campaignId)
                 .label(partitionNode.path(CTX_PARTITION_LABEL).asText())
                 .openingDate(partitionNode.path(CTX_PARTITION_DATE_DEBUT_COLLECTE).asText())

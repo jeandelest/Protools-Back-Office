@@ -7,7 +7,7 @@ import fr.insee.protools.backend.service.common.platine_sabiane.dto.campaign.Cam
 import fr.insee.protools.backend.service.common.platine_sabiane.dto.campaign.MetadataValue;
 import fr.insee.protools.backend.service.context.ContextConstants;
 import fr.insee.protools.backend.service.context.ContextService;
-import fr.insee.protools.backend.service.context.exception.BadContextIncorrectException;
+import fr.insee.protools.backend.service.context.exception.BadContextIncorrectBPMNError;
 import fr.insee.protools.backend.service.nomenclature.NomenclatureService;
 import fr.insee.protools.backend.service.platine.questionnaire.PlatineQuestionnaireService;
 import fr.insee.protools.backend.service.questionnaire_model.QuestionnaireModelService;
@@ -40,7 +40,7 @@ public
 class PlatineQuestionnaireCreateContextTaskTest {
 
     final static String ressourceFolder = ClassUtils.convertClassNameToResourcePath(PlatineQuestionnaireCreateContextTaskTest.class.getPackageName());
-    final static String platine_context_json = ressourceFolder+"/protools-contexte-platine.json";
+    final static String platine_context_json = ressourceFolder+"/protools-contexte-platine-individu.json";
     final static String platine_context_incorrect_json = ressourceFolder+"/protools-contexte-platine-incorrect.json";
 
     @Mock PlatineQuestionnaireService platineQuestionnaireService;
@@ -69,7 +69,7 @@ class PlatineQuestionnaireCreateContextTaskTest {
         initContexteMock(platine_context_incorrect_json);
 
         //Execute the unit under test
-        assertThrows(BadContextIncorrectException.class, () -> platineQuestTask.execute(execution));
+        assertThrows(BadContextIncorrectBPMNError.class, () -> platineQuestTask.execute(execution));
 
         // postconditions
         //assertThat(execution.getVariable("myVariable")).isEqualTo("myValue");

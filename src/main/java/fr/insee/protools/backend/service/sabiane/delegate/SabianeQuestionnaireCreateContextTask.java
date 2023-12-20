@@ -36,16 +36,17 @@ public class SabianeQuestionnaireCreateContextTask implements JavaDelegate, Dele
 
     @Override
     public void execute(DelegateExecution execution) {
-        log.info("ProcessInstanceId={}  begin",execution.getProcessInstanceId());
         JsonNode contextRootNode = protoolsContext.getContextByProcessInstance(execution.getProcessInstanceId());
         //check context
         checkContextOrThrow(log,execution.getProcessInstanceId(), contextRootNode);
+        log.info("ProcessInstanceId={} - campagne={}"
+                ,execution.getProcessInstanceId(),contextRootNode.path(CTX_CAMPAGNE_CONTEXTE).asText());
 
         MetadataValue metadataDto = createMetadataDto(contextRootNode);
         QuestionnaireHelper.createQuestionnaire(contextRootNode,sabianeQuestionnaireService,nomenclatureService,
                 questionnaireModelService,execution.getProcessInstanceId(),metadataDto);
 
-        log.info("ProcessInstanceId={}  end",execution.getProcessInstanceId());
+        log.debug("ProcessInstanceId={}  end",execution.getProcessInstanceId());
     }
 
     @Override

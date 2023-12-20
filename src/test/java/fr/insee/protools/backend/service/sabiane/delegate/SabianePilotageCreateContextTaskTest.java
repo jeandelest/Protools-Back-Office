@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.insee.protools.backend.ProtoolsTestUtils;
 import fr.insee.protools.backend.service.context.ContextService;
-import fr.insee.protools.backend.service.context.exception.BadContextIncorrectException;
+import fr.insee.protools.backend.service.context.exception.BadContextIncorrectBPMNError;
 import fr.insee.protools.backend.service.sabiane.pilotage.SabianePilotageService;
 import fr.insee.protools.backend.service.sabiane.pilotage.dto.CampaignContextDto;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -52,7 +52,7 @@ class SabianePilotageCreateContextTaskTest {
         when(execution.getProcessInstanceId()).thenReturn(dumyId);
 
         //Execute the unit under test
-        assertThrows(BadContextIncorrectException.class,() -> sabianePilotageTask.execute(execution));
+        assertThrows(BadContextIncorrectBPMNError.class,() -> sabianePilotageTask.execute(execution));
     }
 
     @Test

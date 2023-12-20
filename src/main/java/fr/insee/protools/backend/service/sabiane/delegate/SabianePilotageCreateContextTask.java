@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import fr.insee.protools.backend.service.DelegateContextVerifier;
 import fr.insee.protools.backend.service.context.ContextService;
 import fr.insee.protools.backend.service.context.ContextServiceImpl;
-import fr.insee.protools.backend.service.context.exception.BadContextDateTimeParseException;
+import fr.insee.protools.backend.service.context.exception.BadContextDateTimeParseBPMNError;
 import fr.insee.protools.backend.service.sabiane.pilotage.SabianePilotageService;
 import fr.insee.protools.backend.service.sabiane.pilotage.dto.*;
 import lombok.extern.slf4j.Slf4j;
@@ -29,14 +29,15 @@ public class SabianePilotageCreateContextTask implements JavaDelegate, DelegateC
 
     @Override
     public void execute(DelegateExecution execution) {
-        log.info("ProcessInstanceId={}  begin",execution.getProcessInstanceId());
         JsonNode contextRootNode = protoolsContext.getContextByProcessInstance(execution.getProcessInstanceId());
         checkContextOrThrow(log,execution.getProcessInstanceId(), contextRootNode);
 
+        log.info("ProcessInstanceId={} - campagne={}"
+                ,execution.getProcessInstanceId(),contextRootNode.path(CTX_CAMPAGNE_CONTEXTE).asText());
+
         CampaignContextDto dto = computeCampaignContextDto(contextRootNode);
         sabianePilotageService.postCampaign(dto);
-
-        log.info("ProcessInstanceId={}  end",execution.getProcessInstanceId());
+        log.debug("ProcessInstanceId={}  end",execution.getProcessInstanceId());
     }
 
     private CampaignContextDto computeCampaignContextDto(JsonNode contextRootNode) {
@@ -162,6 +163,7 @@ public class SabianePilotageCreateContextTask implements JavaDelegate, DelegateC
     }
 
     @Override
+    @SuppressWarnings("java:S3776") //disable the warning about cognitive complexity as it is long but simple
     public Set<String> getContextErrors(JsonNode contextRootNode) {
         if(contextRootNode==null){
             return Set.of("Context is missing");
@@ -170,7 +172,7 @@ public class SabianePilotageCreateContextTask implements JavaDelegate, DelegateC
         Set<String> requiredNodes =
                 Set.of(
                         //Global & Campaign
-                        CTX_METADONNEES, CTX_CAMPAGNE_ID, CTX_CAMPAGNE_LABEL, CTX_CAMPAGNE_CONTEXTE
+                        CTX_METADONNEES, CTX_CAMPAGNE_ID, CTX_CAMPAGNE_LABEL, CTX_CAMPAGNE_CONTEXTE, CTX_PARTITIONS
                 );
         Set<String> requiredMetadonnees =
                 Set.of(
@@ -178,7 +180,7 @@ public class SabianePilotageCreateContextTask implements JavaDelegate, DelegateC
                         CTX_META_ASSISTANCE_NIVO2_MAIL,
                         CTX_META_REPERAGE,CTX_META_ESSAIS_CONTACT,CTX_META_BILAN_CONTACT,
                         CTX_META_REFERENTS_PRINCIPAUX, CTX_META_REFERENTS_SECONDAIRES,
-                        //arraya with at least one element
+                        //array with at least one element
                         CTX_META_SITES_GESTION
                 );
         Set<String> requiredReferent =
@@ -222,7 +224,7 @@ public class SabianePilotageCreateContextTask implements JavaDelegate, DelegateC
                 //Check the date format
                 try {
                     ContextServiceImpl.getInstantFromPartition(partitionNode, dateNode);
-                } catch (BadContextDateTimeParseException e) {
+                } catch (BadContextDateTimeParseBPMNError e) {
                     results.add(e.getMessage());
                 }
             }

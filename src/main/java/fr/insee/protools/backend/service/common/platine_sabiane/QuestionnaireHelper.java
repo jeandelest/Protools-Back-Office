@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.insee.protools.backend.service.DelegateContextVerifier;
 import fr.insee.protools.backend.service.common.platine_sabiane.dto.campaign.CampaignDto;
 import fr.insee.protools.backend.service.common.platine_sabiane.dto.campaign.MetadataValue;
-import fr.insee.protools.backend.service.exception.JsonParsingException;
+import fr.insee.protools.backend.service.exception.JsonParsingBPMNError;
 import fr.insee.protools.backend.service.nomenclature.NomenclatureService;
 import fr.insee.protools.backend.service.questionnaire_model.QuestionnaireModelService;
 import lombok.extern.slf4j.Slf4j;
@@ -71,7 +71,7 @@ public class QuestionnaireHelper {
                 try {
                     nomenclatureValue = objectMapper.readTree(nomenclatureValueStr);
                 } catch (JsonProcessingException e) {
-                    throw new JsonParsingException("Error while parsing the json retrieved for nomenclatureId=" + nomenclatureId, e);
+                    throw new JsonParsingBPMNError("Error while parsing the json retrieved for nomenclatureId=" + nomenclatureId, e);
                 }
 
                 //Write this nomenclature to platine/sabiane
@@ -113,7 +113,7 @@ public class QuestionnaireHelper {
                 try {
                     questionnaireValue = objectMapper.readTree(questionnaireValueStr);
                 } catch (JsonProcessingException e) {
-                    throw new JsonParsingException("Error while parsing the json retrieved for Model questionnaireId=" + questionnaireId, e);
+                    throw new JsonParsingBPMNError("Error while parsing the json retrieved for Model questionnaireId=" + questionnaireId, e);
                 }
                 //get the list of nomenclatures needed by this Questionnaire Model
                 JsonNode nomenclaturesArrayNode = node.get(CTX_QUESTIONNAIRE_MODEL_REQUIRED_NOMENCLATURES);
@@ -129,6 +129,7 @@ public class QuestionnaireHelper {
         return questionnaireModelIds;
     }
 
+    @SuppressWarnings("java:S3776") //disable the warning about cognitive complexity as it is long but simple
     public static Set<String> getContextErrors(JsonNode contextRootNode){
         if(contextRootNode==null){
             return Set.of(String.format("Class=%s : Context is missing ", QuestionnaireHelper.class.getSimpleName()));
@@ -146,13 +147,13 @@ public class QuestionnaireHelper {
                 i++;
                 var nomenclatureNode = nomenclatureIterator.next();
                 if(nomenclatureNode.get(CTX_NOMENCLATURE_ID) == null || nomenclatureNode.get(CTX_NOMENCLATURE_ID).asText().isEmpty()){
-                    missingNodes.add(DelegateContextVerifier.computeMissingMessage(String.format("%s[%s].%s",CTX_NOMENCLATURES,i,CTX_NOMENCLATURE_ID),QuestionnaireHelper.class));
+                    missingNodes.add(missingCTXMessage(CTX_NOMENCLATURES,i,CTX_NOMENCLATURE_ID));
                 }
                 if(nomenclatureNode.get(CTX_NOMENCLATURE_LABEL) == null || nomenclatureNode.get(CTX_NOMENCLATURE_LABEL).asText().isEmpty()){
-                    missingNodes.add(DelegateContextVerifier.computeMissingMessage(String.format("%s[%s].%s",CTX_NOMENCLATURES,i,CTX_NOMENCLATURE_LABEL),QuestionnaireHelper.class));
+                    missingNodes.add(missingCTXMessage(CTX_NOMENCLATURES,i,CTX_NOMENCLATURE_LABEL));
                 }
                 if(nomenclatureNode.get(CTX_NOMENCLATURE_CHEMIN_REPERTOIRE) == null || nomenclatureNode.get(CTX_NOMENCLATURE_CHEMIN_REPERTOIRE).asText().isEmpty()){
-                    missingNodes.add(DelegateContextVerifier.computeMissingMessage(String.format("%s[%s].%s",CTX_NOMENCLATURES,i,CTX_NOMENCLATURE_CHEMIN_REPERTOIRE),QuestionnaireHelper.class));
+                    missingNodes.add(missingCTXMessage(CTX_NOMENCLATURES,i,CTX_NOMENCLATURE_CHEMIN_REPERTOIRE));
                 }
             }
 
@@ -166,17 +167,21 @@ public class QuestionnaireHelper {
                 i++;
                 var nomenclatureNode = questionnaireModelsIterator.next();
                 if (nomenclatureNode.get(CTX_QUESTIONNAIRE_MODEL_ID) == null || nomenclatureNode.get(CTX_QUESTIONNAIRE_MODEL_ID).asText().isEmpty()) {
-                    missingNodes.add(DelegateContextVerifier.computeMissingMessage(String.format("%s[%s].%s", CTX_QUESTIONNAIRE_MODELS, i, CTX_QUESTIONNAIRE_MODEL_ID), QuestionnaireHelper.class));
+                    missingNodes.add(missingCTXMessage( CTX_QUESTIONNAIRE_MODELS, i, CTX_QUESTIONNAIRE_MODEL_ID));
                 }
                 if (nomenclatureNode.get(CTX_QUESTIONNAIRE_MODEL_LABEL) == null || nomenclatureNode.get(CTX_QUESTIONNAIRE_MODEL_LABEL).asText().isEmpty()) {
-                    missingNodes.add(DelegateContextVerifier.computeMissingMessage(String.format("%s[%s].%s", CTX_QUESTIONNAIRE_MODELS, i, CTX_QUESTIONNAIRE_MODEL_LABEL), QuestionnaireHelper.class));
+                    missingNodes.add(missingCTXMessage( CTX_QUESTIONNAIRE_MODELS, i, CTX_QUESTIONNAIRE_MODEL_LABEL));
                 }
                 if (nomenclatureNode.get(CTX_QUESTIONNAIRE_MODEL_CHEMIN_REPERTOIRE) == null || nomenclatureNode.get(CTX_QUESTIONNAIRE_MODEL_CHEMIN_REPERTOIRE).asText().isEmpty()) {
-                    missingNodes.add(DelegateContextVerifier.computeMissingMessage(String.format("%s[%s].%s", CTX_QUESTIONNAIRE_MODELS, i, CTX_QUESTIONNAIRE_MODEL_CHEMIN_REPERTOIRE), QuestionnaireHelper.class));
+                    missingNodes.add(missingCTXMessage( CTX_QUESTIONNAIRE_MODELS, i, CTX_QUESTIONNAIRE_MODEL_CHEMIN_REPERTOIRE));
                 }
             }
         }
         return missingNodes;
+    }
+
+    private static String missingCTXMessage(String parent,int index,String child){
+        return DelegateContextVerifier.computeMissingMessage(String.format("%s[%s].%s", parent, index, child), QuestionnaireHelper.class);
     }
 
     private QuestionnaireHelper(){}

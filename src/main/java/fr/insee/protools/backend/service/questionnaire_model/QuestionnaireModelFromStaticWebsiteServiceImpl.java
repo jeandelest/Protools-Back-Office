@@ -1,6 +1,6 @@
 package fr.insee.protools.backend.service.questionnaire_model;
 
-import fr.insee.protools.backend.service.context.exception.BadContextIncorrectException;
+import fr.insee.protools.backend.service.context.exception.BadContextIncorrectBPMNError;
 import fr.insee.protools.backend.webclient.WebClientHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class QuestionnaireModelFromStaticWebsiteServiceImpl implements Questionn
         try {
             uri = new URI(fullPath).normalize().toString();
         } catch (URISyntaxException e) {
-            throw new BadContextIncorrectException(String.format("questionnaireModelId=[%s] - folderPath=[%s] : fullPath=[%s] cannot be parsed: Error=[%s]"
+            throw new BadContextIncorrectBPMNError(String.format("questionnaireModelId=[%s] - folderPath=[%s] : fullPath=[%s] cannot be parsed: Error=[%s]"
                     ,questionnaireModelId,folderPath,fullPath, e.getMessage()));
         }
         return
