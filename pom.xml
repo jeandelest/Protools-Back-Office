@@ -42,7 +42,7 @@
             <version>${flowable.version}</version>
         </dependency>
 
-        <!-- for password generation (used to init passwords in sugoi-->
+        <!-- for password generation (used to init passwords in sugoi)-->
         <dependency>
             <groupId>org.passay</groupId>
             <artifactId>passay</artifactId>
