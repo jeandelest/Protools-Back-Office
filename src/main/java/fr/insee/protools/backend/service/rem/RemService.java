@@ -86,7 +86,6 @@ public class RemService {
             log.debug("writeERASUList - partitionId={}  - values==null ==> Nothing to do");
             return null;
         }
-        log.debug("writeERASUList - partitionId={}  - values.size={}", partitionId, values.size());
         try {
             var response = webClientHelper.getWebClient(KNOWN_API_REM)
                     .post()

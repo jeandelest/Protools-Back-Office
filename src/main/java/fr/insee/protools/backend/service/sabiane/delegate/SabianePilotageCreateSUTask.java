@@ -2,9 +2,12 @@ package fr.insee.protools.backend.service.sabiane.delegate;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeType;
 import fr.insee.protools.backend.service.DelegateContextVerifier;
 import fr.insee.protools.backend.service.context.ContextService;
+import fr.insee.protools.backend.service.context.ContextServiceImpl;
 import fr.insee.protools.backend.service.context.enums.PartitionTypeEchantillon;
+import fr.insee.protools.backend.service.context.exception.BadContextDateTimeParseBPMNError;
 import fr.insee.protools.backend.service.exception.IncorrectSUBPMNError;
 import fr.insee.protools.backend.service.platine.utils.PlatineHelper;
 import fr.insee.protools.backend.service.rem.RemDtoUtils;
@@ -14,6 +17,7 @@ import fr.insee.protools.backend.service.sabiane.pilotage.SabianePilotageService
 import fr.insee.protools.backend.service.sabiane.pilotage.dto.*;
 import fr.insee.protools.backend.service.utils.FlowableVariableUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -21,6 +25,7 @@ import org.flowable.engine.delegate.JavaDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -31,8 +36,7 @@ import java.util.stream.Collectors;
 
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES;
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
-import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VARNAME_CURRENT_PARTITION_ID;
-import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VARNAME_REM_SURVEY_UNIT;
+import static fr.insee.protools.backend.service.FlowableVariableNameConstants.*;
 import static fr.insee.protools.backend.service.context.ContextConstants.*;
 import static fr.insee.protools.backend.service.utils.ContextUtils.getCurrentPartitionNode;
 
@@ -40,7 +44,6 @@ import static fr.insee.protools.backend.service.utils.ContextUtils.getCurrentPar
 @Component
 public class SabianePilotageCreateSUTask implements JavaDelegate, DelegateContextVerifier {
 
-    private final static String EMPTY = "";
     private final static DateTimeFormatter birthdateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
     private final static ZoneId parisTimezone = ZoneId.of("Europe/Paris");
     private static final ObjectMapper objectMapper = new ObjectMapper().configure(FAIL_ON_UNKNOWN_PROPERTIES, false).configure(FAIL_ON_MISSING_CREATOR_PROPERTIES, true);
@@ -66,22 +69,61 @@ public class SabianePilotageCreateSUTask implements JavaDelegate, DelegateContex
         log.info("ProcessInstanceId={} - currentPartitionId={} - remSU.id={}", execution.getProcessInstanceId(), currentPartitionId, dto.getId());
 
         //Call service
-        //sabianePilotageService.xxxxxxxxxxx(dto, contextRootNode.path(CTX_CAMPAGNE_ID).asText());
+        sabianePilotageService.postSurveyUnits(List.of(dto));
 
         log.debug("ProcessInstanceId={}  end", execution.getProcessInstanceId());
     }
 
     @Override
     public Set<String> getContextErrors(JsonNode contextRootNode) {
-        if(true)
-            throw new RuntimeException("TOTO");
-        else
-            return null;
+        if(contextRootNode==null){
+            return Set.of("Context is missing");
+        }
+        Set<String> results=new HashSet<>();
 
+        Set<String> requiredNodes =
+                Set.of(
+                        //Global & Campaign
+                        CTX_CAMPAGNE_ID, CTX_PARTITIONS
+                );
+        Set<String> requiredPartition =
+                Set.of(CTX_PARTITION_ID, CTX_PARTITION_TYPE_ECHANTILLON,CTX_PARTITION_PRIORITAIRE);
+
+        results.addAll(DelegateContextVerifier.computeMissingChildrenMessages(requiredNodes,contextRootNode,getClass()));
+
+        //Partitions
+        if(!contextRootNode.path(CTX_PARTITIONS).isArray() || contextRootNode.path(CTX_PARTITIONS).isEmpty()){
+            results.add(DelegateContextVerifier.computeIncorrectMessage(CTX_PARTITIONS," should be a non empty array", getClass()));
+        }
+        else{
+            var partitionIterator =contextRootNode.path(CTX_PARTITIONS).elements();
+            while (partitionIterator.hasNext()) {
+                var partitionNode = partitionIterator.next();
+                results.addAll(DelegateContextVerifier.computeMissingChildrenMessages(requiredPartition,partitionNode,getClass()));
+
+                //Check value of Enum
+                String enumVal = partitionNode.path(CTX_PARTITION_TYPE_ECHANTILLON).asText();
+                if(! EnumUtils.isValidEnumIgnoreCase(PartitionTypeEchantillon.class, enumVal)){
+                    results.add(DelegateContextVerifier.computeIncorrectEnumMessage(CTX_PARTITION_TYPE_ECHANTILLON,enumVal,Arrays.toString(PartitionTypeEchantillon.values()),getClass()));
+                }
+            }
+        }
+
+        return results;
     }
 
-
-    private static long computeSabianeBirthDateFromRem(String remBirthdate) {
+    /**
+     * Compute a timestamp considering that {@code remBirthdate} is localized in
+     * "Europe/Paris" timezone and is at the start of day
+     * @param remBirthdate A birthdate. Can be of the form
+     *      <ul>
+     *          <li>yyyyMMdd - ex: 20110823</li>
+     *          <li>yyyyMM then assume dd is 01 - ex 201108 ==> 20110801</li>
+     *          <li>yyyy then assume MM is 01 and dd is 01 - ex: 2011 ==> 20110101</li>
+     *      </ul>
+     * @return the unix timestamp (number of seconds since epoch) corresponding to this birthdate
+     */
+    protected static long computeSabianeBirthDateFromRem(String remBirthdate) {
         String adjudstedBirthDate = remBirthdate.trim();
         int len = adjudstedBirthDate.length();
         switch (len) {
@@ -170,10 +212,18 @@ public class SabianePilotageCreateSUTask implements JavaDelegate, DelegateContex
     }
 
     private static SabianePersonDto createSabianePersonFromRemPerson(PersonDto remPerson, Boolean isPrivileged) {
-        return SabianePersonDto.builder().title(convertREMGenderToSabianeCivilityTitle(remPerson.getGender())).firstName(remPerson.getFirstName()).lastName(remPerson.getLastName()).email(remPerson.getEmails().stream().findFirst().map(EmailDto::toString).orElse("")).birthdate(computeSabianeBirthDateFromRem(remPerson.getDateOfBirth())).favoriteEmail(Boolean.FALSE).privileged(isPrivileged).phoneNumbers(createSabianePhoneList(remPerson.getPhoneNumbers())).build();
+        return SabianePersonDto.builder()
+                .title(convertREMGenderToSabianeCivilityTitle(remPerson.getGender()))
+                .firstName(remPerson.getFirstName())
+                .lastName(remPerson.getLastName())
+                .email(remPerson.getEmails().stream().findFirst().map(EmailDto::getMailAddress).orElse(""))
+                .birthdate(computeSabianeBirthDateFromRem(remPerson.getDateOfBirth()))
+                .favoriteEmail(Boolean.FALSE).privileged(isPrivileged)
+                .phoneNumbers(createSabianePhoneList(remPerson.getPhoneNumbers()))
+                .build();
     }
 
-    private static SurveyUnitContextDto createSabianeSUContextDto(JsonNode contextRootNode, Long currentPartitionId, JsonNode remSUNode, Boolean isLogement, Boolean priority) {
+    protected static SurveyUnitContextDto createSabianeSUContextDto(JsonNode contextRootNode, Long currentPartitionId, JsonNode remSUNode, Boolean isLogement, Boolean priority) {
         REMSurveyUnitDto remSurveyUnitDto = PlatineHelper.parseRemSUNode(objectMapper, VARNAME_REM_SURVEY_UNIT, remSUNode);
         Pair<PersonDto, Optional<PersonDto>> mainAndSecondaryPerson = RemDtoUtils.findContactAndSecondary(remSUNode, remSurveyUnitDto, isLogement);
         String id = SabianeIdHelper.computeSabianeID(currentPartitionId.toString(), remSurveyUnitDto.getRepositoryId().toString());
@@ -182,12 +232,14 @@ public class SabianePilotageCreateSUTask implements JavaDelegate, DelegateContex
         sabianePersons.add(createSabianePersonFromRemPerson(mainAndSecondaryPerson.getLeft(), true)); //first is privileged
         mainAndSecondaryPerson.getRight().ifPresent(personDto -> sabianePersons.add(createSabianePersonFromRemPerson(personDto, false)));
 
+        //Organisation Unit (probably useless in production)
+        Optional<String> poleGestionOpale = RemDtoUtils.searchAdditionalInformation(RemDtoUtils.REM_ADDITIONALINFOS_POLE_GESTION_OPALE,remSUNode);
 
         return SurveyUnitContextDto.builder()
                 .id(id)
                 .persons(sabianePersons)
-                .address(computeSabianeAdress(remSurveyUnitDto, mainAndSecondaryPerson.getLeft()))
-                .organizationUnitId("TOBEDONE")
+                .address(computeSabianeAdress(remSurveyUnitDto.getAddress(), mainAndSecondaryPerson.getLeft()))
+                .organizationUnitId(poleGestionOpale.orElse(null))
                 .priority(priority)
                 .campaign(contextRootNode.path(CTX_CAMPAGNE_ID).textValue())
                 .sampleIdentifiers(
@@ -197,41 +249,54 @@ public class SabianePilotageCreateSUTask implements JavaDelegate, DelegateContex
                                 .ec("0")
                                 .le(0)
                                 .nograp(remSurveyUnitDto.getOtherIdentifier().getNograp()).noi(0).nole(0).nolog(0).numfa(0).rges(0).ssech(currentPartitionId).build())
-                //.states(StateDto.builder().date(Instant.now().toEpochMilli()).type(StateType.NVM))
+                .states(List.of(StateDto.builder().date(Instant.now().toEpochMilli()).type(StateType.NVM).build()))
                 .build();
     }
 
     /**
      * @param str the string to parse
-     * @return l2 and l3 part of an adress by splitting str at 38 char. If str is null or empty return a pair of empty strings
+     * @return l2 and l3 part of an address by splitting {@code str} at 38 char. If {@code str} is null or empty
+     *          return a pair of empty strings
      */
-    private static Pair<String, String> computeL2L3(String str) {
+    protected static Pair<String, String> computeL2L3(String str) {
         if (str == null || str.isEmpty() || str.isBlank()) {
-            return Pair.of(EMPTY, EMPTY);
+            return Pair.of(StringUtils.EMPTY, StringUtils.EMPTY);
         }
         if (str.length() <= 38) {
-            return Pair.of(str, EMPTY);
+            return Pair.of(str, StringUtils.EMPTY);
         }
-        return Pair.of(str.substring(0, 38), str.substring(39, str.length() - 1));
+        return Pair.of(str.substring(0, 38), str.substring(38));
     }
 
-    static SabianeTitle convertREMGenderToSabianeCivilityTitle(String remGender) {
+    /**
+     * @param remGender
+     * @return A {@code SabianeTitle} for the passed string (supposedly a rem gender). MISTER if value is 1. MISS in every other case
+     */
+    protected static SabianeTitle convertREMGenderToSabianeCivilityTitle(String remGender) {
         return switch (remGender) {
-            case "2":
+            case null:
                 yield SabianeTitle.MISS;
             case "1":
                 yield SabianeTitle.MISTER;
-                //TODO : BPMN Error
             default:
-                throw new IllegalStateException("Unexpected value: " + remGender);
+                yield SabianeTitle.MISS;
         };
     }
 
-    private static AddressDto computeSabianeAdress(REMSurveyUnitDto remSuDto, PersonDto contact) {
+    protected static AddressDto computeSabianeAdress(REMAddressDto remAddressDto, PersonDto contact) {
 
-        REMAddressDto remAddressDto = remSuDto.getAddress();
-        //l1 : “M” si REM.person.gender = "1" ; “MME” sinon   +    “firstName” +  “lastName” (pour la person mis en privileged)
-        String l1 = String.format("%s %s %s", convertREMGenderToSabianeCivilityTitle(contact.getGender()).getFrenchCivility(), contact.getFirstName(), contact.getLastName());
+        //l1 : “M” si REM.person.gender = "1" ; “MME” sinon   +    “firstName” +  “lastName” (pour la personne mise en privileged)
+        StringBuilder l1Builder = new StringBuilder(convertREMGenderToSabianeCivilityTitle(contact.getGender()).getFrenchCivility());
+        l1Builder.append(org.apache.commons.lang3.StringUtils.SPACE);
+        if(!StringUtils.isBlank(contact.getFirstName())){
+            l1Builder.append(contact.getFirstName());
+            l1Builder.append(org.apache.commons.lang3.StringUtils.SPACE);
+        }
+        if(!StringUtils.isBlank(contact.getLastName())){
+            l1Builder.append(contact.getLastName());
+        }
+        String l1=l1Builder.toString().trim();
+
         //l2 : partie de “REM.address.addressSupplement” <=38 caractères
         //l3 : partie de “REM.address.addressSupplement” > 38 caractères
         Pair<String, String> l2_l3 = computeL2L3(remAddressDto.getAddressSupplement());
@@ -239,17 +304,49 @@ public class SabianePilotageCreateSUTask implements JavaDelegate, DelegateContex
         String l3 = l2_l3.getRight();
 
         //l4: “REM.address.streetNumber” + “REM.address.repetitionIndex” + “REM.address.streetType” + “REM.address.streetName”
-        String l4 = String.format("%s %s %s %s", remAddressDto.getStreetNumber(), remAddressDto.getRepetitionIndex(), remAddressDto.getStreetType(), remAddressDto.getStreetName());
+        StringBuilder l4Builder = new StringBuilder();
+        if(!StringUtils.isBlank(remAddressDto.getStreetNumber())){
+            l4Builder.append(remAddressDto.getStreetNumber());
+            l4Builder.append(org.apache.commons.lang3.StringUtils.SPACE);
+        }
+        if(!StringUtils.isBlank(remAddressDto.getRepetitionIndex())){
+            l4Builder.append(remAddressDto.getRepetitionIndex());
+            l4Builder.append(org.apache.commons.lang3.StringUtils.SPACE);
+        }
+        if(!StringUtils.isBlank(remAddressDto.getStreetType())){
+            l4Builder.append(remAddressDto.getStreetType());
+            l4Builder.append(org.apache.commons.lang3.StringUtils.SPACE);
+        }
+        if(!StringUtils.isBlank(remAddressDto.getStreetName())){
+            l4Builder.append(remAddressDto.getStreetName());
+        }
+        String l4 = l4Builder.toString().trim();
+
         //l5: “REM.address.specialDistribution”
-        String l5 = remAddressDto.getSpecialDistribution();
+        String l5 = (StringUtils.isBlank(remAddressDto.getSpecialDistribution()) ? "" : remAddressDto.getSpecialDistribution());
+
         //l6: “REM.address.zipCode” + “REM.address.cityName”
-        String l6 = String.format("%s %s", remAddressDto.getZipCode(), remAddressDto.getCityName());
+        StringBuilder l6Builder = new StringBuilder();
+        if(!StringUtils.isBlank(remAddressDto.getZipCode())){
+            l6Builder.append(remAddressDto.getZipCode());
+            l6Builder.append(org.apache.commons.lang3.StringUtils.SPACE);
+        }
+        if(!StringUtils.isBlank(remAddressDto.getCityName())){
+            l6Builder.append(remAddressDto.getCityName());
+        }
+        String l6 = l6Builder.toString().trim();
+
         //l7: REM.countryName  ou “FRANCE” si null
         String l7 = (StringUtils.isBlank(remAddressDto.getCountryName()) ? "FRANCE" : remAddressDto.getCountryName());
 
-        var sabianeAdressDto = AddressDto.builder().elevator(remAddressDto.getLocationHelp().getElevator()).building(remAddressDto.getLocationHelp().getBuilding()).floor(remAddressDto.getLocationHelp().getFloor()).door(remAddressDto.getLocationHelp().getDoor()).staircase(remAddressDto.getLocationHelp().getStaircase()).cityPriorityDistrict(remAddressDto.getLocationHelp().getCityPriorityDistrict()).l1(l1).l2(l2).l3(l3).l4(l4).l5(l5).l6(l6).l7(l7).build();
-        return sabianeAdressDto;
+        if(remAddressDto.getLocationHelp()!=null) {
+            return AddressDto.builder().elevator(remAddressDto.getLocationHelp().getElevator()).building(remAddressDto.getLocationHelp().getBuilding())
+                    .floor(remAddressDto.getLocationHelp().getFloor()).door(remAddressDto.getLocationHelp().getDoor()).staircase(remAddressDto.getLocationHelp().getStaircase())
+                    .cityPriorityDistrict(remAddressDto.getLocationHelp().getCityPriorityDistrict())
+                    .l1(l1).l2(l2).l3(l3).l4(l4).l5(l5).l6(l6).l7(l7).build();
+        }
+        else{
+            return AddressDto.builder().l1(l1).l2(l2).l3(l3).l4(l4).l5(l5).l6(l6).l7(l7).build();
+        }
     }
-
-
 }

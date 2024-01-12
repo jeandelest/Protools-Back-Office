@@ -10,6 +10,7 @@ import fr.insee.protools.backend.service.context.exception.BadContextIncorrectBP
 import fr.insee.protools.backend.service.exception.IncorrectSUBPMNError;
 import fr.insee.protools.backend.service.platine.questionnaire.PlatineQuestionnaireService;
 import fr.insee.protools.backend.service.utils.TestWithContext;
+import fr.insee.protools.backend.service.utils.data.RemSUData;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -23,7 +24,6 @@ import org.springframework.util.ClassUtils;
 import java.util.stream.Stream;
 
 import static fr.insee.protools.backend.service.FlowableVariableNameConstants.*;
-import static fr.insee.protools.backend.service.platine.delegate.PlatinePilotageCreateSurveyUnitTaskTest.rem_su_3personnes;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -62,7 +62,7 @@ class PlatineQuestionnaireCreateSurveyUnitTaskTest extends TestWithContext {
         //Prepare
         DelegateExecution execution=createMockedExecution();
         JsonNode contextRootNode = initContexteMockWithFile(context_json);
-        JsonNode remSU = ProtoolsTestUtils.asJsonNode(rem_su_3personnes);
+        JsonNode remSU = ProtoolsTestUtils.asJsonNode(RemSUData.rem_su_3personnes);
         Long idPartition=1l;
         lenient().doReturn(idPartition).when(execution).getVariable(VARNAME_CURRENT_PARTITION_ID,Long.class);
         lenient().doReturn(remSU).when(execution).getVariable(VARNAME_REM_SURVEY_UNIT,JsonNode.class);
@@ -92,7 +92,7 @@ class PlatineQuestionnaireCreateSurveyUnitTaskTest extends TestWithContext {
     void execute_should_throw_IncorrectSUException_when_wrongSU() {
         DelegateExecution execution=createMockedExecution();
         initContexteMockWithFile(platine_context_json);
-        JsonNode remSU = ProtoolsTestUtils.asJsonNode(rem_su_3personnes);
+        JsonNode remSU = ProtoolsTestUtils.asJsonNode(RemSUData.rem_su_3personnes);
         //Break this node
         ((ObjectNode) remSU).remove("repositoryId");
         Long idPartition=1l;

@@ -26,6 +26,6 @@ public class PersonDto {
     private Boolean coDeclarant;
     private List<PhoneNumberDto> phoneNumbers;
     private List<EmailDto> emails;
-    private REMAddressDto address;
+    //private REMAddressDto address; //Will be used for buisness; not for household
 
 }
