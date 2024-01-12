@@ -1,5 +1,7 @@
 package fr.insee.protools.backend.service.meshuggah;
 
+import fr.insee.protools.backend.service.utils.data.CtxExamples;
+
 public class MeshuggahCtxExamples {
 
     static final Long ctx_partition1 = 99L;
@@ -181,22 +183,9 @@ public class MeshuggahCtxExamples {
 
 
     //CTX ERROR
-    static final String ctx_ERROR_no_part =
-        """
-            {
-              "id": "AAC2023A00"
-            }
-        """;
+    static final String ctx_ERROR_no_part = CtxExamples.ctx_no_part;
 
-    static final String ctx_ERROR_no_com =
-        """
-            {
-              "id": "AAC2023A00",
-              "partitions": [{
-                "id": 99
-              }]
-            }
-        """;
+    static final String ctx_ERROR_no_com = CtxExamples.ctx_idCampagne_idPartition;
 
     static final String ctx_ERROR_no_moyen =
         """

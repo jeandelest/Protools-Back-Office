@@ -13,6 +13,7 @@ import fr.insee.protools.backend.service.rem.RemDtoUtils;
 import fr.insee.protools.backend.service.rem.dto.PersonDto;
 import fr.insee.protools.backend.service.rem.dto.REMSurveyUnitDto;
 import fr.insee.protools.backend.service.utils.TestWithContext;
+import fr.insee.protools.backend.service.utils.data.RemSUData;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -47,9 +48,6 @@ class PlatinePilotageCreateSurveyUnitTaskTest extends TestWithContext {
     final static String platine_context_json = ressourceFolder+"/protools-contexte-platine-individu.json";
     final static String platine_context_logement_json = ressourceFolder+"/protools-contexte-platine-individu.json";
 
-    final static String rem_su_1personne = ressourceFolder+"/rem-su_1personne.json";
-    final static String rem_su_3personnes = ressourceFolder+"/rem-su_3personnes.json";
-    final static String getRem_su_1personne_noContact = ressourceFolder+"/rem-su-noMainOrSurveyed.json";
 
     //To be able to run tests with differents protools contexts
     private static Stream<Arguments> protoolsContextArguments() {
@@ -73,7 +71,7 @@ class PlatinePilotageCreateSurveyUnitTaskTest extends TestWithContext {
         //Prepare
         DelegateExecution execution=createMockedExecution();
         JsonNode contextRootNode = initContexteMockWithFile(context_json);
-        JsonNode remSU = ProtoolsTestUtils.asJsonNode(rem_su_3personnes);
+        JsonNode remSU = ProtoolsTestUtils.asJsonNode(RemSUData.rem_su_3personnes);
         Long idPArtition=1l;
         lenient().doReturn(idPArtition).when(execution).getVariable(VARNAME_CURRENT_PARTITION_ID,Long.class);
         lenient().doReturn(remSU).when(execution).getVariable(VARNAME_REM_SURVEY_UNIT,JsonNode.class);
@@ -114,12 +112,12 @@ class PlatinePilotageCreateSurveyUnitTaskTest extends TestWithContext {
 
     @Test
     void findContact_should_return_CorrectContactForLogement() {
-        findContact_should_return_CorrectContact(rem_su_1personne,true,false);
-        findContact_should_return_CorrectContact(rem_su_1personne,false,false);
-        findContact_should_return_CorrectContact(rem_su_3personnes,true,false);
-        findContact_should_return_CorrectContact(rem_su_3personnes,false,false);
-        findContact_should_return_CorrectContact(getRem_su_1personne_noContact,false,true);
-        findContact_should_return_CorrectContact(getRem_su_1personne_noContact,true,true);
+        findContact_should_return_CorrectContact(RemSUData.rem_su_1personne,true,false);
+        findContact_should_return_CorrectContact(RemSUData.rem_su_1personne,false,false);
+        findContact_should_return_CorrectContact(RemSUData.rem_su_3personnes,true,false);
+        findContact_should_return_CorrectContact(RemSUData.rem_su_3personnes,false,false);
+        findContact_should_return_CorrectContact(RemSUData.getRem_su_1personne_noContact,false,true);
+        findContact_should_return_CorrectContact(RemSUData.getRem_su_1personne_noContact,true,true);
     }
 
 
@@ -157,7 +155,7 @@ class PlatinePilotageCreateSurveyUnitTaskTest extends TestWithContext {
     void execute_should_throw_IncorrectSUException_when_wrongSU() {
         DelegateExecution execution=createMockedExecution();
         initContexteMockWithFile(platine_context_json);
-        JsonNode remSU = ProtoolsTestUtils.asJsonNode(rem_su_3personnes);
+        JsonNode remSU = ProtoolsTestUtils.asJsonNode(RemSUData.rem_su_3personnes);
         //Break this node
         ((ObjectNode) remSU).remove("repositoryId");
         Long idPartition=1l;
