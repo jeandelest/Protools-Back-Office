@@ -154,7 +154,7 @@ class RemDtoUtilsTest {
         //Check
         assertEquals(res.getLeft().getIndex(), expectedFirstContactIndex);
         if(expectedSecondContact==-1){
-            assertThat(res.getRight().isEmpty());
+            assertThat(res.getRight()).isEmpty();
         }
         else{
             assertThat(res.getRight().get().getIndex()).isEqualTo(expectedSecondContact);
@@ -188,7 +188,7 @@ class RemDtoUtilsTest {
         //Check
         assertEquals(res.getLeft().getIndex(), expectedFirstContactIndex);
         if(expectedSecondContact==-1){
-            assertThat(res.getRight().isEmpty());
+            assertThat(res.getRight()).isEmpty();
         }
         else{
             assertThat(res.getRight().get().getIndex()).isEqualTo(expectedSecondContact);
