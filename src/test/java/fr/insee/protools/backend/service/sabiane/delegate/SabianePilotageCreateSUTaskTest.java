@@ -209,15 +209,16 @@ class SabianePilotageCreateSUTaskTest extends TestWithContext {
 
     @ParameterizedTest
     @CsvSource(
-            {"20110808, 1312754400",
+            {       "20110808, 1312754400",
                     "20110801, 1312149600",
                     "201108, 1312149600",
-                    "2000, 946681200"
+                    "2000, 946681200",
+                    ","
             })
-    public void computeSabianeBirthDateFromRem_should_ReturnCorrectValues(String remBirthdateInput, long expectedOutputTimestampMs) {
+    void computeSabianeBirthDateFromRem_should_ReturnCorrectValues(String remBirthdateInput, Long expectedOutputTimestampMs) {
         //Prepare
         //Call method under test
-        long result = SabianePilotageCreateSUTask.computeSabianeBirthDateFromRem(remBirthdateInput);
+        Long result = SabianePilotageCreateSUTask.computeSabianeBirthDateFromRem(remBirthdateInput);
         // Post status
         assertEquals(expectedOutputTimestampMs, result, "The computed timestamp for the birthdate : " + remBirthdateInput + " is incorrect");
     }
@@ -225,7 +226,7 @@ class SabianePilotageCreateSUTaskTest extends TestWithContext {
     @ParameterizedTest
     @ValueSource(strings = {"20001", "anabab", "200099", "2011010111111", "", "2", "200", "2011a", "1600010a", ",", "01122024"})
     // Les valeurs à tester
-    public void computeSabianeBirthDateFromRem_should_Throw_when_dateIsIncorrect(String inccorectDate) {
+    void computeSabianeBirthDateFromRem_should_Throw_when_dateIsIncorrect(String inccorectDate) {
         assertThrows(IncorrectSUBPMNError.class, () -> SabianePilotageCreateSUTask.computeSabianeBirthDateFromRem(inccorectDate));
     }
 
@@ -239,7 +240,7 @@ class SabianePilotageCreateSUTaskTest extends TestWithContext {
                     "0123456789012345678901234567891234567, 0123456789012345678901234567891234567,''"
             })
     @DisplayName("computeL2L3 should cut the string at 38th caracter (included in L2)")
-    public void computeL2L3_should_ReturnCorrectValues(String input, String expectedL2, String expectedL3) {
+    void computeL2L3_should_ReturnCorrectValues(String input, String expectedL2, String expectedL3) {
         //Prepare
         //Call method under test
         Pair<String, String> result = SabianePilotageCreateSUTask.computeL2L3(input);
@@ -403,7 +404,7 @@ class SabianePilotageCreateSUTaskTest extends TestWithContext {
 
     @ParameterizedTest
     @MethodSource("providedREMAdressAndContactAndExpectedResults")
-    public void computeSabianeAdress_should_returnCorrectValues(REMAddressDto remAdress, PersonDto remContact, AddressDto expectedSabianeAdress) {
+    void computeSabianeAdress_should_returnCorrectValues(REMAddressDto remAdress, PersonDto remContact, AddressDto expectedSabianeAdress) {
         //Prepare
         //Call method under test
         AddressDto sabianeAdress = SabianePilotageCreateSUTask.computeSabianeAdress(remAdress, remContact);
@@ -478,7 +479,7 @@ class SabianePilotageCreateSUTaskTest extends TestWithContext {
 
         //Verifications
         JsonNode sabianeResultNode = new ObjectMapper().valueToTree(sabianeDto);
-        assertThat(sabianeResultNode.get("states").isArray()).isEqualTo(true);
+        assertThat(sabianeResultNode.get("states").isArray()).isTrue();
         assertThat(sabianeResultNode.get("states").size()).isEqualTo(1);
         assertThat(sabianeResultNode.get("states").get(0).get("type").textValue()).isEqualTo(StateType.NVM.toString());
         //state datetime
@@ -572,7 +573,7 @@ class SabianePilotageCreateSUTaskTest extends TestWithContext {
 
         //Verifications
         JsonNode sabianeResultNode = new ObjectMapper().valueToTree(sabianeDto);
-        assertThat(sabianeResultNode.get("states").isArray()).isEqualTo(true);
+        assertThat(sabianeResultNode.get("states").isArray()).isTrue();
         assertThat(sabianeResultNode.get("states").size()).isEqualTo(1);
         assertThat(sabianeResultNode.get("states").get(0).get("type").textValue()).isEqualTo(StateType.NVM.toString());
         //state datetime
