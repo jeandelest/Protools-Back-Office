@@ -44,8 +44,8 @@ import static fr.insee.protools.backend.service.utils.ContextUtils.getCurrentPar
 @Component
 public class SabianePilotageCreateSUTask implements JavaDelegate, DelegateContextVerifier {
 
-    private final static DateTimeFormatter birthdateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-    private final static ZoneId parisTimezone = ZoneId.of("Europe/Paris");
+    private static final DateTimeFormatter birthdateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+    private static final ZoneId parisTimezone = ZoneId.of("Europe/Paris");
     private static final ObjectMapper objectMapper = new ObjectMapper().configure(FAIL_ON_UNKNOWN_PROPERTIES, false).configure(FAIL_ON_MISSING_CREATOR_PROPERTIES, true);
     @Autowired ContextService protoolsContext;
     @Autowired SabianePilotageService sabianePilotageService;
@@ -123,7 +123,10 @@ public class SabianePilotageCreateSUTask implements JavaDelegate, DelegateContex
      *      </ul>
      * @return the unix timestamp (number of seconds since epoch) corresponding to this birthdate
      */
-    protected static long computeSabianeBirthDateFromRem(String remBirthdate) {
+    protected static Long computeSabianeBirthDateFromRem(String remBirthdate) {
+        if(StringUtils.isBlank(remBirthdate))
+            return null;
+
         String adjudstedBirthDate = remBirthdate.trim();
         int len = adjudstedBirthDate.length();
         switch (len) {
@@ -235,6 +238,7 @@ public class SabianePilotageCreateSUTask implements JavaDelegate, DelegateContex
         //Organisation Unit (probably useless in production)
         Optional<String> poleGestionOpale = RemDtoUtils.searchAdditionalInformation(RemDtoUtils.REM_ADDITIONALINFOS_POLE_GESTION_OPALE,remSUNode);
 
+        String noGrap = (remSurveyUnitDto.getOtherIdentifier()==null)?null:remSurveyUnitDto.getOtherIdentifier().getNograp();
         return SurveyUnitContextDto.builder()
                 .id(id)
                 .persons(sabianePersons)
@@ -248,7 +252,7 @@ public class SabianePilotageCreateSUTask implements JavaDelegate, DelegateContex
                                 .bs(0)
                                 .ec("0")
                                 .le(0)
-                                .nograp(remSurveyUnitDto.getOtherIdentifier().getNograp()).noi(0).nole(0).nolog(0).numfa(0).rges(0).ssech(currentPartitionId).build())
+                                .nograp(noGrap).noi(0).nole(0).nolog(0).numfa(0).rges(0).ssech(currentPartitionId).build())
                 .states(List.of(StateDto.builder().date(Instant.now().toEpochMilli()).type(StateType.NVM).build()))
                 .build();
     }
@@ -299,9 +303,9 @@ public class SabianePilotageCreateSUTask implements JavaDelegate, DelegateContex
 
         //l2 : partie de “REM.address.addressSupplement” <=38 caractères
         //l3 : partie de “REM.address.addressSupplement” > 38 caractères
-        Pair<String, String> l2_l3 = computeL2L3(remAddressDto.getAddressSupplement());
-        String l2 = l2_l3.getLeft();
-        String l3 = l2_l3.getRight();
+        Pair<String, String> l2L3 = computeL2L3(remAddressDto.getAddressSupplement());
+        String l2 = l2L3.getLeft();
+        String l3 = l2L3.getRight();
 
         //l4: “REM.address.streetNumber” + “REM.address.repetitionIndex” + “REM.address.streetType” + “REM.address.streetName”
         StringBuilder l4Builder = new StringBuilder();
