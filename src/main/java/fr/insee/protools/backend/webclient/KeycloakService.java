@@ -38,7 +38,7 @@ class KeycloakService {
     private Environment environment;
     private WebClient webClient;
 
-    public static final int TOKEN_REFRESH_LIMIT_MILLISECONDS = 10*1000;
+    public static final int TOKEN_REFRESH_LIMIT_MILLISECONDS = 30*1000;
     //We will keep one token by auth server / realm / clientId
     Map<APIProperties.AuthProperties, Token> tokenByAuthRealm=new HashMap<>();
 
@@ -90,9 +90,13 @@ class KeycloakService {
             .block();
         //TODO: timeout configurable ; handling des exceptions (ex: block) ; codes erreur http
        //TODO : voir aussi cette histoire de timeout
-
-        endValidityTimeMillis += TimeUnit.SECONDS.toMillis(response.getExpiresIn());
-        tokenByAuthRealm.put(authProperties,new Token(response.getAccesToken(), endValidityTimeMillis));
+        if(response!=null) {
+            endValidityTimeMillis += TimeUnit.SECONDS.toMillis(response.getExpiresIn());
+            tokenByAuthRealm.put(authProperties, new Token(response.getAccesToken(), endValidityTimeMillis));
+        }
+        else{
+            log.error("refreshToken: null response");
+        }
     }
 
     @PostConstruct
