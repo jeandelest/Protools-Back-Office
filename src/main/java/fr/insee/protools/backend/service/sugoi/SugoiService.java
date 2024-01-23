@@ -3,7 +3,7 @@ package fr.insee.protools.backend.service.sugoi;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import fr.insee.protools.backend.service.exception.UsernameAlreadyExistsSugoiBPMNError;
-import fr.insee.protools.backend.service.sugoi.dto.User;
+import fr.insee.protools.backend.dto.sugoi.User;
 import fr.insee.protools.backend.webclient.WebClientHelper;
 import fr.insee.protools.backend.webclient.exception.runtime.WebClient4xxBPMNError;
 import lombok.extern.slf4j.Slf4j;

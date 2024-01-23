@@ -1,8 +1,8 @@
 package fr.insee.protools.backend.service.sugoi;
 
 import fr.insee.protools.backend.service.DelegateContextVerifier;
-import fr.insee.protools.backend.service.sugoi.dto.Habilitation;
-import fr.insee.protools.backend.service.sugoi.dto.User;
+import fr.insee.protools.backend.dto.sugoi.Habilitation;
+import fr.insee.protools.backend.dto.sugoi.User;
 import fr.insee.protools.backend.service.utils.password.PasswordService;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;

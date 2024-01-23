@@ -1,39 +1,7 @@
 package fr.insee.protools.backend.service.meshuggah;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import fr.insee.protools.backend.service.DelegateContextVerifier;
-import fr.insee.protools.backend.service.context.ContextService;
-import fr.insee.protools.backend.service.exception.IncorrectPlatineContactError;
-import fr.insee.protools.backend.service.exception.IncorrectSUBPMNError;
-import fr.insee.protools.backend.service.meshuggah.dto.MeshuggahComDetails;
-import fr.insee.protools.backend.service.platine.pilotage.dto.contact.PlatineContactDto;
-import fr.insee.protools.backend.service.rem.dto.REMSurveyUnitDto;
-import fr.insee.protools.backend.service.utils.FlowableVariableUtils;
-import groovy.lang.Tuple;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.tuple.Triple;
-import org.flowable.common.engine.api.FlowableIllegalArgumentException;
-import org.flowable.engine.delegate.DelegateExecution;
-import org.flowable.engine.delegate.JavaDelegate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static fr.insee.protools.backend.service.FlowableVariableNameConstants.*;
-import static fr.insee.protools.backend.service.context.ContextConstants.*;
-import static fr.insee.protools.backend.service.utils.ContextUtils.getCurrentPartitionNode;
 
 @Component
 @Slf4j

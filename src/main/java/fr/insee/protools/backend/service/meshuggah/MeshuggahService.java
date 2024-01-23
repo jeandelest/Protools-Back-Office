@@ -1,7 +1,7 @@
 package fr.insee.protools.backend.service.meshuggah;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import fr.insee.protools.backend.service.meshuggah.dto.MeshuggahComDetails;
+import fr.insee.protools.backend.dto.meshuggah.MeshuggahComDetails;
 import fr.insee.protools.backend.webclient.WebClientHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

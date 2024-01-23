@@ -1,11 +1,11 @@
 package fr.insee.protools.backend.service.rem.delegate;
 
 import fr.insee.protools.backend.service.DelegateContextVerifier;
-import fr.insee.protools.backend.service.era.dto.CensusJsonDto;
+import fr.insee.protools.backend.dto.era.CensusJsonDto;
 import fr.insee.protools.backend.service.exception.ProtoolsTaskBPMNError;
 import fr.insee.protools.backend.service.rem.RemService;
-import fr.insee.protools.backend.service.rem.dto.SuIdMappingJson;
-import fr.insee.protools.backend.service.rem.dto.SuIdMappingRecord;
+import fr.insee.protools.backend.dto.rem.SuIdMappingJson;
+import fr.insee.protools.backend.dto.rem.SuIdMappingRecord;
 import fr.insee.protools.backend.service.utils.FlowableVariableUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;

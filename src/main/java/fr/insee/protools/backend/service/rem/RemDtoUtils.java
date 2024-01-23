@@ -2,18 +2,13 @@ package fr.insee.protools.backend.service.rem;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import fr.insee.protools.backend.service.exception.IncorrectSUBPMNError;
-import fr.insee.protools.backend.service.rem.dto.PersonDto;
-import fr.insee.protools.backend.service.rem.dto.REMSurveyUnitDto;
-import fr.insee.protools.backend.service.utils.FlowableVariableUtils;
+import fr.insee.protools.backend.dto.rem.PersonDto;
+import fr.insee.protools.backend.dto.rem.REMSurveyUnitDto;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VARNAME_DIRECTORYACCESS_ID_CONTACT;
-import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VARNAME_REM_SURVEY_UNIT;
-import static fr.insee.protools.backend.service.rem.delegate.ExtractContactIdentifierFromREMSUTask.*;
 
 public class RemDtoUtils {
     private RemDtoUtils(){}

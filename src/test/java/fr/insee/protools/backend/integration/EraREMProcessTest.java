@@ -3,12 +3,12 @@ package fr.insee.protools.backend.integration;
 
 import fr.insee.protools.backend.service.context.ContextServiceImpl;
 import fr.insee.protools.backend.service.era.EraService;
-import fr.insee.protools.backend.service.era.dto.CensusJsonDto;
-import fr.insee.protools.backend.service.era.dto.GenderType;
+import fr.insee.protools.backend.dto.era.CensusJsonDto;
+import fr.insee.protools.backend.dto.era.GenderType;
 import fr.insee.protools.backend.service.rem.RemService;
-import fr.insee.protools.backend.service.rem.dto.REMSurveyUnitDto;
-import fr.insee.protools.backend.service.rem.dto.SuIdMappingJson;
-import fr.insee.protools.backend.service.rem.dto.SuIdMappingRecord;
+import fr.insee.protools.backend.dto.rem.REMSurveyUnitDto;
+import fr.insee.protools.backend.dto.rem.SuIdMappingJson;
+import fr.insee.protools.backend.dto.rem.SuIdMappingRecord;
 import org.flowable.engine.test.Deployment;
 import org.flowable.engine.test.FlowableTest;
 import org.junit.jupiter.api.Test;

@@ -3,8 +3,8 @@ package fr.insee.protools.backend.service.sabiane.delegate;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.insee.protools.backend.ProtoolsTestUtils;
-import fr.insee.protools.backend.service.common.platine_sabiane.dto.campaign.CampaignDto;
-import fr.insee.protools.backend.service.common.platine_sabiane.dto.campaign.MetadataValue;
+import fr.insee.protools.backend.dto.platine_sabiane_questionnaire.campaign.CampaignDto;
+import fr.insee.protools.backend.dto.platine_sabiane_questionnaire.campaign.MetadataValue;
 import fr.insee.protools.backend.service.context.ContextConstants;
 import fr.insee.protools.backend.service.context.ContextService;
 import fr.insee.protools.backend.service.context.exception.BadContextIncorrectBPMNError;
@@ -37,6 +37,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @FlowableTest
+public
 class SabianeQuestionnaireCreateContextTaskTest {
 
 

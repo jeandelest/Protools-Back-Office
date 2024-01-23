@@ -3,7 +3,7 @@ package fr.insee.protools.backend.service.sugoi;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.insee.protools.backend.service.sugoi.dto.User;
+import fr.insee.protools.backend.dto.sugoi.User;
 import fr.insee.protools.backend.service.utils.password.PasswordService;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.test.FlowableTest;

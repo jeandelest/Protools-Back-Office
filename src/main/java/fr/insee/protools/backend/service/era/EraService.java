@@ -1,7 +1,7 @@
 package fr.insee.protools.backend.service.era;
 
-import fr.insee.protools.backend.service.era.dto.CensusJsonDto;
-import fr.insee.protools.backend.service.era.dto.GenderType;
+import fr.insee.protools.backend.dto.era.CensusJsonDto;
+import fr.insee.protools.backend.dto.era.GenderType;
 import fr.insee.protools.backend.webclient.WebClientHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

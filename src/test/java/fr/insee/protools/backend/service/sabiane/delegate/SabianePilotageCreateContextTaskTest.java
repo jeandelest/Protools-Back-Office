@@ -6,7 +6,7 @@ import fr.insee.protools.backend.ProtoolsTestUtils;
 import fr.insee.protools.backend.service.context.ContextService;
 import fr.insee.protools.backend.service.context.exception.BadContextIncorrectBPMNError;
 import fr.insee.protools.backend.service.sabiane.pilotage.SabianePilotageService;
-import fr.insee.protools.backend.service.sabiane.pilotage.dto.CampaignContextDto;
+import fr.insee.protools.backend.dto.sabiane.pilotage.CampaignContextDto;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.test.FlowableTest;
 import org.junit.jupiter.api.Test;

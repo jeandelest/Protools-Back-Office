@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import fr.insee.protools.backend.ProtoolsTestUtils;
 import fr.insee.protools.backend.service.context.exception.BadContextIncorrectBPMNError;
-import fr.insee.protools.backend.service.meshuggah.dto.MeshuggahComDetails;
+import fr.insee.protools.backend.dto.meshuggah.MeshuggahComDetails;
 import fr.insee.protools.backend.service.utils.TestWithContext;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.junit.jupiter.api.DisplayName;

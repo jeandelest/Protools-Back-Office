@@ -1,12 +1,9 @@
 package fr.insee.protools.backend.service.rem;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import fr.insee.protools.backend.service.exception.IncorrectSUBPMNError;
-import fr.insee.protools.backend.service.rem.dto.PersonDto;
-import fr.insee.protools.backend.service.rem.dto.REMSurveyUnitDto;
-import fr.insee.protools.backend.service.utils.data.CtxExamples;
+import fr.insee.protools.backend.dto.rem.PersonDto;
+import fr.insee.protools.backend.dto.rem.REMSurveyUnitDto;
 import org.apache.commons.lang3.tuple.Pair;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;

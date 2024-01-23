@@ -1,8 +1,8 @@
 package fr.insee.protools.backend.service.platine.pilotage;
 
-import fr.insee.protools.backend.service.platine.pilotage.dto.PlatinePilotageEligibleDto;
-import fr.insee.protools.backend.service.platine.pilotage.dto.contact.PlatineContactDto;
-import fr.insee.protools.backend.service.platine.pilotage.dto.query.QuestioningWebclientDto;
+import fr.insee.protools.backend.dto.platine.pilotage.PlatinePilotageEligibleDto;
+import fr.insee.protools.backend.dto.platine.pilotage.contact.PlatineContactDto;
+import fr.insee.protools.backend.dto.platine.pilotage.query.QuestioningWebclientDto;
 import fr.insee.protools.backend.service.platine.pilotage.metadata.MetadataDto;
 import fr.insee.protools.backend.webclient.WebClientHelper;
 import lombok.extern.slf4j.Slf4j;

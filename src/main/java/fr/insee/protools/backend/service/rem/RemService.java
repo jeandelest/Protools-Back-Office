@@ -1,8 +1,8 @@
 package fr.insee.protools.backend.service.rem;
 
-import fr.insee.protools.backend.service.era.dto.CensusJsonDto;
-import fr.insee.protools.backend.service.rem.dto.REMSurveyUnitDto;
-import fr.insee.protools.backend.service.rem.dto.SuIdMappingJson;
+import fr.insee.protools.backend.dto.era.CensusJsonDto;
+import fr.insee.protools.backend.dto.rem.REMSurveyUnitDto;
+import fr.insee.protools.backend.dto.rem.SuIdMappingJson;
 import fr.insee.protools.backend.webclient.WebClientHelper;
 import fr.insee.protools.backend.webclient.exception.runtime.WebClient4xxBPMNError;
 import lombok.extern.slf4j.Slf4j;

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.insee.protools.backend.ProtoolsTestUtils;
 import fr.insee.protools.backend.service.context.exception.BadContextIncorrectBPMNError;
-import fr.insee.protools.backend.service.meshuggah.dto.MeshuggahComDetails;
+import fr.insee.protools.backend.dto.meshuggah.MeshuggahComDetails;
 import fr.insee.protools.backend.service.utils.TestWithContext;
 import org.flowable.common.engine.api.FlowableIllegalArgumentException;
 import org.flowable.engine.delegate.DelegateExecution;

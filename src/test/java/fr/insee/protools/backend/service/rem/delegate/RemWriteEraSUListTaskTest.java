@@ -1,10 +1,10 @@
 package fr.insee.protools.backend.service.rem.delegate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import fr.insee.protools.backend.service.era.dto.CensusJsonDto;
+import fr.insee.protools.backend.dto.era.CensusJsonDto;
 import fr.insee.protools.backend.service.rem.RemService;
-import fr.insee.protools.backend.service.rem.dto.SuIdMappingJson;
-import fr.insee.protools.backend.service.rem.dto.SuIdMappingRecord;
+import fr.insee.protools.backend.dto.rem.SuIdMappingJson;
+import fr.insee.protools.backend.dto.rem.SuIdMappingRecord;
 import org.flowable.common.engine.api.FlowableIllegalArgumentException;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.test.FlowableTest;

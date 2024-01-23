@@ -1,9 +1,9 @@
 {
-  "id": "AAI2022X02",
-  "label": "Enquête AAI2022X02 de démo 2022 - séquence 1",
+  "id": "AAC2023A00",
+  "label": "Enquête AAC2023A00 de démo 2022 - séquence 1",
   "contexte": "household",
   "metadonnees": {
-    "operationLabelCourt": "Démo 2022 AAI2022X02",
+    "operationLabelCourt": "Démo 2022 AAC2023A00",
     "operationLabelLong": "Enquête de démo 2022 AAC2022X02",
 	"assitanceNiveau2Mail": "blabla@insee.fr",
 	"reperage": "faf_logement",
@@ -31,25 +31,18 @@
 	"sitesGestion": [ "OU-TEST1" ,  "OU-TEST2" ]
   },
   "partitions": [{
-    "id": 59901,
+    "id": 55,
+    "typeEchantillon" : "LOGEMENT",
+    "prioritaire": false,
     "label": "lot hommes",
     "dateDebutCollecte": "2023-01-16T14:07:23.001Z",
     "dateFinCollecte": "2024-01-16T14:07:23.001Z",
     "dateDebutVisibiliteGestionnaire": "2023-01-16T14:07:23.001Z",
     "dateDebutVisibiliteEnqueteur": "2023-01-16T14:07:23.001Z",
     "dateDebutReperage": "2023-01-16T14:07:23.001Z",
-    "dateFinTraitement": "2024-01-16T14:07:23.001Z"
-  },
-    {
-      "id": 59902,
-      "label": "lot femmes",
-      "dateDebutCollecte": "2023-01-16T14:07:23.001Z",
-      "dateFinCollecte": "2024-01-16T14:07:23.001Z",
-      "dateDebutVisibiliteGestionnaire": "2023-01-16T14:07:23.001Z",
-      "dateDebutVisibiliteEnqueteur": "2023-01-16T14:07:23.001Z",
-      "dateDebutReperage": "2023-01-16T14:07:23.001Z",
-      "dateFinTraitement": "2024-01-16T14:07:23.001Z"
-    }
+    "dateFinTraitement": "2025-01-16T14:07:23.001Z",
+    "questionnaireModel": "testQR_enqueteurMBG"
+  }
   ],
   "questionnaireModels": [{
     "id": "testQR_enqueteurMBG",

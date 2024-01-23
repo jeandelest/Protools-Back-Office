@@ -2,19 +2,16 @@ package fr.insee.protools.backend.service.sabiane.delegate;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.JsonNodeType;
+import fr.insee.protools.backend.dto.rem.*;
+import fr.insee.protools.backend.dto.sabiane.pilotage.*;
 import fr.insee.protools.backend.service.DelegateContextVerifier;
 import fr.insee.protools.backend.service.context.ContextService;
-import fr.insee.protools.backend.service.context.ContextServiceImpl;
 import fr.insee.protools.backend.service.context.enums.PartitionTypeEchantillon;
-import fr.insee.protools.backend.service.context.exception.BadContextDateTimeParseBPMNError;
 import fr.insee.protools.backend.service.exception.IncorrectSUBPMNError;
 import fr.insee.protools.backend.service.platine.utils.PlatineHelper;
 import fr.insee.protools.backend.service.rem.RemDtoUtils;
-import fr.insee.protools.backend.service.rem.dto.*;
 import fr.insee.protools.backend.service.sabiane.SabianeIdHelper;
 import fr.insee.protools.backend.service.sabiane.pilotage.SabianePilotageService;
-import fr.insee.protools.backend.service.sabiane.pilotage.dto.*;
 import fr.insee.protools.backend.service.utils.FlowableVariableUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.EnumUtils;
@@ -277,9 +274,13 @@ public class SabianePilotageCreateSUTask implements JavaDelegate, DelegateContex
      * @return A {@code SabianeTitle} for the passed string (supposedly a rem gender). MISTER if value is 1. MISS in every other case
      */
     protected static SabianeTitle convertREMGenderToSabianeCivilityTitle(String remGender) {
+        if(remGender == null){
+            return SabianeTitle.MISS;
+        }
         return switch (remGender) {
-            case null:
-                yield SabianeTitle.MISS;
+            //TODO: enable when pass to java 19 (preview in 17)
+            //case null:
+            //    yield SabianeTitle.MISS;
             case "1":
                 yield SabianeTitle.MISTER;
             default:

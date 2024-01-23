@@ -3,7 +3,7 @@ package fr.insee.protools.backend.service.rem.delegate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.insee.protools.backend.service.DelegateContextVerifier;
 import fr.insee.protools.backend.service.rem.RemService;
-import fr.insee.protools.backend.service.rem.dto.REMSurveyUnitDto;
+import fr.insee.protools.backend.dto.rem.REMSurveyUnitDto;
 import fr.insee.protools.backend.service.utils.FlowableVariableUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;

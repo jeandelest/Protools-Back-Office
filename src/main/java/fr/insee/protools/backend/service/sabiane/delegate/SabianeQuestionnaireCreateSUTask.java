@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import fr.insee.protools.backend.service.DelegateContextVerifier;
 import fr.insee.protools.backend.service.common.platine_sabiane.QuestionnaireHelper;
 import fr.insee.protools.backend.service.context.ContextService;
-import fr.insee.protools.backend.service.sabiane.pilotage.dto.CampaignContextDto;
 import fr.insee.protools.backend.service.sabiane.questionnaire.SabianeQuestionnaireService;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -13,8 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
-
-import static fr.insee.protools.backend.service.context.ContextConstants.CTX_CAMPAGNE_CONTEXTE;
 
 @Slf4j
 @Component

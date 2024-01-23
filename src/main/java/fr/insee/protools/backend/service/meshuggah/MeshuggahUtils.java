@@ -2,7 +2,7 @@ package fr.insee.protools.backend.service.meshuggah;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import fr.insee.protools.backend.service.context.exception.BadContextIncorrectBPMNError;
-import fr.insee.protools.backend.service.meshuggah.dto.MeshuggahComDetails;
+import fr.insee.protools.backend.dto.meshuggah.MeshuggahComDetails;
 
 import java.util.Set;
 

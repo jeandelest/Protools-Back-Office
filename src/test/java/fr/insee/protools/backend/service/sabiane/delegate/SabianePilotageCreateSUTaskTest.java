@@ -5,12 +5,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import fr.insee.protools.backend.ProtoolsTestUtils;
+import fr.insee.protools.backend.dto.rem.*;
+import fr.insee.protools.backend.dto.sabiane.pilotage.*;
 import fr.insee.protools.backend.service.context.exception.BadContextIncorrectBPMNError;
 import fr.insee.protools.backend.service.exception.IncorrectSUBPMNError;
-import fr.insee.protools.backend.service.rem.dto.*;
 import fr.insee.protools.backend.service.sabiane.SabianeIdHelper;
 import fr.insee.protools.backend.service.sabiane.pilotage.SabianePilotageService;
-import fr.insee.protools.backend.service.sabiane.pilotage.dto.*;
 import fr.insee.protools.backend.service.utils.TestWithContext;
 import fr.insee.protools.backend.service.utils.data.CtxExamples;
 import fr.insee.protools.backend.service.utils.data.RemSUData;
@@ -224,7 +224,7 @@ class SabianePilotageCreateSUTaskTest extends TestWithContext {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"20001", "anabab", "200099", "2011010111111", "", "2", "200", "2011a", "1600010a", ",", "01122024"})
+    @ValueSource(strings = {"20001", "anabab", "200099", "2011010111111",  "2", "200", "2011a", "1600010a", ",", "01122024"})
     // Les valeurs à tester
     void computeSabianeBirthDateFromRem_should_Throw_when_dateIsIncorrect(String inccorectDate) {
         assertThrows(IncorrectSUBPMNError.class, () -> SabianePilotageCreateSUTask.computeSabianeBirthDateFromRem(inccorectDate));

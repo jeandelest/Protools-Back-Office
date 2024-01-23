@@ -1,19 +1,15 @@
 package fr.insee.protools.backend.service.sabiane.pilotage;
 
-import fr.insee.protools.backend.service.rem.dto.SuIdMappingJson;
-import fr.insee.protools.backend.service.sabiane.pilotage.dto.CampaignContextDto;
-import fr.insee.protools.backend.service.sabiane.pilotage.dto.SurveyUnitContextDto;
+import fr.insee.protools.backend.dto.sabiane.pilotage.CampaignContextDto;
+import fr.insee.protools.backend.dto.sabiane.pilotage.SurveyUnitContextDto;
 import fr.insee.protools.backend.webclient.WebClientHelper;
-import fr.insee.protools.backend.webclient.exception.runtime.WebClient4xxBPMNError;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.event.Level;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static fr.insee.protools.backend.webclient.configuration.ApiConfigProperties.KNOWN_API.KNOWN_API_REM;
 import static fr.insee.protools.backend.webclient.configuration.ApiConfigProperties.KNOWN_API.KNOWN_API_SABIANE_PILOTAGE;
 
 
