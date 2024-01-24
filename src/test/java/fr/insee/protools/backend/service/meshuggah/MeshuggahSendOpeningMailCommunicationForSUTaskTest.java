@@ -3,6 +3,7 @@ package fr.insee.protools.backend.service.meshuggah;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import fr.insee.protools.backend.ProtoolsTestUtils;
 import fr.insee.protools.backend.service.context.exception.BadContextIncorrectBPMNError;
 import fr.insee.protools.backend.dto.meshuggah.MeshuggahComDetails;
@@ -108,7 +109,8 @@ class MeshuggahSendOpeningMailCommunicationForSUTaskTest extends TestWithContext
         initContexteMockWithString(MeshuggahCtxExamples.ctx_OK_envoi_mail_1part_ouverture_mail);
 
         when(execution.getVariable(VARNAME_CURRENT_PARTITION_ID, Long.class)).thenReturn(MeshuggahCtxExamples.ctx_partition1);
-        when(execution.getVariable(VARNAME_PLATINE_CONTACT, JsonNode.class)).thenReturn(objectMapper.readTree(platineContactContent));
+        JsonNode platineContact = objectMapper.readTree(platineContactContent);
+        when(execution.getVariable(VARNAME_PLATINE_CONTACT, JsonNode.class)).thenReturn(platineContact);
         //Run method under test
         assertDoesNotThrow(() -> meshuggahTask.execute(execution));
 
@@ -123,10 +125,20 @@ class MeshuggahSendOpeningMailCommunicationForSUTaskTest extends TestWithContext
                 .protocol("DEFAULT")
                 .operation("RELANCE_LIBRE")
                 .build();
+
+        ObjectNode expectedBody = objectMapper.createObjectNode();
+        expectedBody.put("email", platineContact.path("email"));
+        expectedBody.put("Ue_CalcIdentifiant", platineContact.path("identifier"));
+
+
         ArgumentCaptor<MeshuggahComDetails> acDetails = ArgumentCaptor.forClass(MeshuggahComDetails.class);
         ArgumentCaptor<JsonNode> acBody = ArgumentCaptor.forClass(JsonNode.class);
         verify(meshuggahService,times(1)).postSendCommunication(acDetails.capture(),acBody.capture());
         MeshuggahComDetails details = acDetails.getValue();
         assertEquals(expectedDetails,details);
+
+        JsonNode resultBody = acBody.getValue();
+        assertEquals(expectedBody,resultBody);
+
     }
 }
