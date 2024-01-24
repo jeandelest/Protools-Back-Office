@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
@@ -58,7 +59,11 @@ public class SecurityConfig {
     @Bean
     @ConditionalOnProperty(name = STARTER_SECURITY_ENABLED, havingValue = "true")
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable);
+        http
+                .csrf(AbstractHttpConfigurer::disable) //disable sessions (stateless)
+                //only allows https
+                .requiresChannel(channel -> channel.anyRequest().requiresSecure())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.cors(Customizer.withDefaults());
         for (var pattern : whiteList) {
             http.authorizeHttpRequests(authorize ->
@@ -79,7 +84,6 @@ public class SecurityConfig {
                                 //We allow admin to access everything
                                 .requestMatchers(AntPathRequestMatcher.antMatcher("/**")).hasRole(administrateurRole)
                 )
-                .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())));
         return http.build();
     }
@@ -95,6 +99,7 @@ public class SecurityConfig {
         );
 
         http.csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll())
                 .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())));
