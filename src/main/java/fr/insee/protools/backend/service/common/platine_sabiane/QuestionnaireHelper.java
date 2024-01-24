@@ -316,7 +316,7 @@ public class QuestionnaireHelper {
         Set<String> requiredNodes =
                 Set.of(
                         //Global & Campaign
-                        CTX_PARTITIONS
+                        CTX_PARTITIONS, CTX_QUESTIONNAIRE_MODELS
                 );
 
         results.addAll(DelegateContextVerifier.computeMissingChildrenMessages(requiredNodes,contextRootNode,QuestionnaireHelper.class));

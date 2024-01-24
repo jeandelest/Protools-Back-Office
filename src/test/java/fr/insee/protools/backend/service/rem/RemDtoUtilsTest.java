@@ -191,8 +191,4 @@ class RemDtoUtilsTest {
             assertThat(res.getRight().get().getIndex()).isEqualTo(expectedSecondContact);
         }
     }
-
-    @Test
-    void searchAdditionalInformation() {
-    }
 }

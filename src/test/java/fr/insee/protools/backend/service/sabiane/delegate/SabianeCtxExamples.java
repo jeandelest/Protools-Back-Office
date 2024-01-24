@@ -51,5 +51,20 @@ public class SabianeCtxExamples {
                 }
             """;
 
+    public static final String ctx_ok_idCampagne_idQuestionnaireModel_idPartition_questionnaireModelPartition =
+            """
+                {
+                    "id": "AAC2023A00",
+                    "partitions": [{
+                        "id": 99,
+                        "questionnaireModel": "ID_1"
+                    }],
+                    "questionnaireModels": [
+                        {
+                          "id": "ID_1"
+                        }]
+                }
+            """;
+
     private SabianeCtxExamples(){}
 }
