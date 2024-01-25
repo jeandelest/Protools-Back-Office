@@ -58,6 +58,11 @@ class SabianePilotageCreateSUTaskTest extends TestWithContext {
     SabianePilotageCreateSUTask sabianePilotageTask;
 
     @Test
+    void execute_should_throwError_when_null_context(){
+        assertThat_delegate_throwError_when_null_context(sabianePilotageTask);
+    }
+
+    @Test
     @DisplayName("convertREMGenderToSabianeCivilityTitle should return MISS when param '2' ; 'MISTER' when param is '1' and throw in other cases")
     void convertREMGenderToSabianeCivilityTitle_should_ReturnCorrectValues() {
         assertThat(SabianePilotageCreateSUTask.convertREMGenderToSabianeCivilityTitle("1")).isEqualTo(SabianeTitle.MISTER);

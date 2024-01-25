@@ -66,6 +66,11 @@ class SabianeQuestionnaireCreateSUTaskTest extends TestWithContext {
     }
 
     @Test
+    void execute_should_throwError_when_null_context(){
+        assertThat_delegate_throwError_when_null_context(sabianePilotageTask);
+    }
+
+    @Test
     @DisplayName("Test execute method - should throw if VARNAME_CURRENT_PARTITION_ID or VARNAME_REM_SURVEY_UNIT not initialized")
     void execute_should_throw_FlowableIllegalArgumentException_when_variables_notDefined() {
         //Precondition

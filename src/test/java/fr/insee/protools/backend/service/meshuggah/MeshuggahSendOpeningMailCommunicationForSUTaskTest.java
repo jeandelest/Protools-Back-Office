@@ -50,6 +50,10 @@ class MeshuggahSendOpeningMailCommunicationForSUTaskTest extends TestWithContext
                 Arguments.of(MeshuggahCtxExamples.ctx_ERROR_typo_moyen));
     }
 
+    @Test
+    void execute_should_throwError_when_null_context(){
+        assertThat_delegate_throwError_when_null_context(meshuggahTask);
+    }
 
     @Mock MeshuggahService meshuggahService;
     @InjectMocks MeshuggahSendOpeningMailCommunicationForSUTask meshuggahTask;

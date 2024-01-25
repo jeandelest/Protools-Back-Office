@@ -51,6 +51,10 @@ class PlatineQuestionnaireCreateSurveyUnitTaskTest extends TestWithContext {
     }
 
     @Test
+    void execute_should_throwError_when_null_context(){
+        assertThat_delegate_throwError_when_null_context(platineQuestionnaireCreateSurveyUnitTask);
+    }
+    @Test
     void execute_should_throw_BadContextIncorrectException_when_noContext() {
         DelegateExecution execution=createMockedExecution();
         //Execute the unit under test

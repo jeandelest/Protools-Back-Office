@@ -11,6 +11,7 @@ import fr.insee.protools.backend.service.context.exception.BadContextIncorrectBP
 import fr.insee.protools.backend.service.nomenclature.NomenclatureService;
 import fr.insee.protools.backend.service.questionnaire_model.QuestionnaireModelService;
 import fr.insee.protools.backend.service.sabiane.questionnaire.SabianeQuestionnaireService;
+import fr.insee.protools.backend.service.utils.TestWithContext;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.test.FlowableTest;
 import org.junit.jupiter.api.Test;
@@ -38,7 +39,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 @FlowableTest
 public
-class SabianeQuestionnaireCreateContextTaskTest {
+class SabianeQuestionnaireCreateContextTaskTest extends TestWithContext {
 
 
     final static String ressourceFolder = ClassUtils.convertClassNameToResourcePath(SabianeQuestionnaireCreateContextTaskTest.class.getPackageName());
@@ -48,7 +49,6 @@ class SabianeQuestionnaireCreateContextTaskTest {
     @Mock SabianeQuestionnaireService sabianeQuestionnaireService;
     @Mock QuestionnaireModelService questionnaireModelService;
     @Mock NomenclatureService nomenclatureService;
-    @Mock ContextService protoolsContext;
     @Spy ObjectMapper objectMapper;
 
     @InjectMocks
@@ -56,11 +56,9 @@ class SabianeQuestionnaireCreateContextTaskTest {
 
     private final String questionnaireContent1 ="{\"id\": \"TOTO\" , \"toto\": 55 }";
 
-
-    private JsonNode initContexteMock(String contexteToLoad){
-        JsonNode contextRootNode = ProtoolsTestUtils.asJsonNode(contexteToLoad);
-        when(protoolsContext.getContextByProcessInstance(anyString())).thenReturn(contextRootNode);
-        return contextRootNode;
+    @Test
+    void execute_should_throwError_when_null_context(){
+        assertThat_delegate_throwError_when_null_context(sabianeQuestTask);
     }
 
     @Test
@@ -68,7 +66,7 @@ class SabianeQuestionnaireCreateContextTaskTest {
         // preconditions
         DelegateExecution execution = mock(DelegateExecution.class);
         when(execution.getProcessInstanceId()).thenReturn("1");
-        initContexteMock(sabiane_context_incorrect_json);
+        initContexteMockWithFile(sabiane_context_incorrect_json);
 
         //Execute the unit under test
         assertThrows(BadContextIncorrectBPMNError.class, () -> sabianeQuestTask.execute(execution));
@@ -87,7 +85,7 @@ class SabianeQuestionnaireCreateContextTaskTest {
     void execute_should_work_and_make_correct_calls() throws IOException {
         DelegateExecution execution = mock(DelegateExecution.class);
         when(execution.getProcessInstanceId()).thenReturn("1");
-        JsonNode contextRootNode = initContexteMock(sabiane_context_json);
+        JsonNode contextRootNode = initContexteMockWithFile(sabiane_context_json);
         assertEquals(2,contextRootNode.path(ContextConstants.CTX_QUESTIONNAIRE_MODELS).size(), "Context error : expected exactly 2 questionnaire model");
 
         //Prepare the list of existing nomenclatures ("L_NATIONETR-1-1-0" does not exists yet)

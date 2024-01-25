@@ -48,6 +48,10 @@ class PlatinePilotageCreateSurveyUnitTaskTest extends TestWithContext {
     final static String platine_context_json = ressourceFolder+"/protools-contexte-platine-individu.json";
     final static String platine_context_logement_json = ressourceFolder+"/protools-contexte-platine-individu.json";
 
+    @Test
+    void execute_should_throwError_when_null_context(){
+        assertThat_delegate_throwError_when_null_context(platinePilotageTask);
+    }
 
     //To be able to run tests with differents protools contexts
     private static Stream<Arguments> protoolsContextArguments() {

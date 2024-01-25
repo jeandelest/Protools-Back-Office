@@ -42,6 +42,11 @@ class MeshuggahCreateCommunicationsContextTaskTest extends TestWithContext {
                 Arguments.of(MeshuggahCtxExamples.ctx_ERROR_typo_moyen));
     }
 
+    @Test
+    void execute_should_throwError_when_null_context(){
+        assertThat_delegate_throwError_when_null_context(meshuggahTask);
+    }
+
     @ParameterizedTest
     @MethodSource("contextErrorArguments")
     @DisplayName("Test execute method - should throw if Context is not correct")

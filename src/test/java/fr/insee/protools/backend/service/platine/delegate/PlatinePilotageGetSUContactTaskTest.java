@@ -32,6 +32,10 @@ class PlatinePilotageGetSUContactTaskTest extends TestWithContext {
     @Mock PlatinePilotageService platinePilotageService;
     @InjectMocks PlatinePilotageGetSUContactTask platinePilotageTask;
 
+    @Test
+    void execute_should_throwError_when_null_context(){
+        assertThat_delegate_throwError_when_null_context(platinePilotageTask);
+    }
 
     @Test
     void execute_should_throw_BadContextIncorrectException_when_noContext() {

@@ -32,14 +32,14 @@ public class EraGetSUForPeriodAndGenderTask implements JavaDelegate, DelegateCon
 
     @Override
     public void execute(DelegateExecution execution) {
+        JsonNode contextRootNode = protoolsContext.getContextByProcessInstance(execution.getProcessInstanceId());
+        checkContextOrThrow(log, execution.getProcessInstanceId(), contextRootNode);
+
         LocalDate startDate = FlowableVariableUtils.getVariableOrThrow(execution, VARNAME_ERA_QUERY_START_DATE, LocalDate.class);
         LocalDate endDate = FlowableVariableUtils.getVariableOrThrow(execution, VARNAME_ERA_QUERY_END_DATE, LocalDate.class);
         Long currentPartitionId = FlowableVariableUtils.getVariableOrThrow(execution, VARNAME_CURRENT_PARTITION_ID, Long.class);
 
         //Get current partition from contexte to get it's defined sexe
-        JsonNode contextRootNode = protoolsContext.getContextByProcessInstance(execution.getProcessInstanceId());
-        checkContextOrThrow(log, execution.getProcessInstanceId(), contextRootNode);
-
         JsonNode currentPartitionNode = getCurrentPartitionNode(contextRootNode, currentPartitionId);
         GenderType sexe = GenderType.fromLabel(currentPartitionNode.path(CTX_PARTITION_ERA_SEXE).asText());
         log.info("ProcessInstanceId={} - currentPartitionId={} - startDate={} - endDate={} - sexe={} begin"

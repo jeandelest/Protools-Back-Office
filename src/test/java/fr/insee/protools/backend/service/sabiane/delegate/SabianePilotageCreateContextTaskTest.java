@@ -7,6 +7,7 @@ import fr.insee.protools.backend.service.context.ContextService;
 import fr.insee.protools.backend.service.context.exception.BadContextIncorrectBPMNError;
 import fr.insee.protools.backend.service.sabiane.pilotage.SabianePilotageService;
 import fr.insee.protools.backend.dto.sabiane.pilotage.CampaignContextDto;
+import fr.insee.protools.backend.service.utils.TestWithContext;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.test.FlowableTest;
 import org.junit.jupiter.api.Test;
@@ -27,13 +28,12 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @FlowableTest
-class SabianePilotageCreateContextTaskTest {
+class SabianePilotageCreateContextTaskTest extends TestWithContext {
     final static String ressourceFolder = ClassUtils.convertClassNameToResourcePath(SabianePilotageCreateContextTaskTest.class.getPackageName());
     final static String sabiane_context_json = ressourceFolder+"/protools-contexte-sabiane.json";
     final static String sabiane_context_incorrect_json = ressourceFolder+"/protools-contexte-sabiane-incorrect.json";
 
     @Mock SabianePilotageService platinePilotageService;
-    @Spy ContextService protoolsContext;
     @Spy ObjectMapper objectMapper;
 
     @InjectMocks
@@ -41,9 +41,9 @@ class SabianePilotageCreateContextTaskTest {
 
     String dumyId="ID1";
 
-    private void initContexteMock(String contexteToLoad){
-        JsonNode contextRootNode = ProtoolsTestUtils.asJsonNode(contexteToLoad);
-        when(protoolsContext.getContextByProcessInstance(anyString())).thenReturn(contextRootNode);
+    @Test
+    void execute_should_throwError_when_null_context(){
+        assertThat_delegate_throwError_when_null_context(sabianePilotageTask);
     }
 
     @Test
@@ -59,7 +59,7 @@ class SabianePilotageCreateContextTaskTest {
     void execute_should_work_when_contextOK() {
         DelegateExecution execution = mock(DelegateExecution.class);
         when(execution.getProcessInstanceId()).thenReturn(dumyId);
-        initContexteMock(sabiane_context_json);
+        initContexteMockWithFile(sabiane_context_json);
 
         //Execute the unit under test
         sabianePilotageTask.execute(execution);
