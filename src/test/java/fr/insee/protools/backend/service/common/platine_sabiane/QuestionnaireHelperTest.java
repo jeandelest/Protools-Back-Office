@@ -27,7 +27,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static fr.insee.protools.backend.service.context.ContextConstants.CTX_QUESTIONNAIRE_MODEL_ID;
+import static fr.insee.protools.backend.service.context.ContextConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -131,6 +131,33 @@ class QuestionnaireHelperTest {
         // postconditions : we expect to find exactly one questionnaire Model
         String idQuestionnaireModel = contextRootNode.path(ContextConstants.CTX_QUESTIONNAIRE_MODELS).get(0).path(CTX_QUESTIONNAIRE_MODEL_ID).asText();
         assertEquals(Set.of(idQuestionnaireModel), questionnaireModels);
+        verify(questionnaireModelService,times(1)).getQuestionnaireModel(
+                contextRootNode.path(CTX_QUESTIONNAIRE_MODELS).get(0).path(CTX_QUESTIONNAIRE_MODEL_ID).asText()
+                , contextRootNode.path(CTX_QUESTIONNAIRE_MODELS).get(0).path(CTX_QUESTIONNAIRE_MODEL_CHEMIN_REPERTOIRE).asText());
+
+        final ArgumentCaptor<Set<String> > nomenclaturesCaptor
+                = ArgumentCaptor.forClass((Class) Set.class);
+        ArgumentCaptor<String> acModelID = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<String> acLabel = ArgumentCaptor.forClass(String.class);
+
+        verify(questionnairePlatineSabianeService,times(1)).postQuestionnaireModel(
+                acModelID.capture(),
+                acLabel.capture(),
+                any(), nomenclaturesCaptor.capture());
+        assertEquals(contextRootNode.path(CTX_QUESTIONNAIRE_MODELS).get(0).path(CTX_QUESTIONNAIRE_MODEL_ID).asText(),acModelID.getValue());
+        assertEquals(contextRootNode.path(CTX_QUESTIONNAIRE_MODELS).get(0).path(CTX_QUESTIONNAIRE_MODEL_LABEL).asText(),acLabel.getValue());
+
+        List<Set<String>> captured = nomenclaturesCaptor.getAllValues();
+        assertEquals(1,captured.size(),"We are supposed to call the method only one");
+        Set<String> actualNomenclatures = captured.get(0);
+        Set<String> expectedNomenclatures = Set.of(
+                "L_DEPNAIS-1-1-0",
+                "L_PAYSNAIS-1-1-0",
+                "L_NATIONETR-1-1-0");
+        assertTrue(expectedNomenclatures.size()==actualNomenclatures.size()
+                &&expectedNomenclatures.containsAll(actualNomenclatures)
+        && actualNomenclatures.containsAll(expectedNomenclatures)
+        ,"The set of nomenclature is incorrect");
     }
 
     @Test
