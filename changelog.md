@@ -4,18 +4,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased 0.1.0-SNAPSHOT] - yyyy-mm-dd
+
+## [Unreleased 1.1.0-SNAPSHOT] - yyyy-mm-dd
 ### Added
 #### BPMN TASKS
+- [SabianePilotageCreateSUTask](http://preparation_collecte.gitlab-pages.insee.fr/prepadoc/Protools/taches/#cr%c3%a9er-une-ue-dans-la-plateforme-de-collecte-enqu%c3%aateur-partie-pilotage)
+  Tâche de création d'une UE dans sabiane pilotage
+- [SabianeQuestionnaireCreateSUTask](http://preparation_collecte.gitlab-pages.insee.fr/prepadoc/Protools/taches/#cr%c3%a9er-une-ue-dans-la-plateforme-de-collecte-enqu%c3%aateur-partie-questionnaire)
+  Tâche de création d'une UE dans sabiane questionnaire
 - [sugoiCreateUserTask](TODO)
   Tâche de création d'un utilisateur dans l'annuaire Sugoi et initialization d'un mot de passe par défaut.
+- [platinePilotageGetSUIsToFollowUpTask]( TODO)
+  Tâche de lecture dans Platine Pilotage de l'état a-relancer/eligible/isToFollowUp d'une UE (d'une partition).
+- [platinePilotageAddSUFollowUpTask]( TODO)
+  Tâche de d'ajout d'un évènement FOLLOW à une UE dans Platine Pilotage.
+- [flowcontrolIsSUToFollowUp]( TODO)
+  Prépare aux relances
 
 
+## [1.0.0] - 01-01-2024
 
-
-## [Unreleased 0.0.5-rc0] - yyyy-mm-dd
-
-Montée de version du moteur flowable de 7.0.0.M1 à 7.0.0.M2 .
+Montée de version du moteur flowable de 7.0.0.M1 à 7.1.0
 Travail sur les tâches BPMN pour ERA et REM.
 
 ### Added
@@ -36,12 +45,6 @@ Travail sur les tâches BPMN pour ERA et REM.
   Tâche de lecture d'UE dans ERA pour un interval et un sexe donnée.
 - [platinePilotageGetSUContactTask]( http://preparation_collecte.gitlab-pages.insee.fr/prepadoc/Protools/taches/#suivi-dans-les-plateformes-de-collecte)
   Tâche de lecture dans Platine Pilotage des informations de contact d'une UE (d'une partition).
-- [platinePilotageGetSUIsToFollowUpTask]( TODO)
-  Tâche de lecture dans Platine Pilotage de l'état a-relancer/eligible/isToFollowUp d'une UE (d'une partition).
-- [platinePilotageAddSUFollowUpTask]( TODO)
-  Tâche de d'ajout d'un évènement FOLLOW à une UE dans Platine Pilotage.
-- [flowcontrolIsSUToFollowUp]( TODO)
-  Prépare aux relances
 - [MeshuggahCreateCommunicationsContextTask](http://preparation_collecte.gitlab-pages.insee.fr/prepadoc/Protools/taches/#envoi-de-communication-avec-meshuggah)
   Tâche de création d'une communication dans Meshuggah
 - [meshuggahSendOpeningMailCommunicationForSUTask](http://preparation_collecte.gitlab-pages.insee.fr/prepadoc/Protools/taches/#envoi-du-mail-douverture-avec-meshuggah)
