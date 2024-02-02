@@ -81,7 +81,7 @@ public class RemDtoUtils {
         //SU INDIVIDU
         else {
             //If main contact is declarant ==> secondary is the co-declarant
-            if(mainContact.getMain()){
+            if(Boolean.TRUE.equals(mainContact.getMain())){
                 secondaryContact = remSurveyUnitDto.getPersons().stream()
                         .filter(personDto -> (Boolean.TRUE.equals(personDto.getCoDeclarant())))
                         .findFirst().orElse(null);

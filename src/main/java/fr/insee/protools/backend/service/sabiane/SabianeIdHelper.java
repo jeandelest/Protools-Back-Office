@@ -10,4 +10,6 @@ public class SabianeIdHelper {
         else
             throw new IncorrectSUBPMNError("partitionId and/or remRepositoryID cannot be null to compute sabiane ID");
     }
+    //Utility class
+    private SabianeIdHelper(){}
 }
