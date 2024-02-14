@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VARNAME_DIRECTORYACCESS_ID_CONTACT;
+import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VARNAME_DIRECTORYACCESS_PWD_CONTACT;
 
 @Slf4j
 @Component
@@ -26,7 +27,7 @@ public class SugoiCreateUserTask implements JavaDelegate, DelegateContextVerifie
 
     @Override
     public void execute(DelegateExecution execution) {
-        log.info("ProcessInstanceId={} begin", execution.getProcessInstanceId());
+        log.debug("ProcessInstanceId={} begin", execution.getProcessInstanceId());
 
         //Create User
         User createdUser = sugoiService.postCreateUsers(createSugoiUserBody);
@@ -35,6 +36,8 @@ public class SugoiCreateUserTask implements JavaDelegate, DelegateContextVerifie
         sugoiService.postInitPassword(createdUser.getUsername(), userPassword);
 
         execution.setVariableLocal(VARNAME_DIRECTORYACCESS_ID_CONTACT, createdUser.getUsername());
+        //TODO : find a way to not store password in protools variables
+        execution.setVariableLocal(VARNAME_DIRECTORYACCESS_PWD_CONTACT, userPassword);
 
         log.info("ProcessInstanceId={} username={} end", execution.getProcessInstanceId(), createdUser.getUsername());
     }

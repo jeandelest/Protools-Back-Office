@@ -224,7 +224,7 @@ public class QuestionnaireHelper {
                 .data(remSurveyUnitDto.getExternals())
                 .personalization(personalizationNode)
                 .comment(objectMapper.createObjectNode())
-                .stateData(objectMapper.createObjectNode())
+                //.stateData(objectMapper.createObjectNode())
                 .build();
     }
 
@@ -238,7 +238,7 @@ public class QuestionnaireHelper {
                 .data(remSurveyUnitDto.getExternals())
                 .personalization(objectMapper.createObjectNode())//No personalization for sabiane
                 .comment(objectMapper.createObjectNode())
-                .stateData(objectMapper.createObjectNode())
+                //.stateData(objectMapper.createObjectNode())
                 .build();
     }
 

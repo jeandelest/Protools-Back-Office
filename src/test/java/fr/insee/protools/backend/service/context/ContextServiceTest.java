@@ -116,7 +116,7 @@ class ContextServiceTest {
         //we skip context verification by returning no error
         doReturn(Set.of()).when(contextService).isContextOKForBPMN(any(),any());
         //Do not try to continue in a BPMN
-        doNothing().when(taskService).complete(any(),any());
+        doNothing().when(taskService).complete(any(),anyMap());
         //Call method under test
         assertThatCode(() -> contextService.processContextFileAndCompleteTask(multipartFile,dummyId)).doesNotThrowAnyException();
     }

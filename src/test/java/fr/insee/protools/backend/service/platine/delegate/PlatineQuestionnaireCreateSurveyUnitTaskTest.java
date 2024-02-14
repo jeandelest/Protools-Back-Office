@@ -89,7 +89,7 @@ class PlatineQuestionnaireCreateSurveyUnitTaskTest extends TestWithContext {
         assertEquals(objectMapper.readTree("{\"EXTERNAL\":{\"ADMINISTRATION1\":\"Insee\",\"ADMINISTRATION2\":\"Patate\"}}"),
                 valueParam.getData(),"Wrong data (external)");
         assertEquals(objectMapper.createObjectNode(), valueParam.getComment(),"No comment expected");
-        assertEquals(objectMapper.createObjectNode(), valueParam.getStateData(),"No stateData expected");
+        //assertEquals(objectMapper.createObjectNode(), valueParam.getStateData(),"No stateData expected");
     }
 
     @Test

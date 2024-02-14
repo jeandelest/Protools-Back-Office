@@ -15,5 +15,5 @@ public class SurveyUnitResponseDto {
 	private JsonNode personalization;
 	private JsonNode data;
 	private JsonNode comment;
-	private JsonNode stateData;
+//	private JsonNode stateData;
 }
