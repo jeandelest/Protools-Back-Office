@@ -2,26 +2,26 @@ package fr.insee.protools.backend.service.platine.delegate;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.insee.protools.backend.dto.platine.pilotage.PlatineAddressDto;
+import fr.insee.protools.backend.dto.platine.pilotage.PlatinePilotageGenderType;
+import fr.insee.protools.backend.dto.platine.pilotage.query.ContactAccreditationDto;
+import fr.insee.protools.backend.dto.platine.pilotage.query.QuestioningWebclientDto;
+import fr.insee.protools.backend.dto.platine.pilotage.questioning.PlatineQuestioningSurveyUnitDto;
 import fr.insee.protools.backend.dto.rem.*;
 import fr.insee.protools.backend.service.DelegateContextVerifier;
 import fr.insee.protools.backend.service.context.ContextService;
 import fr.insee.protools.backend.service.context.enums.CampaignContextEnum;
 import fr.insee.protools.backend.service.context.enums.PartitionTypeEchantillon;
 import fr.insee.protools.backend.service.platine.pilotage.PlatinePilotageService;
-import fr.insee.protools.backend.dto.platine.pilotage.PlatineAddressDto;
-import fr.insee.protools.backend.dto.platine.pilotage.PlatinePilotageGenderType;
-import fr.insee.protools.backend.dto.platine.pilotage.query.ContactAccreditationDto;
-import fr.insee.protools.backend.dto.platine.pilotage.query.QuestioningWebclientDto;
-import fr.insee.protools.backend.dto.platine.pilotage.questioning.PlatineQuestioningSurveyUnitDto;
 import fr.insee.protools.backend.service.platine.utils.PlatineHelper;
 import fr.insee.protools.backend.service.rem.RemDtoUtils;
 import fr.insee.protools.backend.service.utils.FlowableVariableUtils;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.EnumUtils;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -36,11 +36,12 @@ import static fr.insee.protools.backend.service.utils.ContextUtils.getCurrentPar
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class PlatinePilotageCreateSurveyUnitTask implements JavaDelegate, DelegateContextVerifier {
 
 
-    @Autowired ContextService protoolsContext;
-    @Autowired PlatinePilotageService platinePilotageService;
+    private final ContextService protoolsContext;
+    private final PlatinePilotageService platinePilotageService;
 
     private static final ObjectMapper objectMapper = new ObjectMapper().configure(FAIL_ON_UNKNOWN_PROPERTIES,false);
 

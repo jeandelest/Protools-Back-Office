@@ -13,13 +13,13 @@ import fr.insee.protools.backend.service.rem.RemDtoUtils;
 import fr.insee.protools.backend.service.sabiane.SabianeIdHelper;
 import fr.insee.protools.backend.service.sabiane.pilotage.SabianePilotageService;
 import fr.insee.protools.backend.service.utils.FlowableVariableUtils;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -33,20 +33,22 @@ import java.util.stream.Collectors;
 
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES;
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
-import static fr.insee.protools.backend.service.FlowableVariableNameConstants.*;
+import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VARNAME_CURRENT_PARTITION_ID;
+import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VARNAME_REM_SURVEY_UNIT;
 import static fr.insee.protools.backend.service.context.ContextConstants.*;
 import static fr.insee.protools.backend.service.utils.ContextUtils.getCurrentPartitionNode;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class SabianePilotageCreateSUTask implements JavaDelegate, DelegateContextVerifier {
-
+    
+    private final ContextService protoolsContext;
+    private final SabianePilotageService sabianePilotageService;
+    
     private static final DateTimeFormatter birthdateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
     private static final ZoneId parisTimezone = ZoneId.of("Europe/Paris");
     private static final ObjectMapper objectMapper = new ObjectMapper().configure(FAIL_ON_UNKNOWN_PROPERTIES, false).configure(FAIL_ON_MISSING_CREATOR_PROPERTIES, true);
-    @Autowired ContextService protoolsContext;
-    @Autowired SabianePilotageService sabianePilotageService;
-
 
     @Override
     public void execute(DelegateExecution execution) {

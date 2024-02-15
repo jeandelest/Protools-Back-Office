@@ -3,8 +3,8 @@ package fr.insee.protools.backend.service.era;
 import fr.insee.protools.backend.dto.era.CensusJsonDto;
 import fr.insee.protools.backend.dto.era.GenderType;
 import fr.insee.protools.backend.webclient.WebClientHelper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +16,10 @@ import static fr.insee.protools.backend.webclient.configuration.ApiConfigPropert
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class EraService {
     private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    @Autowired WebClientHelper webClientHelper;
+    private final WebClientHelper webClientHelper;
 
     public List<CensusJsonDto> getSUForPeriodAndSex(LocalDate startDate, LocalDate endDate, GenderType gender) {
         log.info("getSUForPeriodAndSex - gender={} from {} to {}", gender, startDate, endDate);

@@ -3,9 +3,9 @@ package fr.insee.protools.backend.service.sabiane.pilotage;
 import fr.insee.protools.backend.dto.sabiane.pilotage.CampaignContextDto;
 import fr.insee.protools.backend.dto.sabiane.pilotage.SurveyUnitContextDto;
 import fr.insee.protools.backend.webclient.WebClientHelper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.event.Level;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,8 +15,11 @@ import static fr.insee.protools.backend.webclient.configuration.ApiConfigPropert
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class SabianePilotageService {
-    @Autowired WebClientHelper webClientHelper;
+
+    private final WebClientHelper webClientHelper;
+
     public void postCampaign(CampaignContextDto campaignContextDto) {
         WebClientHelper.logJson("postCampaign: ",campaignContextDto, log,Level.DEBUG);
 

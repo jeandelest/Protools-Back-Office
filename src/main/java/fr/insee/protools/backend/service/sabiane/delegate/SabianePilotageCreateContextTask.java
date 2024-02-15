@@ -7,10 +7,10 @@ import fr.insee.protools.backend.service.context.ContextService;
 import fr.insee.protools.backend.service.context.ContextServiceImpl;
 import fr.insee.protools.backend.service.context.exception.BadContextDateTimeParseBPMNError;
 import fr.insee.protools.backend.service.sabiane.pilotage.SabianePilotageService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -20,12 +20,13 @@ import static fr.insee.protools.backend.service.context.ContextConstants.*;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class SabianePilotageCreateContextTask implements JavaDelegate, DelegateContextVerifier {
 
     private static final String REFERENT_PRIMARY = "PRIMARY";
     private static final String REFERENT_SECONDARY = "SECONDARY";
-    @Autowired ContextService protoolsContext;
-    @Autowired SabianePilotageService sabianePilotageService;
+    private final ContextService protoolsContext;
+    private final SabianePilotageService sabianePilotageService;
 
     @Override
     public void execute(DelegateExecution execution) {

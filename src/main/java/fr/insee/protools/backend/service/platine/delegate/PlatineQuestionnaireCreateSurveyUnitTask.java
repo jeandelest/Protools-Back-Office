@@ -5,21 +5,21 @@ import fr.insee.protools.backend.service.DelegateContextVerifier;
 import fr.insee.protools.backend.service.common.platine_sabiane.QuestionnaireHelper;
 import fr.insee.protools.backend.service.context.ContextService;
 import fr.insee.protools.backend.service.platine.questionnaire.PlatineQuestionnaireService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class PlatineQuestionnaireCreateSurveyUnitTask implements JavaDelegate, DelegateContextVerifier {
 
-
-    @Autowired ContextService protoolsContext;
-    @Autowired PlatineQuestionnaireService platineQuestionnaireService;
+    private final ContextService protoolsContext;
+    private final PlatineQuestionnaireService platineQuestionnaireService;
 
     @Override
     public void execute(DelegateExecution execution) {

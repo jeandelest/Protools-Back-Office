@@ -4,11 +4,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import fr.insee.protools.backend.service.DelegateContextVerifier;
 import fr.insee.protools.backend.service.context.ContextService;
 import fr.insee.protools.backend.service.utils.FlowableVariableUtils;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Triple;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -17,9 +17,10 @@ import static fr.insee.protools.backend.service.FlowableVariableNameConstants.*;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class FlowcontrolIsSUToFollowUp implements JavaDelegate, DelegateContextVerifier {
 
-    @Autowired ContextService protoolsContext;
+    private final ContextService protoolsContext;
 
     @Override
     public void execute(DelegateExecution execution) {

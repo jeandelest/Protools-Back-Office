@@ -5,8 +5,8 @@ import fr.insee.protools.backend.webclient.exception.KeycloakTokenConfigBPMNErro
 import io.netty.handler.logging.LogLevel;
 import jakarta.annotation.PostConstruct;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -22,7 +22,6 @@ import reactor.netty.transport.logging.AdvancedByteBufFormat;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,11 +30,10 @@ import java.util.concurrent.TimeUnit;
 @Service
 @Data
 @Slf4j
-public
-class KeycloakService {
+@RequiredArgsConstructor
+public class KeycloakService {
 
-    @Autowired
-    private Environment environment;
+    private final Environment environment;
     private WebClient webClient;
 
     public static final int TOKEN_REFRESH_LIMIT_MILLISECONDS = 30*1000;
@@ -118,7 +116,7 @@ class KeycloakService {
             return false;
         }
         try {
-            new URL(url).toURI();
+            new URI(url).toURL();
             return true;
         } catch (MalformedURLException | URISyntaxException e) {
             return false;

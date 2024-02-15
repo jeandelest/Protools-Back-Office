@@ -2,20 +2,20 @@ package fr.insee.protools.backend.service.platine.delegate;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.insee.protools.backend.service.DelegateContextVerifier;
-import fr.insee.protools.backend.service.common.platine_sabiane.QuestionnaireHelper;
 import fr.insee.protools.backend.dto.platine_sabiane_questionnaire.MetadataConstants;
 import fr.insee.protools.backend.dto.platine_sabiane_questionnaire.campaign.MetadataValue;
 import fr.insee.protools.backend.dto.platine_sabiane_questionnaire.campaign.MetadataValueItem;
 import fr.insee.protools.backend.dto.platine_sabiane_questionnaire.campaign.MetadataVariables;
+import fr.insee.protools.backend.service.DelegateContextVerifier;
+import fr.insee.protools.backend.service.common.platine_sabiane.QuestionnaireHelper;
 import fr.insee.protools.backend.service.context.ContextService;
 import fr.insee.protools.backend.service.nomenclature.NomenclatureService;
 import fr.insee.protools.backend.service.platine.questionnaire.PlatineQuestionnaireService;
 import fr.insee.protools.backend.service.questionnaire_model.QuestionnaireModelService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -25,14 +25,14 @@ import static fr.insee.protools.backend.service.context.ContextConstants.*;
 
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class PlatineQuestionnaireCreateContextTask implements JavaDelegate, DelegateContextVerifier {
 
-    @Autowired ContextService protoolsContext;
-    @Autowired ObjectMapper objectMapper;
-    @Autowired NomenclatureService nomenclatureService;
-    @Autowired QuestionnaireModelService questionnaireModelService;
-
-    @Autowired PlatineQuestionnaireService platineQuestionnaireService;
+    private final ContextService protoolsContext;
+    private final ObjectMapper objectMapper;
+    private final NomenclatureService nomenclatureService;
+    private final QuestionnaireModelService questionnaireModelService;
+    private final PlatineQuestionnaireService platineQuestionnaireService;
 
     @Override
     public void execute(DelegateExecution execution) {

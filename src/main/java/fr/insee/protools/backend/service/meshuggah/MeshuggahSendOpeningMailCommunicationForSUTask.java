@@ -4,32 +4,34 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import fr.insee.protools.backend.dto.meshuggah.MeshuggahComDetails;
+import fr.insee.protools.backend.dto.platine.pilotage.contact.PlatineContactDto;
 import fr.insee.protools.backend.service.DelegateContextVerifier;
 import fr.insee.protools.backend.service.context.ContextService;
 import fr.insee.protools.backend.service.exception.IncorrectPlatineContactError;
-import fr.insee.protools.backend.dto.meshuggah.MeshuggahComDetails;
-import fr.insee.protools.backend.dto.platine.pilotage.contact.PlatineContactDto;
 import fr.insee.protools.backend.service.utils.FlowableVariableUtils;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import static fr.insee.protools.backend.service.FlowableVariableNameConstants.*;
+import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VARNAME_CURRENT_PARTITION_ID;
+import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VARNAME_PLATINE_CONTACT;
 import static fr.insee.protools.backend.service.context.ContextConstants.*;
 import static fr.insee.protools.backend.service.utils.ContextUtils.getCurrentPartitionNode;
 
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class MeshuggahSendOpeningMailCommunicationForSUTask implements JavaDelegate, DelegateContextVerifier {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
-    @Autowired ContextService protoolsContext;
-    @Autowired MeshuggahService meshuggahService;
+    private final ContextService protoolsContext;
+    private final MeshuggahService meshuggahService;
 
     private static JsonNode initBody(PlatineContactDto platineContact) {
         ObjectNode body = objectMapper.createObjectNode();

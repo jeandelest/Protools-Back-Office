@@ -5,10 +5,10 @@ import fr.insee.protools.backend.service.DelegateContextVerifier;
 import fr.insee.protools.backend.service.context.ContextService;
 import fr.insee.protools.backend.service.platine.pilotage.PlatinePilotageService;
 import fr.insee.protools.backend.service.utils.FlowableVariableUtils;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
@@ -19,10 +19,11 @@ import static fr.insee.protools.backend.service.platine.utils.PlatineHelper.comp
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class PlatinePilotageAddSUFollowUpTask implements JavaDelegate, DelegateContextVerifier {
 
-    @Autowired ContextService protoolsContext;
-    @Autowired PlatinePilotageService platinePilotageService;
+    private final ContextService protoolsContext;
+    private final PlatinePilotageService platinePilotageService;
 
 
     @Override

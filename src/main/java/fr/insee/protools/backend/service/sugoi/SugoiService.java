@@ -2,12 +2,12 @@ package fr.insee.protools.backend.service.sugoi;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import fr.insee.protools.backend.service.exception.UsernameAlreadyExistsSugoiBPMNError;
 import fr.insee.protools.backend.dto.sugoi.User;
+import fr.insee.protools.backend.service.exception.UsernameAlreadyExistsSugoiBPMNError;
 import fr.insee.protools.backend.webclient.WebClientHelper;
 import fr.insee.protools.backend.webclient.exception.runtime.WebClient4xxBPMNError;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -16,13 +16,13 @@ import static fr.insee.protools.backend.webclient.configuration.ApiConfigPropert
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class SugoiService {
     //TODO:  a quel niveau configure on ça?
 
-
     static final String STORAGE = "default";
-    @Autowired WebClientHelper webClientHelper;
-    @Autowired ObjectMapper objectMapper;
+    private final WebClientHelper webClientHelper;
+    private final ObjectMapper objectMapper;
     @Value("${fr.insee.protools.api.sugoi.dmz-account-creation-realm:questionnaire-particuliers}")
     private String realm;
 

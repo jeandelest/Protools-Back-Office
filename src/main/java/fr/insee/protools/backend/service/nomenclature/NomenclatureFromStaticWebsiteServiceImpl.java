@@ -2,8 +2,8 @@ package fr.insee.protools.backend.service.nomenclature;
 
 import fr.insee.protools.backend.service.context.exception.BadContextIncorrectBPMNError;
 import fr.insee.protools.backend.webclient.WebClientHelper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -15,13 +15,14 @@ import java.net.URISyntaxException;
  */
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class NomenclatureFromStaticWebsiteServiceImpl implements NomenclatureService{
 
     //TODO : expose mandatory configuration?
     @Value("${fr.insee.protools.nomenclature.uri}")
     private String nomenclatureUri;
 
-    @Autowired WebClientHelper webClientHelper;
+    private final WebClientHelper webClientHelper;
 
     @Override
     public String getNomenclatureContent(String nomenclatureId, String folderPath) {

@@ -1,14 +1,14 @@
 package fr.insee.protools.backend.service.rem.delegate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.insee.protools.backend.dto.rem.REMSurveyUnitDto;
 import fr.insee.protools.backend.service.DelegateContextVerifier;
 import fr.insee.protools.backend.service.rem.RemService;
-import fr.insee.protools.backend.dto.rem.REMSurveyUnitDto;
 import fr.insee.protools.backend.service.utils.FlowableVariableUtils;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VARNAME_REM_SURVEY_UNIT;
@@ -16,10 +16,11 @@ import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VA
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class RemGetSUTask implements JavaDelegate, DelegateContextVerifier {
 
-    @Autowired RemService remService;
-    @Autowired ObjectMapper objectMapper;
+    private final RemService remService;
+    private final ObjectMapper objectMapper;
 
     @Override
     public void execute(DelegateExecution execution) {

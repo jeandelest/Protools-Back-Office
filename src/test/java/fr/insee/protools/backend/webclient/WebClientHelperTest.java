@@ -14,11 +14,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -40,12 +39,13 @@ import static org.mockito.Mockito.when;
 class WebClientHelperTest {
 
     @Spy
+    private Environment environment;
+
     private KeycloakService keycloakService;
 
     @Mock
     private ApiConfigProperties apiConfigProperties;
 
-    @InjectMocks
     private WebClientHelper webClientHelper;
 
 
@@ -56,13 +56,14 @@ class WebClientHelperTest {
 
     @BeforeEach
     public void prepare() {
-        MockitoAnnotations.openMocks(this);
+        keycloakService= new KeycloakService(environment);
+        webClientHelper = new WebClientHelper(keycloakService,apiConfigProperties);
         this.keycloakService.initialize();
     }
 
     //close the mocked web server if it has been initialized
     @AfterEach
-    void mockServerCleanup() throws IOException {
+    void mockServerCleanup() throws Exception {
         if(this.mockWebServer!=null){
             this.mockWebServer.close();
         }

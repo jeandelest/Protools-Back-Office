@@ -1,7 +1,7 @@
 package fr.insee.protools.backend.configuration;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -31,12 +31,14 @@ import java.util.stream.Collectors;
 @Configuration
 @EnableWebSecurity
 @Slf4j
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final InseeSecurityTokenProperties inseeSecurityTokenProperties;
 
     public static final String STARTER_SECURITY_ENABLED = "fr.insee.sndil.starter.security.enabled";
     //Par défaut, spring sécurity prefixe les rôles avec cette chaine
     private static final String ROLE_PREFIX = "ROLE_";
-    @Autowired InseeSecurityTokenProperties inseeSecurityTokenProperties;
     // Démonstration avec un rôle protégeant l'accès à un des endpoints
     @Value("${fr.insee.sndil.starter.role.administrateur}")
     private String administrateurRole;

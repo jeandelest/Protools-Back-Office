@@ -3,10 +3,10 @@ package fr.insee.protools.backend.service.rem.delegate;
 import fr.insee.protools.backend.service.DelegateContextVerifier;
 import fr.insee.protools.backend.service.rem.RemService;
 import fr.insee.protools.backend.service.utils.FlowableVariableUtils;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -16,9 +16,10 @@ import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VA
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class RemGetPartitionListOfSuIdTask implements JavaDelegate, DelegateContextVerifier {
 
-    @Autowired RemService remService;
+    private final RemService remService;
 
     @Override
     public void execute(DelegateExecution execution) {
