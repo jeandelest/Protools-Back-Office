@@ -257,33 +257,3 @@ class QuestionnaireHelperTest {
     }
 
 }
-/*
-    public static void createQuestionnaire(JsonNode contextRootNode,
-                                           QuestionnairePlatineSabianeService questionnairePlatineSabianeService,
-                                           NomenclatureService nomenclatureService,
-                                           QuestionnaireModelService questionnaireModelService,
-                                           String processInstanceId,
-                                           MetadataValue metadataDto
-    ){
-        //Get the list of nomenclatures defined in Protools Context
-        //Create them if needed
-        var nomenclatureIterator =contextRootNode.path(CTX_NOMENCLATURES).elements();
-        if(!nomenclatureIterator.hasNext()){
-            log.info("ProcessInstanceId={} - does not declare any nomenclature",processInstanceId);
-        }
-        else  {
-            initRequiredNomenclatures(questionnairePlatineSabianeService, nomenclatureService,processInstanceId, nomenclatureIterator);
-        }
-
-        //Get the list of Questionnaire Models defined in Protools Context
-        Set<String> questionnaireModelIds = initQuestionnaireModels(questionnairePlatineSabianeService,questionnaireModelService,processInstanceId, contextRootNode);
-        CampaignDto campaignDto= CampaignDto.builder()
-                .id(contextRootNode.path(CTX_CAMPAGNE_ID).textValue())
-                .label(contextRootNode.path(CTX_CAMPAGNE_LABEL).textValue())
-                .metadata(metadataDto)
-                .questionnaireIds(questionnaireModelIds)
-                .build();
-        questionnairePlatineSabianeService.postCampaign(campaignDto);
-    }
-}
-*/
