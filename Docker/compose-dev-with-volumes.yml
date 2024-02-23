@@ -1,0 +1,101 @@
+#----------------------------------------------------------------------------
+#  (\___/) (\_(\
+#  (='.'=) (=':') Conteneurisation de Protools Backend
+#  (")_(") (,(")(")
+#
+# Commandes :
+# Pas de Profil
+#  podman-compose -f compose-dev-with-volumes.yml --env-file .\env\.env-container-intranet-insee  --project-name poc-archi-protools-backend    up -d
+#  podman-compose -f compose-dev-with-volumes.yml --env-file .\env\.env-container-intranet-insee  --project-name poc-archi-protools-backend   down -v
+# Generer une "conf kubernetes"
+#  podman generate kube --service  eclipsetemurin17jrefocal > kube.yaml
+#----------------------------------------------------------------------------
+secrets:
+  postgres-password:
+    file: ../secrets/postgres_password.txt
+
+x-maven-openjdk-volumes: &maven-openjdk-volumes
+  #  - ./.m2:/root/.m2
+  - ~/.m2:/root/.m2
+  - ./:/tmp
+
+x-jre-volumes: &jre-volumes
+  - ../target:/tmp
+
+x-db-volumes: &db-volumes
+  - postgres_vol:/var/lib/postgresql/data
+  # - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+services:
+
+  #  build:
+  #    container_name: mavenopenjdk17
+  #    image: ${IMAGE_BUILD_MAVEN}
+  #    #profiles: ["build"]
+  #    volumes: *maven-openjdk-volumes
+  #    tty: true
+  #    command: "/bin/bash"
+  #    working_dir: /tmp
+  #    networks:
+  #      - backend-poc-archi-protools
+
+  run:
+    container_name: eclipsetemurin17jrefocal
+    image: ${IMAGE_RUN_JAVA}
+    env_file:
+      - ../src/main/resources/application-dev.properties
+      - ../src/main/resources/application-conteneur.properties
+      - ../secrets/secrets_protools_properties.properties
+    #profiles: ["build","dev"]
+    ports:
+      - 8082:8082
+      - 8000:8000
+    expose:
+      - "8082"
+      - "8000"
+    volumes: *jre-volumes
+    working_dir: /tmp
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl http://localhost:8082/swagger-ui/index.html"]
+      interval: 10s
+      timeout: 900s
+      retries: 90
+    #    entrypoint: java -Dspring.profiles.active=dev ${JAVA_OPTS} -Xmx${javaMemoryLimit} -jar /app.jar
+    entrypoint: java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8000 -jar protools-protlsbo-1.1.0-SNAPSHOT.jar
+    networks:
+      - backend-poc-archi-protools
+
+  db:
+    container_name: postgresdevwithvolumes
+    image: ${IMAGE_BDD}
+    #profiles: [ "build","dev" ]
+    hostname: postgres-dev
+    privileged: true
+    environment:
+      POSTGRES_USER: insee
+      POSTGRES_DB: protools
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres-password
+    secrets:
+      - postgres-password
+    volumes: *db-volumes
+    expose:
+      - "5432"
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'"]
+      interval: 10s
+      timeout: 30s
+      retries: 3
+    networks:
+      - backend-poc-archi-protools
+
+volumes:
+  postgres_vol:
+
+networks:
+  backend-poc-archi-protools:
+    name: backend-poc-archi-protools

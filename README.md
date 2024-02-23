@@ -14,6 +14,6 @@ On passe les properties par variables d'environnement.<BR>
 La proposition ci-dessous s'appuie sur un fichier *.\secrets\secrets_protools_properties.properties* qui va contenir les
 mots de passe des comptes keycloak.
 
-Un exemple *secrets_protools_properties-example.properties* est présent dans ce dossier.
+Un exemple *secrets_protools_properties-example.properties* est présent dans le dossier secrets_examples.
 
 >podman run -p 8080:8080 --env-file .\src\main\resources\application-dev.properties --env-file .\secrets\secrets_protools_properties.properties localhost/protoolsbo:latest
