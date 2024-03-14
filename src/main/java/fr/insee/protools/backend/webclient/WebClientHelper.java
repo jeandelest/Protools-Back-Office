@@ -261,7 +261,7 @@ public class WebClientHelper {
                         return (String)privateField.get(clientResponse);
                 } catch (Exception e) {
                         log.error("Internal error while trying to extract the requestDescription from ClientResponse");
-                        return "Initial request cannot be retrived";
+                        return "Initial request cannot be retrieved";
                 }
         }
 
