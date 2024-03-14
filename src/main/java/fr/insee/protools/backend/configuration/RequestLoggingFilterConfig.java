@@ -12,11 +12,21 @@ import org.springframework.web.filter.CommonsRequestLoggingFilter;
  *  Les seuls changements sont qu'elle modifie le niveau de log :
  *  Par défaut, CommonsRequestLoggingFilter log uniquement lorsque le niveau de journalisation est défini sur debug.
  * Ici, nous écrivons un log AVANT la requête si le niveau INFO est actif.
- *
- * Le nom d'utilisateur loggé est celui défini dans le Principal de Spring security.
- * Dans SecurityConfig de Protools,
+ *<p>
+ * <p>Le nom d'utilisateur loggé est celui défini dans le Principal de Spring security.
+ * <p>Dans SecurityConfig de Protools,
  * nous définissons qu'il doit être initialisé avec le preferred_username des claims du jeton JWT.
- * Dans le contexte INSEE, il s'agit de l'IDEP
+ * <p>Dans le contexte INSEE, il s'agit de l'IDEP.
+ *<p>
+ * <p>Format des messages
+ *<ul>
+ * <li>Pour les utilisateurs non enregistrés:
+ * <p>     - [GET /path/endpoint, client=192.168.0.200]
+ *
+ * <li>Pour les utilisateurs enregistrés:
+ * <p>     - [GET /path/endpoint, client=127.0.0.1, user=<IDEP>]
+ *
+ *</ul>
  */
 @Configuration
 public class RequestLoggingFilterConfig {
