@@ -19,10 +19,11 @@ import java.net.URISyntaxException;
 public class QuestionnaireModelFromStaticWebsiteServiceImpl implements QuestionnaireModelService {
 
     //TODO : expose mandatory configuration?
+    private final WebClientHelper webClientHelper;
+
     @Value("${fr.insee.protools.questionnaire.model.uri}")
     private String questionnaireModelUri;
 
-    private final WebClientHelper webClientHelper;
 
     @Override
     public String getQuestionnaireModel(String questionnaireModelId, String folderPath){

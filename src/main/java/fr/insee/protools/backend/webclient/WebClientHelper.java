@@ -44,12 +44,12 @@ import java.util.*;
 @Slf4j
 public class WebClientHelper {
 
+        private static final int DEFAULT_FILE_BUFFER_SIZE = 100 * 1024*1024;
+        private static final int DEFAULT_API_BUFFER_SIZE =  100 * 1024*1024;
         private final KeycloakService keycloakService;
         private final ApiConfigProperties apiConfigProperties;
 
         private final EnumMap<ApiConfigProperties.KNOWN_API, WebClient> initializedClients = new EnumMap<>(ApiConfigProperties.KNOWN_API.class);
-        private static final int DEFAULT_FILE_BUFFER_SIZE = 100 * 1024*1024;
-        private static final int DEFAULT_API_BUFFER_SIZE =  100 * 1024*1024;
 
         public WebClientHelper(KeycloakService keycloakService, ApiConfigProperties apiConfigProperties) {
                 this.keycloakService = keycloakService;

@@ -39,11 +39,10 @@ import static fr.insee.protools.backend.service.utils.ContextUtils.getCurrentPar
 @RequiredArgsConstructor
 public class PlatinePilotageCreateSurveyUnitTask implements JavaDelegate, DelegateContextVerifier {
 
+    private static final ObjectMapper objectMapper = new ObjectMapper().configure(FAIL_ON_UNKNOWN_PROPERTIES,false);
 
     private final ContextService protoolsContext;
     private final PlatinePilotageService platinePilotageService;
-
-    private static final ObjectMapper objectMapper = new ObjectMapper().configure(FAIL_ON_UNKNOWN_PROPERTIES,false);
 
     @Override
     public void execute(DelegateExecution execution) {
