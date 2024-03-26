@@ -152,7 +152,7 @@ public interface QuestionnairePlatineSabianeService {
         }
     }
 
-    /** Create the campaign **/
+    /** Create a survey Unit **/
     default void postSurveyUnit(SurveyUnitResponseDto suDto, String idCampaign) {
         WebClientHelper.logJson("postSurveyUnit: idCampaign="+idCampaign, suDto,getLogger(),Level.DEBUG);
         try {
