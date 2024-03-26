@@ -25,7 +25,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 class PlatinePilotageGetSUContactTaskTest extends TestWithContext {
-    final static String ressourceFolder = ClassUtils.convertClassNameToResourcePath(PlatinePilotageAddSUFollowUpTaskTest.class.getPackageName());
+    final static String ressourceFolder = ClassUtils.convertClassNameToResourcePath(PlatinePilotageGetSUContactTaskTest.class.getPackageName());
     final static String platine_context_json = ressourceFolder + "/protools-contexte-platine-individu.json";
     final static String platine_context_incorrect_json = ressourceFolder + "/protools-contexte-platine-incorrect-no-campaign-id.json";
 

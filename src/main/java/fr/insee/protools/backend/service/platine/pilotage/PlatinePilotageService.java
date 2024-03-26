@@ -77,16 +77,4 @@ public class PlatinePilotageService {
         return  result;
     }
 
-    public void addFollowUpState(Long idSU, String platinePartitionId){
-        log.debug("isToFollowUp: platinePartitionId={} - idSu={}",platinePartitionId,idSU);
-        String response = webClientHelper.getWebClient(KNOWN_API_PLATINE_PILOTAGE)
-                .post()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/api/partitionings/{idPartitioning}/survey-units/{idSu}/follow-up")
-                        .build(platinePartitionId,idSU))
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
-        log.debug("isToFollowUp: platinePartitionId={} - idSu={} - response={}",platinePartitionId,idSU,response);
-    }
 }
