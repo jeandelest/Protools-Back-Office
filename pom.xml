@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.3</version>
+        <version>3.2.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>fr.insee.sndil.protools</groupId>
@@ -18,9 +18,9 @@
         <springdoc.version>2.3.0</springdoc.version>
         <flowable.version>7.0.1-insee</flowable.version>
         <pitest.version>1.11.7</pitest.version>
-        <pitest.junit.version>1.1.2</pitest.junit.version>
+        <pitest.junit.version>1.2.1</pitest.junit.version>
         <passay.version>1.6.4</passay.version>
-
+        <groovy-version>4.0.20</groovy-version>
     </properties>
 
 
@@ -58,7 +58,7 @@
         <dependency>
             <groupId>org.apache.groovy</groupId>
             <artifactId>groovy-jsr223</artifactId>
-            <version>4.0.12</version>
+            <version>${groovy-version}</version>
         </dependency>
 
 
@@ -140,6 +140,9 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <layout>ZIP</layout>
+                </configuration>
             </plugin>
 
             <plugin>
@@ -188,8 +191,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>17</source>
-                    <target>17</target>
+                    <source>21</source>
+                    <target>21</target>
                 </configuration>
             </plugin>
         </plugins>
