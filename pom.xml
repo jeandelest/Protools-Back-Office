@@ -140,9 +140,11 @@
                         </goals>
                     </execution>
                 </executions>
+                <!-- to use protperty loader and load external jars
                 <configuration>
                     <layout>ZIP</layout>
                 </configuration>
+                -->
             </plugin>
 
             <plugin>
