@@ -20,7 +20,7 @@ import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VA
 @RequiredArgsConstructor
 public class SugoiCreateUserTask implements JavaDelegate, DelegateContextVerifier {
 
-    protected static final Habilitation PLATINE_HABILITATION = new Habilitation("platine", "repondant", "");
+    protected static final Habilitation PLATINE_HABILITATION = new Habilitation("platine", "repondant", null);
     protected static final User createSugoiUserBody = User.builder().habilitations(List.of(PLATINE_HABILITATION)).build();
 
     private final SugoiService sugoiService;
