@@ -10,14 +10,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package fr.insee.protools.backend.flowable.parall;
+package fr.insee.protools.backend.flowable.poc_utilisation_plusieurs_moteurs;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.sql.DataSource;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.flowable.common.engine.api.async.AsyncTaskExecutor;
 import org.flowable.common.engine.api.scope.ScopeTypes;
 import org.flowable.common.engine.impl.cfg.IdGenerator;
@@ -31,10 +26,7 @@ import org.flowable.job.service.impl.asyncexecutor.AsyncExecutor;
 import org.flowable.job.service.impl.asyncexecutor.AsyncJobExecutorConfiguration;
 import org.flowable.spring.SpringProcessEngineConfiguration;
 import org.flowable.spring.boot.*;
-import org.flowable.spring.boot.app.AppEngineAutoConfiguration;
-import org.flowable.spring.boot.app.AppEngineServicesAutoConfiguration;
 import org.flowable.spring.boot.app.FlowableAppProperties;
-import org.flowable.spring.boot.condition.ConditionalOnProcessEngine;
 import org.flowable.spring.boot.eventregistry.FlowableEventRegistryProperties;
 import org.flowable.spring.boot.idm.FlowableIdmProperties;
 import org.flowable.spring.boot.process.FlowableProcessProperties;
@@ -49,11 +41,8 @@ import org.flowable.spring.job.service.SpringAsyncHistoryExecutor;
 import org.flowable.spring.job.service.SpringRejectedJobsHandler;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.AutoConfiguration;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.task.TaskExecutionAutoConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -63,7 +52,15 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.Resource;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import javax.sql.DataSource;
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
+
+
+//CETTE CLASSE EST UNE COPIE INTEGRALE d'une class du moteur
+
+
 @Configuration
 @EnableConfigurationProperties({
         FlowableAutoDeploymentProperties.class,
@@ -74,6 +71,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
         FlowableAppProperties.class,
         FlowableIdmProperties.class,
         FlowableEventRegistryProperties.class
+})
+@Import({
+        FlowableJobConfiguration.class,
+        AsyncJobExecutorConfiguration.class
+
 })
 public class ProcessEngineAutoConfiguration extends AbstractSpringEngineAutoConfiguration {
 
@@ -165,7 +167,7 @@ public class ProcessEngineAutoConfiguration extends AbstractSpringEngineAutoConf
             ObjectProvider<FlowableHttpClient> flowableHttpClient,
             ObjectProvider<AutoDeploymentStrategy<ProcessEngine>> processEngineAutoDeploymentStrategies) throws IOException {
 
-        SpringProcessEngineConfiguration conf = new ProcessEngineConfigImplTest();
+        SpringProcessEngineConfiguration conf = new ProtoolsProcessEngineConfigImplTest();
 
         List<Resource> resources = this.discoverDeploymentResources(
             flowableProperties.getProcessDefinitionLocationPrefix(),

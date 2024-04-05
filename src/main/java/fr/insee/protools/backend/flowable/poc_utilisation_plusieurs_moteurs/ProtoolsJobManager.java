@@ -1,11 +1,11 @@
-package fr.insee.protools.backend.flowable.parall;
+package fr.insee.protools.backend.flowable.poc_utilisation_plusieurs_moteurs;
 
 import org.flowable.job.service.JobServiceConfiguration;
 import org.flowable.job.service.impl.asyncexecutor.DefaultJobManager;
 import org.flowable.job.service.impl.persistence.entity.JobEntity;
 
-public class CustomJobManager extends DefaultJobManager {
-    public CustomJobManager(JobServiceConfiguration jobServiceConfiguration) {
+public class ProtoolsJobManager extends DefaultJobManager {
+    public ProtoolsJobManager(JobServiceConfiguration jobServiceConfiguration) {
        super(jobServiceConfiguration);
     }
 
