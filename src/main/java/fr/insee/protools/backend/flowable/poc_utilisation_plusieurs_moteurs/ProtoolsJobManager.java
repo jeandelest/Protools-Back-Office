@@ -8,8 +8,11 @@ public class ProtoolsJobManager extends DefaultJobManager {
     public ProtoolsJobManager(JobServiceConfiguration jobServiceConfiguration) {
        super(jobServiceConfiguration);
     }
-
+/*
+    @Override
     protected boolean isJobApplicableForExecutorExecution(JobEntity jobEntity) {
         return false;
     }
+    */
+
 }
