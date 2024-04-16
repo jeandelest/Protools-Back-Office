@@ -152,12 +152,21 @@ public class ContextServiceImpl implements ContextService {
             if (!contextErrors.isEmpty()) {
                 throw new BadContextIncorrectBPMNError(contextErrors.toString());
             }
+
+            String mode = rootContext.path(CTX_MODE).asText();
+            if(!mode.equalsIgnoreCase("api") && mode.equalsIgnoreCase("queue")){
+                throw new BadContextIncorrectBPMNError("The mode must be defined with values api or queue");
+            }
+
             log.info("idCampaign="+rootContext.path(CTX_CAMPAGNE_ID).textValue());
 
             //Variables to store for this process
             Map<String, Object> variables = new HashMap<>();
             //Store the raw json as string
             variables.put(VARNAME_CONTEXT, content);
+            //Store the mode
+            variables.put(VARNAME_MODE, mode);
+
 
             // Extraction of campaign TIMER START/END dates
             //        Do extraction of important BPMN Variables in separates functions
@@ -181,6 +190,11 @@ public class ContextServiceImpl implements ContextService {
                 partitionVariables.put(CTX_PARTITION_DATE_FIN_COLLECTE,startEndDT.getValue() );
 
                 variablesByPartition.put(partitionId,partitionVariables);
+
+                //The context defines only one partition
+                if(partitions.size()==1){
+                    variables.put(VARNAME_CURRENT_PARTITION_ID, partitionId);
+                }
             }
 
             variables.put(VARNAME_CONTEXT_PARTITION_ID_LIST, partitionIds);

@@ -8,6 +8,8 @@ public class FlowableVariableNameConstants {
     //TODO : renommer toutes ces variables pour remplacer les - par des _ (comme ca ca sera utilisable dans les resolvers)
     //Protools context
     public static final String VARNAME_CONTEXT="context";
+    //Async mode queue or api
+    public static final String VARNAME_MODE="mode";
     public static final String VARNAME_CONTEXT_PARTITION_ID_LIST="contexte_partition_id_list";
     public static final String VARNAME_CONTEXT_PARTITION_VARIABLES_BY_ID="contexte_partition_variables_by_partitionid";
     //To treat partitions one by one (Long)
