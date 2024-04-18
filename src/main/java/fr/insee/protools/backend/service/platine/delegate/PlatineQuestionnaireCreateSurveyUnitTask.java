@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
+import static fr.insee.protools.backend.service.context.ContextConstants.CTX_CAMPAGNE_CONTEXTE;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -24,8 +26,16 @@ public class PlatineQuestionnaireCreateSurveyUnitTask implements JavaDelegate, D
     @Override
     public void execute(DelegateExecution execution) {
         JsonNode contextRootNode = protoolsContext.getContextByProcessInstance(execution.getProcessInstanceId());
+        //TODO: delete this log if necessary
+        log.debug("ProcessInstanceId={}  - campagne={} - begin"
+                ,execution.getProcessInstanceId(),contextRootNode.path(CTX_CAMPAGNE_CONTEXTE).asText());
+
         checkContextOrThrow(log,execution.getProcessInstanceId(), contextRootNode);
         QuestionnaireHelper.createSUTaskPlatine(execution,protoolsContext,platineQuestionnaireService);
+        log.debug("ProcessInstanceId={}  - campagne={} - end",
+                execution.getProcessInstanceId(),contextRootNode.path(CTX_CAMPAGNE_CONTEXTE).asText());
+
+
     }
 
     @Override
