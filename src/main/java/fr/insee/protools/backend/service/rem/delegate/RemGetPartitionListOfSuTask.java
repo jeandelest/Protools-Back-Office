@@ -30,6 +30,7 @@ public class RemGetPartitionListOfSuTask implements JavaDelegate, DelegateContex
 
         JsonNode[] partitionSUs = remService.getPartitionAllSU(currentPartitionId);
         List<JsonNode> remSUList = List.of(partitionSUs);
+        log.trace("remSUList.length="+partitionSUs.length);
         execution.getParent().setVariableLocal(VARNAME_REM_SU_LIST, remSUList);
         log.debug("ProcessInstanceId={} -  partition={} - remSUList.size={} end",execution.getProcessInstanceId(),currentPartitionId,remSUList.size());
     }
