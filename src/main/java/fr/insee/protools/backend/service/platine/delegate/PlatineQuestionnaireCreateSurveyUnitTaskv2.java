@@ -18,7 +18,7 @@ import static fr.insee.protools.backend.service.context.ContextConstants.CTX_CAM
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class PlatineQuestionnaireCreateSurveyUnitTask implements JavaDelegate, DelegateContextVerifier {
+public class PlatineQuestionnaireCreateSurveyUnitTaskv2 implements JavaDelegate, DelegateContextVerifier {
 
     private final ContextService protoolsContext;
     private final PlatineQuestionnaireService platineQuestionnaireService;
@@ -31,7 +31,7 @@ public class PlatineQuestionnaireCreateSurveyUnitTask implements JavaDelegate, D
                 ,execution.getProcessInstanceId(),contextRootNode.path(CTX_CAMPAGNE_CONTEXTE).asText());
 
         checkContextOrThrow(log,execution.getProcessInstanceId(), contextRootNode);
-        QuestionnaireHelper.createSUTaskPlatine(execution,protoolsContext,platineQuestionnaireService);
+        QuestionnaireHelper.createAllSUTaskPlatine(execution,protoolsContext,platineQuestionnaireService);
         log.debug("ProcessInstanceId={}  - campagne={} - end",
                 execution.getProcessInstanceId(),contextRootNode.path(CTX_CAMPAGNE_CONTEXTE).asText());
 

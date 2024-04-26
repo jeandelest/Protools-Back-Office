@@ -1,7 +1,6 @@
 package fr.insee.protools.backend.service.rem.delegate;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import fr.insee.protools.backend.dto.rem.REMSurveyUnitDto;
 import fr.insee.protools.backend.service.DelegateContextVerifier;
 import fr.insee.protools.backend.service.rem.RemService;
 import fr.insee.protools.backend.service.utils.FlowableVariableUtils;
@@ -15,12 +14,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static fr.insee.protools.backend.service.FlowableVariableNameConstants.*;
+import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VARNAME_CURRENT_PARTITION_ID;
+import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VARNAME_REM_SU_LIST;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class RemGetPartitionListOfSuTask implements JavaDelegate, DelegateContextVerifier {
+public class RemGetPartitionListOfSuTaskv2 implements JavaDelegate, DelegateContextVerifier {
 
     private final RemService remService;
 
@@ -31,12 +31,8 @@ public class RemGetPartitionListOfSuTask implements JavaDelegate, DelegateContex
         log.info("ProcessInstanceId={} - partition={} begin",execution.getProcessInstanceId(),currentPartitionId);
 
         JsonNode[] partitionSUs = remService.getPartitionAllSU(currentPartitionId);
-        // Convert JsonNode array to List<String> using streams
-        List<String> remSUList = Arrays.stream(partitionSUs)
-                .map(JsonNode::toString)
-                .collect(Collectors.toList());
         log.trace("remSUList.length="+partitionSUs.length);
-        execution.getParent().setVariableLocal(VARNAME_REM_SU_LIST, remSUList);
-        log.debug("ProcessInstanceId={} -  partition={} - remSUList.size={} end",execution.getProcessInstanceId(),currentPartitionId,remSUList.size());
+        execution.getParent().setVariableLocal(VARNAME_REM_SU_LIST, partitionSUs);
+        log.debug("ProcessInstanceId={} -  partition={} - remSUList.size={} end",execution.getProcessInstanceId(),currentPartitionId,partitionSUs.length);
     }
 }

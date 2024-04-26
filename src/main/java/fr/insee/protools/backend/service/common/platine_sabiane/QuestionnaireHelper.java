@@ -9,6 +9,7 @@ import fr.insee.protools.backend.dto.platine_sabiane_questionnaire.campaign.Camp
 import fr.insee.protools.backend.dto.platine_sabiane_questionnaire.campaign.MetadataValue;
 import fr.insee.protools.backend.dto.platine_sabiane_questionnaire.surveyunit.SurveyUnitResponseDto;
 import fr.insee.protools.backend.service.context.ContextService;
+import fr.insee.protools.backend.service.exception.IncorrectSUBPMNError;
 import fr.insee.protools.backend.service.exception.JsonParsingBPMNError;
 import fr.insee.protools.backend.service.nomenclature.NomenclatureService;
 import fr.insee.protools.backend.service.platine.utils.PlatineHelper;
@@ -25,8 +26,7 @@ import java.util.Set;
 
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES;
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
-import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VARNAME_CURRENT_PARTITION_ID;
-import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VARNAME_REM_SURVEY_UNIT;
+import static fr.insee.protools.backend.service.FlowableVariableNameConstants.*;
 import static fr.insee.protools.backend.service.context.ContextConstants.*;
 import static fr.insee.protools.backend.service.utils.ContextUtils.getCurrentPartitionNode;
 
@@ -250,6 +250,32 @@ public class QuestionnaireHelper {
      */
     public static void createSUTaskPlatine(DelegateExecution execution, ContextService protoolsContext, QuestionnairePlatineSabianeService service) {
         createSUTaskPlatineSabiane(execution, protoolsContext, service, false);
+    }
+
+    public static void createAllSUTaskPlatine(DelegateExecution execution, ContextService protoolsContext, QuestionnairePlatineSabianeService service) {
+        JsonNode contextRootNode = protoolsContext.getContextByProcessInstance(execution.getProcessInstanceId());
+
+        Long currentPartitionId = FlowableVariableUtils.getVariableOrThrow(execution, VARNAME_CURRENT_PARTITION_ID, Long.class);
+        JsonNode[] suArray = FlowableVariableUtils.getVariableOrThrow(execution, VARNAME_REM_SU_LIST, JsonNode[].class);
+
+        JsonNode currentPartitionNode = getCurrentPartitionNode(contextRootNode, currentPartitionId);
+
+        for (int i = 0; i<suArray.length; i++) {
+            JsonNode remSUNode = suArray[i];
+            //Create the DTO object
+            SurveyUnitResponseDto dto =
+                    QuestionnaireHelper.computeDtoPlatine(remSUNode, currentPartitionNode);
+
+            log.info("ProcessInstanceId={} - mode={} - currentPartitionId={} - remSU.id={}",
+                    execution.getProcessInstanceId(), "platine", currentPartitionId, dto.getId());
+
+            //Call service
+            service.postSurveyUnit(dto, contextRootNode.path(CTX_CAMPAGNE_ID).asText());
+        }
+
+        log.debug("ProcessInstanceId={}  end", execution.getProcessInstanceId());
+
+
     }
 
     /**

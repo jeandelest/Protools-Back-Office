@@ -51,18 +51,19 @@ public class RemService {
 
 
     public JsonNode[] getPartitionAllSU(Long partitionId) {
-        log.debug("getPartitionAllSU - partitionId={} ",partitionId);
+        log.error("getPartitionAllSU - partitionId={} ",partitionId);
         try {
             var response = webClientHelper.getWebClient(KNOWN_API_REM)
                     .get()
-                    .uri(uriBuilder -> uriBuilder
-                            .path("/survey-units/partitions/{partitionId}")
-                            .queryParam("withExternals", true)
-                            .build(partitionId))
+                   // .uri(uriBuilder -> uriBuilder
+                   //         .path("/survey-units/partitions/{partitionId}")
+                   //         .queryParam("withExternals", true)
+                   //         .build(partitionId))
+                    .uri("/starter/ues")
                     .retrieve()
                     .bodyToMono(JsonNode[].class)
                     .block();
-            log.trace("partitionId={} - response.length={} ", partitionId, response.length);
+            log.error("partitionId={} - response.length={} ", partitionId, response.length);
             return response;
         }
         catch (WebClient4xxBPMNError e){
