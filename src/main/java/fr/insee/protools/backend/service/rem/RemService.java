@@ -55,11 +55,11 @@ public class RemService {
         try {
             var response = webClientHelper.getWebClient(KNOWN_API_REM)
                     .get()
-                   // .uri(uriBuilder -> uriBuilder
-                   //         .path("/survey-units/partitions/{partitionId}")
-                   //         .queryParam("withExternals", true)
-                   //         .build(partitionId))
-                    .uri("/starter/ues")
+                    .uri(uriBuilder -> uriBuilder
+                            .path("/survey-units/partitions/{partitionId}")
+                            .queryParam("withExternals", true)
+                            .build(partitionId))
+                   // .uri("/starter/ues")
                     .retrieve()
                     .bodyToMono(JsonNode[].class)
                     .block();
