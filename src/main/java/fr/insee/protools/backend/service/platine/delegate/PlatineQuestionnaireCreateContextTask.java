@@ -36,7 +36,6 @@ public class PlatineQuestionnaireCreateContextTask implements JavaDelegate, Dele
 
     @Override
     public void execute(DelegateExecution execution) {
-        if(false) {
             JsonNode contextRootNode = protoolsContext.getContextByProcessInstance(execution.getProcessInstanceId());
             //check context
             checkContextOrThrow(log, execution.getProcessInstanceId(), contextRootNode);
@@ -47,7 +46,6 @@ public class PlatineQuestionnaireCreateContextTask implements JavaDelegate, Dele
 
             QuestionnaireHelper.createQuestionnaire(contextRootNode, platineQuestionnaireService, nomenclatureService,
                     questionnaireModelService, execution.getProcessInstanceId(), metadataDto);
-        }
         log.debug("ProcessInstanceId={}  end",execution.getProcessInstanceId());
     }
 
