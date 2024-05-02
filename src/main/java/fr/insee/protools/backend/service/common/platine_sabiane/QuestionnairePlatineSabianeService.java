@@ -157,7 +157,7 @@ public interface QuestionnairePlatineSabianeService {
         WebClientHelper.logJson("postSurveyUnit: idCampaign="+idCampaign, suDto,getLogger(),Level.DEBUG);
         try {
             //TODO : delete this log
-            getLogger().info("postSurveyUnit: BEFORE - idCampaign={} - idSu={}", idCampaign,suDto.getId());
+            getLogger().debug("postSurveyUnit: BEFORE - idCampaign={} - idSu={}", idCampaign,suDto.getId());
             var response = webClient()
                     .post()
                     .uri(uriBuilder -> uriBuilder

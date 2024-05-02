@@ -303,7 +303,7 @@ public class QuestionnaireHelper {
                         :
                         QuestionnaireHelper.computeDtoPlatine(remSUNode, currentPartitionNode);
 
-        log.info("ProcessInstanceId={} - mode={} - currentPartitionId={} - remSU.id={}",
+        log.debug("ProcessInstanceId={} - mode={} - currentPartitionId={} - remSU.id={}",
                 execution.getProcessInstanceId(), modeSabiane ? "sabiane" : "platine", currentPartitionId, dto.getId());
 
         //Call service
