@@ -260,6 +260,7 @@ public class QuestionnaireHelper {
         JsonNode[] suArray = FlowableVariableUtils.getVariableOrThrow(execution, VARNAME_REM_SU_LIST, JsonNode[].class);
         Boolean parallele = FlowableVariableUtils.getVariableOrThrow(execution, "parallele", Boolean.class);
         JsonNode currentPartitionNode = getCurrentPartitionNode(contextRootNode, currentPartitionId);
+        log.info("parallele="+parallele+"- Boolean.FALSE.equals(parallele)="+Boolean.FALSE.equals(parallele));
 
         if(Boolean.FALSE.equals(parallele)) {
             for (int i = 0; i < suArray.length; i++) {
