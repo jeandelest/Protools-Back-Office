@@ -167,7 +167,7 @@ public class ContextServiceImpl implements ContextService {
                 paralleleB=Boolean.FALSE;
             }
 
-            log.info("idCampaign="+rootContext.path(CTX_CAMPAGNE_ID).textValue());
+            log.info("idCampaign="+rootContext.path(CTX_CAMPAGNE_ID).textValue()+" - parallele="+paralleleB);
 
             //Variables to store for this process
             Map<String, Object> variables = new HashMap<>();
