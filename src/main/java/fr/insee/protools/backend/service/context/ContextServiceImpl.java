@@ -158,6 +158,15 @@ public class ContextServiceImpl implements ContextService {
                 throw new BadContextIncorrectBPMNError("The mode must be defined with values api or queue");
             }
 
+            String parallele = rootContext.path("parallele").asText();
+            Boolean paralleleB;
+            if(parallele.equalsIgnoreCase("true") ){
+                paralleleB=Boolean.TRUE;
+            }
+            else{
+                paralleleB=Boolean.FALSE;
+            }
+
             log.info("idCampaign="+rootContext.path(CTX_CAMPAGNE_ID).textValue());
 
             //Variables to store for this process
@@ -166,6 +175,8 @@ public class ContextServiceImpl implements ContextService {
             variables.put(VARNAME_CONTEXT, content);
             //Store the mode
             variables.put(VARNAME_MODE, mode);
+            variables.put("parallele", paralleleB);
+
 
 
             // Extraction of campaign TIMER START/END dates

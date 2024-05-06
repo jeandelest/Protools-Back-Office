@@ -23,6 +23,7 @@ import org.flowable.engine.delegate.DelegateExecution;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES;
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
@@ -257,25 +258,39 @@ public class QuestionnaireHelper {
 
         Long currentPartitionId = FlowableVariableUtils.getVariableOrThrow(execution, VARNAME_CURRENT_PARTITION_ID, Long.class);
         JsonNode[] suArray = FlowableVariableUtils.getVariableOrThrow(execution, VARNAME_REM_SU_LIST, JsonNode[].class);
-
+        Boolean parallele = FlowableVariableUtils.getVariableOrThrow(execution, "parallele", Boolean.class);
         JsonNode currentPartitionNode = getCurrentPartitionNode(contextRootNode, currentPartitionId);
 
-        for (int i = 0; i<suArray.length; i++) {
-            JsonNode remSUNode = suArray[i];
-            //Create the DTO object
-            SurveyUnitResponseDto dto =
-                    QuestionnaireHelper.computeDtoPlatine(remSUNode, currentPartitionNode);
+        if(Boolean.FALSE.equals(parallele)) {
+            for (int i = 0; i < suArray.length; i++) {
+                JsonNode remSUNode = suArray[i];
+                //Create the DTO object
+                SurveyUnitResponseDto dto =
+                        QuestionnaireHelper.computeDtoPlatine(remSUNode, currentPartitionNode);
 
-            log.info("ProcessInstanceId={} - mode={} - currentPartitionId={} - remSU.id={}",
-                    execution.getProcessInstanceId(), "platine", currentPartitionId, dto.getId());
+                log.info("ProcessInstanceId={} - mode={} - currentPartitionId={} - remSU.id={}",
+                        execution.getProcessInstanceId(), "platine", currentPartitionId, dto.getId());
 
-            //Call service
-            service.postSurveyUnit(dto, contextRootNode.path(CTX_CAMPAGNE_ID).asText());
+                //Call service
+                service.postSurveyUnit(dto, contextRootNode.path(CTX_CAMPAGNE_ID).asText());
+            }
         }
+        else{
+
+                Stream.of(suArray).parallel().forEach(remSUNode -> {
+                    //Create the DTO object
+                    SurveyUnitResponseDto dto =
+                            QuestionnaireHelper.computeDtoPlatine(remSUNode, currentPartitionNode);
+
+                    log.info("ProcessInstanceId={} - mode={} - currentPartitionId={} - remSU.id={}",
+                            execution.getProcessInstanceId(), "platine", currentPartitionId, dto.getId());
+
+                    //Call service
+                    service.postSurveyUnit(dto, contextRootNode.path(CTX_CAMPAGNE_ID).asText());
+                });
+            }
 
         log.debug("ProcessInstanceId={}  end", execution.getProcessInstanceId());
-
-
     }
 
     /**
