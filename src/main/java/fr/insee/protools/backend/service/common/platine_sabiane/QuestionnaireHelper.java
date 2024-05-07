@@ -266,55 +266,61 @@ public class QuestionnaireHelper {
         JsonNode currentPartitionNode = getCurrentPartitionNode(contextRootNode, currentPartitionId);
         log.info("parallele="+parallele+"- Boolean.FALSE.equals(parallele)="+Boolean.FALSE.equals(parallele));
 
+        String idCampaign = contextRootNode.path(CTX_CAMPAGNE_ID).asText();
+
         if(Boolean.FALSE.equals(parallele)) {
             for (JsonNode remSUNode : listeUe){
                 //Create the DTO object
                 SurveyUnitResponseDto dto =
                         QuestionnaireHelper.computeDtoPlatine(remSUNode, currentPartitionNode);
-
                 log.trace("ProcessInstanceId={} - mode={} - currentPartitionId={} - remSU.id={}",
                         execution.getProcessInstanceId(), "platine", currentPartitionId, dto.getId());
 
                 //Call service
-                service.postSurveyUnit(dto, contextRootNode.path(CTX_CAMPAGNE_ID).asText());
+                postSUWithRetry(service, dto, idCampaign);
             }
         }
         else{
+
                 listeUe.stream().parallel().forEach(remSUNode -> {
-                    int retryCount = 0;
-                    boolean finished=false;
                     //Create the DTO object
                     SurveyUnitResponseDto dto =
                             QuestionnaireHelper.computeDtoPlatine(remSUNode, currentPartitionNode);
-
                     log.trace("ProcessInstanceId={} - mode={} - currentPartitionId={} - remSU.id={}",
                             execution.getProcessInstanceId(), "platine", currentPartitionId, dto.getId());
-                    while(retryCount<10 && !finished)
-                    try {
-                        //Call service
-                        service.postSurveyUnit(dto, contextRootNode.path(CTX_CAMPAGNE_ID).asText());
-                        finished=true;
-                    }
-                    catch (Throwable e){
-                        int sleepMs = 1000 + retryCount*10000;
-                        retryCount++;
-                        log.error(" Exception : remSU.id={} - retryCount={} - sleepMs={} - msg={} ",
-                                dto.getId(), retryCount,sleepMs,e.getMessage());;
-                        if(retryCount>=10){
-                            throw e;
-                        }
 
-
-                        try {
-                            Thread.sleep(15000);
-                        } catch (Exception ex) {
-                            throw new RuntimeException(ex);
-                        }
-                    }
+                    postSUWithRetry(service, dto, idCampaign);
                 });
             }
 
         log.debug("ProcessInstanceId={}  end", execution.getProcessInstanceId());
+    }
+
+    private static void postSUWithRetry(QuestionnairePlatineSabianeService service, SurveyUnitResponseDto dto, String idCampaign) {
+        int retryCount = 0;
+        boolean finished=false;
+        while(retryCount<10 && !finished)
+        try {
+            //Call service
+            service.postSurveyUnit(dto, idCampaign);
+            finished=true;
+        }
+        catch (Throwable e){
+            int sleepMs = 1000 + retryCount*10000;
+            retryCount++;
+            log.error(" Exception : remSU.id={} - retryCount={} - sleepMs={} - msg={} ",
+                    dto.getId(), retryCount,sleepMs,e.getMessage());;
+            if(retryCount>=10){
+                throw e;
+            }
+
+
+            try {
+                Thread.sleep(15000);
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        }
     }
 
     /**
