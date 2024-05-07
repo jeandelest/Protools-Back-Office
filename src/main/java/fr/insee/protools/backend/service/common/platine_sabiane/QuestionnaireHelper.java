@@ -272,7 +272,7 @@ public class QuestionnaireHelper {
                 SurveyUnitResponseDto dto =
                         QuestionnaireHelper.computeDtoPlatine(remSUNode, currentPartitionNode);
 
-                log.info("ProcessInstanceId={} - mode={} - currentPartitionId={} - remSU.id={}",
+                log.trace("ProcessInstanceId={} - mode={} - currentPartitionId={} - remSU.id={}",
                         execution.getProcessInstanceId(), "platine", currentPartitionId, dto.getId());
 
                 //Call service
@@ -287,9 +287,9 @@ public class QuestionnaireHelper {
                     SurveyUnitResponseDto dto =
                             QuestionnaireHelper.computeDtoPlatine(remSUNode, currentPartitionNode);
 
-                    log.info("ProcessInstanceId={} - mode={} - currentPartitionId={} - remSU.id={}",
+                    log.trace("ProcessInstanceId={} - mode={} - currentPartitionId={} - remSU.id={}",
                             execution.getProcessInstanceId(), "platine", currentPartitionId, dto.getId());
-                    while(retryCount<3 && !finished)
+                    while(retryCount<10 && !finished)
                     try {
                         //Call service
                         service.postSurveyUnit(dto, contextRootNode.path(CTX_CAMPAGNE_ID).asText());
@@ -297,16 +297,16 @@ public class QuestionnaireHelper {
                     }
                     catch (Throwable e){
                         retryCount++;
-                        log.error("Exception : msg="+e.getMessage());
-                        log.error("RETRY retryCount="+retryCount);
-                        if(retryCount>=3){
+                        int sleepMs = 1000 + retryCount*10000;
+                        log.error(" Exception : remSU.id={} - retryCount={} - - sleepMs={} - msg={} ",
+                                dto.getId(), retryCount,sleepMs,e.getMessage());;
+                        if(retryCount>=10){
                             throw e;
                         }
 
 
                         try {
-                            log.error("RETRY sleep="+retryCount*1000);
-                            Thread.sleep(retryCount*1000);
+                            Thread.sleep(15000);
                         } catch (Exception ex) {
                             throw new RuntimeException(ex);
                         }
