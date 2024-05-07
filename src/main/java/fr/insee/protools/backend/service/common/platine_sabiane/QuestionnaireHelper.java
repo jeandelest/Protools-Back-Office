@@ -295,16 +295,19 @@ public class QuestionnaireHelper {
                         service.postSurveyUnit(dto, contextRootNode.path(CTX_CAMPAGNE_ID).asText());
                         finished=true;
                     }
-                    catch (BpmnError e){
+                    catch (Exception e){
                         retryCount++;
+                        log.error("Exception : msg="+e.getMessage());
+                        log.error("RETRY retryCount="+retryCount);
                         if(retryCount>=3){
                             throw e;
                         }
 
 
                         try {
+                            log.error("RETRY sleep="+retryCount*1000);
                             Thread.sleep(retryCount*1000);
-                        } catch (InterruptedException ex) {
+                        } catch (Exception ex) {
                             throw new RuntimeException(ex);
                         }
                     }
