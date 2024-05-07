@@ -18,6 +18,7 @@ import fr.insee.protools.backend.dto.rem.REMSurveyUnitDto;
 import fr.insee.protools.backend.service.sabiane.SabianeIdHelper;
 import fr.insee.protools.backend.service.utils.FlowableVariableUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.flowable.engine.delegate.BpmnError;
 import org.flowable.engine.delegate.DelegateExecution;
 
 import java.util.HashSet;
@@ -280,15 +281,33 @@ public class QuestionnaireHelper {
         }
         else{
                 listeUe.stream().parallel().forEach(remSUNode -> {
+                    int retryCount = 0;
+                    boolean finished=false;
                     //Create the DTO object
                     SurveyUnitResponseDto dto =
                             QuestionnaireHelper.computeDtoPlatine(remSUNode, currentPartitionNode);
 
                     log.info("ProcessInstanceId={} - mode={} - currentPartitionId={} - remSU.id={}",
                             execution.getProcessInstanceId(), "platine", currentPartitionId, dto.getId());
+                    while(retryCount<3 && !finished)
+                    try {
+                        //Call service
+                        service.postSurveyUnit(dto, contextRootNode.path(CTX_CAMPAGNE_ID).asText());
+                        finished=true;
+                    }
+                    catch (BpmnError e){
+                        retryCount++;
+                        if(retryCount>=3){
+                            throw e;
+                        }
 
-                    //Call service
-                    service.postSurveyUnit(dto, contextRootNode.path(CTX_CAMPAGNE_ID).asText());
+
+                        try {
+                            Thread.sleep(retryCount*1000);
+                        } catch (InterruptedException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    }
                 });
             }
 
