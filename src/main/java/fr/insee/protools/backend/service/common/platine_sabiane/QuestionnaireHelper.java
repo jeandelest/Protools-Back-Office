@@ -295,7 +295,7 @@ public class QuestionnaireHelper {
                         service.postSurveyUnit(dto, contextRootNode.path(CTX_CAMPAGNE_ID).asText());
                         finished=true;
                     }
-                    catch (Exception e){
+                    catch (Throwable e){
                         retryCount++;
                         log.error("Exception : msg="+e.getMessage());
                         log.error("RETRY retryCount="+retryCount);
