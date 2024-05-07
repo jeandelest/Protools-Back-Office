@@ -22,6 +22,7 @@ import org.flowable.engine.delegate.DelegateExecution;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -257,14 +258,15 @@ public class QuestionnaireHelper {
         JsonNode contextRootNode = protoolsContext.getContextByProcessInstance(execution.getProcessInstanceId());
 
         Long currentPartitionId = FlowableVariableUtils.getVariableOrThrow(execution, VARNAME_CURRENT_PARTITION_ID, Long.class);
-        JsonNode[] suArray = FlowableVariableUtils.getVariableOrThrow(execution, VARNAME_REM_SU_LIST, JsonNode[].class);
+        List<JsonNode> listeUe =   FlowableVariableUtils.getVariableOrThrow(execution, VARNAME_REM_SU_LIST, List.class);
+
+
         Boolean parallele = FlowableVariableUtils.getVariableOrThrow(execution, "parallele", Boolean.class);
         JsonNode currentPartitionNode = getCurrentPartitionNode(contextRootNode, currentPartitionId);
         log.info("parallele="+parallele+"- Boolean.FALSE.equals(parallele)="+Boolean.FALSE.equals(parallele));
 
         if(Boolean.FALSE.equals(parallele)) {
-            for (int i = 0; i < suArray.length; i++) {
-                JsonNode remSUNode = suArray[i];
+            for (JsonNode remSUNode : listeUe){
                 //Create the DTO object
                 SurveyUnitResponseDto dto =
                         QuestionnaireHelper.computeDtoPlatine(remSUNode, currentPartitionNode);
@@ -277,8 +279,7 @@ public class QuestionnaireHelper {
             }
         }
         else{
-
-                Stream.of(suArray).parallel().forEach(remSUNode -> {
+                listeUe.stream().parallel().forEach(remSUNode -> {
                     //Create the DTO object
                     SurveyUnitResponseDto dto =
                             QuestionnaireHelper.computeDtoPlatine(remSUNode, currentPartitionNode);
