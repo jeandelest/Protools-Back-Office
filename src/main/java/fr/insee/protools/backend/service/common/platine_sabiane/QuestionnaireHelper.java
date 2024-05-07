@@ -296,8 +296,8 @@ public class QuestionnaireHelper {
                         finished=true;
                     }
                     catch (Throwable e){
-                        retryCount++;
                         int sleepMs = 1000 + retryCount*10000;
+                        retryCount++;
                         log.error(" Exception : remSU.id={} - retryCount={} - sleepMs={} - msg={} ",
                                 dto.getId(), retryCount,sleepMs,e.getMessage());;
                         if(retryCount>=10){
