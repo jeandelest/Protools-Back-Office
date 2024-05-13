@@ -2,15 +2,15 @@ package fr.insee.protools.backend.service.platine.delegate;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.insee.protools.backend.dto.platine.pilotage.contact.PlatineContactDto;
 import fr.insee.protools.backend.service.DelegateContextVerifier;
 import fr.insee.protools.backend.service.context.ContextService;
 import fr.insee.protools.backend.service.platine.pilotage.PlatinePilotageService;
-import fr.insee.protools.backend.service.platine.pilotage.dto.contact.PlatineContactDto;
 import fr.insee.protools.backend.service.utils.FlowableVariableUtils;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
@@ -22,13 +22,12 @@ import static fr.insee.protools.backend.service.platine.utils.PlatineHelper.comp
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class PlatinePilotageGetSUContactTask implements JavaDelegate, DelegateContextVerifier {
 
-    @Autowired ContextService protoolsContext;
-    @Autowired PlatinePilotageService platinePilotageService;
-
     private static final ObjectMapper objectMapper = new ObjectMapper().configure(FAIL_ON_UNKNOWN_PROPERTIES,false);
-
+    private final ContextService protoolsContext;
+    private final PlatinePilotageService platinePilotageService;
 
     @Override
     public void execute(DelegateExecution execution) {

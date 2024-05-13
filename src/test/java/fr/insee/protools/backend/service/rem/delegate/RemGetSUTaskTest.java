@@ -3,7 +3,7 @@ package fr.insee.protools.backend.service.rem.delegate;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.insee.protools.backend.service.rem.RemService;
-import fr.insee.protools.backend.service.rem.dto.REMSurveyUnitDto;
+import fr.insee.protools.backend.dto.rem.REMSurveyUnitDto;
 import org.flowable.common.engine.api.FlowableIllegalArgumentException;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.test.FlowableTest;

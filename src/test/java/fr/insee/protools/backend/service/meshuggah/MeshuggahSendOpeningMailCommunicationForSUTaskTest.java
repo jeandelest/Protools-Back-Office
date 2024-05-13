@@ -3,31 +3,28 @@ package fr.insee.protools.backend.service.meshuggah;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import fr.insee.protools.backend.ProtoolsTestUtils;
 import fr.insee.protools.backend.service.context.exception.BadContextIncorrectBPMNError;
-import fr.insee.protools.backend.service.era.dto.CensusJsonDto;
-import fr.insee.protools.backend.service.era.dto.GenderType;
-import fr.insee.protools.backend.service.meshuggah.dto.MeshuggahComDetails;
-import fr.insee.protools.backend.service.platine.pilotage.metadata.MetadataDto;
-import fr.insee.protools.backend.service.platine.utils.PlatineHelper;
+import fr.insee.protools.backend.dto.meshuggah.MeshuggahComDetails;
 import fr.insee.protools.backend.service.utils.TestWithContext;
 import org.flowable.common.engine.api.FlowableIllegalArgumentException;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.test.FlowableTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
-import java.time.LocalDate;
-import java.util.List;
+import java.util.stream.Stream;
 
-import static fr.insee.protools.backend.service.FlowableVariableNameConstants.*;
-import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VARNAME_ERA_QUERY_END_DATE;
-import static fr.insee.protools.backend.service.context.ContextConstants.*;
-import static fr.insee.protools.backend.service.context.ContextConstants.CTX_PARTITION_COMMUNICATION_AVEC_QUESTIONNAIRE_PAPIER;
+import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VARNAME_CURRENT_PARTITION_ID;
+import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VARNAME_PLATINE_CONTACT;
 import static fr.insee.protools.backend.service.utils.FlowableVariableUtils.getMissingVariableMessage;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -36,31 +33,28 @@ import static org.mockito.Mockito.*;
 @FlowableTest
 class MeshuggahSendOpeningMailCommunicationForSUTaskTest extends TestWithContext {
     static ObjectMapper objectMapper = new ObjectMapper();
-    final static String meshuggahContext_1part_Ok =
-            """
-            {
-              "id": "AAC2023A00",
-              "partitions": [{
-                "id": 99,
-                "communications" :[
-                  {
-                    "moyenCommunication" : "mail",
-                    "phaseCommunication" : "ouverture",
-                    "avecQuestionnairePapier" : false,
-                    "protocole" : null,
-                    "mode" : "web",
-                    "typeModele" : "relance_libre"
-                  }
-                ]
-              }]
-            }
-            """;
+
     private final String platineContactContent = """
             {
                         "email": "toto@insee.fr",
                         "identifier": "id"
             }
             """;
+
+    private static Stream<Arguments> contextErrorArguments() {
+        return Stream.of(
+                Arguments.of(MeshuggahCtxExamples.ctx_ERROR_no_part),
+                Arguments.of(MeshuggahCtxExamples.ctx_ERROR_no_com),
+                Arguments.of(MeshuggahCtxExamples.ctx_ERROR_no_moyen),
+                Arguments.of(MeshuggahCtxExamples.ctx_ERROR_typo_phase),
+                Arguments.of(MeshuggahCtxExamples.ctx_ERROR_typo_moyen));
+    }
+
+    @Test
+    void execute_should_throwError_when_null_context(){
+        assertThat_delegate_throwError_when_null_context(meshuggahTask);
+    }
+
     @Mock MeshuggahService meshuggahService;
     @InjectMocks MeshuggahSendOpeningMailCommunicationForSUTask meshuggahTask;
 
@@ -71,7 +65,7 @@ class MeshuggahSendOpeningMailCommunicationForSUTaskTest extends TestWithContext
         //Precondition
         DelegateExecution execution = mock(DelegateExecution.class);
         lenient().when(execution.getProcessInstanceId()).thenReturn(dumyId);
-        initContexteMockWithString(meshuggahContext_1part_Ok);
+        initContexteMockWithString(MeshuggahCtxExamples.ctx_OK_envoi_mail_1part_ouverture_mail);
 
         //Execute the unit under test
         FlowableIllegalArgumentException exception = assertThrows(FlowableIllegalArgumentException.class, () -> meshuggahTask.execute(execution));
@@ -91,137 +85,23 @@ class MeshuggahSendOpeningMailCommunicationForSUTaskTest extends TestWithContext
         assertDoesNotThrow(() -> meshuggahTask.execute(execution));
     }
 
-    @Test
+    @ParameterizedTest
+    @MethodSource("contextErrorArguments")
     @DisplayName("Test execute method - should throw if Context is not correct")
-    void execute_should_throw_BadContext_when_contextIncorrect() throws JsonProcessingException {
+    void execute_should_throw_BadContext_when_contextIncorrect(String context_json) throws JsonProcessingException {
         //Precondition
         DelegateExecution execution = mock(DelegateExecution.class);
         lenient().when(execution.getProcessInstanceId()).thenReturn(dumyId);
+        //Variables
+        lenient().when(execution.getVariable(VARNAME_CURRENT_PARTITION_ID, Long.class)).thenReturn(MeshuggahCtxExamples.ctx_partition1);
+        lenient().when(execution.getVariable(VARNAME_PLATINE_CONTACT, JsonNode.class)).thenReturn(objectMapper.readTree(platineContactContent));
+        //Ctx
+        ProtoolsTestUtils.initContexteMockFromString(protoolsContext, context_json);
 
-        when(execution.getVariable(VARNAME_CURRENT_PARTITION_ID, Long.class)).thenReturn(99L);
-        when(execution.getVariable(VARNAME_PLATINE_CONTACT, JsonNode.class)).thenReturn(objectMapper.readTree(platineContactContent));
 
-
-        final String context1_no_part =
-        """
-            {
-              "id": "AAC2023A00"
-            }
-        """;
-        final String context2_no_com =
-        """
-            {
-              "id": "AAC2023A00",
-              "partitions": [{
-                "id": 99
-              }]
-            }
-        """;
-        final String context3_no_moyen =
-        """
-            {
-              "id": "AAC2023A00",
-              "partitions": [{
-                "id": 99,
-                "communications" :[
-                  {
-                    "phaseCommunication" : "ouverture",
-                    "avecQuestionnairePapier" : false,
-                    "protocole" : null,
-                    "mode" : "web",
-                    "typeModele" : "relance_libre"
-                  }
-                ]
-              }]
-            }
-        """;
-        final String context4_error_in_phase=
-        """
-            {
-              "id": "AAC2023A00",
-              "partitions": [{
-                "id": 99,
-                "communications" :[
-                  {
-                    "moyenCommunication" : "mail",
-                    "phaseCommunication" : "ouvertureeee",
-                    "avecQuestionnairePapier" : false,
-                    "protocole" : null,
-                    "mode" : "web",
-                    "typeModele" : "relance_libre"
-                  }
-                ]
-              }]
-            }
-        """;
-
-        final String context5_error_in_moyen=
-        """
-            {
-              "id": "AAC2023A00",
-              "partitions": [{
-                "id": 99,
-                "communications" :[
-                  {
-                    "moyenCommunication" : "email",
-                    "phaseCommunication" : "ouverture",
-                    "avecQuestionnairePapier" : false,
-                    "protocole" : null,
-                    "mode" : "web",
-                    "typeModele" : "relance_libre"
-                  }
-                ]
-              }]
-            }
-        """;
-
-        final String context6_wrong_moyen=
-        """
-            {
-              "id": "AAC2023A00",
-              "partitions": [{
-                "id": 99,
-                "communications" :[
-                  {
-                    "moyenCommunication" : "courrier",
-                    "phaseCommunication" : "ouverture",
-                    "avecQuestionnairePapier" : false,
-                    "protocole" : null,
-                    "mode" : "web",
-                    "typeModele" : "relance_libre"
-                  }
-                ]
-              }]
-            }
-        """;
-        final String context7_wrong_phase=
-        """
-            {
-              "id": "AAC2023A00",
-              "partitions": [{
-                "id": 99,
-                "communications" :[
-                  {
-                    "moyenCommunication" : "mail",
-                    "phaseCommunication" : "relance",
-                    "avecQuestionnairePapier" : false,
-                    "protocole" : null,
-                    "mode" : "web",
-                    "typeModele" : "relance_libre"
-                  }
-                ]
-              }]
-            }
-        """;
-        List<String> contextErrorTestList=List.of(context1_no_part,context2_no_com,context3_no_moyen,context5_error_in_moyen,
-                context6_wrong_moyen,context7_wrong_phase);
-        for(String context : contextErrorTestList){
-            //Precondition
-            ProtoolsTestUtils.initContexteMockFromString(protoolsContext, context);
-            //Run test
-            assertThrows(BadContextIncorrectBPMNError.class, () -> meshuggahTask.execute(execution));
-            Mockito.reset(protoolsContext);
-        }
+        //Run test
+        assertThrows(BadContextIncorrectBPMNError.class, () -> meshuggahTask.execute(execution));
+        Mockito.reset(protoolsContext);
     }
 
     @Test
@@ -230,11 +110,11 @@ class MeshuggahSendOpeningMailCommunicationForSUTaskTest extends TestWithContext
         //Precondition
         DelegateExecution execution = mock(DelegateExecution.class);
         lenient().when(execution.getProcessInstanceId()).thenReturn(dumyId);
-        initContexteMockWithString(meshuggahContext_1part_Ok);
+        initContexteMockWithString(MeshuggahCtxExamples.ctx_OK_envoi_mail_1part_ouverture_mail);
 
-        Long partitionId=99L;
-        when(execution.getVariable(VARNAME_CURRENT_PARTITION_ID, Long.class)).thenReturn(partitionId);
-        when(execution.getVariable(VARNAME_PLATINE_CONTACT, JsonNode.class)).thenReturn(objectMapper.readTree(platineContactContent));
+        when(execution.getVariable(VARNAME_CURRENT_PARTITION_ID, Long.class)).thenReturn(MeshuggahCtxExamples.ctx_partition1);
+        JsonNode platineContact = objectMapper.readTree(platineContactContent);
+        when(execution.getVariable(VARNAME_PLATINE_CONTACT, JsonNode.class)).thenReturn(platineContact);
         //Run method under test
         assertDoesNotThrow(() -> meshuggahTask.execute(execution));
 
@@ -244,15 +124,25 @@ class MeshuggahSendOpeningMailCommunicationForSUTaskTest extends TestWithContext
                 .phase("OUVERTURE")
                 .medium("EMAIL")
                 .mode("WEB")
-                .partitioningId(partitionId.toString())
+                .partitioningId(MeshuggahCtxExamples.ctx_partition1.toString())
                 .avecQuestionnaire(false)
                 .protocol("DEFAULT")
                 .operation("RELANCE_LIBRE")
                 .build();
+
+        ObjectNode expectedBody = objectMapper.createObjectNode();
+        expectedBody.put("email", platineContact.path("email"));
+        expectedBody.put("Ue_CalcIdentifiant", platineContact.path("identifier"));
+
+
         ArgumentCaptor<MeshuggahComDetails> acDetails = ArgumentCaptor.forClass(MeshuggahComDetails.class);
         ArgumentCaptor<JsonNode> acBody = ArgumentCaptor.forClass(JsonNode.class);
         verify(meshuggahService,times(1)).postSendCommunication(acDetails.capture(),acBody.capture());
         MeshuggahComDetails details = acDetails.getValue();
         assertEquals(expectedDetails,details);
+
+        JsonNode resultBody = acBody.getValue();
+        assertEquals(expectedBody,resultBody);
+
     }
 }

@@ -3,9 +3,9 @@ package fr.insee.protools.backend.service.common.platine_sabiane;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.insee.protools.backend.ProtoolsTestUtils;
-import fr.insee.protools.backend.service.common.platine_sabiane.dto.campaign.MetadataValue;
-import fr.insee.protools.backend.service.common.platine_sabiane.dto.campaign.MetadataValueItem;
-import fr.insee.protools.backend.service.common.platine_sabiane.dto.campaign.MetadataVariables;
+import fr.insee.protools.backend.dto.platine_sabiane_questionnaire.campaign.MetadataValue;
+import fr.insee.protools.backend.dto.platine_sabiane_questionnaire.campaign.MetadataValueItem;
+import fr.insee.protools.backend.dto.platine_sabiane_questionnaire.campaign.MetadataVariables;
 import fr.insee.protools.backend.service.context.ContextConstants;
 import fr.insee.protools.backend.service.nomenclature.NomenclatureService;
 import fr.insee.protools.backend.service.platine.delegate.PlatineQuestionnaireCreateContextTaskTest;
@@ -27,7 +27,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static fr.insee.protools.backend.service.context.ContextConstants.CTX_QUESTIONNAIRE_MODEL_ID;
+import static fr.insee.protools.backend.service.context.ContextConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -131,6 +131,33 @@ class QuestionnaireHelperTest {
         // postconditions : we expect to find exactly one questionnaire Model
         String idQuestionnaireModel = contextRootNode.path(ContextConstants.CTX_QUESTIONNAIRE_MODELS).get(0).path(CTX_QUESTIONNAIRE_MODEL_ID).asText();
         assertEquals(Set.of(idQuestionnaireModel), questionnaireModels);
+        verify(questionnaireModelService,times(1)).getQuestionnaireModel(
+                contextRootNode.path(CTX_QUESTIONNAIRE_MODELS).get(0).path(CTX_QUESTIONNAIRE_MODEL_ID).asText()
+                , contextRootNode.path(CTX_QUESTIONNAIRE_MODELS).get(0).path(CTX_QUESTIONNAIRE_MODEL_CHEMIN_REPERTOIRE).asText());
+
+        final ArgumentCaptor<Set<String> > nomenclaturesCaptor
+                = ArgumentCaptor.forClass((Class) Set.class);
+        ArgumentCaptor<String> acModelID = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<String> acLabel = ArgumentCaptor.forClass(String.class);
+
+        verify(questionnairePlatineSabianeService,times(1)).postQuestionnaireModel(
+                acModelID.capture(),
+                acLabel.capture(),
+                any(), nomenclaturesCaptor.capture());
+        assertEquals(contextRootNode.path(CTX_QUESTIONNAIRE_MODELS).get(0).path(CTX_QUESTIONNAIRE_MODEL_ID).asText(),acModelID.getValue());
+        assertEquals(contextRootNode.path(CTX_QUESTIONNAIRE_MODELS).get(0).path(CTX_QUESTIONNAIRE_MODEL_LABEL).asText(),acLabel.getValue());
+
+        List<Set<String>> captured = nomenclaturesCaptor.getAllValues();
+        assertEquals(1,captured.size(),"We are supposed to call the method only one");
+        Set<String> actualNomenclatures = captured.get(0);
+        Set<String> expectedNomenclatures = Set.of(
+                "L_DEPNAIS-1-1-0",
+                "L_PAYSNAIS-1-1-0",
+                "L_NATIONETR-1-1-0");
+        assertTrue(expectedNomenclatures.size()==actualNomenclatures.size()
+                &&expectedNomenclatures.containsAll(actualNomenclatures)
+        && actualNomenclatures.containsAll(expectedNomenclatures)
+        ,"The set of nomenclature is incorrect");
     }
 
     @Test
@@ -230,33 +257,3 @@ class QuestionnaireHelperTest {
     }
 
 }
-/*
-    public static void createQuestionnaire(JsonNode contextRootNode,
-                                           QuestionnairePlatineSabianeService questionnairePlatineSabianeService,
-                                           NomenclatureService nomenclatureService,
-                                           QuestionnaireModelService questionnaireModelService,
-                                           String processInstanceId,
-                                           MetadataValue metadataDto
-    ){
-        //Get the list of nomenclatures defined in Protools Context
-        //Create them if needed
-        var nomenclatureIterator =contextRootNode.path(CTX_NOMENCLATURES).elements();
-        if(!nomenclatureIterator.hasNext()){
-            log.info("ProcessInstanceId={} - does not declare any nomenclature",processInstanceId);
-        }
-        else  {
-            initRequiredNomenclatures(questionnairePlatineSabianeService, nomenclatureService,processInstanceId, nomenclatureIterator);
-        }
-
-        //Get the list of Questionnaire Models defined in Protools Context
-        Set<String> questionnaireModelIds = initQuestionnaireModels(questionnairePlatineSabianeService,questionnaireModelService,processInstanceId, contextRootNode);
-        CampaignDto campaignDto= CampaignDto.builder()
-                .id(contextRootNode.path(CTX_CAMPAGNE_ID).textValue())
-                .label(contextRootNode.path(CTX_CAMPAGNE_LABEL).textValue())
-                .metadata(metadataDto)
-                .questionnaireIds(questionnaireModelIds)
-                .build();
-        questionnairePlatineSabianeService.postCampaign(campaignDto);
-    }
-}
-*/

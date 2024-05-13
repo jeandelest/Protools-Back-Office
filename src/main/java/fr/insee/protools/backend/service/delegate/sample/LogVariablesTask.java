@@ -28,6 +28,7 @@ public class LogVariablesTask implements JavaDelegate {
     Map<String,Object> filterVariables(Map<String,Object> input){
         return input.entrySet().stream()
                 .filter(entry -> ! (entry.getKey().equals(VARNAME_CONTEXT)))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                .collect(
+                        Collectors.toMap(Map.Entry::getKey, entry -> (entry.getValue() == null)?"null":entry.getValue()));
     }
 }

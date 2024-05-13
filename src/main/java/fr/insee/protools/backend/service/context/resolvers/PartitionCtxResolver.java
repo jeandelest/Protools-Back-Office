@@ -13,8 +13,8 @@ import static fr.insee.protools.backend.service.context.ContextConstants.CTX_PAR
 import static fr.insee.protools.backend.service.context.ContextConstants.CTX_PARTITION_DATE_FIN_COLLECTE;
 
 /**
- * Used to make protools context variables availables in BPMN expressions
- * exemple:
+ * Used to make protools context variables available in BPMN expressions
+ * example:
  *
  *   <intermediateCatchEvent id="id1" name="dummy">
  *     <timerEventDefinition>

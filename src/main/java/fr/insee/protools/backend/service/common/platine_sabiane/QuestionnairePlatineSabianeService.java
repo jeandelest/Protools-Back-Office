@@ -1,10 +1,10 @@
 package fr.insee.protools.backend.service.common.platine_sabiane;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import fr.insee.protools.backend.service.common.platine_sabiane.dto.NomenclatureDto;
-import fr.insee.protools.backend.service.common.platine_sabiane.dto.QuestionnaireModelCreateDto;
-import fr.insee.protools.backend.service.common.platine_sabiane.dto.campaign.CampaignDto;
-import fr.insee.protools.backend.service.common.platine_sabiane.dto.surveyunit.SurveyUnitResponseDto;
+import fr.insee.protools.backend.dto.platine_sabiane_questionnaire.NomenclatureDto;
+import fr.insee.protools.backend.dto.platine_sabiane_questionnaire.QuestionnaireModelCreateDto;
+import fr.insee.protools.backend.dto.platine_sabiane_questionnaire.campaign.CampaignDto;
+import fr.insee.protools.backend.dto.platine_sabiane_questionnaire.surveyunit.SurveyUnitResponseDto;
 import fr.insee.protools.backend.webclient.WebClientHelper;
 import fr.insee.protools.backend.webclient.exception.runtime.WebClient4xxBPMNError;
 import fr.insee.protools.backend.webclient.exception.runtime.WebClient5xxBPMNError;
@@ -152,7 +152,7 @@ public interface QuestionnairePlatineSabianeService {
         }
     }
 
-    /** Create the campaign **/
+    /** Create a survey Unit **/
     default void postSurveyUnit(SurveyUnitResponseDto suDto, String idCampaign) {
         WebClientHelper.logJson("postSurveyUnit: idCampaign="+idCampaign, suDto,getLogger(),Level.DEBUG);
         try {

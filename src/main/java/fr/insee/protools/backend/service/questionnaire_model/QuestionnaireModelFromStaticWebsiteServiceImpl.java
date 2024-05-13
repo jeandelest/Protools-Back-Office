@@ -2,8 +2,8 @@ package fr.insee.protools.backend.service.questionnaire_model;
 
 import fr.insee.protools.backend.service.context.exception.BadContextIncorrectBPMNError;
 import fr.insee.protools.backend.webclient.WebClientHelper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -15,13 +15,15 @@ import java.net.URISyntaxException;
  */
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class QuestionnaireModelFromStaticWebsiteServiceImpl implements QuestionnaireModelService {
 
     //TODO : expose mandatory configuration?
+    private final WebClientHelper webClientHelper;
+
     @Value("${fr.insee.protools.questionnaire.model.uri}")
     private String questionnaireModelUri;
 
-    @Autowired WebClientHelper webClientHelper;
 
     @Override
     public String getQuestionnaireModel(String questionnaireModelId, String folderPath){

@@ -2,26 +2,26 @@ package fr.insee.protools.backend.service.platine.delegate;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.insee.protools.backend.dto.platine.pilotage.PlatineAddressDto;
+import fr.insee.protools.backend.dto.platine.pilotage.PlatinePilotageGenderType;
+import fr.insee.protools.backend.dto.platine.pilotage.query.ContactAccreditationDto;
+import fr.insee.protools.backend.dto.platine.pilotage.query.QuestioningWebclientDto;
+import fr.insee.protools.backend.dto.platine.pilotage.questioning.PlatineQuestioningSurveyUnitDto;
+import fr.insee.protools.backend.dto.rem.*;
 import fr.insee.protools.backend.service.DelegateContextVerifier;
 import fr.insee.protools.backend.service.context.ContextService;
 import fr.insee.protools.backend.service.context.enums.CampaignContextEnum;
 import fr.insee.protools.backend.service.context.enums.PartitionTypeEchantillon;
-import fr.insee.protools.backend.service.exception.IncorrectSUBPMNError;
 import fr.insee.protools.backend.service.platine.pilotage.PlatinePilotageService;
-import fr.insee.protools.backend.service.platine.pilotage.dto.PlatineAddressDto;
-import fr.insee.protools.backend.service.platine.pilotage.dto.PlatinePilotageGenderType;
-import fr.insee.protools.backend.service.platine.pilotage.dto.query.ContactAccreditationDto;
-import fr.insee.protools.backend.service.platine.pilotage.dto.query.QuestioningWebclientDto;
-import fr.insee.protools.backend.service.platine.pilotage.dto.questioning.PlatineQuestioningSurveyUnitDto;
 import fr.insee.protools.backend.service.platine.utils.PlatineHelper;
-import fr.insee.protools.backend.service.rem.dto.*;
+import fr.insee.protools.backend.service.rem.RemDtoUtils;
 import fr.insee.protools.backend.service.utils.FlowableVariableUtils;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.EnumUtils;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -36,13 +36,13 @@ import static fr.insee.protools.backend.service.utils.ContextUtils.getCurrentPar
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class PlatinePilotageCreateSurveyUnitTask implements JavaDelegate, DelegateContextVerifier {
 
-
-    @Autowired ContextService protoolsContext;
-    @Autowired PlatinePilotageService platinePilotageService;
-
     private static final ObjectMapper objectMapper = new ObjectMapper().configure(FAIL_ON_UNKNOWN_PROPERTIES,false);
+
+    private final ContextService protoolsContext;
+    private final PlatinePilotageService platinePilotageService;
 
     @Override
     public void execute(DelegateExecution execution) {
@@ -66,7 +66,7 @@ public class PlatinePilotageCreateSurveyUnitTask implements JavaDelegate, Delega
     private static QuestioningWebclientDto computeQuestioningWebclientDto(JsonNode remSUNode, JsonNode currentPartitionNode,String idInternaute, String idCampagne) {
         REMSurveyUnitDto remSurveyUnitDto=PlatineHelper.parseRemSUNode(objectMapper,VARNAME_REM_SURVEY_UNIT,remSUNode);
         boolean isLogement = currentPartitionNode.path(CTX_PARTITION_TYPE_ECHANTILLON).textValue().equalsIgnoreCase(PartitionTypeEchantillon.LOGEMENT.getAsString());
-        PersonDto contact = findContact(remSUNode, remSurveyUnitDto, isLogement);
+        PersonDto contact = RemDtoUtils.findContact(remSUNode, remSurveyUnitDto, isLogement);
 
         PlatineAddressDto platineAdress = computePlatineAdress(remSurveyUnitDto.getAddress());
         ContactAccreditationDto platineContact = convertREMPersonToPlatineContact(idInternaute, platineAdress, contact);
@@ -80,33 +80,7 @@ public class PlatinePilotageCreateSurveyUnitTask implements JavaDelegate, Delega
                         .build();
     }
 
-    /**
-     * Search for the right contact according to the SU Type :
-     * For Logement : Find the first person flagged as Main
-     * For Individu : Find the first person flagged as Surveyed
-     * @param remSUNode : Used only to add it to exception in case of error
-     * @param remSurveyUnitDto
-     * @param isLogement true if logement (false if individu)
-     * @return the contact to be used
-     */
-    protected static PersonDto findContact(JsonNode remSUNode, REMSurveyUnitDto remSurveyUnitDto, boolean isLogement) {
-        //Search for right contact
-        PersonDto contact;
-        //SU Logement
-        if (isLogement) {
-            //We use the "main" person (actually it is the Declarant)
-            contact = remSurveyUnitDto.getPersons().stream()
-                    .filter(personDto -> (Boolean.TRUE.equals(personDto.getMain())))
-                    .findFirst().orElseThrow(() -> new IncorrectSUBPMNError("No main person found in SU [id="+ remSurveyUnitDto.getRepositoryId()+"]", remSUNode));
-        }
-        //SU INDIVIDU
-        else {
-            contact = remSurveyUnitDto.getPersons().stream()
-                    .filter(personDto -> (Boolean.TRUE.equals(personDto.getSurveyed())))
-                    .findFirst().orElseThrow(() -> new IncorrectSUBPMNError("No surveyed person found in SU [id="+ remSurveyUnitDto.getRepositoryId()+"]", remSUNode));
-        }
-        return contact;
-    }
+
 
     private static PlatineQuestioningSurveyUnitDto computeSurveyUnitDto(REMSurveyUnitDto remSurveyUnitDto) {
 

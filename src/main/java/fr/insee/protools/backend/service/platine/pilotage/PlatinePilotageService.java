@@ -1,13 +1,13 @@
 package fr.insee.protools.backend.service.platine.pilotage;
 
-import fr.insee.protools.backend.service.platine.pilotage.dto.PlatinePilotageEligibleDto;
-import fr.insee.protools.backend.service.platine.pilotage.dto.contact.PlatineContactDto;
-import fr.insee.protools.backend.service.platine.pilotage.dto.query.QuestioningWebclientDto;
+import fr.insee.protools.backend.dto.platine.pilotage.PlatinePilotageEligibleDto;
+import fr.insee.protools.backend.dto.platine.pilotage.contact.PlatineContactDto;
+import fr.insee.protools.backend.dto.platine.pilotage.query.QuestioningWebclientDto;
 import fr.insee.protools.backend.service.platine.pilotage.metadata.MetadataDto;
 import fr.insee.protools.backend.webclient.WebClientHelper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.event.Level;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import static fr.insee.protools.backend.webclient.WebClientHelper.logJson;
@@ -15,9 +15,10 @@ import static fr.insee.protools.backend.webclient.configuration.ApiConfigPropert
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class PlatinePilotageService {
 
-    @Autowired WebClientHelper webClientHelper;
+    private final WebClientHelper webClientHelper;
     public void putMetadata(String partitionId , MetadataDto dto) {
         log.debug("putMetadata : partitionId={} - dto.su.id={} ",partitionId,dto.getSurveyDto().getId());
         logJson(String.format("putMetadata - partitionId=%s : ",partitionId),dto, log,Level.DEBUG);
@@ -76,16 +77,4 @@ public class PlatinePilotageService {
         return  result;
     }
 
-    public void addFollowUpState(Long idSU, String platinePartitionId){
-        log.debug("isToFollowUp: platinePartitionId={} - idSu={}",platinePartitionId,idSU);
-        String response = webClientHelper.getWebClient(KNOWN_API_PLATINE_PILOTAGE)
-                .post()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/api/partitionings/{idPartitioning}/survey-units/{idSu}/follow-up")
-                        .build(platinePartitionId,idSU))
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
-        log.debug("isToFollowUp: platinePartitionId={} - idSu={} - response={}",platinePartitionId,idSU,response);
-    }
 }

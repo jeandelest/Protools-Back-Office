@@ -1,12 +1,12 @@
 package fr.insee.protools.backend.service.rem;
 
-import fr.insee.protools.backend.service.era.dto.CensusJsonDto;
-import fr.insee.protools.backend.service.rem.dto.REMSurveyUnitDto;
-import fr.insee.protools.backend.service.rem.dto.SuIdMappingJson;
+import fr.insee.protools.backend.dto.era.CensusJsonDto;
+import fr.insee.protools.backend.dto.rem.REMSurveyUnitDto;
+import fr.insee.protools.backend.dto.rem.SuIdMappingJson;
 import fr.insee.protools.backend.webclient.WebClientHelper;
 import fr.insee.protools.backend.webclient.exception.runtime.WebClient4xxBPMNError;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +16,10 @@ import static fr.insee.protools.backend.webclient.configuration.ApiConfigPropert
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class RemService {
 
-    @Autowired WebClientHelper webClientHelper;
+    private final WebClientHelper webClientHelper;
 
     public Long[] getSampleSuIds(Long partitionId) {
         log.debug("getSampleSuIds - partitionId={} ",partitionId);
@@ -86,7 +87,6 @@ public class RemService {
             log.debug("writeERASUList - partitionId={}  - values==null ==> Nothing to do");
             return null;
         }
-        log.debug("writeERASUList - partitionId={}  - values.size={}", partitionId, values.size());
         try {
             var response = webClientHelper.getWebClient(KNOWN_API_REM)
                     .post()

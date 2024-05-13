@@ -18,7 +18,6 @@ import io.netty.handler.logging.LogLevel;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.event.Level;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
@@ -45,12 +44,17 @@ import java.util.*;
 @Slf4j
 public class WebClientHelper {
 
-        private final EnumMap<ApiConfigProperties.KNOWN_API, WebClient> initializedClients = new EnumMap<>(ApiConfigProperties.KNOWN_API.class);
         private static final int DEFAULT_FILE_BUFFER_SIZE = 100 * 1024*1024;
         private static final int DEFAULT_API_BUFFER_SIZE =  100 * 1024*1024;
+        private final KeycloakService keycloakService;
+        private final ApiConfigProperties apiConfigProperties;
 
-        @Autowired private KeycloakService keycloakService;
-        @Autowired private ApiConfigProperties apiConfigProperties;
+        private final EnumMap<ApiConfigProperties.KNOWN_API, WebClient> initializedClients = new EnumMap<>(ApiConfigProperties.KNOWN_API.class);
+
+        public WebClientHelper(KeycloakService keycloakService, ApiConfigProperties apiConfigProperties) {
+                this.keycloakService = keycloakService;
+                this.apiConfigProperties = apiConfigProperties;
+        }
 
         //I cannot have a single builder and store it in a private variable because every call to .filter(...) append a new filter to the builder
         private WebClient.Builder getBuilder() {
@@ -257,7 +261,7 @@ public class WebClientHelper {
                         return (String)privateField.get(clientResponse);
                 } catch (Exception e) {
                         log.error("Internal error while trying to extract the requestDescription from ClientResponse");
-                        return "Initial request cannot be retrived";
+                        return "Initial request cannot be retrieved";
                 }
         }
 

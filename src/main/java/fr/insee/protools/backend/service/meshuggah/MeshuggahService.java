@@ -1,19 +1,20 @@
 package fr.insee.protools.backend.service.meshuggah;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import fr.insee.protools.backend.service.meshuggah.dto.MeshuggahComDetails;
+import fr.insee.protools.backend.dto.meshuggah.MeshuggahComDetails;
 import fr.insee.protools.backend.webclient.WebClientHelper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import static fr.insee.protools.backend.webclient.configuration.ApiConfigProperties.KNOWN_API.KNOWN_API_MESHUGGAH;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class MeshuggahService {
 
-    @Autowired WebClientHelper webClientHelper;
+    private final WebClientHelper webClientHelper;
 
 
     public void postCreateCommunication(MeshuggahComDetails meshuggahComDetails, JsonNode body) {

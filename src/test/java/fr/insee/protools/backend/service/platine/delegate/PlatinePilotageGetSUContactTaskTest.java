@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.insee.protools.backend.service.context.exception.BadContextIncorrectBPMNError;
 import fr.insee.protools.backend.service.platine.pilotage.PlatinePilotageService;
-import fr.insee.protools.backend.service.platine.pilotage.dto.contact.PlatineContactDto;
+import fr.insee.protools.backend.dto.platine.pilotage.contact.PlatineContactDto;
 import fr.insee.protools.backend.service.platine.utils.PlatineHelper;
 import fr.insee.protools.backend.service.rem.delegate.ExtractContactIdentifierFromREMSUTask;
 import fr.insee.protools.backend.service.utils.TestWithContext;
@@ -25,13 +25,17 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 class PlatinePilotageGetSUContactTaskTest extends TestWithContext {
-    final static String ressourceFolder = ClassUtils.convertClassNameToResourcePath(PlatinePilotageAddSUFollowUpTaskTest.class.getPackageName());
+    final static String ressourceFolder = ClassUtils.convertClassNameToResourcePath(PlatinePilotageGetSUContactTaskTest.class.getPackageName());
     final static String platine_context_json = ressourceFolder + "/protools-contexte-platine-individu.json";
     final static String platine_context_incorrect_json = ressourceFolder + "/protools-contexte-platine-incorrect-no-campaign-id.json";
 
     @Mock PlatinePilotageService platinePilotageService;
     @InjectMocks PlatinePilotageGetSUContactTask platinePilotageTask;
 
+    @Test
+    void execute_should_throwError_when_null_context(){
+        assertThat_delegate_throwError_when_null_context(platinePilotageTask);
+    }
 
     @Test
     void execute_should_throw_BadContextIncorrectException_when_noContext() {

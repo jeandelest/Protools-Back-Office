@@ -10,7 +10,7 @@
     </parent>
     <groupId>fr.insee.sndil.protools</groupId>
     <artifactId>protools-protlsbo</artifactId>
-    <version>1.0.1</version>
+    <version>1.1.0</version>
     <name>Protools Back Office</name>
     <description>Protools Back Office: Survey Orchestrator and Management Tool - Built with Flowable Engine</description>
     <properties>
@@ -18,7 +18,9 @@
         <springdoc.version>2.3.0</springdoc.version>
         <flowable.version>7.0.1-insee</flowable.version>
         <pitest.version>1.11.7</pitest.version>
-        <pitest.junit.version>1.1.2</pitest.junit.version>
+        <pitest.junit.version>1.2.1</pitest.junit.version>
+        <passay.version>1.6.4</passay.version>
+        <groovy-version>4.0.20</groovy-version>
     </properties>
 
 
@@ -40,6 +42,12 @@
             <version>${flowable.version}</version>
         </dependency>
 
+        <!-- for password generation (used to init passwords in sugoi)-->
+        <dependency>
+            <groupId>org.passay</groupId>
+            <artifactId>passay</artifactId>
+            <version>${passay.version}</version>
+        </dependency>
 
         <!-- to use groovy engine in script task in bpmn -->
         <dependency>
@@ -50,7 +58,7 @@
         <dependency>
             <groupId>org.apache.groovy</groupId>
             <artifactId>groovy-jsr223</artifactId>
-            <version>4.0.12</version>
+            <version>${groovy-version}</version>
         </dependency>
 
 

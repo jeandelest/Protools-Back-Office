@@ -1,7 +1,7 @@
 package fr.insee.protools.backend.configuration;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
@@ -30,20 +31,17 @@ import java.util.stream.Collectors;
 @Configuration
 @EnableWebSecurity
 @Slf4j
+@RequiredArgsConstructor
 public class SecurityConfig {
 
+    private final InseeSecurityTokenProperties inseeSecurityTokenProperties;
+
     public static final String STARTER_SECURITY_ENABLED = "fr.insee.sndil.starter.security.enabled";
-
-
+    //Par défaut, spring sécurity prefixe les rôles avec cette chaine
+    private static final String ROLE_PREFIX = "ROLE_";
     // Démonstration avec un rôle protégeant l'accès à un des endpoints
     @Value("${fr.insee.sndil.starter.role.administrateur}")
     private String administrateurRole;
-
-    //Par défaut, spring sécurity prefixe les rôles avec cette chaine
-    private static final String ROLE_PREFIX = "ROLE_";
-
-    @Autowired InseeSecurityTokenProperties inseeSecurityTokenProperties;
-
     //Liste d'URL sur lesquels on n'applique pas de sécurité (swagger; actuator...)
     @Value("#{'${fr.insee.sndil.starter.security.whitelist-matchers}'.split(',')}")
     private String[] whiteList;
@@ -63,7 +61,11 @@ public class SecurityConfig {
     @Bean
     @ConditionalOnProperty(name = STARTER_SECURITY_ENABLED, havingValue = "true")
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable);
+        http
+                .csrf(AbstractHttpConfigurer::disable) //disable sessions (stateless)
+                //only allows https
+                .requiresChannel(channel -> channel.anyRequest().requiresSecure())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.cors(Customizer.withDefaults());
         for (var pattern : whiteList) {
             http.authorizeHttpRequests(authorize ->
@@ -84,7 +86,6 @@ public class SecurityConfig {
                                 //We allow admin to access everything
                                 .requestMatchers(AntPathRequestMatcher.antMatcher("/**")).hasRole(administrateurRole)
                 )
-                .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())));
         return http.build();
     }
@@ -98,8 +99,10 @@ public class SecurityConfig {
                 .frameOptions(frameOptions -> frameOptions.sameOrigin()
                 )
         );
+        http.cors(Customizer.withDefaults());
 
         http.csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll())
                 .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())));

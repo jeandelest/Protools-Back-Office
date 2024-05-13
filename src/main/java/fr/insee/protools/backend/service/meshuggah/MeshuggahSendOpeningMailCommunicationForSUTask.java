@@ -4,32 +4,34 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import fr.insee.protools.backend.dto.meshuggah.MeshuggahComDetails;
+import fr.insee.protools.backend.dto.platine.pilotage.contact.PlatineContactDto;
 import fr.insee.protools.backend.service.DelegateContextVerifier;
 import fr.insee.protools.backend.service.context.ContextService;
 import fr.insee.protools.backend.service.exception.IncorrectPlatineContactError;
-import fr.insee.protools.backend.service.meshuggah.dto.MeshuggahComDetails;
-import fr.insee.protools.backend.service.platine.pilotage.dto.contact.PlatineContactDto;
 import fr.insee.protools.backend.service.utils.FlowableVariableUtils;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import static fr.insee.protools.backend.service.FlowableVariableNameConstants.*;
+import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VARNAME_CURRENT_PARTITION_ID;
+import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VARNAME_PLATINE_CONTACT;
 import static fr.insee.protools.backend.service.context.ContextConstants.*;
 import static fr.insee.protools.backend.service.utils.ContextUtils.getCurrentPartitionNode;
 
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class MeshuggahSendOpeningMailCommunicationForSUTask implements JavaDelegate, DelegateContextVerifier {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
-    @Autowired ContextService protoolsContext;
-    @Autowired MeshuggahService meshuggahService;
+    private final ContextService protoolsContext;
+    private final MeshuggahService meshuggahService;
 
     private static JsonNode initBody(PlatineContactDto platineContact) {
         ObjectNode body = objectMapper.createObjectNode();
@@ -61,7 +63,8 @@ public class MeshuggahSendOpeningMailCommunicationForSUTask implements JavaDeleg
 
         //Get current partition from contexte
         JsonNode currentPartitionNode = getCurrentPartitionNode(contextRootNode, currentPartitionId);
-        log.info("ProcessInstanceId={} - campainId={}  begin", execution.getProcessInstanceId(), campainId);
+        log.info("ProcessInstanceId={} - campainId={}  - currentPartitionId={} - platineContactDto={} begin",
+                execution.getProcessInstanceId(), campainId, currentPartitionId,platineContactDto);
 
         JsonNode communicationNode = MeshuggahUtils.getCommunication(currentPartitionNode, medium, phase);
         JsonNode body = initBody(platineContactDto);
@@ -69,7 +72,8 @@ public class MeshuggahSendOpeningMailCommunicationForSUTask implements JavaDeleg
         MeshuggahComDetails meshuggahComDetails = MeshuggahUtils.computeMeshuggahComDetails(campainId, currentPartitionId, communicationNode);
         meshuggahService.postSendCommunication(meshuggahComDetails, body);
 
-        log.info("ProcessInstanceId={} - campainId={}  end", execution.getProcessInstanceId(), campainId);
+        log.debug("ProcessInstanceId={} - campainId={}  - currentPartitionId={} - platineContactDto={} end",
+                execution.getProcessInstanceId(), campainId, currentPartitionId,platineContactDto);
     }
 
     @Override

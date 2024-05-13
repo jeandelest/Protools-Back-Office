@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +18,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RequestMapping("/protools-process")
 @Controller
+@RequiredArgsConstructor
 public class ProtoolsProcessController {
-    @Autowired ContextService contextService;
+
+    private final ContextService contextService;
 
     @PostMapping(value = "/upload-context", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Upload of the context file",

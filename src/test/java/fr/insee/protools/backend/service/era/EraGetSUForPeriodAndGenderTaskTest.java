@@ -2,9 +2,9 @@ package fr.insee.protools.backend.service.era;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import fr.insee.protools.backend.ProtoolsTestUtils;
+import fr.insee.protools.backend.dto.era.CensusJsonDto;
+import fr.insee.protools.backend.dto.era.GenderType;
 import fr.insee.protools.backend.service.context.exception.BadContextIncorrectBPMNError;
-import fr.insee.protools.backend.service.era.dto.CensusJsonDto;
-import fr.insee.protools.backend.service.era.dto.GenderType;
 import fr.insee.protools.backend.service.utils.TestWithContext;
 import org.flowable.common.engine.api.FlowableIllegalArgumentException;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -37,7 +37,11 @@ class EraGetSUForPeriodAndGenderTaskTest extends TestWithContext {
     String dumyId = "ID999";
     final static String era_context_2partition = "{ \"partitions\": [{ \"id\": 1  ,  \"sexe\": \"hommes\" }, { \"id\": 2  ,  \"sexe\": \"femmes\" }]   }";
 
-    final
+    @Test
+    void execute_should_throwError_when_null_context(){
+        assertThat_delegate_throwError_when_null_context(eraGetSUForPeriodAndGenderTask);
+    }
+
     @Test
     @DisplayName("Test execute method - should throw if VARNAME_ERA_QUERY_START_DATE or VARNAME_ERA_QUERY_END_DATE or VARNAME_CURRENT_PARTITION_ID not initialized")
     void execute_should_throw_FlowableIllegalArgumentException_when_variables_notDefined() {

@@ -30,6 +30,12 @@ class PlatinePilotageCreateContextTaskTest extends TestWithContext {
     @Mock PlatinePilotageService platinePilotageService;
     @InjectMocks PlatinePilotageCreateContextTask platinePilotageTask;
 
+
+    @Test
+    void execute_should_throwError_when_null_context(){
+        assertThat_delegate_throwError_when_null_context(platinePilotageTask);
+    }
+
     @Test
     void execute_should_throw_BadContextIncorrectException_when_noContext() {
         DelegateExecution execution = createMockedExecution();
@@ -60,8 +66,12 @@ class PlatinePilotageCreateContextTaskTest extends TestWithContext {
         assertEquals(1, allValues.size(),"We should have exactly one partition");
 //TODO
     //    MetadataDto expectedMetadataNode = ProtoolsTestUtils.asObject(ressourceFolder + "/expected_post_questionnaire_metadata.json", MetadataDto.class);
+    //            assertEquals(expectedMetadataNode,allValues.get(0).getMetadata(),"Erreur with generated Metadata");
         assertEquals("DEM2022X00",allValues.get(0).getCampaignDto().getId(),"Erreur with generated Metadata campaign id");
-
+        assertEquals("DEM2022X001",allValues.get(0).getPartitioningDto().getId(),"Erreur with generated Metadata partition id");
+        assertEquals("DEM2022",allValues.get(0).getSurveyDto().getId(),"Erreur with generated Metadata partition id");
+        assertEquals("proprietaireId",allValues.get(0).getOwnerDto().getId(),"Erreur with generated Metadata owner id");
+        assertEquals("assistanceNiveau2Id",allValues.get(0).getSupportDto().getId(),"Erreur with generated Metadata support id");
     }
 
 }

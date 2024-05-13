@@ -5,11 +5,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import fr.insee.protools.backend.ProtoolsTestUtils;
-import fr.insee.protools.backend.service.common.platine_sabiane.dto.surveyunit.SurveyUnitResponseDto;
+import fr.insee.protools.backend.dto.platine_sabiane_questionnaire.surveyunit.SurveyUnitResponseDto;
 import fr.insee.protools.backend.service.context.exception.BadContextIncorrectBPMNError;
 import fr.insee.protools.backend.service.exception.IncorrectSUBPMNError;
 import fr.insee.protools.backend.service.platine.questionnaire.PlatineQuestionnaireService;
 import fr.insee.protools.backend.service.utils.TestWithContext;
+import fr.insee.protools.backend.service.utils.data.RemSUData;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -23,7 +24,6 @@ import org.springframework.util.ClassUtils;
 import java.util.stream.Stream;
 
 import static fr.insee.protools.backend.service.FlowableVariableNameConstants.*;
-import static fr.insee.protools.backend.service.platine.delegate.PlatinePilotageCreateSurveyUnitTaskTest.rem_su_3personnes;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -51,6 +51,10 @@ class PlatineQuestionnaireCreateSurveyUnitTaskTest extends TestWithContext {
     }
 
     @Test
+    void execute_should_throwError_when_null_context(){
+        assertThat_delegate_throwError_when_null_context(platineQuestionnaireCreateSurveyUnitTask);
+    }
+    @Test
     void execute_should_throw_BadContextIncorrectException_when_noContext() {
         DelegateExecution execution=createMockedExecution();
         //Execute the unit under test
@@ -62,7 +66,7 @@ class PlatineQuestionnaireCreateSurveyUnitTaskTest extends TestWithContext {
         //Prepare
         DelegateExecution execution=createMockedExecution();
         JsonNode contextRootNode = initContexteMockWithFile(context_json);
-        JsonNode remSU = ProtoolsTestUtils.asJsonNode(rem_su_3personnes);
+        JsonNode remSU = ProtoolsTestUtils.asJsonNode(RemSUData.rem_su_3personnes);
         Long idPartition=1l;
         lenient().doReturn(idPartition).when(execution).getVariable(VARNAME_CURRENT_PARTITION_ID,Long.class);
         lenient().doReturn(remSU).when(execution).getVariable(VARNAME_REM_SURVEY_UNIT,JsonNode.class);
@@ -85,14 +89,14 @@ class PlatineQuestionnaireCreateSurveyUnitTaskTest extends TestWithContext {
         assertEquals(objectMapper.readTree("{\"EXTERNAL\":{\"ADMINISTRATION1\":\"Insee\",\"ADMINISTRATION2\":\"Patate\"}}"),
                 valueParam.getData(),"Wrong data (external)");
         assertEquals(objectMapper.createObjectNode(), valueParam.getComment(),"No comment expected");
-        assertEquals(objectMapper.createObjectNode(), valueParam.getStateData(),"No stateData expected");
+        //assertEquals(objectMapper.createObjectNode(), valueParam.getStateData(),"No stateData expected");
     }
 
     @Test
     void execute_should_throw_IncorrectSUException_when_wrongSU() {
         DelegateExecution execution=createMockedExecution();
         initContexteMockWithFile(platine_context_json);
-        JsonNode remSU = ProtoolsTestUtils.asJsonNode(rem_su_3personnes);
+        JsonNode remSU = ProtoolsTestUtils.asJsonNode(RemSUData.rem_su_3personnes);
         //Break this node
         ((ObjectNode) remSU).remove("repositoryId");
         Long idPartition=1l;

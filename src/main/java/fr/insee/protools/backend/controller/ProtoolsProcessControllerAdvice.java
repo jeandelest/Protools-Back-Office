@@ -34,7 +34,7 @@ public class ProtoolsProcessControllerAdvice {
     @ExceptionHandler({ BadContextIncorrectBPMNError.class })
     public ResponseEntity<String> exceptionContextIncorrectHandler(/*final HttpServletRequest req,*/ final BadContextIncorrectBPMNError exception) {
         log.error("exceptionContextIncorrectHandler  : "+exception.getMessage());
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Error with provided context: "+exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({ TaskNotFoundException.class })

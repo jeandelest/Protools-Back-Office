@@ -11,6 +11,7 @@ import fr.insee.protools.backend.service.context.exception.BadContextIncorrectBP
 import fr.insee.protools.backend.service.context.exception.BadContextNotJSONBPMNError;
 import fr.insee.protools.backend.service.exception.ProcessDefinitionNotFoundException;
 import fr.insee.protools.backend.service.exception.TaskNotFoundException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -26,7 +27,7 @@ import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.engine.repository.ProcessDefinitionQuery;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.task.api.Task;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,16 +48,13 @@ import static fr.insee.protools.backend.service.context.ContextConstants.*;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class ContextServiceImpl implements ContextService {
 
-    @Autowired
-    private RuntimeService runtimeService;
-    @Autowired
-    private TaskService taskService;
-    @Autowired
-    private RepositoryService repositoryService;
-    @Autowired
-    private ApplicationContext springApplicationContext;
+    private final RuntimeService runtimeService;
+    private final TaskService taskService;
+    private final RepositoryService repositoryService;
+    private final ApplicationContext springApplicationContext;
 
     private static final ObjectMapper mapper = new ObjectMapper();
     private static final ObjectReader defaultReader = mapper.reader(); // maybe with configs
@@ -276,10 +274,13 @@ public class ContextServiceImpl implements ContextService {
         if (flowElement instanceof ServiceTask serviceTask) {
             if (serviceTask.getImplementationType().equals("delegateExpression")) {
                 String delegateExpression = serviceTask.getImplementation().replace("${", "").replace("}", "");
-                Object bean = springApplicationContext.getBean(delegateExpression);
-                if (bean instanceof DelegateContextVerifier beanDelegateCtxVerifier) {
-                    return beanDelegateCtxVerifier.getContextErrors(protoolsContextRootNode);
+                try {
+                    Object bean = springApplicationContext.getBean(delegateExpression);
+                    if (bean instanceof DelegateContextVerifier beanDelegateCtxVerifier) {
+                        return beanDelegateCtxVerifier.getContextErrors(protoolsContextRootNode);
+                    }
                 }
+                catch (NoSuchBeanDefinitionException e){}
             }
         } else if (flowElement instanceof SubProcess subProcessFlowElement) {
             Set<String> errors = new HashSet<>();

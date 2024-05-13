@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.insee.protools.backend.service.exception.IncorrectSUBPMNError;
-import fr.insee.protools.backend.service.rem.dto.REMSurveyUnitDto;
+import fr.insee.protools.backend.dto.rem.REMSurveyUnitDto;
 
 public class PlatineHelper {
 
