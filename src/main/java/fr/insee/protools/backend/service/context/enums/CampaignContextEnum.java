@@ -13,4 +13,12 @@ public enum CampaignContextEnum {
     public String getAsString() {
         return contexte;
     }
+
+    public static CampaignContextEnum fromLabel(String label) {
+        return switch (label.toLowerCase()) {
+            case "household" -> HOUSEHOLD;
+            case "business" -> BUSINESS;
+            default -> throw new IllegalStateException("Unexpected value for CampaignContextEnum: " + label);
+        };
+    }
 }

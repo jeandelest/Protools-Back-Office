@@ -14,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(classes = PasswordServiceImpl.class)
 @TestPropertySource(properties = {
-        "fr.insee.protools.password.create.length = 19",
         "fr.insee.protools.password.create.withDigits = true",
         "fr.insee.protools.password.create.withUpperCase = true",
         "fr.insee.protools.password.create.withLowerCase = true",
@@ -32,15 +31,17 @@ class PasswordServiceTest {
 
         //Generate and validate X1000
         for (int i = 0; i < 1000 ; i++) {
-            //Execute method under test
-            String generatePassword=passwordService.generatePassword();
+            for(int length=8; length < 19; length ++) { // and for various sizes
+                //Execute method under test
+                String generatePassword = passwordService.generatePassword(length);
 
-            //Post condition
-            PasswordData passwordData = new PasswordData(generatePassword);
-            RuleResult validate = passwordValidator.validate(passwordData);
+                //Post condition
+                PasswordData passwordData = new PasswordData(generatePassword);
+                RuleResult validate = passwordValidator.validate(passwordData);
 
-            assertTrue(validate.isValid(),"Generated password meets the rules : "+generatePassword);
-            assertEquals(19,generatePassword.length(),"Generated password length should meets the confif : "+generatePassword);
+                assertTrue(validate.isValid(), "Generated password meets the rules : " + generatePassword);
+                assertEquals(length, generatePassword.length(), "Generated password length should meets the confif : " + generatePassword);
+            }
         }
 
     }

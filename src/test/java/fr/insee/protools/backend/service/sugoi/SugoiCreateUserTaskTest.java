@@ -3,16 +3,23 @@ package fr.insee.protools.backend.service.sugoi;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.insee.protools.backend.ProtoolsTestUtils;
 import fr.insee.protools.backend.dto.sugoi.User;
+import fr.insee.protools.backend.service.context.exception.BadContextIncorrectBPMNError;
+import fr.insee.protools.backend.service.utils.TestWithContext;
 import fr.insee.protools.backend.service.utils.password.PasswordService;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.test.FlowableTest;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.List;
 
 import static fr.insee.protools.backend.service.FlowableVariableNameConstants.VARNAME_DIRECTORYACCESS_ID_CONTACT;
 import static fr.insee.protools.backend.service.sugoi.SugoiCreateUserTask.PLATINE_HABILITATION;
@@ -21,7 +28,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @FlowableTest
-class SugoiCreateUserTaskTest {
+class SugoiCreateUserTaskTest extends TestWithContext {
 
     @Mock SugoiService sugoiService;
     @Mock PasswordService passwordService;
@@ -35,7 +42,7 @@ class SugoiCreateUserTaskTest {
         DelegateExecution execution = mock(DelegateExecution.class);
         doReturn(dumyId).when(execution).getProcessInstanceId();
         String expectedPwd="veryComplicatedPassword";
-        doReturn(expectedPwd).when(passwordService).generatePassword();
+        doReturn(expectedPwd).when(passwordService).generatePassword(anyInt());
         final String userId="D96QSST";
         final String sugoiResponse =
         """
@@ -80,5 +87,49 @@ class SugoiCreateUserTaskTest {
 
         //verif on password
         verify(sugoiService).postInitPassword(userId,expectedPwd);
+    }
+
+    @Test
+    @DisplayName("Test execute method - should throw if Context is not correct")
+    void execute_should_throw_BadContext_when_contextIncorrect() throws JsonProcessingException {
+        //Precondition
+        DelegateExecution execution = mock(DelegateExecution.class);
+        lenient().when(execution.getProcessInstanceId()).thenReturn(dumyId);
+
+        //Erreur
+        final String contextKO1 =
+                "{ \"partitions\": [{ \"id\": 1  }]   }";
+        final String contextKO2 =
+                "{\"contexte\": \"xxxx\" } }";
+
+        List<String> contextErrorTestList=List.of(contextKO1,contextKO2);
+        for(String context : contextErrorTestList){
+            //Precondition
+            ProtoolsTestUtils.initContexteMockFromString(protoolsContext, context);
+            //Run test
+            assertThrows(BadContextIncorrectBPMNError.class, () -> task.execute(execution));
+            Mockito.reset(protoolsContext);
+        }
+    }
+    @Test
+    @DisplayName("Test getPasswordSize method - should return 8 for household")
+    void getPasswordSize_should_return_8_for_household() throws JsonProcessingException {
+
+        final String context =
+                "{\"contexte\": \"household\" } }";
+        ProtoolsTestUtils.initContexteMockFromString(protoolsContext, context);
+        assertEquals(8,task.getPasswordSize(protoolsContext.getContextByProcessInstance(dumyId)));
+        Mockito.reset(protoolsContext);
+    }
+
+    @Test
+    @DisplayName("Test getPasswordSize method - should return 12 for non household")
+    void getPasswordSize_should_return_12_for_NonHousehold() throws JsonProcessingException {
+
+        final String context =
+                "{\"contexte\": \"business\" } }";
+        ProtoolsTestUtils.initContexteMockFromString(protoolsContext, context);
+        assertEquals(12,task.getPasswordSize(protoolsContext.getContextByProcessInstance(dumyId)));
+        Mockito.reset(protoolsContext);
     }
 }
