@@ -160,10 +160,10 @@ public class MeshuggahCreateCommunicationsContextTask implements JavaDelegate, D
                     results.add(DelegateContextVerifier.computeIncorrectEnumMessage(CTX_PARTITION_COMMUNICATION_MOYEN,medium, Arrays.toString(MeshuggahUtils.MediumEnum.values()),getClass()));
                 }
 
-                //Verify medium enum
+                //Verify phase enum
                 String phase = communicationNode.path(CTX_PARTITION_COMMUNICATION_PHASE).asText();
                 if(! EnumUtils.isValidEnumIgnoreCase(MeshuggahUtils.PhaseEnum.class, phase)){
-                    results.add(DelegateContextVerifier.computeIncorrectEnumMessage(CTX_PARTITION_COMMUNICATION_PHASE,medium, Arrays.toString(MeshuggahUtils.PhaseEnum.values()),getClass()));
+                    results.add(DelegateContextVerifier.computeIncorrectEnumMessage(CTX_PARTITION_COMMUNICATION_PHASE,phase, Arrays.toString(MeshuggahUtils.PhaseEnum.values()),getClass()));
                 }
             }
         }
