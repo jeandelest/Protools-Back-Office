@@ -10,6 +10,7 @@ import fr.insee.protools.backend.service.utils.TestWithContext;
 import fr.insee.protools.backend.service.utils.password.PasswordService;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.test.FlowableTest;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,6 +42,11 @@ class SugoiCreateUserTaskTest extends TestWithContext {
         //Prepare
         DelegateExecution execution = mock(DelegateExecution.class);
         doReturn(dumyId).when(execution).getProcessInstanceId();
+
+        final String context =
+                "{\"contexte\": \"household\" } }";
+        ProtoolsTestUtils.initContexteMockFromString(protoolsContext, context);
+
         String expectedPwd="veryComplicatedPassword";
         doReturn(expectedPwd).when(passwordService).generatePassword(anyInt());
         final String userId="D96QSST";
@@ -119,7 +125,6 @@ class SugoiCreateUserTaskTest extends TestWithContext {
                 "{\"contexte\": \"household\" } }";
         ProtoolsTestUtils.initContexteMockFromString(protoolsContext, context);
         assertEquals(8,task.getPasswordSize(protoolsContext.getContextByProcessInstance(dumyId)));
-        Mockito.reset(protoolsContext);
     }
 
     @Test
@@ -130,6 +135,5 @@ class SugoiCreateUserTaskTest extends TestWithContext {
                 "{\"contexte\": \"business\" } }";
         ProtoolsTestUtils.initContexteMockFromString(protoolsContext, context);
         assertEquals(12,task.getPasswordSize(protoolsContext.getContextByProcessInstance(dumyId)));
-        Mockito.reset(protoolsContext);
     }
 }

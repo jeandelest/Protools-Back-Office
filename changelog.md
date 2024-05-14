@@ -4,16 +4,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased 1.1.1-SNAPSHOT] - xx-xx-xxxx
+### Changed
+#### BPMN TASKS
+- [sugoiCreateUserTask](TODO)
+  La longueur du mot de passe crée dépend du contexte (8 pour household ; 12 sinon)
 
-## [Unreleased 1.1.0-SNAPSHOT] - yyyy-mm-dd
+
+## [1.1.0] - 14-05-2024
 ### Added
 #### BPMN TASKS
 - [SabianePilotageCreateSUTask](http://preparation_collecte.gitlab-pages.insee.fr/prepadoc/Protools/taches/#cr%c3%a9er-une-ue-dans-la-plateforme-de-collecte-enqu%c3%aateur-partie-pilotage)
   Tâche de création d'une UE dans sabiane pilotage
 - [SabianeQuestionnaireCreateSUTask](http://preparation_collecte.gitlab-pages.insee.fr/prepadoc/Protools/taches/#cr%c3%a9er-une-ue-dans-la-plateforme-de-collecte-enqu%c3%aateur-partie-questionnaire)
   Tâche de création d'une UE dans sabiane questionnaire
-- [sugoiCreateUserTask](TODO)
-  Tâche de création d'un utilisateur dans l'annuaire Sugoi et initialization d'un mot de passe par défaut.
+- [sugoiCreateUserTask](http://preparation_collecte.gitlab-pages.insee.fr/prepadoc/Protools/taches/#cr%c3%a9ation-de-comptes-dans-lannuaire-sugoi)
+  Tâche de création d'un utilisateur dans l'annuaire Sugoi et initialization d'un mot de passe par défaut
 - [platinePilotageGetSUIsToFollowUpTask]( TODO)
   Tâche de lecture dans Platine Pilotage de l'état a-relancer/eligible/isToFollowUp d'une UE (d'une partition).
 - [platinePilotageAddSUFollowUpTask]( TODO)

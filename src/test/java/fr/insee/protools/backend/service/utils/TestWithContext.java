@@ -6,7 +6,9 @@ import fr.insee.protools.backend.service.context.ContextService;
 import fr.insee.protools.backend.service.context.exception.BadContextIncorrectBPMNError;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -24,6 +26,10 @@ public abstract class TestWithContext {
 
     protected final String dumyId="ID1";
 
+    @AfterEach
+    void mockitoResetContext() {
+        Mockito.reset(protoolsContext);
+    }
     protected JsonNode initContexteMockWithFile(String contexteToLoad){
         JsonNode contextRootNode = ProtoolsTestUtils.asJsonNode(contexteToLoad);
         doReturn(contextRootNode).when(protoolsContext).getContextByProcessInstance(anyString());
