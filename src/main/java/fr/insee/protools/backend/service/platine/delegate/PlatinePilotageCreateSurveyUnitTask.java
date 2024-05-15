@@ -108,8 +108,9 @@ public class PlatinePilotageCreateSurveyUnitTask implements JavaDelegate, Delega
 
 
         results.addAll(DelegateContextVerifier.computeMissingChildrenMessages(requiredNodes,contextRootNode,getClass()));
-        if (!contextRootNode.path(CTX_CAMPAGNE_CONTEXTE).asText().equalsIgnoreCase(CampaignContextEnum.HOUSEHOLD.getAsString())) {
-            results.add(DelegateContextVerifier.computeIncorrectMessage(CTX_CAMPAGNE_CONTEXTE,"contexte for platine can only be "+CampaignContextEnum.HOUSEHOLD,getClass()));
+        String contexte = contextRootNode.path(CTX_CAMPAGNE_CONTEXTE).asText();
+        if(! EnumUtils.isValidEnumIgnoreCase(CampaignContextEnum.class, contexte)){
+            results.add(DelegateContextVerifier.computeIncorrectEnumMessage(CTX_CAMPAGNE_CONTEXTE,contexte, Arrays.toString(CampaignContextEnum.values()),getClass()));
         }
 
         //Maybe one day we will have partitions for platine and partitions for sabiane and we will only validate the platine ones
