@@ -24,12 +24,11 @@ public class QuestionnaireModelFromStaticWebsiteServiceImpl implements Questionn
     @Value("${fr.insee.protools.questionnaire.model.uri}")
     private String questionnaireModelUri;
 
-
     @Override
     public String getQuestionnaireModel(String questionnaireModelId, String folderPath){
         log.info("Get Questionnaire Model Value for questionnaireModelId={}", questionnaireModelId);
         String uri;
-        String fullPath=questionnaireModelUri+"/" +folderPath+ "/"+questionnaireModelId + ".json";
+        String fullPath = String.format("%s/%s/%s.json", questionnaireModelUri, folderPath, questionnaireModelId);
         try {
             uri = new URI(fullPath).normalize().toString();
         } catch (URISyntaxException e) {
